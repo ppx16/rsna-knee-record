@@ -34,7 +34,7 @@ sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 
 EXPECT = {
-    # ⚠️ the fork's tuple is ("Baker's",) WITH a trailing comma -- that is a 1-element TUPLE.  Written
+    # 鈿狅笍 the fork's tuple is ("Baker's",) WITH a trailing comma -- that is a 1-element TUPLE.  Written
     # as ("Baker's") it would be the plain string, and `label not in _RAD_EXCLUDE` would silently turn
     # into SUBSTRING matching instead of membership.  Assert the comma.
     "kernel-0943": {"rad_exclude": "\"Baker's\", 'Fracture'", "note": "0.943 control"},
@@ -127,8 +127,28 @@ def main():
             except Exception as e:                                  # noqa: BLE001
                 print("  competition ?: %s -> %s" % (ref, str(e)[:60]))
                 warnings.append("%s: competition %s not confirmed" % (d, ref))
-        if meta.get("model_sources"):
-            print("  model_sources : %s (not machine-checked)" % meta["model_sources"])
+        
+
+        # ---- 4b. MODEL sources -------------------------------------------
+        # 鈿狅笍 NOT optional.  A public score ladder measured on real submissions shows that a run with
+        # model_sources missing silently DROPS all 20 DINOv2 members, still completes, and scores
+        # 0.937 instead of 0.940.  The pipeline degrades quietly by design, so the sources have to be
+        # checked here rather than trusted.  Entry form is owner/model/framework/instance[/version].
+        for ref in meta.get("model_sources", []):
+            parts = ref.split("/")
+            ok = False
+            try:
+                if len(parts) >= 4:
+                    api.model_instance_get("/".join(parts[:4]))
+                else:
+                    api.model_get("/".join(parts[:2]))
+                ok = True
+            except Exception as e:                                  # noqa: BLE001
+                print("  model FAIL    : %s -> %s" % (ref, str(e)[:70]))
+                problems.append("%s: model source %s unresolvable (a missing model source "
+                                "silently costs ~0.003)" % (d, ref))
+            if ok:
+                print("  model OK      : %s" % ref)
 
         # ---- 5. notebook parses; every code cell compiles ---------------
         nb = json.loads(cf.read_text(encoding="utf-8"))

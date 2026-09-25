@@ -13016,3 +13016,83 @@ notebook 里多处 `if torch.cuda.device_count() != 2: raise ...`，还有
   —— **我们的 `kernel-0943` 已经在正确那一侧**，所以周六这条臂不受该问题拖累。
 - 若 0943 达不到预期，下一个 fork 目标是 Mattia 的 **"Speedy Raptors"**（另一条 lineage：24 cells、
   44 槽 span 0.06–0.94、k_eval 42），已拉到本地待做逐字段差异表。
+
+---
+
+## 159. B 线（前沿情报）：一篇分析同时**补上了 A2 的缺口**并**改变了终局策略**
+
+来源：`starkhushi/rsna-knee-why-public-forks-stop-at-0-941`（已拉到 `downloads/research/frontier3/`）。
+这篇不是又一个 fork，而是**带真实提交的分数阶梯 + 源清单 + 负面结果**。
+
+### 159.1 ⭐ 分数阶梯（每个数都是真实提交）
+
+| 配置 | 公开分 |
+|---|---|
+| v27 但 `model_sources`/`kernel_sources` **缺失**（**静默丢掉全部 20 个 DINOv2 成员**） | **0.937** |
+| v27 源齐全 | **0.940** |
+| + per-label outer map、臂 0.55/0.15、inner CoAt re-rank（"0.941 配方"） | **0.941** |
+| + 臂还原 0.60/0.10（该文自己，pending） | ? |
+
+⇒ **管道会【静默降级】而不是崩溃**：缺源时它**照样跑完**、打 20 行 `dropped -- costs one vote, not the run`，
+然后得 0.937。**这正是 A2 要防的东西，而我的检查器当时对 `model_sources` 打的是 "(not machine-checked)"。**
+
+### 159.2 ✅ 因此立刻补上了 A2 的缺口（已改、已验）
+
+`scripts/preflight_0943.py` 现在**机器校验 `model_sources`**：
+`api.model_instance_get('metaresearch/dinov2/PyTorch/small')`（该 API 的合法形式是
+`{owner}/{model-slug}` 或 `{owner}/{model-slug}/{framework}/{instance-slug}`；metadata 里那条尾部多一个 `/1`）。
+⇒ 现在两个内核都输出 `model OK : metaresearch/dinov2/PyTorch/small/1`，并且仍然 **PREFLIGHT OK（0/0）**。
+
+### 159.3 ⭐⭐ 新增一条【跑完后的验收测试】（周六必做）
+
+那篇明确给了怎么确认成员没被静默丢掉：
+
+> Then check the log: **20 lines of `fingerprint matches within ~1e-6`, zero `dropped`**.
+
+⇒ **周六跑完，先在日志里 grep 这两样，再谈提交**。这比"分数看起来正常"可靠得多。
+
+### 159.4 ⭐⭐ 终局两个勾选位：那篇给了明确建议
+
+- **"Keep a flat-0.60 version as your second final pick."**
+  理由：**per-label outer map 是在公开切分上调的**，而且 `Lateral Meniscus = 1.00` 会**丢掉该列 4 个阶段中的 3 个**
+  ⇒ 对公开 LB 有过拟合风险，需要一版**不依赖该调参**的作为第二个提交。
+- 我们的 notebook **内置 `outer060` 预设**（把外层默认还原成 0.942 的 0.60，其余不变）⇒ **正好是这一版**。
+- ⚠️ 于是**第二个勾选位出现竞争**：`outer060`（那篇推荐的稳健版）vs `0943f`（我们的断裂 fork，内部证据 +0.001）。
+  ⇒ **待定，需要按周六两条臂的实际读数来选。** 当前已有的两个位是 `56166132`(0.941) + `56175178`(0.940)。
+
+### 159.5 ⭐⭐ 额度杠杆：`sparse` 预设（可能把一周的臂数翻好几倍）
+
+那篇自述 **"Runs in ~90 min on T4 x2"**，而它用的是**62/42 窗口**；我们的 `speedy` 用 **94**，预算 **8 h**。
+我们的 notebook 里正好有这个开关：
+
+```
+`sparse` drops the window count back to the released 62/42, which both fits a tighter runtime
+and measures what the denser [94-window sampling] contributed
+```
+⇒ **四档臂菜单**：
+
+| 臂 | 预设 | 窗口 | 预计时长 | 角色 |
+|---|---|---|---|---|
+| `0943` | `speedy`（默认） | 94 | **最长 8 h** | **0.943 复现**（期望最高） |
+| `0943f` | `speedy` | 94 | 最长 8 h | 断裂 fork A/B |
+| `0943-outer060` | `outer060` | 94 | 最长 8 h | 那篇推荐的**稳健第二版** |
+| `0943-sparse` | `sparse` | 62/42 | **可能 ~1.5 h** | 隔离 94 窗口的增益 + **便宜** |
+
+⇒ 若 `sparse` 真在 1–2 h 量级，则**同一周的额度能跑的臂数多好几倍**，§158.5 那个"一周只够 1–2 条臂"的风险大幅缓解。
+⚠️ 但 `sparse` 的分数**大概率低于** 0.943（它砍掉的正是 0.942→0.943 的一项），所以它是**额度杠杆**，不是免费的午餐。
+
+### 159.6 ⭐⭐ 外部证据支持了 C84 / D14：「自己的成员只会拖后腿」
+
+那篇的负面结果一节（原文）：注入它自己的 2.5D 成员（ResNet34 / ConvNeXt / RadImageNet，**holdout 0.85–0.87**）
+在 15% 权重下得 **0.936** —— 比不加还差。结论："**Below ~0.90 solo, a member costs more than its diversity buys.**"
+
+⇒ **我们的密语料模型正好落在 0.85–0.87 这一档**（convnext OOF ~0.85、CoAtNet ~0.85–0.87）
+⇒ **外部独立证据确认：密语料是【仪器】，不是【涨分手段】** —— 与 C84 预先注册的分档结论一致，
+也与 D14（"更好的成员 → 0.941 不动"）一致。**所以周六优先提交、而不是拿密语料造成员，是对的选择。**
+
+### 159.7 其它值得记住的点
+
+- 那篇还指出 0.941 配方里 `_ke_cr ... .rank(pct=True)` 那处改动**是 no-op**（因为 `_raptor.csv` 到那时已经是百分位排名了）
+  ⇒ **那个配方只有 3 处有效改动，不是 4 处**。
+- **"The visible test is 3 studies; real scoring happens in the hidden rerun."** ⇒ 公开 LB 样本极小，别过度解读单次波动。
+- 注意 `sparse` 一行：`RUN["raptor_k_eval"] = None`（回到各臂自带的 62/42，而不是全局 94）。
