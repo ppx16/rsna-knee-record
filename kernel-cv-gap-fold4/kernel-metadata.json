@@ -1,0 +1,22 @@
+{
+  "id": "ppxl16/rsna-knee-cv-gap-fold4",
+  "title": "RSNA knee cv gap fold4",
+  "code_file": "knee-mri-training-the-twelve-finding-model.py",
+  "language": "python",
+  "kernel_type": "script",
+  "is_private": true,
+  "enable_gpu": true,
+  "enable_internet": true,
+  "dataset_sources": [
+    "dreaddevelopment/knee-raptor-corpus",
+    "dreaddevelopment/knee-raptor-corpus-ext",
+    "flight0234/rsna-knee-hybrid-report-labels",
+    "ppxl16/rsna-knee-cv-folds"
+  ],
+  "competition_sources": [
+    "rsna-knee-abnormality-detection"
+  ],
+  "kernel_sources": [],
+  "machine_shape": "NvidiaTeslaT4",
+  "enable_tpu": false
+}

@@ -1,0 +1,7 @@
+{
+  "name": "v2src-a5w60",
+  "desc": "The other half of the `a5_w` bracket, 0.45 -> 0.60. If A5 is stronger than its 45% share assumes this gains; if both directions read as no rank movement the axis is flat and `a5_w` can be left alone.",
+  "source": "kernel-fresh\\rsna-knee-ens-v2src.ipynb",
+  "source_sha256": "bb34d22e97d29f6cb0638bcf5effd1de9237778e420baba3d9b4258485855b91",
+  "result_sha256": "f62d48da715f5287b555cd34215d6af7f61f2d702761aaa6431feeac25c4a3b1"
+}

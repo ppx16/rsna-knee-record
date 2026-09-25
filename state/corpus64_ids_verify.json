@@ -1,0 +1,82 @@
+{
+ "0": {
+  "rows": [
+   0,
+   550
+  ],
+  "n": 551,
+  "match": true,
+  "corpus_part": 551,
+  "ext_part": 0
+ },
+ "1": {
+  "rows": [
+   551,
+   1101
+  ],
+  "n": 551,
+  "match": true,
+  "corpus_part": 551,
+  "ext_part": 0
+ },
+ "2": {
+  "rows": [
+   1102,
+   1652
+  ],
+  "n": 551,
+  "match": true,
+  "corpus_part": 551,
+  "ext_part": 0
+ },
+ "3": {
+  "rows": [
+   1653,
+   2203
+  ],
+  "n": 551,
+  "match": true,
+  "corpus_part": 551,
+  "ext_part": 0
+ },
+ "4": {
+  "rows": [
+   2204,
+   2754
+  ],
+  "n": 551,
+  "match": true,
+  "corpus_part": 551,
+  "ext_part": 0
+ },
+ "5": {
+  "rows": [
+   2755,
+   3305
+  ],
+  "n": 551,
+  "match": true,
+  "corpus_part": 445,
+  "ext_part": 106
+ },
+ "6": {
+  "rows": [
+   3306,
+   3856
+  ],
+  "n": 551,
+  "match": true,
+  "corpus_part": 0,
+  "ext_part": 551
+ },
+ "7": {
+  "rows": [
+   3857,
+   4406
+  ],
+  "n": 550,
+  "match": true,
+  "corpus_part": 0,
+  "ext_part": 550
+ }
+}

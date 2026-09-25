@@ -1,0 +1,23 @@
+{
+  "id": "ppxl16/rsna-knee-train-v1",
+  "title": "RSNA Knee train v1",
+  "code_file": "rsna-knee-train-v1.ipynb",
+  "language": "python",
+  "kernel_type": "notebook",
+  "is_private": true,
+  "enable_gpu": true,
+  "enable_tpu": false,
+  "enable_internet": true,
+  "machine_shape": "NvidiaTeslaT4",
+  "dataset_sources": [
+    "pilkwang/rsna-knee-llm-labels"
+  ],
+  "competition_sources": [
+    "rsna-knee-abnormality-detection"
+  ],
+  "model_sources": [
+    "metaresearch/dinov2/PyTorch/large/1",
+    "metaresearch/dinov2/PyTorch/small/1",
+    "mrquadian/biomedclip/PyTorch/default/1"
+  ]
+}

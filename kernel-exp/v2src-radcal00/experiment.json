@@ -1,0 +1,7 @@
+{
+  "name": "v2src-radcal00",
+  "desc": "`rad_cal_w` 0.40 -> 0.00, i.e. switch the RadImageNet calibration branch OFF. Value taken from the current public frontier (HANDOFF 87). Everything else identical to the canonical recipe.",
+  "source": "kernel-fresh\\rsna-knee-ens-v2src.ipynb",
+  "source_sha256": "fa338297cc9f79d9f30400e21007272505e622250567cd077edc9525321210f6",
+  "result_sha256": "676ad5b2352f7a784ceade62128b532ec61e5d9fd20be85da9f5551241e2e399"
+}

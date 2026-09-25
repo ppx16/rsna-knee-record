@@ -1,0 +1,7 @@
+{
+  "name": "v2src-private25",
+  "desc": "Probe `coat_private_alpha` DOWN. The full RUN config has ten fusion weights; upstream's own evolution only ever moved two of them (`coatnet_w` worth +0.002, and `raptor_view_w`). The other six are at the values they were first typed in at, so `coat_private_alpha` - the share of the private residual-gated CoAt e4/e6/e8 INSIDE the Raptor arm - has never been tuned. It is the highest-leverage untested weight available: the Raptor arm carries 0.60-1.00 of the final blend, and 40% of that arm is this one component. Paired with `v2src-private55` to bracket the current 0.40.",
+  "source": "kernel-fresh\\rsna-knee-ens-v2src.ipynb",
+  "source_sha256": "bb34d22e97d29f6cb0638bcf5effd1de9237778e420baba3d9b4258485855b91",
+  "result_sha256": "faf74c5c815c3ad53e7dbee4a3f87a5278f2bb56467c29187b1851daef923edd"
+}

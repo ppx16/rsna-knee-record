@@ -1,0 +1,7 @@
+{
+  "name": "v2src-routedeep",
+  "desc": "ROUTING, DEEPENED. Push the four non-maximal raised findings toward the 1.00 ceiling the author already chose for Lateral Meniscus: ACL 0.75 -> 0.875, Medial Meniscus 0.80 -> 0.90, Lateral OA 0.75 -> 0.875, Fracture 0.75 -> 0.875 (Lateral Meniscus stays 1.00). Extrapolates along the only direction with a measured positive gradient (HANDOFF 67.3).",
+  "source": "kernel-fresh\\rsna-knee-ens-v2src.ipynb",
+  "source_sha256": "fa338297cc9f79d9f30400e21007272505e622250567cd077edc9525321210f6",
+  "result_sha256": "531d3ddcb398aa0710686aa71aaef6424e777a76fb81c7198bbfb598462ad7c9"
+}

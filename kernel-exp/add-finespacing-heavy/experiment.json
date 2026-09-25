@@ -1,0 +1,7 @@
+{
+  "name": "add-finespacing-heavy",
+  "desc": "THE DOSE TEST for v9 `finespacing`. The first attempt gave it 0.20 and read 0.941 (flat, D14) -- but the author's OWN score table says v9 (80 slices, 1.20% of stack per slice) scores 0.932 against maxspan-v5's 0.927, while our shipped weights give maxspan 0.55 and v9 nothing. So the ensemble under-weights its best view by a lot, and 0.20 may simply have been too small a dose to show. This gives v9 0.50 and scales the shipped four to 0.50 in their exact original ratios (0.275/0.075/0.05/0.10) -- the same shape n942 (titled 0.942) uses, where `0.5 * arms + 0.5 * raptor`. One submission, ~0.5 GPU-h, and it is the only untested composition with author data behind it.",
+  "source": "kernel-ens\\rsna-knee-ensemble-v1.ipynb",
+  "source_sha256": "01f2d834a6c55726c7990e951a96c663405cb2a6bbc4929cae1fc5f07ce53cd6",
+  "result_sha256": "0b55e0a6f6716ac207b44e7c3ad77ff095fe2d62d5d1b5d16e838eb3b5982f57"
+}

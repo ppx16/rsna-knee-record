@@ -1,0 +1,18 @@
+{
+  "id": "ppxl16/rsna-knee-recipe-probe",
+  "title": "RSNA knee recipe probe",
+  "code_file": "recipe_probe.py",
+  "language": "python",
+  "kernel_type": "script",
+  "is_private": true,
+  "enable_gpu": false,
+  "enable_internet": false,
+  "dataset_sources": [
+    "dreaddevelopment/knee-raptor-corpus"
+  ],
+  "competition_sources": [
+    "rsna-knee-abnormality-detection"
+  ],
+  "kernel_sources": [],
+  "enable_tpu": false
+}

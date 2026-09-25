@@ -1,0 +1,18 @@
+{
+  "id": "ppxl16/rsna-knee-diag-slots",
+  "title": "RSNA knee diag slots",
+  "code_file": "diag_slots.py",
+  "language": "python",
+  "kernel_type": "script",
+  "is_private": true,
+  "enable_gpu": false,
+  "enable_internet": false,
+  "dataset_sources": [
+    "dreaddevelopment/knee-raptor-corpus"
+  ],
+  "competition_sources": [
+    "rsna-knee-abnormality-detection"
+  ],
+  "kernel_sources": [],
+  "enable_tpu": false
+}

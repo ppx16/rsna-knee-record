@@ -1,0 +1,2227 @@
+[
+ {
+  "ref": "mattiaangeli/bend-the-knee-to-the-dinosaurs",
+  "rank": 1,
+  "votes": 186,
+  "title": "Bend the Knee to the Dinosaurs",
+  "lastRun": "2026-09-08",
+  "gpu": true,
+  "machine": "NvidiaTeslaT4",
+  "internet": false,
+  "ver": 30,
+  "datasets": [
+   "dreaddevelopment/raptor-knee-maxspan",
+   "dreaddevelopment/raptor-knee-native384",
+   "dreaddevelopment/raptor-knee-native384dense",
+   "mattiaangeli/knee-mri-fold-weights",
+   "mattiaangeli/opencv-python-headless-4120088-x86",
+   "marwanmath/resnet-50-radimagenet-marwan",
+   "mattiaangeli/rsna-knee-coat-resgated-ep10-top3",
+   "antoinegg1/rsna-knee-e11-diverse-heads-v20",
+   "antoinegg1/rsna-knee-e9-radimagenet-heads-v15",
+   "pilkwang/rsna-knee-llm-labels",
+   "prvsiyan/rsna-knee-v52-radimagenet-heads-20260812",
+   "pilkwang/rsna-knee-weights"
+  ],
+  "kernels": [
+   "sofiaanjenje/rsna-knee-e11-train",
+   "sofiaanjenje/rsna-knee-e13-train"
+  ],
+  "models": [
+   "metaresearch/dinov2/PyTorch/small/1"
+  ]
+ },
+ {
+  "ref": "maverickss26/rsna-knee-0941-restructured",
+  "rank": 2,
+  "votes": 67,
+  "title": "rsna-knee-0941-restructured",
+  "lastRun": "2026-09-08",
+  "gpu": true,
+  "machine": "NvidiaTeslaT4",
+  "internet": false,
+  "ver": 2,
+  "datasets": [
+   "dreaddevelopment/raptor-knee-maxspan",
+   "dreaddevelopment/raptor-knee-native384",
+   "dreaddevelopment/raptor-knee-native384dense",
+   "mattiaangeli/knee-mri-fold-weights",
+   "mattiaangeli/opencv-python-headless-4120088-x86",
+   "marwanmath/resnet-50-radimagenet-marwan",
+   "mattiaangeli/rsna-knee-coat-resgated-ep10-top3",
+   "antoinegg1/rsna-knee-e11-diverse-heads-v20",
+   "antoinegg1/rsna-knee-e9-radimagenet-heads-v15",
+   "pilkwang/rsna-knee-llm-labels",
+   "prvsiyan/rsna-knee-v52-radimagenet-heads-20260812",
+   "pilkwang/rsna-knee-weights"
+  ],
+  "kernels": [
+   "sofiaanjenje/rsna-knee-e11-train",
+   "sofiaanjenje/rsna-knee-e13-train"
+  ],
+  "models": [
+   "metaresearch/dinov2/PyTorch/small/1"
+  ]
+ },
+ {
+  "ref": "renta0426/rsna-knee-hybrid-raptor-meniscus-specialist",
+  "rank": 3,
+  "votes": 34,
+  "title": "RSNA Knee | Hybrid Raptor + Meniscus Specialist",
+  "lastRun": "2026-09-08",
+  "gpu": true,
+  "machine": "NvidiaTeslaT4",
+  "internet": false,
+  "ver": 1,
+  "datasets": [
+   "dreaddevelopment/raptor-knee-maxspan",
+   "dreaddevelopment/raptor-knee-native384",
+   "dreaddevelopment/raptor-knee-native384dense",
+   "mattiaangeli/knee-mri-fold-weights",
+   "mattiaangeli/opencv-python-headless-4120088-x86",
+   "marwanmath/resnet-50-radimagenet-marwan",
+   "mattiaangeli/rsna-knee-coat-resgated-ep10-top3",
+   "antoinegg1/rsna-knee-e11-diverse-heads-v20",
+   "antoinegg1/rsna-knee-e9-radimagenet-heads-v15",
+   "pilkwang/rsna-knee-llm-labels",
+   "prvsiyan/rsna-knee-v52-radimagenet-heads-20260812",
+   "pilkwang/rsna-knee-weights"
+  ],
+  "kernels": [
+   "sofiaanjenje/rsna-knee-e11-train",
+   "sofiaanjenje/rsna-knee-e13-train"
+  ],
+  "models": [
+   "metaresearch/dinov2/PyTorch/small/1"
+  ]
+ },
+ {
+  "ref": "vaihero/rsna-knee-rentafork",
+  "rank": 4,
+  "votes": 10,
+  "title": "rsna-knee-rentafork",
+  "lastRun": "2026-09-08",
+  "gpu": true,
+  "machine": "NvidiaTeslaT4",
+  "internet": false,
+  "ver": 1,
+  "datasets": [
+   "dreaddevelopment/raptor-knee-maxspan",
+   "dreaddevelopment/raptor-knee-native384",
+   "dreaddevelopment/raptor-knee-native384dense",
+   "mattiaangeli/knee-mri-fold-weights",
+   "mattiaangeli/opencv-python-headless-4120088-x86",
+   "marwanmath/resnet-50-radimagenet-marwan",
+   "mattiaangeli/rsna-knee-coat-resgated-ep10-top3",
+   "antoinegg1/rsna-knee-e11-diverse-heads-v20",
+   "antoinegg1/rsna-knee-e9-radimagenet-heads-v15",
+   "pilkwang/rsna-knee-llm-labels",
+   "prvsiyan/rsna-knee-v52-radimagenet-heads-20260812",
+   "pilkwang/rsna-knee-weights"
+  ],
+  "kernels": [
+   "sofiaanjenje/rsna-knee-e11-train",
+   "sofiaanjenje/rsna-knee-e13-train"
+  ],
+  "models": [
+   "metaresearch/dinov2/PyTorch/small/1"
+  ]
+ },
+ {
+  "ref": "evgendvorkin/rsna-baseline",
+  "rank": 5,
+  "votes": 100,
+  "title": "RSNA Baseline",
+  "lastRun": "2026-09-08",
+  "gpu": true,
+  "machine": "NvidiaTeslaT4",
+  "internet": false,
+  "ver": 14,
+  "datasets": [
+   "dreaddevelopment/raptor-knee-maxspan",
+   "dreaddevelopment/raptor-knee-native384",
+   "dreaddevelopment/raptor-knee-native384dense",
+   "mattiaangeli/knee-mri-fold-weights",
+   "mattiaangeli/opencv-python-headless-4120088-x86",
+   "marwanmath/resnet-50-radimagenet-marwan",
+   "mattiaangeli/rsna-knee-coat-resgated-ep10-top3",
+   "antoinegg1/rsna-knee-e11-diverse-heads-v20",
+   "antoinegg1/rsna-knee-e9-radimagenet-heads-v15",
+   "pilkwang/rsna-knee-llm-labels",
+   "prvsiyan/rsna-knee-v52-radimagenet-heads-20260812",
+   "pilkwang/rsna-knee-weights"
+  ],
+  "kernels": [
+   "sofiaanjenje/rsna-knee-e11-train",
+   "sofiaanjenje/rsna-knee-e13-train"
+  ],
+  "models": [
+   "metaresearch/dinov2/PyTorch/base/1",
+   "metaresearch/dinov2/PyTorch/small/1"
+  ]
+ },
+ {
+  "ref": "renta0426/rsna-knee-hybrid-raptor-lateral-meniscus-r100",
+  "rank": 6,
+  "votes": 36,
+  "title": "RSNA Knee | Hybrid Raptor | Lateral Meniscus R100",
+  "lastRun": "2026-09-08",
+  "gpu": true,
+  "machine": "NvidiaTeslaT4",
+  "internet": false,
+  "ver": 1,
+  "datasets": [
+   "dreaddevelopment/raptor-knee-maxspan",
+   "dreaddevelopment/raptor-knee-native384",
+   "dreaddevelopment/raptor-knee-native384dense",
+   "mattiaangeli/knee-mri-fold-weights",
+   "mattiaangeli/opencv-python-headless-4120088-x86",
+   "marwanmath/resnet-50-radimagenet-marwan",
+   "mattiaangeli/rsna-knee-coat-resgated-ep10-top3",
+   "antoinegg1/rsna-knee-e11-diverse-heads-v20",
+   "antoinegg1/rsna-knee-e9-radimagenet-heads-v15",
+   "pilkwang/rsna-knee-llm-labels",
+   "prvsiyan/rsna-knee-v52-radimagenet-heads-20260812",
+   "pilkwang/rsna-knee-weights"
+  ],
+  "kernels": [
+   "sofiaanjenje/rsna-knee-e11-train",
+   "sofiaanjenje/rsna-knee-e13-train"
+  ],
+  "models": [
+   "metaresearch/dinov2/PyTorch/small/1"
+  ]
+ },
+ {
+  "ref": "manderson240/cohezion-rsna-knee-sota-ensemble",
+  "rank": 7,
+  "votes": 9,
+  "title": "Cohezion RSNA Knee SOTA Ensemble",
+  "lastRun": "2026-09-08",
+  "gpu": true,
+  "machine": "NvidiaTeslaT4",
+  "internet": false,
+  "ver": 1,
+  "datasets": [
+   "dreaddevelopment/raptor-knee-maxspan",
+   "dreaddevelopment/raptor-knee-native384",
+   "dreaddevelopment/raptor-knee-native384dense",
+   "mattiaangeli/knee-mri-fold-weights",
+   "mattiaangeli/opencv-python-headless-4120088-x86",
+   "marwanmath/resnet-50-radimagenet-marwan",
+   "mattiaangeli/rsna-knee-coat-resgated-ep10-top3",
+   "antoinegg1/rsna-knee-e11-diverse-heads-v20",
+   "antoinegg1/rsna-knee-e9-radimagenet-heads-v15",
+   "pilkwang/rsna-knee-llm-labels",
+   "prvsiyan/rsna-knee-v52-radimagenet-heads-20260812",
+   "pilkwang/rsna-knee-weights"
+  ],
+  "kernels": [
+   "sofiaanjenje/rsna-knee-e11-train",
+   "sofiaanjenje/rsna-knee-e13-train"
+  ],
+  "models": [
+   "metaresearch/dinov2/PyTorch/small/1"
+  ]
+ },
+ {
+  "ref": "ask812/bee-knees-fork-v1",
+  "rank": 8,
+  "votes": 3,
+  "title": "Bee Knees Fork V1",
+  "lastRun": "2026-09-08",
+  "gpu": true,
+  "machine": "NvidiaTeslaT4",
+  "internet": false,
+  "ver": 1,
+  "datasets": [
+   "dreaddevelopment/raptor-knee-maxspan",
+   "dreaddevelopment/raptor-knee-native384",
+   "dreaddevelopment/raptor-knee-native384dense",
+   "mattiaangeli/knee-mri-fold-weights",
+   "mattiaangeli/opencv-python-headless-4120088-x86",
+   "marwanmath/resnet-50-radimagenet-marwan",
+   "mattiaangeli/rsna-knee-coat-resgated-ep10-top3",
+   "antoinegg1/rsna-knee-e11-diverse-heads-v20",
+   "antoinegg1/rsna-knee-e9-radimagenet-heads-v15",
+   "pilkwang/rsna-knee-llm-labels",
+   "prvsiyan/rsna-knee-v52-radimagenet-heads-20260812",
+   "pilkwang/rsna-knee-weights"
+  ],
+  "kernels": [
+   "sofiaanjenje/rsna-knee-e11-train",
+   "sofiaanjenje/rsna-knee-e13-train"
+  ],
+  "models": [
+   "metaresearch/dinov2/PyTorch/small/1"
+  ]
+ },
+ {
+  "ref": "prvsiyan/head-and-shoulders-knees-and-toes",
+  "rank": 9,
+  "votes": 189,
+  "title": "Head and shoulders, knees and toes",
+  "lastRun": "2026-09-08",
+  "gpu": true,
+  "machine": "NvidiaTeslaT4",
+  "internet": false,
+  "ver": 50,
+  "datasets": [
+   "dreaddevelopment/raptor-knee-maxspan",
+   "dreaddevelopment/raptor-knee-native384",
+   "dreaddevelopment/raptor-knee-native384dense",
+   "mattiaangeli/knee-mri-fold-weights",
+   "mattiaangeli/opencv-python-headless-4120088-x86",
+   "marwanmath/resnet-50-radimagenet-marwan",
+   "mattiaangeli/rsna-knee-coat-resgated-ep10-top3",
+   "antoinegg1/rsna-knee-e11-diverse-heads-v20",
+   "antoinegg1/rsna-knee-e9-radimagenet-heads-v15",
+   "pilkwang/rsna-knee-llm-labels",
+   "prvsiyan/rsna-knee-v52-radimagenet-heads-20260812",
+   "pilkwang/rsna-knee-weights"
+  ],
+  "kernels": [
+   "sofiaanjenje/rsna-knee-e11-train",
+   "sofiaanjenje/rsna-knee-e13-train"
+  ],
+  "models": [
+   "metaresearch/dinov2/PyTorch/small/1"
+  ]
+ },
+ {
+  "ref": "romantamrazov/rsna-knee-dinosaur-v4",
+  "rank": 10,
+  "votes": 161,
+  "title": "RSNA Knee | DINOsaur V4 \ud83e\udd96 ",
+  "lastRun": "2026-09-08",
+  "gpu": true,
+  "machine": "NvidiaTeslaT4",
+  "internet": false,
+  "ver": 35,
+  "datasets": [
+   "dreaddevelopment/raptor-knee-maxspan",
+   "dreaddevelopment/raptor-knee-native384",
+   "dreaddevelopment/raptor-knee-native384dense",
+   "mattiaangeli/knee-mri-fold-weights",
+   "mattiaangeli/opencv-python-headless-4120088-x86",
+   "marwanmath/resnet-50-radimagenet-marwan",
+   "tonylica/rsna-knee-bend-dinov3-0917-repro-assets",
+   "mattiaangeli/rsna-knee-coat-resgated-ep10-top3",
+   "antoinegg1/rsna-knee-e11-diverse-heads-v20",
+   "antoinegg1/rsna-knee-e9-radimagenet-heads-v15",
+   "pilkwang/rsna-knee-llm-labels",
+   "renta0426/rsna-knee-public0033-meniscus-bag-v1",
+   "prvsiyan/rsna-knee-v52-radimagenet-heads-20260812",
+   "pilkwang/rsna-knee-weights"
+  ],
+  "kernels": [
+   "sofiaanjenje/rsna-knee-e11-train",
+   "sofiaanjenje/rsna-knee-e13-train",
+   "romantamrazov/rsna-knee-dinosaur-v4-train"
+  ],
+  "models": [
+   "metaresearch/dinov2/PyTorch/small/1"
+  ]
+ },
+ {
+  "ref": "renta0426/rsna-knee-0-937-weak-label-dinov2-meniscus-resid",
+  "rank": 11,
+  "votes": 58,
+  "title": "RSNA Knee 0.937 | Weak-Label DINOv2 Meniscus Resid",
+  "lastRun": "2026-09-08",
+  "gpu": true,
+  "machine": "NvidiaTeslaT4",
+  "internet": false,
+  "ver": 1,
+  "datasets": [
+   "dreaddevelopment/raptor-knee-maxspan",
+   "dreaddevelopment/raptor-knee-native384",
+   "dreaddevelopment/raptor-knee-native384dense",
+   "tonylica/rsna-knee-bend-dinov3-0917-repro-assets",
+   "renta0426/rsna-knee-public0033-meniscus-bag-v1"
+  ],
+  "kernels": [],
+  "models": [
+   "metaresearch/dinov2/PyTorch/small/1"
+  ]
+ },
+ {
+  "ref": "hyakumanben2025/rsna-knee-0937-meniscus-resid-repro",
+  "rank": 12,
+  "votes": 37,
+  "title": "RSNA Knee 0937 Meniscus Resid Repro",
+  "lastRun": "2026-09-08",
+  "gpu": true,
+  "machine": "NvidiaTeslaT4",
+  "internet": false,
+  "ver": 4,
+  "datasets": [
+   "",
+   "dreaddevelopment/raptor-knee-maxspan",
+   "dreaddevelopment/raptor-knee-native384",
+   "dreaddevelopment/raptor-knee-native384dense",
+   "tonylica/rsna-knee-bend-dinov3-0917-repro-assets"
+  ],
+  "kernels": [],
+  "models": [
+   "metaresearch/dinov2/PyTorch/small/1"
+  ]
+ },
+ {
+  "ref": "hyakumanben2025/rsna-knee-v6-outer-weight-overlay",
+  "rank": 13,
+  "votes": 2,
+  "title": "RSNA Knee V6 Outer Weight Overlay",
+  "lastRun": "2026-09-08",
+  "gpu": true,
+  "machine": "NvidiaTeslaT4",
+  "internet": false,
+  "ver": 1,
+  "datasets": [
+   "",
+   "dreaddevelopment/raptor-knee-maxspan",
+   "dreaddevelopment/raptor-knee-native384",
+   "dreaddevelopment/raptor-knee-native384dense",
+   "tonylica/rsna-knee-bend-dinov3-0917-repro-assets"
+  ],
+  "kernels": [],
+  "models": [
+   "metaresearch/dinov2/PyTorch/small/1"
+  ]
+ },
+ {
+  "ref": "kelvincheungkw/rsna-knee-0-937-weak-label-dinov2-meniscus-resid",
+  "rank": 14,
+  "votes": 2,
+  "title": "RSNA Knee 0.937 | Weak-Label DINOv2 Meniscus Resid",
+  "lastRun": "2026-09-08",
+  "gpu": true,
+  "machine": "NvidiaTeslaT4",
+  "internet": false,
+  "ver": 1,
+  "datasets": [
+   "dreaddevelopment/raptor-knee-maxspan",
+   "dreaddevelopment/raptor-knee-native384",
+   "dreaddevelopment/raptor-knee-native384dense",
+   "tonylica/rsna-knee-bend-dinov3-0917-repro-assets",
+   "renta0426/rsna-knee-public0033-meniscus-bag-v1"
+  ],
+  "kernels": [],
+  "models": [
+   "metaresearch/dinov2/PyTorch/small/1"
+  ]
+ },
+ {
+  "ref": "kaiwalyaatulraut/rsna-knee-competition-solution",
+  "rank": 15,
+  "votes": 11,
+  "title": "RSNA Knee Competition Solution",
+  "lastRun": "2026-09-08",
+  "gpu": true,
+  "machine": "NvidiaTeslaT4",
+  "internet": false,
+  "ver": 2,
+  "datasets": [
+   "dreaddevelopment/raptor-knee-maxspan",
+   "dreaddevelopment/raptor-knee-widedense",
+   "tonylica/rsna-knee-bend-dinov3-0917-repro-assets",
+   "renta0426/rsna-knee-public0033-meniscus-bag-v1"
+  ],
+  "kernels": [
+   "romantamrazov/rsna-knee-dinosaur-v4-train"
+  ],
+  "models": [
+   "metaresearch/dinov2/PyTorch/small/1"
+  ]
+ },
+ {
+  "ref": "anhadmahajan06/rsna-knee-take-care-of-your-knee",
+  "rank": 16,
+  "votes": 123,
+  "title": "RSNA Knee: Take Care Of Your Knee",
+  "lastRun": "2026-09-08",
+  "gpu": true,
+  "machine": "NvidiaTeslaT4",
+  "internet": false,
+  "ver": 48,
+  "datasets": [
+   "anhadmahajan06/images-for-competition-notebook",
+   "dreaddevelopment/raptor-knee-maxspan",
+   "mattiaangeli/knee-mri-fold-weights",
+   "dreaddevelopment/raptor-knee-widedense",
+   "marwanmath/resnet-50-radimagenet-marwan",
+   "tonylica/rsna-knee-bend-dinov3-0917-repro-assets",
+   "antoinegg1/rsna-knee-e9-radimagenet-heads-v15",
+   "stevenleehans/rsna-knee-llm-report-labels",
+   "lixin73/rsna-knee-llm-report-labels-sol56",
+   "pilkwang/rsna-knee-llm-labels",
+   "mattiaangeli/rsna-knee-radimagenet-foldsv1-heads",
+   "prvsiyan/rsna-knee-v52-radimagenet-heads-20260812",
+   "pilkwang/rsna-knee-weights",
+   "royceplayz/rsna-medicalnet-resnet50-weights",
+   "tonylica/rsna2026-models"
+  ],
+  "kernels": [],
+  "models": [
+   "metaresearch/dinov2/PyTorch/base/1",
+   "metaresearch/dinov2/PyTorch/small/1"
+  ]
+ },
+ {
+  "ref": "anvithpothula/rsna-base",
+  "rank": 17,
+  "votes": 102,
+  "title": "rsna-base",
+  "lastRun": "2026-09-08",
+  "gpu": true,
+  "machine": "NvidiaTeslaT4",
+  "internet": false,
+  "ver": 3,
+  "datasets": [
+   "dreaddevelopment/raptor-knee-maxspan",
+   "dreaddevelopment/raptor-knee-widedense",
+   "tonylica/rsna-knee-bend-dinov3-0917-repro-assets"
+  ],
+  "kernels": [],
+  "models": [
+   "metaresearch/dinov2/PyTorch/small/1"
+  ]
+ },
+ {
+  "ref": "nishantkharga/rsna-knee-full-4-arm-ensemble-v55",
+  "rank": 18,
+  "votes": 79,
+  "title": "RSNA Knee: Full 4-arm ensemble v55",
+  "lastRun": "2026-09-08",
+  "gpu": true,
+  "machine": "NvidiaTeslaT4",
+  "internet": false,
+  "ver": 57,
+  "datasets": [
+   "dreaddevelopment/raptor-knee-maxspan",
+   "mattiaangeli/knee-mri-fold-weights",
+   "dreaddevelopment/raptor-knee-widedense",
+   "dreaddevelopment/raptor-knee-arms",
+   "dreaddevelopment/raptor-knee-arms-x",
+   "marwanmath/resnet-50-radimagenet-marwan",
+   "tonylica/rsna-knee-bend-dinov3-0917-repro-assets",
+   "antoinegg1/rsna-knee-e9-radimagenet-heads-v15",
+   "prvsiyan/rsna-knee-v52-radimagenet-heads-20260812",
+   "pilkwang/rsna-knee-weights"
+  ],
+  "kernels": [],
+  "models": [
+   "metaresearch/dinov2/PyTorch/small/1"
+  ]
+ },
+ {
+  "ref": "ayodejiibrahimlateef/rsna-knee-c01-dinosaur-v4-dual-fusion",
+  "rank": 19,
+  "votes": 8,
+  "title": "RSNA Knee C01 - DINOsaur V4 dual fusion",
+  "lastRun": "2026-09-08",
+  "gpu": true,
+  "machine": "NvidiaTeslaT4",
+  "internet": false,
+  "ver": 4,
+  "datasets": [
+   "dreaddevelopment/raptor-knee-maxspan",
+   "dreaddevelopment/raptor-knee-widedense",
+   "tonylica/rsna-knee-bend-dinov3-0917-repro-assets"
+  ],
+  "kernels": [
+   "romantamrazov/rsna-knee-dinosaur-v4-train"
+  ],
+  "models": [
+   "metaresearch/dinov2/PyTorch/small/1"
+  ]
+ },
+ {
+  "ref": "lynnsakurai/rsna-knee-dinosaur-v4-5-validated-repro",
+  "rank": 20,
+  "votes": 8,
+  "title": "RSNA Knee DINOsaur V4.5 Validated Repro",
+  "lastRun": "2026-09-08",
+  "gpu": true,
+  "machine": "NvidiaTeslaT4",
+  "internet": false,
+  "ver": 1,
+  "datasets": [
+   "",
+   "dreaddevelopment/raptor-knee-maxspan",
+   "dreaddevelopment/raptor-knee-widedense",
+   "prvsiyan/orthodiffusion-official-knee-mri-foundation",
+   "tonylica/rsna-knee-bend-dinov3-0917-repro-assets"
+  ],
+  "kernels": [
+   "romantamrazov/rsna-knee-dinosaur-v4-train"
+  ],
+  "models": [
+   "metaresearch/dinov2/PyTorch/small/1"
+  ]
+ },
+ {
+  "ref": "tamerlanomralinov/rsna-knee-crazy-lb-tune",
+  "rank": 21,
+  "votes": 50,
+  "title": "RSNA Knee | Crazy LB Tune",
+  "lastRun": "2026-09-08",
+  "gpu": true,
+  "machine": "NvidiaTeslaT4",
+  "internet": false,
+  "ver": 11,
+  "datasets": [
+   "dreaddevelopment/raptor-knee-maxspan",
+   "dreaddevelopment/raptor-knee-widedense",
+   "tonylica/rsna-knee-bend-dinov3-0917-repro-assets",
+   "antoinegg1/rsna-knee-e11-diverse-heads-v20"
+  ],
+  "kernels": [
+   "romantamrazov/rsna-knee-dinosaur-v4-train"
+  ],
+  "models": [
+   "metaresearch/dinov2/PyTorch/small/1"
+  ]
+ },
+ {
+  "ref": "maverickss26/rsna-knee-restructured-version-2",
+  "rank": 22,
+  "votes": 11,
+  "title": "rsna-knee-restructured Version 2",
+  "lastRun": "2026-09-08",
+  "gpu": true,
+  "machine": "NvidiaTeslaT4",
+  "internet": false,
+  "ver": 3,
+  "datasets": [
+   "dreaddevelopment/raptor-knee-maxspan",
+   "dreaddevelopment/raptor-knee-widedense",
+   "tonylica/rsna-knee-bend-dinov3-0917-repro-assets"
+  ],
+  "kernels": [],
+  "models": [
+   "metaresearch/dinov2/PyTorch/small/1"
+  ]
+ },
+ {
+  "ref": "junaid512/rsna-base-enc",
+  "rank": 23,
+  "votes": 7,
+  "title": "rsna-base-enc",
+  "lastRun": "2026-09-08",
+  "gpu": true,
+  "machine": "NvidiaTeslaT4",
+  "internet": false,
+  "ver": 9,
+  "datasets": [
+   "dreaddevelopment/raptor-knee-maxspan",
+   "dreaddevelopment/raptor-knee-widedense",
+   "tonylica/rsna-knee-bend-dinov3-0917-repro-assets"
+  ],
+  "kernels": [],
+  "models": [
+   "metaresearch/dinov2/PyTorch/small/1"
+  ]
+ },
+ {
+  "ref": "hyakumanben2025/rsna-knee-dinosaur-v5-repro",
+  "rank": 24,
+  "votes": 14,
+  "title": "RSNA Knee DINOsaur V5 Repro",
+  "lastRun": "2026-09-08",
+  "gpu": true,
+  "machine": "NvidiaTeslaT4",
+  "internet": false,
+  "ver": 1,
+  "datasets": [
+   "dreaddevelopment/raptor-knee-maxspan",
+   "dreaddevelopment/raptor-knee-widedense",
+   "tonylica/rsna-knee-bend-dinov3-0917-repro-assets"
+  ],
+  "kernels": [
+   "romantamrazov/rsna-knee-dinosaur-v4-train"
+  ],
+  "models": [
+   "metaresearch/dinov2/PyTorch/small/1"
+  ]
+ },
+ {
+  "ref": "hyakumanben2025/rsna-knee-dinosaur-v6-repro",
+  "rank": 25,
+  "votes": 7,
+  "title": "RSNA Knee DINOsaur V6 Repro",
+  "lastRun": "2026-09-08",
+  "gpu": true,
+  "machine": "NvidiaTeslaT4",
+  "internet": false,
+  "ver": 1,
+  "datasets": [
+   "dreaddevelopment/raptor-knee-maxspan",
+   "dreaddevelopment/raptor-knee-widedense",
+   "tonylica/rsna-knee-bend-dinov3-0917-repro-assets"
+  ],
+  "kernels": [
+   "romantamrazov/rsna-knee-dinosaur-v4-train"
+  ],
+  "models": [
+   "metaresearch/dinov2/PyTorch/small/1"
+  ]
+ },
+ {
+  "ref": "shashwat1729/rsna-knee-infer-gpu-hsv44",
+  "rank": 26,
+  "votes": 2,
+  "title": "RSNA Knee Infer GPU Hsv44",
+  "lastRun": "2026-09-08",
+  "gpu": true,
+  "machine": "NvidiaTeslaT4",
+  "internet": false,
+  "ver": 1,
+  "datasets": [
+   "dreaddevelopment/raptor-knee-maxspan",
+   "dreaddevelopment/raptor-knee-widedense",
+   "prvsiyan/orthodiffusion-official-knee-mri-foundation",
+   "tonylica/rsna-knee-bend-dinov3-0917-repro-assets"
+  ],
+  "kernels": [
+   "romantamrazov/rsna-knee-dinosaur-v4-train"
+  ],
+  "models": [
+   "metaresearch/dinov2/PyTorch/small/1"
+  ]
+ },
+ {
+  "ref": "shashwat1729/rsna-knee-infer-gpu-hsv44fix",
+  "rank": 27,
+  "votes": 3,
+  "title": "RSNA Knee Infer GPU Hsv44fix",
+  "lastRun": "2026-09-08",
+  "gpu": true,
+  "machine": "NvidiaTeslaT4",
+  "internet": false,
+  "ver": 1,
+  "datasets": [
+   "dreaddevelopment/raptor-knee-maxspan",
+   "dreaddevelopment/raptor-knee-widedense",
+   "prvsiyan/orthodiffusion-official-knee-mri-foundation",
+   "tonylica/rsna-knee-bend-dinov3-0917-repro-assets"
+  ],
+  "kernels": [
+   "romantamrazov/rsna-knee-dinosaur-v4-train"
+  ],
+  "models": [
+   "metaresearch/dinov2/PyTorch/small/1"
+  ]
+ },
+ {
+  "ref": "shashwat1729/rsna-knee-infer-gpu-hsv44fixb",
+  "rank": 28,
+  "votes": 1,
+  "title": "RSNA Knee Infer GPU Hsv44fixb",
+  "lastRun": "2026-09-08",
+  "gpu": true,
+  "machine": "NvidiaTeslaT4",
+  "internet": false,
+  "ver": 1,
+  "datasets": [
+   "dreaddevelopment/raptor-knee-maxspan",
+   "dreaddevelopment/raptor-knee-widedense",
+   "prvsiyan/orthodiffusion-official-knee-mri-foundation",
+   "tonylica/rsna-knee-bend-dinov3-0917-repro-assets"
+  ],
+  "kernels": [
+   "romantamrazov/rsna-knee-dinosaur-v4-train"
+  ],
+  "models": [
+   "metaresearch/dinov2/PyTorch/small/1"
+  ]
+ },
+ {
+  "ref": "shashwat1729/rsna-knee-infer-gpu-hsv44fixb-calw",
+  "rank": 29,
+  "votes": 1,
+  "title": "RSNA Knee Infer GPU Hsv44fixb Calw",
+  "lastRun": "2026-09-08",
+  "gpu": true,
+  "machine": "NvidiaTeslaT4",
+  "internet": false,
+  "ver": 1,
+  "datasets": [
+   "dreaddevelopment/raptor-knee-maxspan",
+   "dreaddevelopment/raptor-knee-widedense",
+   "prvsiyan/orthodiffusion-official-knee-mri-foundation",
+   "tonylica/rsna-knee-bend-dinov3-0917-repro-assets"
+  ],
+  "kernels": [
+   "romantamrazov/rsna-knee-dinosaur-v4-train"
+  ],
+  "models": [
+   "metaresearch/dinov2/PyTorch/small/1"
+  ]
+ },
+ {
+  "ref": "shashwat1729/rsna-knee-infer-gpu-hsv44fixc-calw",
+  "rank": 30,
+  "votes": 15,
+  "title": "RSNA Knee Infer GPU Hsv44fixc Calw",
+  "lastRun": "2026-09-08",
+  "gpu": true,
+  "machine": "NvidiaTeslaT4",
+  "internet": false,
+  "ver": 1,
+  "datasets": [
+   "dreaddevelopment/raptor-knee-maxspan",
+   "dreaddevelopment/raptor-knee-widedense",
+   "prvsiyan/orthodiffusion-official-knee-mri-foundation",
+   "tonylica/rsna-knee-bend-dinov3-0917-repro-assets"
+  ],
+  "kernels": [
+   "romantamrazov/rsna-knee-dinosaur-v4-train"
+  ],
+  "models": [
+   "metaresearch/dinov2/PyTorch/small/1"
+  ]
+ },
+ {
+  "ref": "shashwat1729/rsna-knee-infer-gpu-anhad",
+  "rank": 31,
+  "votes": 22,
+  "title": "RSNA Knee Infer GPU Anhad",
+  "lastRun": "2026-09-08",
+  "gpu": true,
+  "machine": "NvidiaTeslaT4",
+  "internet": false,
+  "ver": 1,
+  "datasets": [
+   "anhadmahajan06/images-for-competition-notebook",
+   "dreaddevelopment/raptor-knee-maxspan",
+   "mattiaangeli/knee-mri-fold-weights",
+   "dreaddevelopment/raptor-knee-widedense",
+   "marwanmath/resnet-50-radimagenet-marwan",
+   "tonylica/rsna-knee-bend-dinov3-0917-repro-assets",
+   "antoinegg1/rsna-knee-e9-radimagenet-heads-v15",
+   "stevenleehans/rsna-knee-llm-report-labels",
+   "lixin73/rsna-knee-llm-report-labels-sol56",
+   "pilkwang/rsna-knee-llm-labels",
+   "mattiaangeli/rsna-knee-radimagenet-foldsv1-heads",
+   "prvsiyan/rsna-knee-v52-radimagenet-heads-20260812",
+   "pilkwang/rsna-knee-weights",
+   "royceplayz/rsna-medicalnet-resnet50-weights",
+   "tonylica/rsna2026-models"
+  ],
+  "kernels": [],
+  "models": [
+   "metaresearch/dinov2/PyTorch/base/1",
+   "metaresearch/dinov2/PyTorch/small/1"
+  ]
+ },
+ {
+  "ref": "sardorrazikov/rsna-fork-kunal-detectionv1",
+  "rank": 32,
+  "votes": 0,
+  "title": "rsna-fork-kunal-detectionv1",
+  "lastRun": "2026-09-08",
+  "gpu": true,
+  "machine": "NvidiaTeslaT4",
+  "internet": false,
+  "ver": 1,
+  "datasets": [
+   "anhadmahajan06/images-for-competition-notebook",
+   "dreaddevelopment/raptor-knee-maxspan",
+   "mattiaangeli/knee-mri-fold-weights",
+   "dreaddevelopment/raptor-knee-widedense",
+   "marwanmath/resnet-50-radimagenet-marwan",
+   "tonylica/rsna-knee-bend-dinov3-0917-repro-assets",
+   "antoinegg1/rsna-knee-e9-radimagenet-heads-v15",
+   "stevenleehans/rsna-knee-llm-report-labels",
+   "lixin73/rsna-knee-llm-report-labels-sol56",
+   "pilkwang/rsna-knee-llm-labels",
+   "mattiaangeli/rsna-knee-radimagenet-foldsv1-heads",
+   "prvsiyan/rsna-knee-v52-radimagenet-heads-20260812",
+   "pilkwang/rsna-knee-weights",
+   "royceplayz/rsna-medicalnet-resnet50-weights",
+   "tonylica/rsna2026-models"
+  ],
+  "kernels": [],
+  "models": [
+   "metaresearch/dinov2/PyTorch/base/1",
+   "metaresearch/dinov2/PyTorch/small/1"
+  ]
+ },
+ {
+  "ref": "sardorrazikov/rsna-fork-nishant-4arm-v55",
+  "rank": 33,
+  "votes": 0,
+  "title": "rsna-fork-nishant-4arm-v55",
+  "lastRun": "2026-09-08",
+  "gpu": true,
+  "machine": "NvidiaTeslaT4",
+  "internet": false,
+  "ver": 1,
+  "datasets": [
+   "dreaddevelopment/raptor-knee-maxspan",
+   "mattiaangeli/knee-mri-fold-weights",
+   "dreaddevelopment/raptor-knee-widedense",
+   "dreaddevelopment/raptor-knee-arms",
+   "dreaddevelopment/raptor-knee-arms-x",
+   "marwanmath/resnet-50-radimagenet-marwan",
+   "tonylica/rsna-knee-bend-dinov3-0917-repro-assets",
+   "antoinegg1/rsna-knee-e9-radimagenet-heads-v15",
+   "prvsiyan/rsna-knee-v52-radimagenet-heads-20260812",
+   "pilkwang/rsna-knee-weights"
+  ],
+  "kernels": [],
+  "models": [
+   "metaresearch/dinov2/PyTorch/small/1"
+  ]
+ },
+ {
+  "ref": "devzerone/vigil-rsna-knee-public-0-936-baseline",
+  "rank": 34,
+  "votes": 3,
+  "title": "VIGIL RSNA Knee - public 0.936 baseline",
+  "lastRun": "2026-09-08",
+  "gpu": true,
+  "machine": "NvidiaTeslaT4",
+  "internet": false,
+  "ver": 2,
+  "datasets": [
+   "dreaddevelopment/raptor-knee-maxspan",
+   "dreaddevelopment/raptor-knee-widedense",
+   "tonylica/rsna-knee-bend-dinov3-0917-repro-assets"
+  ],
+  "kernels": [
+   "romantamrazov/rsna-knee-dinosaur-v4-train"
+  ],
+  "models": [
+   "metaresearch/dinov2/PyTorch/small/1"
+  ]
+ },
+ {
+  "ref": "sardorrazikov/rsna-fork-anhad-v2",
+  "rank": 35,
+  "votes": 13,
+  "title": "rsna-fork-anhad-v2",
+  "lastRun": "2026-09-08",
+  "gpu": true,
+  "machine": "NvidiaTeslaT4",
+  "internet": false,
+  "ver": 1,
+  "datasets": [
+   "anhadmahajan06/images-for-competition-notebook",
+   "dreaddevelopment/raptor-knee-maxspan",
+   "mattiaangeli/knee-mri-fold-weights",
+   "dreaddevelopment/raptor-knee-widedense",
+   "marwanmath/resnet-50-radimagenet-marwan",
+   "tonylica/rsna-knee-bend-dinov3-0917-repro-assets",
+   "antoinegg1/rsna-knee-e9-radimagenet-heads-v15",
+   "stevenleehans/rsna-knee-llm-report-labels",
+   "lixin73/rsna-knee-llm-report-labels-sol56",
+   "pilkwang/rsna-knee-llm-labels",
+   "mattiaangeli/rsna-knee-radimagenet-foldsv1-heads",
+   "prvsiyan/rsna-knee-v52-radimagenet-heads-20260812",
+   "pilkwang/rsna-knee-weights",
+   "royceplayz/rsna-medicalnet-resnet50-weights",
+   "tonylica/rsna2026-models"
+  ],
+  "kernels": [],
+  "models": [
+   "metaresearch/dinov2/PyTorch/base/1",
+   "metaresearch/dinov2/PyTorch/small/1"
+  ]
+ },
+ {
+  "ref": "ezrakho/rsna-knee-dinosaur-v42-fork-a-track-frontier-probe",
+  "rank": 36,
+  "votes": 3,
+  "title": "RSNA Knee DINOsaur V42 Fork A Track Frontier Probe",
+  "lastRun": "2026-09-08",
+  "gpu": true,
+  "machine": "NvidiaTeslaT4",
+  "internet": false,
+  "ver": 1,
+  "datasets": [
+   "anhadmahajan06/images-for-competition-notebook",
+   "dreaddevelopment/raptor-knee-maxspan",
+   "mattiaangeli/knee-mri-fold-weights",
+   "dreaddevelopment/raptor-knee-widedense",
+   "marwanmath/resnet-50-radimagenet-marwan",
+   "tonylica/rsna-knee-bend-dinov3-0917-repro-assets",
+   "antoinegg1/rsna-knee-e9-radimagenet-heads-v15",
+   "stevenleehans/rsna-knee-llm-report-labels",
+   "lixin73/rsna-knee-llm-report-labels-sol56",
+   "pilkwang/rsna-knee-llm-labels",
+   "mattiaangeli/rsna-knee-radimagenet-foldsv1-heads",
+   "prvsiyan/rsna-knee-v52-radimagenet-heads-20260812",
+   "pilkwang/rsna-knee-weights",
+   "royceplayz/rsna-medicalnet-resnet50-weights",
+   "tonylica/rsna2026-models"
+  ],
+  "kernels": [],
+  "models": [
+   "metaresearch/dinov2/PyTorch/small/1",
+   "metaresearch/dinov2/PyTorch/base/1"
+  ]
+ },
+ {
+  "ref": "nathanjacob/4-arm-ensemble-explained-rsna-knee-0-937",
+  "rank": 37,
+  "votes": 14,
+  "title": "4-Arm Ensemble Explained: RSNA Knee 0.937",
+  "lastRun": "2026-09-08",
+  "gpu": false,
+  "machine": "None",
+  "internet": false,
+  "ver": 2,
+  "datasets": [
+   "",
+   "dreaddevelopment/raptor-knee-maxspan",
+   "dreaddevelopment/raptor-knee-native384",
+   "dreaddevelopment/raptor-knee-native384dense",
+   "dreaddevelopment/raptor-knee-arms",
+   "dreaddevelopment/raptor-knee-arms-x",
+   "tonylica/rsna-knee-bend-dinov3-0917-repro-assets"
+  ],
+  "kernels": [],
+  "models": [
+   "metaresearch/dinov2/PyTorch/small/1"
+  ]
+ },
+ {
+  "ref": "llccqq624/rsna-knee-dino-protocol-fusion",
+  "rank": 38,
+  "votes": 26,
+  "title": "RSNA Knee DINO Protocol Fusion",
+  "lastRun": "2026-09-08",
+  "gpu": true,
+  "machine": "NvidiaTeslaT4",
+  "internet": false,
+  "ver": 17,
+  "datasets": [
+   "dreaddevelopment/raptor-knee-maxspan",
+   "tonylica/rsna-knee-bend-dinov3-0917-repro-assets"
+  ],
+  "kernels": [
+   "romantamrazov/rsna-knee-dinosaur-v4-train"
+  ],
+  "models": [
+   "metaresearch/dinov2/PyTorch/small/1"
+  ]
+ },
+ {
+  "ref": "andreluizpedroso/rsna-knee-tony-rank-ensemble",
+  "rank": 39,
+  "votes": 6,
+  "title": "rsna-knee-tony-rank-ensemble",
+  "lastRun": "2026-09-08",
+  "gpu": true,
+  "machine": "NvidiaTeslaT4",
+  "internet": false,
+  "ver": 21,
+  "datasets": [
+   "dreaddevelopment/raptor-knee-finespacing",
+   "tonylica/rsna-knee-bend-dinov3-0917-repro-assets"
+  ],
+  "kernels": [],
+  "models": [
+   "metaresearch/dinov2/PyTorch/small/1"
+  ]
+ },
+ {
+  "ref": "phngbqun/hello-hihi",
+  "rank": 40,
+  "votes": 1,
+  "title": "hello hihi",
+  "lastRun": "2026-09-08",
+  "gpu": true,
+  "machine": "NvidiaTeslaT4",
+  "internet": false,
+  "ver": 3,
+  "datasets": [
+   "dreaddevelopment/raptor-knee-maxspan",
+   "tonylica/rsna-knee-bend-dinov3-0917-repro-assets"
+  ],
+  "kernels": [
+   "romantamrazov/rsna-knee-dinosaur-v4-train"
+  ],
+  "models": [
+   "metaresearch/dinov2/PyTorch/small/1"
+  ]
+ },
+ {
+  "ref": "sardorrazikov/rsna-fork-kunal-v2-aug24",
+  "rank": 41,
+  "votes": 6,
+  "title": "rsna fork kunal v2 aug24",
+  "lastRun": "2026-09-08",
+  "gpu": true,
+  "machine": "NvidiaTeslaT4",
+  "internet": false,
+  "ver": 1,
+  "datasets": [
+   "dreaddevelopment/raptor-knee-maxspan",
+   "tonylica/rsna-knee-bend-dinov3-0917-repro-assets"
+  ],
+  "kernels": [
+   "romantamrazov/rsna-knee-dinosaur-v4-train"
+  ],
+  "models": [
+   "metaresearch/dinov2/PyTorch/small/1"
+  ]
+ },
+ {
+  "ref": "hdhsjdjd/rsna-knee-raptor-v45-w065",
+  "rank": 42,
+  "votes": 2,
+  "title": "rsna-knee-raptor-v45-w065",
+  "lastRun": "2026-09-08",
+  "gpu": true,
+  "machine": "NvidiaTeslaT4",
+  "internet": false,
+  "ver": 1,
+  "datasets": [
+   "dreaddevelopment/raptor-knee-maxspan",
+   "mattiaangeli/knee-mri-fold-weights",
+   "dreaddevelopment/raptor-knee-widedense",
+   "pilkwang/pilkwang-public-dataset-for-notebooks-figures",
+   "marwanmath/resnet-50-radimagenet-marwan",
+   "antoinegg1/rsna-knee-e11-diverse-heads-v20",
+   "antoinegg1/rsna-knee-e9-radimagenet-heads-v15",
+   "stevenleehans/rsna-knee-llm-report-labels",
+   "pilkwang/rsna-knee-llm-labels",
+   "mattiaangeli/rsna-knee-rad-calibration",
+   "mattiaangeli/rsna-knee-radimagenet-foldsv1-heads",
+   "prvsiyan/rsna-knee-v52-radimagenet-heads-20260812",
+   "pilkwang/rsna-knee-weights",
+   "tonylica/rsna2026-models"
+  ],
+  "kernels": [
+   "sofiaanjenje/rsna-knee-e11-train",
+   "sofiaanjenje/rsna-knee-e13-train"
+  ],
+  "models": [
+   "metaresearch/dinov2/PyTorch/small/1"
+  ]
+ },
+ {
+  "ref": "hdhsjdjd/rsna-knee-raptor-quad-w065",
+  "rank": 43,
+  "votes": 5,
+  "title": "rsna-knee-raptor-quad-w065",
+  "lastRun": "2026-09-08",
+  "gpu": true,
+  "machine": "NvidiaTeslaT4",
+  "internet": false,
+  "ver": 1,
+  "datasets": [
+   "dreaddevelopment/raptor-knee-finespacing",
+   "dreaddevelopment/raptor-knee-maxspan",
+   "mattiaangeli/knee-mri-fold-weights",
+   "dreaddevelopment/raptor-knee-widedense",
+   "pilkwang/pilkwang-public-dataset-for-notebooks-figures",
+   "marwanmath/resnet-50-radimagenet-marwan",
+   "antoinegg1/rsna-knee-e11-diverse-heads-v20",
+   "antoinegg1/rsna-knee-e9-radimagenet-heads-v15",
+   "stevenleehans/rsna-knee-llm-report-labels",
+   "pilkwang/rsna-knee-llm-labels",
+   "mattiaangeli/rsna-knee-rad-calibration",
+   "mattiaangeli/rsna-knee-radimagenet-foldsv1-heads",
+   "prvsiyan/rsna-knee-v52-radimagenet-heads-20260812",
+   "pilkwang/rsna-knee-weights",
+   "tonylica/rsna2026-models"
+  ],
+  "kernels": [
+   "sofiaanjenje/rsna-knee-e11-train",
+   "sofiaanjenje/rsna-knee-e13-train"
+  ],
+  "models": [
+   "metaresearch/dinov2/PyTorch/small/1"
+  ]
+ },
+ {
+  "ref": "nishantkharga/rsna-knee-4-arm-v16-slothead-nk",
+  "rank": 44,
+  "votes": 0,
+  "title": "RSNA Knee: 4-arm + V16 SlotHead NK",
+  "lastRun": "2026-09-08",
+  "gpu": true,
+  "machine": "NvidiaTeslaT4",
+  "internet": false,
+  "ver": 2,
+  "datasets": [
+   "dreaddevelopment/raptor-knee-maxspan",
+   "mattiaangeli/knee-mri-fold-weights",
+   "dreaddevelopment/raptor-knee-widedense",
+   "dreaddevelopment/raptor-knee-arms",
+   "dreaddevelopment/raptor-knee-arms-x",
+   "marwanmath/resnet-50-radimagenet-marwan",
+   "tonylica/rsna-knee-bend-dinov3-0917-repro-assets",
+   "antoinegg1/rsna-knee-e9-radimagenet-heads-v15",
+   "prvsiyan/rsna-knee-v52-radimagenet-heads-20260812",
+   "pilkwang/rsna-knee-weights"
+  ],
+  "kernels": [
+   "nishantkharga/rsna-knee-v16-slothead-train-nk"
+  ],
+  "models": [
+   "metaresearch/dinov2/PyTorch/small/1"
+  ]
+ },
+ {
+  "ref": "fanch123/rsna-knee-e0-v16-crossfit-gated",
+  "rank": 45,
+  "votes": 0,
+  "title": "RSNA Knee E0 + V16 Crossfit Gated",
+  "lastRun": "2026-09-08",
+  "gpu": true,
+  "machine": "NvidiaTeslaT4",
+  "internet": false,
+  "ver": 4,
+  "datasets": [
+   "dreaddevelopment/raptor-knee-maxspan",
+   "mattiaangeli/knee-mri-fold-weights",
+   "dreaddevelopment/raptor-knee-widedense",
+   "dreaddevelopment/raptor-knee-arms",
+   "dreaddevelopment/raptor-knee-arms-x",
+   "marwanmath/resnet-50-radimagenet-marwan",
+   "tonylica/rsna-knee-bend-dinov3-0917-repro-assets",
+   "antoinegg1/rsna-knee-e9-radimagenet-heads-v15",
+   "prvsiyan/rsna-knee-v52-radimagenet-heads-20260812",
+   "pilkwang/rsna-knee-weights"
+  ],
+  "kernels": [
+   "nishantkharga/rsna-knee-v16-slothead-train-nk"
+  ],
+  "models": [
+   "metaresearch/dinov2/PyTorch/small/1"
+  ]
+ },
+ {
+  "ref": "sardorrazikov/rsna-fork-fanch-gated",
+  "rank": 46,
+  "votes": 1,
+  "title": "rsna-fork-fanch-gated",
+  "lastRun": "2026-09-08",
+  "gpu": true,
+  "machine": "NvidiaTeslaT4",
+  "internet": false,
+  "ver": 1,
+  "datasets": [
+   "dreaddevelopment/raptor-knee-maxspan",
+   "mattiaangeli/knee-mri-fold-weights",
+   "dreaddevelopment/raptor-knee-widedense",
+   "dreaddevelopment/raptor-knee-arms",
+   "dreaddevelopment/raptor-knee-arms-x",
+   "marwanmath/resnet-50-radimagenet-marwan",
+   "tonylica/rsna-knee-bend-dinov3-0917-repro-assets",
+   "antoinegg1/rsna-knee-e9-radimagenet-heads-v15",
+   "prvsiyan/rsna-knee-v52-radimagenet-heads-20260812",
+   "pilkwang/rsna-knee-weights"
+  ],
+  "kernels": [
+   "nishantkharga/rsna-knee-v16-slothead-train-nk"
+  ],
+  "models": [
+   "metaresearch/dinov2/PyTorch/small/1"
+  ]
+ },
+ {
+  "ref": "daoviet/rsna-ensemble-is-all-you-need",
+  "rank": 47,
+  "votes": 1,
+  "title": "RSNA | Ensemble is all you need",
+  "lastRun": "2026-09-08",
+  "gpu": true,
+  "machine": "NvidiaTeslaT4",
+  "internet": false,
+  "ver": 7,
+  "datasets": [
+   "daoviet/conv-checkpoint",
+   "dreaddevelopment/raptor-knee-maxspan",
+   "dreaddevelopment/raptor-knee-widedense",
+   "tonylica/rsna-knee-bend-dinov3-0917-repro-assets"
+  ],
+  "kernels": [],
+  "models": [
+   "metaresearch/dinov2/PyTorch/small/1"
+  ]
+ },
+ {
+  "ref": "hdhsjdjd/rsna-knee-raptor-v5",
+  "rank": 48,
+  "votes": 1,
+  "title": "rsna-knee-raptor-v5",
+  "lastRun": "2026-09-08",
+  "gpu": true,
+  "machine": "NvidiaTeslaT4",
+  "internet": false,
+  "ver": 1,
+  "datasets": [
+   "dreaddevelopment/raptor-knee-maxspan",
+   "mattiaangeli/knee-mri-fold-weights",
+   "pilkwang/pilkwang-public-dataset-for-notebooks-figures",
+   "marwanmath/resnet-50-radimagenet-marwan",
+   "antoinegg1/rsna-knee-e11-diverse-heads-v20",
+   "antoinegg1/rsna-knee-e9-radimagenet-heads-v15",
+   "stevenleehans/rsna-knee-llm-report-labels",
+   "pilkwang/rsna-knee-llm-labels",
+   "mattiaangeli/rsna-knee-rad-calibration",
+   "mattiaangeli/rsna-knee-radimagenet-foldsv1-heads",
+   "prvsiyan/rsna-knee-v52-radimagenet-heads-20260812",
+   "pilkwang/rsna-knee-weights",
+   "tonylica/rsna2026-models"
+  ],
+  "kernels": [
+   "sofiaanjenje/rsna-knee-e11-train",
+   "sofiaanjenje/rsna-knee-e13-train"
+  ],
+  "models": [
+   "metaresearch/dinov2/PyTorch/small/1"
+  ]
+ },
+ {
+  "ref": "hdhsjdjd/rsna-knee-raptor-v45",
+  "rank": 49,
+  "votes": 1,
+  "title": "rsna-knee-raptor-v45",
+  "lastRun": "2026-09-08",
+  "gpu": true,
+  "machine": "NvidiaTeslaT4",
+  "internet": false,
+  "ver": 1,
+  "datasets": [
+   "dreaddevelopment/raptor-knee-maxspan",
+   "mattiaangeli/knee-mri-fold-weights",
+   "dreaddevelopment/raptor-knee-widedense",
+   "pilkwang/pilkwang-public-dataset-for-notebooks-figures",
+   "marwanmath/resnet-50-radimagenet-marwan",
+   "antoinegg1/rsna-knee-e11-diverse-heads-v20",
+   "antoinegg1/rsna-knee-e9-radimagenet-heads-v15",
+   "stevenleehans/rsna-knee-llm-report-labels",
+   "pilkwang/rsna-knee-llm-labels",
+   "mattiaangeli/rsna-knee-rad-calibration",
+   "mattiaangeli/rsna-knee-radimagenet-foldsv1-heads",
+   "prvsiyan/rsna-knee-v52-radimagenet-heads-20260812",
+   "pilkwang/rsna-knee-weights",
+   "tonylica/rsna2026-models"
+  ],
+  "kernels": [
+   "sofiaanjenje/rsna-knee-e11-train",
+   "sofiaanjenje/rsna-knee-e13-train"
+  ],
+  "models": [
+   "metaresearch/dinov2/PyTorch/small/1"
+  ]
+ },
+ {
+  "ref": "hdhsjdjd/rsna-knee-raptor-quad-w080",
+  "rank": 50,
+  "votes": 4,
+  "title": "rsna-knee-raptor-quad-w080",
+  "lastRun": "2026-09-08",
+  "gpu": true,
+  "machine": "NvidiaTeslaT4",
+  "internet": false,
+  "ver": 1,
+  "datasets": [
+   "dreaddevelopment/raptor-knee-finespacing",
+   "dreaddevelopment/raptor-knee-maxspan",
+   "mattiaangeli/knee-mri-fold-weights",
+   "dreaddevelopment/raptor-knee-widedense",
+   "pilkwang/pilkwang-public-dataset-for-notebooks-figures",
+   "marwanmath/resnet-50-radimagenet-marwan",
+   "antoinegg1/rsna-knee-e11-diverse-heads-v20",
+   "antoinegg1/rsna-knee-e9-radimagenet-heads-v15",
+   "stevenleehans/rsna-knee-llm-report-labels",
+   "pilkwang/rsna-knee-llm-labels",
+   "mattiaangeli/rsna-knee-rad-calibration",
+   "mattiaangeli/rsna-knee-radimagenet-foldsv1-heads",
+   "prvsiyan/rsna-knee-v52-radimagenet-heads-20260812",
+   "pilkwang/rsna-knee-weights",
+   "tonylica/rsna2026-models"
+  ],
+  "kernels": [
+   "sofiaanjenje/rsna-knee-e11-train",
+   "sofiaanjenje/rsna-knee-e13-train"
+  ],
+  "models": [
+   "metaresearch/dinov2/PyTorch/small/1"
+  ]
+ },
+ {
+  "ref": "anthonytherrien/rsna-knee-dino-radimagenet-dual-coatnet",
+  "rank": 51,
+  "votes": 8,
+  "title": "RSNA Knee \u2014 DINO + RadImageNet + dual CoAtNet",
+  "lastRun": "2026-09-08",
+  "gpu": true,
+  "machine": "NvidiaTeslaT4",
+  "internet": false,
+  "ver": 1,
+  "datasets": [
+   "dreaddevelopment/raptor-knee-maxspan",
+   "dreaddevelopment/raptor-knee-widedense",
+   "tonylica/rsna-knee-bend-dinov3-0917-repro-assets"
+  ],
+  "kernels": [],
+  "models": [
+   "metaresearch/dinov2/PyTorch/small/1"
+  ]
+ },
+ {
+  "ref": "terrybenjaminjr/rsna-knee-raptor-public-control-v1-attributed",
+  "rank": 52,
+  "votes": 1,
+  "title": "RSNA Knee Raptor public control v1 (attributed)",
+  "lastRun": "2026-09-08",
+  "gpu": true,
+  "machine": "NvidiaTeslaT4",
+  "internet": false,
+  "ver": 2,
+  "datasets": [
+   "mattiaangeli/knee-mri-fold-weights",
+   "dreaddevelopment/raptor-knee-widedense",
+   "pilkwang/pilkwang-public-dataset-for-notebooks-figures",
+   "marwanmath/resnet-50-radimagenet-marwan",
+   "antoinegg1/rsna-knee-e11-diverse-heads-v20",
+   "antoinegg1/rsna-knee-e9-radimagenet-heads-v15",
+   "stevenleehans/rsna-knee-llm-report-labels",
+   "pilkwang/rsna-knee-llm-labels",
+   "mattiaangeli/rsna-knee-rad-calibration",
+   "mattiaangeli/rsna-knee-radimagenet-foldsv1-heads",
+   "prvsiyan/rsna-knee-v52-radimagenet-heads-20260812",
+   "pilkwang/rsna-knee-weights",
+   "tonylica/rsna2026-models"
+  ],
+  "kernels": [
+   "sofiaanjenje/rsna-knee-e11-train",
+   "sofiaanjenje/rsna-knee-e13-train"
+  ],
+  "models": [
+   "metaresearch/dinov2/PyTorch/small/1"
+  ]
+ },
+ {
+  "ref": "hdhsjdjd/rsna-knee-raptor-coatnet",
+  "rank": 53,
+  "votes": 5,
+  "title": "rsna-knee-raptor-coatnet",
+  "lastRun": "2026-09-08",
+  "gpu": true,
+  "machine": "NvidiaTeslaT4",
+  "internet": false,
+  "ver": 1,
+  "datasets": [
+   "mattiaangeli/knee-mri-fold-weights",
+   "dreaddevelopment/raptor-knee-widedense",
+   "pilkwang/pilkwang-public-dataset-for-notebooks-figures",
+   "marwanmath/resnet-50-radimagenet-marwan",
+   "antoinegg1/rsna-knee-e11-diverse-heads-v20",
+   "antoinegg1/rsna-knee-e9-radimagenet-heads-v15",
+   "stevenleehans/rsna-knee-llm-report-labels",
+   "pilkwang/rsna-knee-llm-labels",
+   "mattiaangeli/rsna-knee-rad-calibration",
+   "mattiaangeli/rsna-knee-radimagenet-foldsv1-heads",
+   "prvsiyan/rsna-knee-v52-radimagenet-heads-20260812",
+   "pilkwang/rsna-knee-weights",
+   "tonylica/rsna2026-models"
+  ],
+  "kernels": [
+   "sofiaanjenje/rsna-knee-e11-train",
+   "sofiaanjenje/rsna-knee-e13-train"
+  ],
+  "models": [
+   "metaresearch/dinov2/PyTorch/small/1"
+  ]
+ },
+ {
+  "ref": "hdhsjdjd/rsna-knee-raptor-v5-w035",
+  "rank": 54,
+  "votes": 2,
+  "title": "rsna-knee-raptor-v5-w035",
+  "lastRun": "2026-09-08",
+  "gpu": true,
+  "machine": "NvidiaTeslaT4",
+  "internet": false,
+  "ver": 1,
+  "datasets": [
+   "dreaddevelopment/raptor-knee-maxspan",
+   "mattiaangeli/knee-mri-fold-weights",
+   "pilkwang/pilkwang-public-dataset-for-notebooks-figures",
+   "marwanmath/resnet-50-radimagenet-marwan",
+   "antoinegg1/rsna-knee-e11-diverse-heads-v20",
+   "antoinegg1/rsna-knee-e9-radimagenet-heads-v15",
+   "stevenleehans/rsna-knee-llm-report-labels",
+   "pilkwang/rsna-knee-llm-labels",
+   "mattiaangeli/rsna-knee-rad-calibration",
+   "mattiaangeli/rsna-knee-radimagenet-foldsv1-heads",
+   "prvsiyan/rsna-knee-v52-radimagenet-heads-20260812",
+   "pilkwang/rsna-knee-weights",
+   "tonylica/rsna2026-models"
+  ],
+  "kernels": [
+   "sofiaanjenje/rsna-knee-e11-train",
+   "sofiaanjenje/rsna-knee-e13-train"
+  ],
+  "models": [
+   "metaresearch/dinov2/PyTorch/small/1"
+  ]
+ },
+ {
+  "ref": "hdhsjdjd/rsna-knee-raptor-lixin-w10",
+  "rank": 55,
+  "votes": 0,
+  "title": "rsna-knee-raptor-lixin-w10",
+  "lastRun": "2026-09-08",
+  "gpu": true,
+  "machine": "NvidiaTeslaT4",
+  "internet": false,
+  "ver": 1,
+  "datasets": [
+   "dreaddevelopment/raptor-knee-maxspan",
+   "mattiaangeli/knee-mri-fold-weights",
+   "dreaddevelopment/raptor-knee-widedense",
+   "pilkwang/pilkwang-public-dataset-for-notebooks-figures",
+   "marwanmath/resnet-50-radimagenet-marwan",
+   "antoinegg1/rsna-knee-e11-diverse-heads-v20",
+   "antoinegg1/rsna-knee-e9-radimagenet-heads-v15",
+   "stevenleehans/rsna-knee-llm-report-labels",
+   "pilkwang/rsna-knee-llm-labels",
+   "mattiaangeli/rsna-knee-rad-calibration",
+   "mattiaangeli/rsna-knee-radimagenet-foldsv1-heads",
+   "prvsiyan/rsna-knee-v52-radimagenet-heads-20260812",
+   "pilkwang/rsna-knee-weights",
+   "lixin73/rsna-knee-train-checkpoints",
+   "tonylica/rsna2026-models"
+  ],
+  "kernels": [
+   "sofiaanjenje/rsna-knee-e11-train",
+   "sofiaanjenje/rsna-knee-e13-train"
+  ],
+  "models": [
+   "metaresearch/dinov2/PyTorch/small/1"
+  ]
+ },
+ {
+  "ref": "macmo1/rsna-knee-new-branch-lixin-w10",
+  "rank": 56,
+  "votes": 1,
+  "title": "RSNA Knee New Branch Lixin W10",
+  "lastRun": "2026-09-08",
+  "gpu": true,
+  "machine": "NvidiaTeslaT4",
+  "internet": false,
+  "ver": 1,
+  "datasets": [
+   "dreaddevelopment/raptor-knee-maxspan",
+   "mattiaangeli/knee-mri-fold-weights",
+   "dreaddevelopment/raptor-knee-widedense",
+   "pilkwang/pilkwang-public-dataset-for-notebooks-figures",
+   "marwanmath/resnet-50-radimagenet-marwan",
+   "antoinegg1/rsna-knee-e11-diverse-heads-v20",
+   "antoinegg1/rsna-knee-e9-radimagenet-heads-v15",
+   "stevenleehans/rsna-knee-llm-report-labels",
+   "pilkwang/rsna-knee-llm-labels",
+   "mattiaangeli/rsna-knee-rad-calibration",
+   "mattiaangeli/rsna-knee-radimagenet-foldsv1-heads",
+   "prvsiyan/rsna-knee-v52-radimagenet-heads-20260812",
+   "pilkwang/rsna-knee-weights",
+   "lixin73/rsna-knee-train-checkpoints",
+   "tonylica/rsna2026-models"
+  ],
+  "kernels": [
+   "sofiaanjenje/rsna-knee-e11-train",
+   "sofiaanjenje/rsna-knee-e13-train"
+  ],
+  "models": [
+   "metaresearch/dinov2/PyTorch/small/1"
+  ]
+ },
+ {
+  "ref": "hdhsjdjd/rsna-knee-raptor-dual-w080",
+  "rank": 57,
+  "votes": 1,
+  "title": "rsna-knee-raptor-dual-w080",
+  "lastRun": "2026-09-08",
+  "gpu": true,
+  "machine": "NvidiaTeslaT4",
+  "internet": false,
+  "ver": 1,
+  "datasets": [
+   "dreaddevelopment/raptor-knee-maxspan",
+   "mattiaangeli/knee-mri-fold-weights",
+   "dreaddevelopment/raptor-knee-widedense",
+   "pilkwang/pilkwang-public-dataset-for-notebooks-figures",
+   "marwanmath/resnet-50-radimagenet-marwan",
+   "antoinegg1/rsna-knee-e11-diverse-heads-v20",
+   "antoinegg1/rsna-knee-e9-radimagenet-heads-v15",
+   "stevenleehans/rsna-knee-llm-report-labels",
+   "pilkwang/rsna-knee-llm-labels",
+   "mattiaangeli/rsna-knee-rad-calibration",
+   "mattiaangeli/rsna-knee-radimagenet-foldsv1-heads",
+   "prvsiyan/rsna-knee-v52-radimagenet-heads-20260812",
+   "pilkwang/rsna-knee-weights",
+   "tonylica/rsna2026-models"
+  ],
+  "kernels": [
+   "sofiaanjenje/rsna-knee-e11-train",
+   "sofiaanjenje/rsna-knee-e13-train"
+  ],
+  "models": [
+   "metaresearch/dinov2/PyTorch/small/1"
+  ]
+ },
+ {
+  "ref": "pranjalverma08/rsna-knee-climbing-up-the-hill-the-ensemble-way",
+  "rank": 58,
+  "votes": 2,
+  "title": "RSNA-KNEE : Climbing up the Hill (The Ensemble Way",
+  "lastRun": "2026-09-08",
+  "gpu": true,
+  "machine": "NvidiaTeslaT4",
+  "internet": false,
+  "ver": 7,
+  "datasets": [
+   "dreaddevelopment/raptor-knee-finespacing",
+   "dreaddevelopment/raptor-knee-fullspan",
+   "dreaddevelopment/raptor-knee-maxspan",
+   "dreaddevelopment/raptor-knee-native384",
+   "dreaddevelopment/raptor-knee-native384dense",
+   "dreaddevelopment/raptor-knee-widefov",
+   "dreaddevelopment/raptor-knee-arms",
+   "dreaddevelopment/raptor-knee-arms-x",
+   "stevenleehans/rsna-knee-llm-report-labels"
+  ],
+  "kernels": [],
+  "models": [
+   "",
+   "metaresearch/dinov2/PyTorch/base/1",
+   "metaresearch/dinov2/PyTorch/large/1",
+   "pranjalverma08/dinov3/Transformers/default/1",
+   "unmol03/dinov3-vit-large/PyTorch/default/1",
+   "dew389/radimagenet50/PyTorch/default/1",
+   "pranjalverma08/snarcy-radiodino-b16/Transformers/default/1"
+  ]
+ },
+ {
+  "ref": "hdhsjdjd/rsna-knee-raptor-coatnet-w35",
+  "rank": 59,
+  "votes": 3,
+  "title": "rsna-knee-raptor-coatnet-w35",
+  "lastRun": "2026-09-08",
+  "gpu": true,
+  "machine": "NvidiaTeslaT4",
+  "internet": false,
+  "ver": 1,
+  "datasets": [
+   "mattiaangeli/knee-mri-fold-weights",
+   "dreaddevelopment/raptor-knee-widedense",
+   "pilkwang/pilkwang-public-dataset-for-notebooks-figures",
+   "marwanmath/resnet-50-radimagenet-marwan",
+   "antoinegg1/rsna-knee-e11-diverse-heads-v20",
+   "antoinegg1/rsna-knee-e9-radimagenet-heads-v15",
+   "stevenleehans/rsna-knee-llm-report-labels",
+   "pilkwang/rsna-knee-llm-labels",
+   "mattiaangeli/rsna-knee-rad-calibration",
+   "mattiaangeli/rsna-knee-radimagenet-foldsv1-heads",
+   "prvsiyan/rsna-knee-v52-radimagenet-heads-20260812",
+   "pilkwang/rsna-knee-weights",
+   "tonylica/rsna2026-models"
+  ],
+  "kernels": [
+   "sofiaanjenje/rsna-knee-e11-train",
+   "sofiaanjenje/rsna-knee-e13-train"
+  ],
+  "models": [
+   "metaresearch/dinov2/PyTorch/small/1"
+  ]
+ },
+ {
+  "ref": "hdhsjdjd/rsna-knee-raptor-quad-lixin-w065",
+  "rank": 60,
+  "votes": 2,
+  "title": "rsna-knee-raptor-quad-lixin-w065",
+  "lastRun": "2026-09-08",
+  "gpu": true,
+  "machine": "NvidiaTeslaT4",
+  "internet": false,
+  "ver": 1,
+  "datasets": [
+   "dreaddevelopment/raptor-knee-finespacing",
+   "dreaddevelopment/raptor-knee-maxspan",
+   "mattiaangeli/knee-mri-fold-weights",
+   "dreaddevelopment/raptor-knee-widedense",
+   "pilkwang/pilkwang-public-dataset-for-notebooks-figures",
+   "marwanmath/resnet-50-radimagenet-marwan",
+   "antoinegg1/rsna-knee-e11-diverse-heads-v20",
+   "antoinegg1/rsna-knee-e9-radimagenet-heads-v15",
+   "stevenleehans/rsna-knee-llm-report-labels",
+   "pilkwang/rsna-knee-llm-labels",
+   "mattiaangeli/rsna-knee-rad-calibration",
+   "mattiaangeli/rsna-knee-radimagenet-foldsv1-heads",
+   "prvsiyan/rsna-knee-v52-radimagenet-heads-20260812",
+   "pilkwang/rsna-knee-weights",
+   "lixin73/rsna-knee-train-checkpoints",
+   "tonylica/rsna2026-models"
+  ],
+  "kernels": [
+   "sofiaanjenje/rsna-knee-e11-train",
+   "sofiaanjenje/rsna-knee-e13-train"
+  ],
+  "models": [
+   "metaresearch/dinov2/PyTorch/small/1"
+  ]
+ },
+ {
+  "ref": "dreaddevelopment/knee-mri-twelve-findings-from-a-single-model",
+  "rank": 75,
+  "votes": 125,
+  "title": "Knee MRI: twelve findings from a single model",
+  "lastRun": "2026-09-08",
+  "gpu": true,
+  "machine": "NvidiaTeslaT4",
+  "internet": false,
+  "ver": 7,
+  "datasets": [
+   "dreaddevelopment/raptor-knee-widedense"
+  ],
+  "kernels": [],
+  "models": []
+ },
+ {
+  "ref": "farhanabidtech786/rsna-knee",
+  "rank": 80,
+  "votes": 34,
+  "title": "RSNA Knee",
+  "lastRun": "2026-09-08",
+  "gpu": true,
+  "machine": "NvidiaTeslaT4",
+  "internet": false,
+  "ver": 5,
+  "datasets": [
+   "mattiaangeli/knee-mri-fold-weights",
+   "pilkwang/pilkwang-public-dataset-for-notebooks-figures",
+   "marwanmath/resnet-50-radimagenet-marwan",
+   "tonylica/rsna-knee-bend-dinov3-0917-repro-assets",
+   "antoinegg1/rsna-knee-e11-diverse-heads-v20",
+   "antoinegg1/rsna-knee-e9-radimagenet-heads-v15",
+   "stevenleehans/rsna-knee-llm-report-labels",
+   "lixin73/rsna-knee-llm-report-labels-sol56",
+   "pilkwang/rsna-knee-llm-labels",
+   "mattiaangeli/rsna-knee-radimagenet-foldsv1-heads",
+   "pilkwang/rsna-knee-weights",
+   "tonylica/rsna2026-models"
+  ],
+  "kernels": [],
+  "models": [
+   "metaresearch/dinov2/PyTorch/small/1",
+   "metaresearch/dinov2/PyTorch/base/1"
+  ]
+ },
+ {
+  "ref": "mattiaangeli/bend-the-knee-to-dinov3-ensembled",
+  "rank": 81,
+  "votes": 212,
+  "title": "Bend the Knee to DinoV3 (ensembled)",
+  "lastRun": "2026-09-08",
+  "gpu": true,
+  "machine": "NvidiaTeslaT4",
+  "internet": false,
+  "ver": 126,
+  "datasets": [
+   "",
+   "mattiaangeli/knee-mri-fold-weights",
+   "pilkwang/pilkwang-public-dataset-for-notebooks-figures",
+   "marwanmath/resnet-50-radimagenet-marwan",
+   "antoinegg1/rsna-knee-e11-diverse-heads-v20",
+   "antoinegg1/rsna-knee-e9-radimagenet-heads-v15",
+   "stevenleehans/rsna-knee-llm-report-labels",
+   "pilkwang/rsna-knee-llm-labels",
+   "mattiaangeli/rsna-knee-rad-calibration",
+   "mattiaangeli/rsna-knee-radimagenet-foldsv1-heads",
+   "prvsiyan/rsna-knee-v52-radimagenet-heads-20260812",
+   "pilkwang/rsna-knee-weights",
+   "tonylica/rsna2026-models"
+  ],
+  "kernels": [
+   "sofiaanjenje/rsna-knee-e11-train",
+   "sofiaanjenje/rsna-knee-e13-train"
+  ],
+  "models": [
+   "metaresearch/dinov2/PyTorch/small/1"
+  ]
+ },
+ {
+  "ref": "tonylica/rsna-knee-dino-radimagenet-rank-ensemble",
+  "rank": 90,
+  "votes": 91,
+  "title": "RSNA Knee DINO-RadImageNet Rank Ensemble",
+  "lastRun": "2026-09-08",
+  "gpu": true,
+  "machine": "NvidiaTeslaT4",
+  "internet": false,
+  "ver": 5,
+  "datasets": [
+   "tonylica/rsna-knee-bend-dinov3-0917-repro-assets"
+  ],
+  "kernels": [],
+  "models": [
+   "metaresearch/dinov2/PyTorch/small/1"
+  ]
+ },
+ {
+  "ref": "saidmohamedomary/rsna-knee-frontier-v48",
+  "rank": 97,
+  "votes": 29,
+  "title": "RSNA Knee frontier v48",
+  "lastRun": "2026-09-08",
+  "gpu": true,
+  "machine": "NvidiaTeslaT4",
+  "internet": false,
+  "ver": 1,
+  "datasets": [
+   "mattiaangeli/knee-mri-fold-weights",
+   "marwanmath/resnet-50-radimagenet-marwan",
+   "antoinegg1/rsna-knee-e9-radimagenet-heads-v15",
+   "stevenleehans/rsna-knee-llm-report-labels",
+   "lixin73/rsna-knee-llm-report-labels-sol56",
+   "pilkwang/rsna-knee-llm-labels",
+   "mattiaangeli/rsna-knee-radimagenet-foldsv1-heads",
+   "pilkwang/rsna-knee-weights",
+   "tonylica/rsna2026-models"
+  ],
+  "kernels": [
+   "sofiaanjenje/rsna-knee-e11-train",
+   "sofiaanjenje/rsna-knee-e13-train"
+  ],
+  "models": [
+   "metaresearch/dinov2/PyTorch/small/1",
+   "metaresearch/dinov2/PyTorch/base/1"
+  ]
+ },
+ {
+  "ref": "sofiaanjenje/rsna-knee-frontier-v46",
+  "rank": 108,
+  "votes": 38,
+  "title": "RSNA Knee frontier v46",
+  "lastRun": "2026-09-08",
+  "gpu": true,
+  "machine": "NvidiaTeslaT4",
+  "internet": false,
+  "ver": 3,
+  "datasets": [
+   "mattiaangeli/knee-mri-fold-weights",
+   "marwanmath/resnet-50-radimagenet-marwan",
+   "antoinegg1/rsna-knee-e9-radimagenet-heads-v15",
+   "stevenleehans/rsna-knee-llm-report-labels",
+   "lixin73/rsna-knee-llm-report-labels-sol56",
+   "pilkwang/rsna-knee-llm-labels",
+   "mattiaangeli/rsna-knee-radimagenet-foldsv1-heads",
+   "pilkwang/rsna-knee-weights",
+   "tonylica/rsna2026-models"
+  ],
+  "kernels": [
+   "sofiaanjenje/rsna-knee-e11-train"
+  ],
+  "models": [
+   "metaresearch/dinov2/PyTorch/base/1",
+   "metaresearch/dinov2/PyTorch/small/1"
+  ]
+ },
+ {
+  "ref": "sakhawathossen/rsna-knee-enhanced-ensemble",
+  "rank": 117,
+  "votes": 92,
+  "title": "rsna-knee-enhanced-ensemble",
+  "lastRun": "2026-09-08",
+  "gpu": true,
+  "machine": "NvidiaTeslaT4",
+  "internet": false,
+  "ver": 11,
+  "datasets": [
+   "mattiaangeli/knee-mri-fold-weights",
+   "sohaibanwaar1203/kneemridataset",
+   "pilkwang/pilkwang-public-dataset-for-notebooks-figures",
+   "marwanmath/resnet-50-radimagenet-marwan",
+   "antoinegg1/rsna-knee-e9-radimagenet-heads-v15",
+   "stevenleehans/rsna-knee-llm-report-labels",
+   "lixin73/rsna-knee-llm-report-labels-sol56",
+   "pilkwang/rsna-knee-llm-labels",
+   "mattiaangeli/rsna-knee-radimagenet-foldsv1-heads",
+   "pilkwang/rsna-knee-weights",
+   "tonylica/rsna2026-models"
+  ],
+  "kernels": [],
+  "models": [
+   "metaresearch/dinov2/PyTorch/base/1",
+   "metaresearch/dinov2/PyTorch/small/1"
+  ]
+ },
+ {
+  "ref": "ieshanmeghani/rsna-knee-v40-dinov3-e10-hybrid",
+  "rank": 118,
+  "votes": 50,
+  "title": "RSNA Knee V40 DINOv3 E10 Hybrid",
+  "lastRun": "2026-09-08",
+  "gpu": true,
+  "machine": "NvidiaTeslaT4",
+  "internet": false,
+  "ver": 1,
+  "datasets": [
+   "mattiaangeli/knee-mri-fold-weights",
+   "marwanmath/resnet-50-radimagenet-marwan",
+   "antoinegg1/rsna-knee-e9-radimagenet-heads-v15",
+   "stevenleehans/rsna-knee-llm-report-labels",
+   "lixin73/rsna-knee-llm-report-labels-sol56",
+   "pilkwang/rsna-knee-llm-labels",
+   "mattiaangeli/rsna-knee-radimagenet-foldsv1-heads",
+   "pilkwang/rsna-knee-weights",
+   "tonylica/rsna2026-models"
+  ],
+  "kernels": [],
+  "models": [
+   "metaresearch/dinov2/PyTorch/base/1",
+   "metaresearch/dinov2/PyTorch/small/1"
+  ]
+ },
+ {
+  "ref": "prvsiyan/rsna-knee-read-the-report-then-the-knee",
+  "rank": 140,
+  "votes": 257,
+  "title": "RSNA Knee: read the report, then the knee",
+  "lastRun": "2026-09-08",
+  "gpu": false,
+  "machine": "TpuV5E8",
+  "internet": false,
+  "ver": 62,
+  "datasets": [
+   "",
+   "",
+   "",
+   "",
+   "",
+   "marwanmath/resnet-50-radimagenet-marwan",
+   "stevenleehans/rsna-knee-llm-report-labels",
+   "lixin73/rsna-knee-llm-report-labels-sol56",
+   "pilkwang/rsna-knee-llm-labels",
+   "pilkwang/rsna-knee-weights",
+   "royceplayz/rsna-medicalnet-resnet50-weights",
+   "tonylica/rsna2026-models"
+  ],
+  "kernels": [
+   "gourabroy553/rsna-knee-hybrid-dino-radiomics",
+   "blacklions/report-teacher-anatomy-aware-hierarchical-multimod"
+  ],
+  "models": [
+   "mrquadian/biomedclip/PyTorch/default/1",
+   "metaresearch/dinov2/PyTorch/base/1",
+   "metaresearch/dinov2/PyTorch/small/1",
+   "timm/tf-efficientnet/PyTorch/tf-efficientnet-b3/1"
+  ]
+ },
+ {
+  "ref": "aadigupta7686/0-899-let-me-cook",
+  "rank": 146,
+  "votes": 86,
+  "title": "[0.899] Let me Cook",
+  "lastRun": "2026-09-08",
+  "gpu": true,
+  "machine": "NvidiaTeslaT4",
+  "internet": false,
+  "ver": 8,
+  "datasets": [
+   "pilkwang/pilkwang-public-dataset-for-notebooks-figures",
+   "pilkwang/rsna-knee-llm-labels",
+   "pilkwang/rsna-knee-weights"
+  ],
+  "kernels": [],
+  "models": [
+   "metaresearch/dinov2/PyTorch/small/1"
+  ]
+ },
+ {
+  "ref": "renta0426/rsna-knee-baseline-v1-fracture-tta-pool-probe",
+  "rank": 155,
+  "votes": 61,
+  "title": "rsna-knee-baseline-v1-fracture-tta-pool-probe",
+  "lastRun": "2026-09-08",
+  "gpu": true,
+  "machine": "NvidiaTeslaT4",
+  "internet": false,
+  "ver": 9,
+  "datasets": [
+   "pilkwang/pilkwang-public-dataset-for-notebooks-figures",
+   "pilkwang/rsna-knee-llm-labels",
+   "pilkwang/rsna-knee-weights"
+  ],
+  "kernels": [],
+  "models": [
+   "metaresearch/dinov2/PyTorch/small/1"
+  ]
+ },
+ {
+  "ref": "romanrozen/rsna-knee-data-structure-eda-baseline",
+  "rank": 159,
+  "votes": 121,
+  "title": "RSNA Knee | Data structure, EDA, baseline\ud83d\udd25",
+  "lastRun": "2026-09-08",
+  "gpu": true,
+  "machine": "NvidiaTeslaT4",
+  "internet": false,
+  "ver": 15,
+  "datasets": [
+   "sohaibanwaar1203/kneemridataset",
+   "pilkwang/pilkwang-public-dataset-for-notebooks-figures",
+   "marwanmath/resnet-50-radimagenet-marwan",
+   "stevenleehans/rsna-knee-llm-report-labels",
+   "lixin73/rsna-knee-llm-report-labels-sol56",
+   "pilkwang/rsna-knee-weights",
+   "royceplayz/rsna-medicalnet-resnet50-weights",
+   "tonylica/rsna2026-models"
+  ],
+  "kernels": [
+   "gourabroy553/rsna-knee-hybrid-dino-radiomics",
+   "blacklions/report-teacher-anatomy-aware-hierarchical-multimod"
+  ],
+  "models": [
+   "metaresearch/dinov2/PyTorch/small/1",
+   "metaresearch/dinov2/PyTorch/base/1"
+  ]
+ },
+ {
+  "ref": "pilkwang/rsna-knee-baseline-v1",
+  "rank": 162,
+  "votes": 554,
+  "title": "RSNA Knee baseline v1",
+  "lastRun": "2026-09-08",
+  "gpu": true,
+  "machine": "NvidiaTeslaT4",
+  "internet": false,
+  "ver": 15,
+  "datasets": [
+   "pilkwang/pilkwang-public-dataset-for-notebooks-figures",
+   "pilkwang/rsna-knee-llm-labels",
+   "pilkwang/rsna-knee-weights"
+  ],
+  "kernels": [],
+  "models": [
+   "metaresearch/dinov2/PyTorch/small/1"
+  ]
+ },
+ {
+  "ref": "sadamtorres/domain-adaptation-beats-resolution-dinov2-on-knee",
+  "rank": 173,
+  "votes": 23,
+  "title": "Domain adaptation beats resolution: DINOv2 on knee",
+  "lastRun": "2026-09-08",
+  "gpu": true,
+  "machine": "NvidiaTeslaT4",
+  "internet": false,
+  "ver": 2,
+  "datasets": [
+   "sadamtorres/rsna-ft-a",
+   "sadamtorres/rsna-ft-b",
+   "sadamtorres/rsna-wheels"
+  ],
+  "kernels": [],
+  "models": []
+ },
+ {
+  "ref": "tonylica/rsna-knee-infer",
+  "rank": 187,
+  "votes": 59,
+  "title": "RSNA Knee infer",
+  "lastRun": "2026-09-08",
+  "gpu": true,
+  "machine": "NvidiaTeslaT4",
+  "internet": false,
+  "ver": 4,
+  "datasets": [
+   "tonylica/rsna2026-models"
+  ],
+  "kernels": [],
+  "models": [
+   "metaresearch/dinov2/PyTorch/small/1"
+  ]
+ },
+ {
+  "ref": "wguesdon/rsna-knee-dinov2-at-meniscus-resolution",
+  "rank": 194,
+  "votes": 87,
+  "title": "RSNA Knee DINOv2 at meniscus resolution",
+  "lastRun": "2026-09-08",
+  "gpu": true,
+  "machine": "NvidiaTeslaT4",
+  "internet": false,
+  "ver": 5,
+  "datasets": [
+   ""
+  ],
+  "kernels": [],
+  "models": [
+   "metaresearch/dinov2/PyTorch/small/1"
+  ]
+ },
+ {
+  "ref": "hida1211/rsna-knee-public-4-fold-dinov2-v4",
+  "rank": 197,
+  "votes": 42,
+  "title": "RSNA Knee Public 4-fold DINOv2 v4",
+  "lastRun": "2026-09-08",
+  "gpu": true,
+  "machine": "NvidiaTeslaT4",
+  "internet": false,
+  "ver": 1,
+  "datasets": [],
+  "kernels": [],
+  "models": [
+   "metaresearch/dinov2/PyTorch/base/1",
+   "metaresearch/dinov2/PyTorch/small/1"
+  ]
+ },
+ {
+  "ref": "mawramusawwar/rsna-dinov2-ensemble",
+  "rank": 207,
+  "votes": 23,
+  "title": "RSNA-dinov2-ensemble ",
+  "lastRun": "2026-09-08",
+  "gpu": true,
+  "machine": "NvidiaTeslaT4",
+  "internet": false,
+  "ver": 5,
+  "datasets": [],
+  "kernels": [],
+  "models": [
+   "metaresearch/dinov2/PyTorch/base/1",
+   "metaresearch/dinov2/PyTorch/small/1"
+  ]
+ },
+ {
+  "ref": "karnakbaevarthur/rsna-knee-eda-to-2-5d",
+  "rank": 251,
+  "votes": 36,
+  "title": "RSNA Knee: EDA to 2.5D",
+  "lastRun": "2026-09-08",
+  "gpu": true,
+  "machine": "NvidiaTeslaT4",
+  "internet": false,
+  "ver": 6,
+  "datasets": [],
+  "kernels": [],
+  "models": []
+ },
+ {
+  "ref": "ryanholbrook/rsna-knee-abnormalities-efficiency-lb",
+  "rank": 312,
+  "votes": 359,
+  "title": "RSNA Knee Abnormalities - Efficiency LB",
+  "lastRun": "2026-09-08",
+  "gpu": false,
+  "machine": "None",
+  "internet": true,
+  "ver": 43,
+  "datasets": [],
+  "kernels": [
+   ""
+  ],
+  "models": []
+ },
+ {
+  "ref": "mpwolke/rsna-knee-abnormality-detection-2026-dcm",
+  "rank": 320,
+  "votes": 43,
+  "title": "RSNA Knee Abnormality Detection 2026 dcm",
+  "lastRun": "2026-09-08",
+  "gpu": false,
+  "machine": "None",
+  "internet": true,
+  "ver": 1,
+  "datasets": [],
+  "kernels": [],
+  "models": []
+ },
+ {
+  "ref": "barun2104/baseline-rsna-knee-mri-2-5d-resnet34",
+  "rank": 372,
+  "votes": 29,
+  "title": "[Baseline] RSNA Knee MRI \u2014 2.5D ResNet34",
+  "lastRun": "2026-09-08",
+  "gpu": true,
+  "machine": "NvidiaTeslaT4",
+  "internet": true,
+  "ver": 3,
+  "datasets": [
+   "barun2104/rsna-knee-stratified-folds-and-llm-soft-labels",
+   "barun2104/rsna-knee-mri-processed-3d-volumes"
+  ],
+  "kernels": [],
+  "models": []
+ },
+ {
+  "ref": "hamdimohamed22/rsna-dataset-discovery-eda",
+  "rank": 397,
+  "votes": 25,
+  "title": "RSNA Dataset Discovery + EDA",
+  "lastRun": "2026-09-08",
+  "gpu": false,
+  "machine": "None",
+  "internet": true,
+  "ver": 1,
+  "datasets": [],
+  "kernels": [
+   "packagemanager/pm-130397856-at-08-11-2026-05-56-33"
+  ],
+  "models": []
+ },
+ {
+  "ref": "romantamrazov/rsna-knee-dinosaur-v4-train",
+  "rank": 486,
+  "votes": 46,
+  "title": "RSNA Knee | DINOsaur V4 train \ud83e\udd96",
+  "lastRun": "2026-09-08",
+  "gpu": true,
+  "machine": "NvidiaTeslaT4",
+  "internet": false,
+  "ver": 5,
+  "datasets": [
+   "mattiaangeli/knee-mri-fold-weights",
+   "pilkwang/pilkwang-public-dataset-for-notebooks-figures",
+   "marwanmath/resnet-50-radimagenet-marwan",
+   "tonylica/rsna-knee-bend-dinov3-0917-repro-assets",
+   "antoinegg1/rsna-knee-e11-diverse-heads-v20",
+   "antoinegg1/rsna-knee-e9-radimagenet-heads-v15",
+   "stevenleehans/rsna-knee-llm-report-labels",
+   "lixin73/rsna-knee-llm-report-labels-sol56",
+   "pilkwang/rsna-knee-llm-labels",
+   "mattiaangeli/rsna-knee-radimagenet-foldsv1-heads",
+   "prvsiyan/rsna-knee-v52-radimagenet-heads-20260812",
+   "pilkwang/rsna-knee-weights",
+   "tonylica/rsna2026-models"
+  ],
+  "kernels": [
+   "sofiaanjenje/rsna-knee-e11-train",
+   "sofiaanjenje/rsna-knee-e13-train"
+  ],
+  "models": [
+   "metaresearch/dinov2/PyTorch/small/1",
+   "metaresearch/dinov2/PyTorch/base/1"
+  ]
+ },
+ {
+  "ref": "dreaddevelopment/knee-mri-training-the-twelve-finding-model",
+  "rank": 9999,
+  "votes": 75,
+  "title": "Knee MRI: training the twelve-finding model",
+  "lastRun": "2026-09-08",
+  "gpu": true,
+  "machine": "NvidiaTeslaT4",
+  "internet": true,
+  "ver": 8,
+  "datasets": [
+   "dreaddevelopment/knee-raptor-corpus",
+   "dreaddevelopment/knee-raptor-corpus-ext"
+  ],
+  "kernels": [],
+  "models": []
+ }
+]

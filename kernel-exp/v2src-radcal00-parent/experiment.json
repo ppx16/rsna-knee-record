@@ -1,0 +1,7 @@
+{
+  "name": "v2src-radcal00-parent",
+  "desc": "Both structural switches OFF: flat 0.60 outer routing AND `rad_cal_w` 0.00. Completes the 2x2 with the canonical / parent-routing / radcal00 (HANDOFF 100.1).",
+  "source": "kernel-fresh\\rsna-knee-ens-v2src.ipynb",
+  "source_sha256": "fa338297cc9f79d9f30400e21007272505e622250567cd077edc9525321210f6",
+  "result_sha256": "77e57cc95fa80a36e5c8a18565ea58b20159619d18818c57437ad350e6d6dca8"
+}

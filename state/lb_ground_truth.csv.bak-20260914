@@ -1,0 +1,21 @@
+date,ref,desc,score,status
+2026-09-06 03:08:12.357000,56045533,self-trained 5-fold weights (r336/slices3),0.842,COMPLETE
+2026-09-06 10:35:17.593000,56053045,224px x6 slices self-trained (5fold seed2026) - vs 336px x3 baseline 0.842,0.874,COMPLETE
+2026-09-11 11:10:58.950000,56164308,"v4 224x12 dinov2-large seed2026, 5 members rank-mean",0.854,COMPLETE
+2026-09-11 13:21:00.093000,56166132,public 0.941-class ensemble (kernel_sources restored),0.941,COMPLETE
+2026-09-11 14:02:42.803000,56166772,ppxl16/rsna-knee-ens-exclude-fracture v1,0.941,COMPLETE
+2026-09-11 14:20:50.143000,56167067,ppxl16/rsna-knee-ens-parent-routing v1,0.939,COMPLETE
+2026-09-11 14:28:56.783000,56167190,ppxl16/rsna-knee-ens-add-widedense-arm v1,0.941,COMPLETE
+2026-09-12 00:44:30.257000,56175178,ppxl16/rsna-knee-ens-halfway-routing v1,0.940,COMPLETE
+2026-09-12 00:47:45.580000,56175245,ppxl16/rsna-knee-ens-v2src-v8rev v1,0.941,COMPLETE
+2026-09-12 00:51:15.307000,56175295,ppxl16/rsna-knee-ens-v2src-default v1,0.941,COMPLETE
+2026-09-12 04:37:29.967000,56178575,ppxl16/rsna-knee-ens-v2src-denserev v1,0.941,COMPLETE
+2026-09-12 04:41:00.840000,56178615,ppxl16/rsna-knee-ens-v2src-w5050 v1,0.941,COMPLETE
+2026-09-13 01:31:48.337000,56196394,ppxl16/rsna-knee-ens-v2src-private25 v1,0.940,COMPLETE
+2026-09-13 01:31:54.677000,56196396,ppxl16/rsna-knee-ens-v2src-private55 v1,0.940,COMPLETE
+2026-09-13 01:32:04.260000,56196402,ppxl16/rsna-knee-ens-v2src-routew75 v1,0.940,COMPLETE
+2026-09-13 01:32:10.490000,56196404,ppxl16/rsna-knee-ens-v2src-routew85 v1,0.940,COMPLETE
+2026-09-13 01:32:17.270000,56196406,ppxl16/rsna-knee-ens-v2src-routedeep v1,0.941,COMPLETE
+2026-09-14 01:09:52.077000,56218191,ppxl16/rsna-knee-ens-v2src-poolfluidmax v1,,PENDING
+2026-09-14 01:09:58.610000,56218192,ppxl16/rsna-knee-ens-v2src-pooloamax v1,,PENDING
+2026-09-14 01:10:04.847000,56218195,ppxl16/rsna-knee-ens-v2src-poolefforig v1,,PENDING

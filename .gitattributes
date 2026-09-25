@@ -1,0 +1,18 @@
+# Line endings, pinned.  This repo is edited on Windows but its .sh files are shipped to a Linux box
+# and its .py files run on both -- and a CRLF shell script fails on Linux with the classic
+#     bash: $'\r': command not found
+# which has already cost real debugging time in this project.  Git's Windows default (core.autocrlf)
+# would happily introduce exactly that on checkout, so it is disabled in the repo AND pinned here.
+* text=auto eol=lf
+*.sh   text eol=lf
+*.py   text eol=lf
+*.ps1  text eol=crlf
+*.md   text eol=lf
+*.json text eol=lf
+*.csv  text eol=lf
+*.tsv  text eol=lf
+*.ipynb text eol=lf
+# binaries: never touch
+*.npz binary
+*.npy binary
+*.pt binary

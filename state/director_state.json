@@ -1,0 +1,531 @@
+{
+  "watches": {
+    "ppxl16/rsna-knee-ens-add-finespacing-arm": {
+      "handled": [
+        "notice:1:COMPLETE",
+        "download:v1",
+        "submit:v1",
+        "score:v1"
+      ],
+      "landing_dir": "D:\\kaggle\\rsna-knee\\outputs\\_landing\\rsna-knee-ens-add-finespacing-arm_v1_2026-09-20T094102Z",
+      "last_poll": "2026-09-21T01:39:57Z",
+      "public_rank": 393,
+      "public_score": "0.941",
+      "score_history": [
+        {
+          "at": "2026-09-21T01:40:02Z",
+          "rank": 393,
+          "score": "0.941",
+          "version": 1
+        }
+      ],
+      "status": "COMPLETE",
+      "submitted_message": "ppxl16/rsna-knee-ens-add-finespacing-arm v1",
+      "version": 1
+    },
+    "ppxl16/rsna-knee-ens-add-widedense-arm": {
+      "handled": [
+        "notice:1:COMPLETE",
+        "download:v1",
+        "submit:v1",
+        "score:v1"
+      ],
+      "landing_dir": "D:\\kaggle\\rsna-knee\\outputs\\_landing\\rsna-knee-ens-add-widedense-arm_v1_2026-09-11T142055Z",
+      "last_poll": "2026-09-20T10:01:44Z",
+      "public_score": "0.941",
+      "status": "COMPLETE",
+      "submitted_message": "ppxl16/rsna-knee-ens-add-widedense-arm v1",
+      "version": 1
+    },
+    "ppxl16/rsna-knee-ens-arm-weights-alt": {
+      "handled": [
+        "notice:1:COMPLETE",
+        "download:v1",
+        "submitfail:v1",
+        "submit:v1",
+        "score:v1"
+      ],
+      "landing_dir": "D:\\kaggle\\rsna-knee\\outputs\\_landing\\rsna-knee-ens-arm-weights-alt_v1_2026-09-11T144546Z",
+      "last_poll": "2026-09-20T10:01:47Z",
+      "public_rank": 196,
+      "public_score": "0.941",
+      "score_history": [
+        {
+          "at": "2026-09-14T09:16:25Z",
+          "rank": 196,
+          "score": "0.941",
+          "version": 1
+        }
+      ],
+      "status": "COMPLETE",
+      "submitted_message": "ppxl16/rsna-knee-ens-arm-weights-alt v1",
+      "version": 1
+    },
+    "ppxl16/rsna-knee-ens-exclude-fracture": {
+      "handled": [
+        "notice:1:COMPLETE",
+        "download:v1",
+        "submit:v1",
+        "score:v1"
+      ],
+      "landing_dir": "D:\\kaggle\\rsna-knee\\outputs\\_landing\\rsna-knee-ens-exclude-fracture_v1_2026-09-11T135854Z",
+      "last_poll": "2026-09-20T10:01:38Z",
+      "public_score": "0.941",
+      "status": "COMPLETE",
+      "submitted_message": "ppxl16/rsna-knee-ens-exclude-fracture v1",
+      "version": 1
+    },
+    "ppxl16/rsna-knee-ens-halfway-routing": {
+      "handled": [
+        "notice:1:COMPLETE",
+        "download:v1",
+        "submitfail:v1",
+        "submit:v1",
+        "score:v1"
+      ],
+      "landing_dir": "D:\\kaggle\\rsna-knee\\outputs\\_landing\\rsna-knee-ens-halfway-routing_v1_2026-09-11T143626Z",
+      "last_poll": "2026-09-20T10:01:23Z",
+      "public_rank": 158,
+      "public_score": "0.940",
+      "score_history": [
+        {
+          "at": "2026-09-12T12:22:59Z",
+          "rank": 158,
+          "score": "0.940",
+          "version": 1
+        }
+      ],
+      "status": "COMPLETE",
+      "submitted_message": "ppxl16/rsna-knee-ens-halfway-routing v1",
+      "version": 1
+    },
+    "ppxl16/rsna-knee-ens-parent-routing": {
+      "handled": [
+        "notice:1:COMPLETE",
+        "download:v1",
+        "submit:v1",
+        "score:v1"
+      ],
+      "landing_dir": "D:\\kaggle\\rsna-knee\\outputs\\_landing\\redo_parent_routing",
+      "last_poll": "2026-09-20T10:01:41Z",
+      "public_score": "0.939",
+      "status": "COMPLETE",
+      "submitted_message": "ppxl16/rsna-knee-ens-parent-routing v1",
+      "version": 1
+    },
+    "ppxl16/rsna-knee-ens-v2src-a5w30": {
+      "handled": [
+        "notice:1:COMPLETE",
+        "download:v1",
+        "submitfail:v1",
+        "submit:v1",
+        "score:v1"
+      ],
+      "landing_dir": "D:\\kaggle\\rsna-knee\\outputs\\_landing\\rsna-knee-ens-v2src-a5w30_v1_2026-09-12T051642Z",
+      "last_poll": "2026-09-20T10:01:57Z",
+      "public_rank": 196,
+      "public_score": "0.941",
+      "score_history": [
+        {
+          "at": "2026-09-14T08:37:10Z",
+          "rank": 196,
+          "score": "0.941",
+          "version": 1
+        }
+      ],
+      "status": "COMPLETE",
+      "submitted_message": "ppxl16/rsna-knee-ens-v2src-a5w30 v1",
+      "version": 1
+    },
+    "ppxl16/rsna-knee-ens-v2src-a5w60": {
+      "handled": [
+        "notice:1:COMPLETE",
+        "download:v1",
+        "submitfail:v1",
+        "submit:v1",
+        "score:v1"
+      ],
+      "landing_dir": "D:\\kaggle\\rsna-knee\\outputs\\_landing\\rsna-knee-ens-v2src-a5w60_v1_2026-09-12T052044Z",
+      "last_poll": "2026-09-20T10:02:01Z",
+      "public_rank": 218,
+      "public_score": "0.940",
+      "score_history": [
+        {
+          "at": "2026-09-15T12:17:31Z",
+          "rank": 218,
+          "score": "0.940",
+          "version": 1
+        }
+      ],
+      "status": "COMPLETE",
+      "submitted_message": "ppxl16/rsna-knee-ens-v2src-a5w60 v1",
+      "version": 1
+    },
+    "ppxl16/rsna-knee-ens-v2src-default": {
+      "handled": [
+        "notice:1:COMPLETE",
+        "download:v1",
+        "submit:v1",
+        "score:v1"
+      ],
+      "landing_dir": "D:\\kaggle\\rsna-knee\\outputs\\_landing\\rsna-knee-ens-v2src-default_v1_2026-09-12T004750Z",
+      "last_poll": "2026-09-20T10:01:19Z",
+      "public_rank": 152,
+      "public_score": "0.941",
+      "score_history": [
+        {
+          "at": "2026-09-12T07:58:10Z",
+          "rank": 152,
+          "score": "0.941",
+          "version": 1
+        }
+      ],
+      "status": "COMPLETE",
+      "submitted_message": "ppxl16/rsna-knee-ens-v2src-default v1",
+      "version": 1
+    },
+    "ppxl16/rsna-knee-ens-v2src-denserev": {
+      "handled": [
+        "notice:1:COMPLETE",
+        "download:v1",
+        "submit:v1",
+        "score:v1"
+      ],
+      "landing_dir": "D:\\kaggle\\rsna-knee\\outputs\\_landing\\rsna-knee-ens-v2src-denserev_v1_2026-09-12T043410Z",
+      "last_poll": "2026-09-20T10:01:08Z",
+      "public_rank": 158,
+      "public_score": "0.941",
+      "score_history": [
+        {
+          "at": "2026-09-12T12:31:19Z",
+          "rank": 158,
+          "score": "0.941",
+          "version": 1
+        }
+      ],
+      "status": "COMPLETE",
+      "submitted_message": "ppxl16/rsna-knee-ens-v2src-denserev v1",
+      "version": 1
+    },
+    "ppxl16/rsna-knee-ens-v2src-poolefforig": {
+      "handled": [
+        "notice:1:COMPLETE",
+        "download:v1",
+        "submitfail:v1",
+        "submit:v1",
+        "score:v1"
+      ],
+      "landing_dir": "D:\\kaggle\\rsna-knee\\outputs\\_landing\\rsna-knee-ens-v2src-poolefforig_v1_2026-09-13T135651Z",
+      "last_poll": "2026-09-20T10:02:22Z",
+      "public_rank": 196,
+      "public_score": "0.941",
+      "score_history": [
+        {
+          "at": "2026-09-14T08:37:30Z",
+          "rank": 196,
+          "score": "0.941",
+          "version": 1
+        }
+      ],
+      "status": "COMPLETE",
+      "submitted_message": "ppxl16/rsna-knee-ens-v2src-poolefforig v1",
+      "version": 1
+    },
+    "ppxl16/rsna-knee-ens-v2src-poolfluidmax": {
+      "handled": [
+        "notice:1:COMPLETE",
+        "download:v1",
+        "submitfail:v1",
+        "submit:v1",
+        "score:v1"
+      ],
+      "landing_dir": "D:\\kaggle\\rsna-knee\\outputs\\_landing\\rsna-knee-ens-v2src-poolfluidmax_v1_2026-09-13T133255Z",
+      "last_poll": "2026-09-20T10:02:15Z",
+      "public_rank": 196,
+      "public_score": "0.941",
+      "score_history": [
+        {
+          "at": "2026-09-14T09:01:47Z",
+          "rank": 196,
+          "score": "0.941",
+          "version": 1
+        }
+      ],
+      "status": "COMPLETE",
+      "submitted_message": "ppxl16/rsna-knee-ens-v2src-poolfluidmax v1",
+      "version": 1
+    },
+    "ppxl16/rsna-knee-ens-v2src-pooloamax": {
+      "handled": [
+        "notice:1:COMPLETE",
+        "download:v1",
+        "submitfail:v1",
+        "submit:v1",
+        "score:v1"
+      ],
+      "landing_dir": "D:\\kaggle\\rsna-knee\\outputs\\_landing\\rsna-knee-ens-v2src-pooloamax_v1_2026-09-13T134554Z",
+      "last_poll": "2026-09-20T10:02:18Z",
+      "public_rank": 196,
+      "public_score": "0.941",
+      "score_history": [
+        {
+          "at": "2026-09-14T08:37:25Z",
+          "rank": 196,
+          "score": "0.941",
+          "version": 1
+        }
+      ],
+      "status": "COMPLETE",
+      "submitted_message": "ppxl16/rsna-knee-ens-v2src-pooloamax v1",
+      "version": 1
+    },
+    "ppxl16/rsna-knee-ens-v2src-private25": {
+      "handled": [
+        "notice:1:COMPLETE",
+        "download:v1",
+        "submitfail:v1",
+        "submit:v1",
+        "score:v1"
+      ],
+      "landing_dir": "D:\\kaggle\\rsna-knee\\outputs\\_landing\\rsna-knee-ens-v2src-private25_v1_2026-09-12T045811Z",
+      "last_poll": "2026-09-20T10:01:50Z",
+      "public_rank": 177,
+      "public_score": "0.940",
+      "score_history": [
+        {
+          "at": "2026-09-13T08:31:31Z",
+          "rank": 177,
+          "score": "0.940",
+          "version": 1
+        }
+      ],
+      "status": "COMPLETE",
+      "submitted_message": "ppxl16/rsna-knee-ens-v2src-private25 v1",
+      "version": 1
+    },
+    "ppxl16/rsna-knee-ens-v2src-private55": {
+      "handled": [
+        "notice:1:COMPLETE",
+        "download:v1",
+        "submitfail:v1",
+        "submit:v1",
+        "score:v1"
+      ],
+      "landing_dir": "D:\\kaggle\\rsna-knee\\outputs\\_landing\\rsna-knee-ens-v2src-private55_v1_2026-09-12T050210Z",
+      "last_poll": "2026-09-20T10:01:53Z",
+      "public_rank": 177,
+      "public_score": "0.940",
+      "score_history": [
+        {
+          "at": "2026-09-13T08:46:36Z",
+          "rank": 177,
+          "score": "0.940",
+          "version": 1
+        }
+      ],
+      "status": "COMPLETE",
+      "submitted_message": "ppxl16/rsna-knee-ens-v2src-private55 v1",
+      "version": 1
+    },
+    "ppxl16/rsna-knee-ens-v2src-radcal00": {
+      "handled": [
+        "notice:1:COMPLETE",
+        "download:v1",
+        "submitfail:v1",
+        "submit:v1",
+        "score:v1"
+      ],
+      "landing_dir": "D:\\kaggle\\rsna-knee\\outputs\\_landing\\rsna-knee-ens-v2src-radcal00_v1_2026-09-14T123202Z",
+      "last_poll": "2026-09-20T10:02:27Z",
+      "public_rank": 218,
+      "public_score": "0.940",
+      "score_history": [
+        {
+          "at": "2026-09-15T12:18:16Z",
+          "rank": 218,
+          "score": "0.940",
+          "version": 1
+        }
+      ],
+      "status": "COMPLETE",
+      "submitted_message": "ppxl16/rsna-knee-ens-v2src-radcal00 v1",
+      "version": 1
+    },
+    "ppxl16/rsna-knee-ens-v2src-radcal00-parent": {
+      "handled": [
+        "notice:1:COMPLETE",
+        "download:v1",
+        "submit:v1",
+        "score:v1"
+      ],
+      "landing_dir": "D:\\kaggle\\rsna-knee\\outputs\\_landing\\rsna-knee-ens-v2src-radcal00-parent_v1_2026-09-15T023221Z",
+      "last_poll": "2026-09-20T10:02:31Z",
+      "public_rank": 218,
+      "public_score": "0.938",
+      "score_history": [
+        {
+          "at": "2026-09-15T12:18:27Z",
+          "rank": 218,
+          "score": "0.938",
+          "version": 1
+        }
+      ],
+      "status": "COMPLETE",
+      "submitted_message": "ppxl16/rsna-knee-ens-v2src-radcal00-parent v1",
+      "version": 1
+    },
+    "ppxl16/rsna-knee-ens-v2src-routedeep": {
+      "handled": [
+        "notice:1:COMPLETE",
+        "download:v1",
+        "submitfail:v1",
+        "submit:v1",
+        "score:v1"
+      ],
+      "landing_dir": "D:\\kaggle\\rsna-knee\\outputs\\_landing\\rsna-knee-ens-v2src-routedeep_v1_2026-09-12T143313Z",
+      "last_poll": "2026-09-20T10:02:11Z",
+      "public_rank": 177,
+      "public_score": "0.941",
+      "score_history": [
+        {
+          "at": "2026-09-13T08:31:50Z",
+          "rank": 177,
+          "score": "0.941",
+          "version": 1
+        }
+      ],
+      "status": "COMPLETE",
+      "submitted_message": "ppxl16/rsna-knee-ens-v2src-routedeep v1",
+      "version": 1
+    },
+    "ppxl16/rsna-knee-ens-v2src-routew75": {
+      "handled": [
+        "notice:1:COMPLETE",
+        "download:v1",
+        "submitfail:v1",
+        "submit:v1",
+        "score:v1"
+      ],
+      "landing_dir": "D:\\kaggle\\rsna-knee\\outputs\\_landing\\rsna-knee-ens-v2src-routew75_v1_2026-09-12T131712Z",
+      "last_poll": "2026-09-20T10:02:05Z",
+      "public_rank": 177,
+      "public_score": "0.940",
+      "score_history": [
+        {
+          "at": "2026-09-13T08:46:46Z",
+          "rank": 177,
+          "score": "0.940",
+          "version": 1
+        }
+      ],
+      "status": "COMPLETE",
+      "submitted_message": "ppxl16/rsna-knee-ens-v2src-routew75 v1",
+      "version": 1
+    },
+    "ppxl16/rsna-knee-ens-v2src-routew85": {
+      "handled": [
+        "notice:1:COMPLETE",
+        "download:v1",
+        "submitfail:v1",
+        "submit:v1",
+        "score:v1"
+      ],
+      "landing_dir": "D:\\kaggle\\rsna-knee\\outputs\\_landing\\rsna-knee-ens-v2src-routew85_v1_2026-09-12T134733Z",
+      "last_poll": "2026-09-20T10:02:07Z",
+      "public_rank": 180,
+      "public_score": "0.940",
+      "score_history": [
+        {
+          "at": "2026-09-13T12:23:06Z",
+          "rank": 180,
+          "score": "0.940",
+          "version": 1
+        }
+      ],
+      "status": "COMPLETE",
+      "submitted_message": "ppxl16/rsna-knee-ens-v2src-routew85 v1",
+      "version": 1
+    },
+    "ppxl16/rsna-knee-ens-v2src-v8rev": {
+      "handled": [
+        "notice:1:COMPLETE",
+        "download:v1",
+        "submit:v1",
+        "score:v1"
+      ],
+      "landing_dir": "D:\\kaggle\\rsna-knee\\outputs\\_landing\\rsna-knee-ens-v2src-v8rev_v1_2026-09-12T004436Z",
+      "last_poll": "2026-09-20T10:01:15Z",
+      "public_rank": 158,
+      "public_score": "0.941",
+      "score_history": [
+        {
+          "at": "2026-09-12T12:22:46Z",
+          "rank": 158,
+          "score": "0.941",
+          "version": 1
+        }
+      ],
+      "status": "COMPLETE",
+      "submitted_message": "ppxl16/rsna-knee-ens-v2src-v8rev v1",
+      "version": 1
+    },
+    "ppxl16/rsna-knee-ens-v2src-w5050": {
+      "handled": [
+        "notice:1:COMPLETE",
+        "download:v1",
+        "submit:v1",
+        "score:v1"
+      ],
+      "landing_dir": "D:\\kaggle\\rsna-knee\\outputs\\_landing\\rsna-knee-ens-v2src-w5050_v1_2026-09-12T043734Z",
+      "last_poll": "2026-09-20T10:01:11Z",
+      "public_rank": 158,
+      "public_score": "0.941",
+      "score_history": [
+        {
+          "at": "2026-09-12T12:22:34Z",
+          "rank": 158,
+          "score": "0.941",
+          "version": 1
+        }
+      ],
+      "status": "COMPLETE",
+      "submitted_message": "ppxl16/rsna-knee-ens-v2src-w5050 v1",
+      "version": 1
+    },
+    "ppxl16/rsna-knee-ensemble-v1": {
+      "handled": [
+        "notice:2:COMPLETE",
+        "download:v2",
+        "submit:v2",
+        "score:v2"
+      ],
+      "landing_dir": "D:\\kaggle\\rsna-knee\\outputs\\_landing\\rsna-knee-ensemble-v1_v2_2026-09-11T131720Z",
+      "last_poll": "2026-09-20T10:01:27Z",
+      "public_score": "0.941",
+      "status": "COMPLETE",
+      "submitted_message": "public 0.941-class ensemble (kernel_sources restored)",
+      "submitted_ref": 56166132,
+      "version": 2
+    },
+    "ppxl16/rsna-knee-tpu-train-v1": {
+      "handled": [
+        "notice:20:COMPLETE",
+        "download:v20"
+      ],
+      "landing_dir": "D:\\kaggle\\rsna-knee\\outputs\\_landing\\rsna-knee-tpu-train-v1_v20_2026-09-12T004331Z",
+      "last_poll": "2026-09-20T10:01:35Z",
+      "status": "COMPLETE",
+      "version": 20
+    },
+    "ppxl16/rsna-knee-train-v1": {
+      "handled": [
+        "notice:5:COMPLETE",
+        "download:v5"
+      ],
+      "landing_dir": "D:\\kaggle\\rsna-knee\\outputs\\_landing\\rsna-knee-train-v1_v5_2026-09-12T004044Z",
+      "last_poll": "2026-09-20T10:01:30Z",
+      "status": "COMPLETE",
+      "version": 5
+    }
+  }
+}

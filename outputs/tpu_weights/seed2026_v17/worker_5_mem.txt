@@ -1,0 +1,567 @@
+fork_after rss_kb=40716908 avail_kb=316997116
+warmup_pre rss_kb=40716912 avail_kb=316997116
+warmup_done rss_kb=40804152 avail_kb=316845128
+smoke_pre rss_kb=41750948 avail_kb=309398824
+smoke_done shape=(2, 12) mean=0.4907 rss_kb=43700888 avail_kb=293016116
+fold0 r336 ep0 si0 fwd g=3 shape=(2, 6, 3, 336, 336) rss_kb=43812020 avail_kb=292491768
+fold0 r336 ep0 si0 bwd rss_kb=43789724 avail_kb=292472328
+fold0 r336 ep0 si0 opt rss_kb=43790104 avail_kb=292443168
+fold0 r336 ep0 si1 fwd g=3 shape=(2, 6, 3, 336, 336) rss_kb=43854032 avail_kb=292078096
+fold0 r336 ep0 si1 bwd rss_kb=43823360 avail_kb=292037612
+fold0 r336 ep0 si1 opt rss_kb=43823360 avail_kb=292009972
+fold0 r336 ep0 si2 fwd g=1 shape=(2, 6, 3, 336, 336) rss_kb=43870484 avail_kb=291836312
+fold0 r336 ep0 si2 bwd rss_kb=43839684 avail_kb=291852060
+fold0 r336 ep0 si2 opt rss_kb=43839684 avail_kb=291826688
+fold0 r336 ep0 si3 fwd g=0 shape=(2, 6, 3, 336, 336) rss_kb=43905676 avail_kb=291607368
+fold0 r336 ep0 si3 bwd rss_kb=43874868 avail_kb=291595184
+fold0 r336 ep0 si3 opt rss_kb=43874868 avail_kb=291574436
+fold0 r336 ep0 si4 fwd g=2 shape=(2, 6, 3, 336, 336) rss_kb=43942176 avail_kb=291327856
+fold0 r336 ep0 si4 bwd rss_kb=43911332 avail_kb=291329652
+fold0 r336 ep0 si4 opt rss_kb=43911332 avail_kb=291328508
+fold0 r336 ep0 si5 fwd g=1 shape=(2, 6, 3, 336, 336) rss_kb=43962492 avail_kb=291085096
+fold0 r336 ep0 si5 bwd rss_kb=43931508 avail_kb=291086660
+fold0 r336 ep0 si5 opt rss_kb=43931508 avail_kb=291048388
+fold0 r336 ep0 si6 fwd g=1 shape=(2, 6, 3, 336, 336) rss_kb=43994020 avail_kb=290914132
+fold0 r336 ep0 si6 bwd rss_kb=43962956 avail_kb=290914840
+fold0 r336 ep0 si6 opt rss_kb=43962956 avail_kb=290892112
+fold0 r336 ep0 si7 fwd g=3 shape=(2, 6, 3, 336, 336) rss_kb=44004784 avail_kb=290795788
+fold0 r336 ep0 si7 bwd rss_kb=43973760 avail_kb=290815148
+fold0 r336 ep0 si7 opt rss_kb=43973760 avail_kb=290791348
+fold0 r336 ep0 si8 fwd g=2 shape=(2, 6, 3, 336, 336) rss_kb=44012024 avail_kb=290673964
+fold0 r336 ep0 si8 bwd rss_kb=43981000 avail_kb=290685556
+fold0 r336 ep0 si8 opt rss_kb=43981000 avail_kb=290643652
+fold0 r336 ep0 si9 fwd g=3 shape=(2, 6, 3, 336, 336) rss_kb=44044596 avail_kb=290560008
+fold0 r336 ep0 si9 bwd rss_kb=44002984 avail_kb=290562528
+fold0 r336 ep0 si9 opt rss_kb=44002984 avail_kb=290519428
+fold0 r336 ep0 si10 fwd g=3 shape=(2, 6, 3, 336, 336) rss_kb=44062996 avail_kb=290432768
+fold0 r336 ep0 si10 bwd rss_kb=44010812 avail_kb=290480748
+fold0 r336 ep0 si10 opt rss_kb=44010812 avail_kb=290422212
+fold0 r336 ep0 si11 fwd g=2 shape=(2, 6, 3, 336, 336) rss_kb=44089580 avail_kb=290258260
+fold0 r336 ep0 si11 bwd rss_kb=44016200 avail_kb=290297512
+fold0 r336 ep0 si11 opt rss_kb=44016200 avail_kb=290243672
+fold0 r336 ep0 si12 fwd g=1 shape=(2, 6, 3, 336, 336) rss_kb=44095288 avail_kb=290124332
+fold0 r336 ep0 si12 bwd rss_kb=44032664 avail_kb=290277948
+fold0 r336 ep0 si12 opt rss_kb=44032664 avail_kb=290260556
+fold0 r336 ep0 si13 fwd g=2 shape=(2, 6, 3, 336, 336) rss_kb=44106872 avail_kb=290129100
+fold0 r336 ep0 si13 bwd rss_kb=44091692 avail_kb=289947668
+fold0 r336 ep0 si13 opt rss_kb=44091692 avail_kb=289927644
+fold0 r336 ep0 si14 fwd g=0 shape=(2, 6, 3, 336, 336) rss_kb=44132892 avail_kb=289598348
+fold0 r336 ep0 si14 bwd rss_kb=44107128 avail_kb=289625464
+fold0 r336 ep0 si14 opt rss_kb=44107128 avail_kb=289615452
+fold0 r336 ep0 si15 fwd g=2 shape=(2, 6, 3, 336, 336) rss_kb=44128972 avail_kb=289541884
+fold0 r336 ep0 si15 bwd rss_kb=44113788 avail_kb=289513788
+fold0 r336 ep0 si15 opt rss_kb=44113788 avail_kb=289515136
+fold0 r336 ep0 si16 fwd g=1 shape=(2, 6, 3, 336, 336) rss_kb=44165712 avail_kb=289398736
+fold0 r336 ep0 si16 bwd rss_kb=44124064 avail_kb=289409948
+fold0 r336 ep0 si16 opt rss_kb=44124064 avail_kb=289401404
+fold0 r336 ep0 si17 fwd g=2 shape=(2, 6, 3, 336, 336) rss_kb=44183668 avail_kb=289285624
+fold0 r336 ep0 si17 bwd rss_kb=44131468 avail_kb=289318888
+fold0 r336 ep0 si17 opt rss_kb=44131468 avail_kb=289307196
+fold0 r336 ep0 si18 fwd g=1 shape=(2, 6, 3, 336, 336) rss_kb=44208364 avail_kb=289165272
+fold0 r336 ep0 si18 bwd rss_kb=44140256 avail_kb=289201560
+fold0 r336 ep0 si18 opt rss_kb=44140256 avail_kb=289271960
+fold0 r336 ep0 si19 fwd g=1 shape=(2, 6, 3, 336, 336) rss_kb=44244944 avail_kb=288948280
+fold0 r336 ep0 si19 bwd rss_kb=44229800 avail_kb=288896364
+fold0 r336 ep0 si19 opt rss_kb=44229800 avail_kb=288895148
+fold0 r336 ep0 si20 fwd g=3 shape=(2, 6, 3, 336, 336) rss_kb=44273060 avail_kb=288501324
+fold0 r336 ep0 si20 bwd rss_kb=44247324 avail_kb=288521348
+fold0 r336 ep0 si20 opt rss_kb=44247324 avail_kb=288508232
+fold0 r336 ep0 si21 fwd g=0 shape=(2, 6, 3, 336, 336) rss_kb=44259236 avail_kb=288404512
+fold0 r336 ep0 si21 bwd rss_kb=44259932 avail_kb=288404144
+fold0 r336 ep0 si21 opt rss_kb=44259932 avail_kb=288406436
+fold0 r336 ep0 si22 fwd g=3 shape=(2, 6, 3, 336, 336) rss_kb=44312984 avail_kb=288252012
+fold0 r336 ep0 si22 bwd rss_kb=44260760 avail_kb=288312372
+fold0 r336 ep0 si22 opt rss_kb=44260760 avail_kb=288277588
+fold0 r336 ep0 si23 fwd g=0 shape=(2, 6, 3, 336, 336) rss_kb=44302284 avail_kb=287994272
+fold0 r336 ep0 si23 bwd rss_kb=44245200 avail_kb=288086688
+fold0 r336 ep0 si23 opt rss_kb=44245200 avail_kb=288078896
+fold0 r336 ep0 si24 fwd g=1 shape=(2, 6, 3, 336, 336) rss_kb=44373732 avail_kb=287815232
+fold0 r336 ep0 si24 bwd rss_kb=44358592 avail_kb=287822488
+fold0 r336 ep0 si24 opt rss_kb=44358592 avail_kb=287778808
+fold0 r336 ep0 si25 fwd g=0 shape=(2, 6, 3, 336, 336) rss_kb=44360920 avail_kb=287414080
+fold0 r336 ep0 si25 bwd rss_kb=44361616 avail_kb=287410772
+fold0 r336 ep0 si25 opt rss_kb=44361616 avail_kb=287355756
+fold0 r336 ep0 si26 fwd g=1 shape=(2, 6, 3, 336, 336) rss_kb=44404880 avail_kb=287140268
+fold0 r336 ep0 si26 bwd rss_kb=44405592 avail_kb=287125796
+fold0 r336 ep0 si26 opt rss_kb=44405592 avail_kb=287048948
+fold0 r336 ep0 si27 fwd g=1 shape=(2, 6, 3, 336, 336) rss_kb=44442092 avail_kb=287027232
+fold0 r336 ep0 si27 bwd rss_kb=44379472 avail_kb=287011988
+fold0 r336 ep0 si27 opt rss_kb=44379472 avail_kb=287007996
+fold0 r336 ep0 si28 fwd g=3 shape=(2, 6, 3, 336, 336) rss_kb=44493180 avail_kb=286639880
+fold0 r336 ep0 si28 bwd rss_kb=44478032 avail_kb=286656324
+fold0 r336 ep0 si28 opt rss_kb=44478032 avail_kb=286658204
+fold0 r336 ep0 si29 fwd g=1 shape=(2, 6, 3, 336, 336) rss_kb=44535768 avail_kb=286251872
+fold0 r336 ep0 si29 bwd rss_kb=44509996 avail_kb=286266108
+fold0 r336 ep0 si29 opt rss_kb=44509996 avail_kb=286263132
+fold0 r336 ep0 si30 fwd g=1 shape=(2, 6, 3, 336, 336) rss_kb=44538736 avail_kb=286028124
+fold0 r336 ep0 si30 bwd rss_kb=44539436 avail_kb=286009852
+fold0 r336 ep0 si30 opt rss_kb=44539436 avail_kb=286003980
+fold0 r336 ep0 si31 fwd g=1 shape=(2, 6, 3, 336, 336) rss_kb=44555324 avail_kb=285973004
+fold0 r336 ep0 si31 bwd rss_kb=44487356 avail_kb=286054016
+fold0 r336 ep0 si31 opt rss_kb=44487356 avail_kb=285958128
+fold0 r336 ep0 si32 fwd g=0 shape=(2, 6, 3, 336, 336) rss_kb=44596212 avail_kb=285454588
+fold0 r336 ep0 si32 bwd rss_kb=44581028 avail_kb=285449604
+fold0 r336 ep0 si32 opt rss_kb=44581028 avail_kb=285405140
+fold0 r336 ep0 si33 fwd g=3 shape=(2, 6, 3, 336, 336) rss_kb=44598940 avail_kb=285085920
+fold0 r336 ep0 si33 bwd rss_kb=44583752 avail_kb=285110284
+fold0 r336 ep0 si33 opt rss_kb=44583752 avail_kb=285112408
+fold0 r336 ep0 si34 fwd g=2 shape=(2, 6, 3, 336, 336) rss_kb=44632192 avail_kb=284867028
+fold0 r336 ep0 si34 bwd rss_kb=44632888 avail_kb=284888212
+fold0 r336 ep0 si34 opt rss_kb=44632888 avail_kb=284849656
+fold0 r336 ep0 si35 fwd g=2 shape=(2, 6, 3, 336, 336) rss_kb=44652732 avail_kb=284754008
+fold0 r336 ep0 si35 bwd rss_kb=44590108 avail_kb=284856916
+fold0 r336 ep0 si35 opt rss_kb=44590108 avail_kb=284809680
+fold0 r336 ep0 si36 fwd g=2 shape=(2, 6, 3, 336, 336) rss_kb=44712084 avail_kb=284416004
+fold0 r336 ep0 si36 bwd rss_kb=44686380 avail_kb=284438464
+fold0 r336 ep0 si36 opt rss_kb=44686380 avail_kb=284438716
+fold0 r336 ep0 si37 fwd g=3 shape=(2, 6, 3, 336, 336) rss_kb=44737072 avail_kb=284102636
+fold0 r336 ep0 si37 bwd rss_kb=44695432 avail_kb=284139036
+fold0 r336 ep0 si37 opt rss_kb=44695432 avail_kb=284112324
+fold0 r336 ep0 si38 fwd g=3 shape=(2, 6, 3, 336, 336) rss_kb=44773124 avail_kb=283973912
+fold0 r336 ep0 si38 bwd rss_kb=44715600 avail_kb=283983824
+fold0 r336 ep0 si38 opt rss_kb=44715600 avail_kb=283988384
+fold0 r336 ep0 si39 fwd g=3 shape=(2, 6, 3, 336, 336) rss_kb=44814280 avail_kb=283504456
+fold0 r336 ep0 si39 bwd rss_kb=44799096 avail_kb=283467772
+fold0 r336 ep0 si39 opt rss_kb=44799096 avail_kb=283460108
+fold0 r336 ep0 si40 fwd g=0 shape=(2, 6, 3, 336, 336) rss_kb=44822292 avail_kb=283110316
+fold0 r336 ep0 si40 bwd rss_kb=44807108 avail_kb=283121920
+fold0 r336 ep0 si40 opt rss_kb=44807108 avail_kb=283119704
+fold0 r336 ep0 si41 fwd g=0 shape=(2, 6, 3, 336, 336) rss_kb=44855080 avail_kb=282975180
+fold0 r336 ep0 si41 bwd rss_kb=44855776 avail_kb=282947152
+fold0 r336 ep0 si41 opt rss_kb=44855776 avail_kb=282915232
+fold0 r336 ep0 si42 fwd g=3 shape=(2, 6, 3, 336, 336) rss_kb=44915280 avail_kb=282627948
+fold0 r336 ep0 si42 bwd rss_kb=44900092 avail_kb=282629368
+fold0 r336 ep0 si42 opt rss_kb=44900036 avail_kb=282573012
+fold0 r336 ep0 si43 fwd g=0 shape=(2, 6, 3, 336, 336) rss_kb=44929800 avail_kb=282335744
+fold0 r336 ep0 si43 bwd rss_kb=44914616 avail_kb=282411668
+fold0 r336 ep0 si43 opt rss_kb=44914616 avail_kb=282392620
+fold0 r336 ep0 si44 fwd g=0 shape=(2, 6, 3, 336, 336) rss_kb=44970140 avail_kb=282327256
+fold0 r336 ep0 si44 bwd rss_kb=44917912 avail_kb=282370032
+fold0 r336 ep0 si44 opt rss_kb=44917912 avail_kb=282353172
+fold0 r336 ep0 si45 fwd g=3 shape=(2, 6, 3, 336, 336) rss_kb=45005056 avail_kb=282057780
+fold0 r336 ep0 si45 bwd rss_kb=44989872 avail_kb=282044252
+fold0 r336 ep0 si45 opt rss_kb=44989872 avail_kb=281965720
+fold0 r336 ep0 si46 fwd g=0 shape=(2, 6, 3, 336, 336) rss_kb=45032540 avail_kb=281635672
+fold0 r336 ep0 si46 bwd rss_kb=44990896 avail_kb=281681288
+fold0 r336 ep0 si46 opt rss_kb=44990896 avail_kb=281676540
+fold0 r336 ep0 si47 fwd g=3 shape=(2, 6, 3, 336, 336) rss_kb=45059992 avail_kb=281468932
+fold0 r336 ep0 si47 bwd rss_kb=44991884 avail_kb=281568868
+fold0 r336 ep0 si47 opt rss_kb=44991884 avail_kb=281537544
+fold0 r336 ep0 si48 fwd g=0 shape=(2, 6, 3, 336, 336) rss_kb=45085728 avail_kb=281108564
+fold0 r336 ep0 si48 bwd rss_kb=45070540 avail_kb=281063588
+fold0 r336 ep0 si48 opt rss_kb=45070540 avail_kb=281005712
+fold0 r336 ep0 si49 fwd g=2 shape=(2, 6, 3, 336, 336) rss_kb=45149372 avail_kb=280497260
+fold0 r336 ep0 si49 bwd rss_kb=45134188 avail_kb=280486708
+fold0 r336 ep0 si49 opt rss_kb=45134188 avail_kb=280500764
+fold0 r336 ep0 si50 fwd g=0 shape=(2, 6, 3, 336, 336) rss_kb=45167172 avail_kb=280226080
+fold0 r336 ep0 si50 bwd rss_kb=45093908 avail_kb=280352084
+fold0 r336 ep0 si50 opt rss_kb=45093908 avail_kb=280338596
+fold0 r336 ep0 si51 fwd g=1 shape=(2, 6, 3, 336, 336) rss_kb=45300640 avail_kb=279418120
+fold0 r336 ep0 si51 bwd rss_kb=45285456 avail_kb=279332632
+fold0 r336 ep0 si51 opt rss_kb=45285456 avail_kb=279278900
+fold0 r336 ep0 si52 fwd g=1 shape=(2, 6, 3, 336, 336) rss_kb=45332720 avail_kb=278933948
+fold0 r336 ep0 si52 bwd rss_kb=45333416 avail_kb=278942100
+fold0 r336 ep0 si52 opt rss_kb=45333416 avail_kb=278940780
+fold0 r336 ep0 si53 fwd g=2 shape=(2, 6, 3, 336, 336) rss_kb=45429048 avail_kb=278482628
+fold0 r336 ep0 si53 bwd rss_kb=45361160 avail_kb=278555420
+fold0 r336 ep0 si53 opt rss_kb=45361160 avail_kb=278524096
+fold0 r336 ep0 si54 fwd g=1 shape=(2, 6, 3, 336, 336) rss_kb=45490360 avail_kb=277929796
+fold0 r336 ep0 si54 bwd rss_kb=45464592 avail_kb=277898612
+fold0 r336 ep0 si54 opt rss_kb=45464592 avail_kb=277802656
+fold0 r336 ep0 si55 fwd g=0 shape=(2, 6, 3, 336, 336) rss_kb=45497780 avail_kb=277453844
+fold0 r336 ep0 si55 bwd rss_kb=45498476 avail_kb=277437672
+fold0 r336 ep0 si55 opt rss_kb=45498476 avail_kb=277413760
+fold0 r336 ep0 si56 fwd g=2 shape=(2, 6, 3, 336, 336) rss_kb=45636216 avail_kb=276811776
+fold0 r336 ep0 si56 bwd rss_kb=45621032 avail_kb=276654264
+fold0 r336 ep0 si56 opt rss_kb=45621032 avail_kb=276673276
+fold0 r336 ep0 si57 fwd g=0 shape=(2, 6, 3, 336, 336) rss_kb=45638140 avail_kb=276096512
+fold0 r336 ep0 si57 bwd rss_kb=45638836 avail_kb=276085920
+fold0 r336 ep0 si57 opt rss_kb=45638836 avail_kb=276116752
+fold0 r336 ep0 si58 fwd g=3 shape=(2, 6, 3, 336, 336) rss_kb=45714912 avail_kb=275857948
+fold0 r336 ep0 si58 bwd rss_kb=45647360 avail_kb=275853412
+fold0 r336 ep0 si58 opt rss_kb=45647360 avail_kb=275896916
+fold0 r336 ep0 si59 fwd g=3 shape=(2, 6, 3, 336, 336) rss_kb=45781484 avail_kb=275163804
+fold0 r336 ep0 si59 bwd rss_kb=45755720 avail_kb=275190680
+fold0 r336 ep0 si59 opt rss_kb=45755720 avail_kb=275135820
+fold0 r336 ep0 si60 fwd g=2 shape=(2, 6, 3, 336, 336) rss_kb=45937528 avail_kb=274282616
+fold0 r336 ep0 si60 bwd rss_kb=45885304 avail_kb=274283624
+fold0 r336 ep0 si60 opt rss_kb=45885304 avail_kb=274341452
+fold0 r336 ep0 si61 fwd g=2 shape=(2, 6, 3, 336, 336) rss_kb=46058160 avail_kb=273676364
+fold0 r336 ep0 si61 bwd rss_kb=46042980 avail_kb=273542824
+fold0 r336 ep0 si61 opt rss_kb=46042980 avail_kb=273550088
+fold0 r336 ep0 si62 fwd g=1 shape=(2, 6, 3, 336, 336) rss_kb=46188588 avail_kb=272690644
+fold0 r336 ep0 si62 bwd rss_kb=46173400 avail_kb=272689920
+fold0 r336 ep0 si62 opt rss_kb=46173400 avail_kb=272658728
+fold0 r336 ep0 si63 fwd g=0 shape=(2, 6, 3, 336, 336) rss_kb=46231936 avail_kb=272088912
+fold0 r336 ep0 si63 bwd rss_kb=46164020 avail_kb=272031384
+fold0 r336 ep0 si63 opt rss_kb=46164020 avail_kb=272011192
+fold0 r336 ep0 si64 fwd g=1 shape=(2, 6, 3, 336, 336) rss_kb=46342072 avail_kb=271270004
+fold0 r336 ep0 si64 bwd rss_kb=46300424 avail_kb=271269672
+fold0 r336 ep0 si64 opt rss_kb=46300424 avail_kb=271277304
+fold0 r336 ep0 si65 fwd g=3 shape=(2, 6, 3, 336, 336) rss_kb=46402608 avail_kb=270787716
+fold0 r336 ep0 si65 bwd rss_kb=46329344 avail_kb=270843800
+fold0 r336 ep0 si65 opt rss_kb=46329344 avail_kb=270881156
+fold0 r336 ep0 si66 fwd g=3 shape=(2, 6, 3, 336, 336) rss_kb=46527464 avail_kb=270020848
+fold0 r336 ep0 si66 bwd rss_kb=46501700 avail_kb=269996864
+fold0 r336 ep0 si66 opt rss_kb=46501700 avail_kb=269980800
+fold0 r336 ep0 si67 fwd g=3 shape=(2, 6, 3, 336, 336) rss_kb=46635576 avail_kb=269247548
+fold0 r336 ep0 si67 bwd rss_kb=46593932 avail_kb=269230780
+fold0 r336 ep0 si67 opt rss_kb=46593932 avail_kb=269249708
+fold0 r336 ep0 si68 fwd g=3 shape=(2, 6, 3, 336, 336) rss_kb=46725020 avail_kb=268448176
+fold0 r336 ep0 si68 bwd rss_kb=46709836 avail_kb=268392416
+fold0 r336 ep0 si68 opt rss_kb=46709836 avail_kb=268345596
+fold0 r336 ep0 si69 fwd g=3 shape=(2, 6, 3, 336, 336) rss_kb=46859072 avail_kb=267594388
+fold0 r336 ep0 si69 bwd rss_kb=46817428 avail_kb=267599552
+fold0 r336 ep0 si69 opt rss_kb=46817428 avail_kb=267577384
+fold0 r336 ep0 si70 fwd g=3 shape=(2, 6, 3, 336, 336) rss_kb=46972744 avail_kb=267001448
+fold0 r336 ep0 si70 bwd rss_kb=46941684 avail_kb=267052900
+fold0 r336 ep0 si70 opt rss_kb=46941684 avail_kb=267014256
+fold0 r336 ep0 si71 fwd g=1 shape=(2, 6, 3, 336, 336) rss_kb=47065908 avail_kb=266186644
+fold0 r336 ep0 si71 bwd rss_kb=47024264 avail_kb=266196812
+fold0 r336 ep0 si71 opt rss_kb=47024264 avail_kb=266220876
+fold0 r336 ep0 si72 fwd g=1 shape=(2, 6, 3, 336, 336) rss_kb=47214056 avail_kb=265296252
+fold0 r336 ep0 si72 bwd rss_kb=47198868 avail_kb=265297748
+fold0 r336 ep0 si72 opt rss_kb=47198868 avail_kb=265253800
+fold0 r336 ep0 si73 fwd g=0 shape=(2, 6, 3, 336, 336) rss_kb=47223716 avail_kb=264446044
+fold0 r336 ep0 si73 bwd rss_kb=47224412 avail_kb=264456768
+fold0 r336 ep0 si73 opt rss_kb=47224412 avail_kb=264460400
+fold0 r336 ep0 si74 fwd g=1 shape=(2, 6, 3, 336, 336) rss_kb=47364544 avail_kb=263584608
+fold0 r336 ep0 si74 bwd rss_kb=47365240 avail_kb=263550952
+fold0 r336 ep0 si74 opt rss_kb=47365240 avail_kb=263551596
+fold0 r336 ep0 si75 fwd g=1 shape=(2, 6, 3, 336, 336) rss_kb=47436332 avail_kb=262774576
+fold0 r336 ep0 si75 bwd rss_kb=47405272 avail_kb=262745288
+fold0 r336 ep0 si75 opt rss_kb=47405272 avail_kb=262743996
+fold0 r336 ep0 si76 fwd g=2 shape=(2, 6, 3, 336, 336) rss_kb=47578520 avail_kb=261939748
+fold0 r336 ep0 si76 bwd rss_kb=47563332 avail_kb=261838324
+fold0 r336 ep0 si76 opt rss_kb=47563332 avail_kb=261852112
+fold0 r336 ep0 si77 fwd g=1 shape=(2, 6, 3, 336, 336) rss_kb=47575716 avail_kb=261256208
+fold0 r336 ep0 si77 bwd rss_kb=47560532 avail_kb=261254808
+fold0 r336 ep0 si77 opt rss_kb=47560532 avail_kb=261265220
+fold0 r336 ep0 si78 fwd g=3 shape=(2, 6, 3, 336, 336) rss_kb=47751848 avail_kb=260461932
+fold0 r336 ep0 si78 bwd rss_kb=47736664 avail_kb=260433012
+fold0 r336 ep0 si78 opt rss_kb=47736664 avail_kb=260329660
+fold0 r336 ep0 si79 fwd g=0 shape=(2, 6, 3, 336, 336) rss_kb=47848824 avail_kb=259416224
+fold0 r336 ep0 si79 bwd rss_kb=47833644 avail_kb=259422788
+fold0 r336 ep0 si79 opt rss_kb=47833644 avail_kb=259420408
+fold0 r336 ep0 si80 fwd g=3 shape=(2, 6, 3, 336, 336) rss_kb=47934388 avail_kb=258864696
+fold0 r336 ep0 si80 bwd rss_kb=47919204 avail_kb=258876796
+fold0 r336 ep0 si80 opt rss_kb=47919204 avail_kb=258861208
+fold0 r336 ep0 si81 fwd g=2 shape=(2, 6, 3, 336, 336) rss_kb=48031528 avail_kb=258051696
+fold0 r336 ep0 si81 bwd rss_kb=48032224 avail_kb=258050168
+fold0 r336 ep0 si81 opt rss_kb=48032224 avail_kb=258049228
+fold0 r336 ep0 si82 fwd g=1 shape=(2, 6, 3, 336, 336) rss_kb=48174608 avail_kb=257352472
+fold0 r336 ep0 si82 bwd rss_kb=48143548 avail_kb=257369200
+fold0 r336 ep0 si82 opt rss_kb=48143548 avail_kb=257336040
+fold0 r336 ep0 si83 fwd g=1 shape=(2, 6, 3, 336, 336) rss_kb=48267556 avail_kb=256560280
+fold0 r336 ep0 si83 bwd rss_kb=48225908 avail_kb=256655708
+fold0 r336 ep0 si83 opt rss_kb=48225908 avail_kb=256655708
+fold0 r336 ep0 si84 fwd g=3 shape=(2, 6, 3, 336, 336) rss_kb=48392852 avail_kb=255785160
+fold0 r336 ep0 si84 bwd rss_kb=48361792 avail_kb=255730508
+fold0 r336 ep0 si84 opt rss_kb=48361792 avail_kb=255652096
+fold0 r336 ep0 si85 fwd g=1 shape=(2, 6, 3, 336, 336) rss_kb=48474792 avail_kb=254976264
+fold0 r336 ep0 si85 bwd rss_kb=48443736 avail_kb=255007160
+fold0 r336 ep0 si85 opt rss_kb=48443736 avail_kb=255080976
+fold0 r336 ep0 si86 fwd g=0 shape=(2, 6, 3, 336, 336) rss_kb=48588492 avail_kb=254574592
+fold0 r336 ep0 si86 bwd rss_kb=48573304 avail_kb=254541020
+fold0 r336 ep0 si86 opt rss_kb=48573304 avail_kb=254449980
+fold0 r336 ep0 si87 fwd g=3 shape=(2, 6, 3, 336, 336) rss_kb=48658988 avail_kb=253406056
+fold0 r336 ep0 si87 bwd rss_kb=48585724 avail_kb=253404960
+fold0 r336 ep0 si87 opt rss_kb=48585724 avail_kb=253417492
+fold0 r336 ep0 si88 fwd g=2 shape=(2, 6, 3, 336, 336) rss_kb=48795188 avail_kb=252803580
+fold0 r336 ep0 si88 bwd rss_kb=48753548 avail_kb=252800204
+fold0 r336 ep0 si88 opt rss_kb=48753548 avail_kb=252787732
+fold0 r336 ep0 si89 fwd g=0 shape=(2, 6, 3, 336, 336) rss_kb=48889976 avail_kb=251723072
+fold0 r336 ep0 si89 bwd rss_kb=48890668 avail_kb=251707464
+fold0 r336 ep0 si89 opt rss_kb=48890668 avail_kb=251610272
+fold0 r336 ep0 si90 fwd g=3 shape=(2, 6, 3, 336, 336) rss_kb=48976752 avail_kb=250736500
+fold0 r336 ep0 si90 bwd rss_kb=48977464 avail_kb=250756264
+fold0 r336 ep0 si90 opt rss_kb=48977464 avail_kb=250746208
+fold0 r336 ep0 si91 fwd g=3 shape=(2, 6, 3, 336, 336) rss_kb=49162796 avail_kb=250014644
+fold0 r336 ep0 si91 bwd rss_kb=49131740 avail_kb=250002452
+fold0 r336 ep0 si91 opt rss_kb=49131740 avail_kb=249900112
+fold0 r336 ep0 si92 fwd g=0 shape=(2, 6, 3, 336, 336) rss_kb=49333192 avail_kb=248840292
+fold0 r336 ep0 si92 bwd rss_kb=49302132 avail_kb=248819764
+fold0 r336 ep0 si92 opt rss_kb=49302132 avail_kb=248794172
+fold0 r336 ep0 si93 fwd g=2 shape=(2, 6, 3, 336, 336) rss_kb=49470276 avail_kb=247785696
+fold0 r336 ep0 si93 bwd rss_kb=49428648 avail_kb=247807520
+fold0 r336 ep0 si93 opt rss_kb=49428648 avail_kb=247780716
+fold0 r336 ep0 si94 fwd g=0 shape=(2, 6, 3, 336, 336) rss_kb=49502248 avail_kb=246961900
+fold0 r336 ep0 si94 bwd rss_kb=49502956 avail_kb=246883972
+fold0 r336 ep0 si94 opt rss_kb=49502956 avail_kb=246740292
+fold0 r336 ep0 si95 fwd g=3 shape=(2, 6, 3, 336, 336) rss_kb=49752148 avail_kb=245812320
+fold0 r336 ep0 si95 bwd rss_kb=49726396 avail_kb=245723332
+fold0 r336 ep0 si95 opt rss_kb=49726396 avail_kb=245691484
+fold0 r336 ep0 si96 fwd g=1 shape=(2, 6, 3, 336, 336) rss_kb=49899836 avail_kb=244699776
+fold0 r336 ep0 si96 bwd rss_kb=49900536 avail_kb=244631100
+fold0 r336 ep0 si96 opt rss_kb=49900536 avail_kb=244590488
+fold0 r336 ep0 si97 fwd g=0 shape=(2, 6, 3, 336, 336) rss_kb=50031636 avail_kb=243565404
+fold0 r336 ep0 si97 bwd rss_kb=50032328 avail_kb=243444892
+fold0 r336 ep0 si97 opt rss_kb=50032328 avail_kb=243479548
+fold0 r336 ep0 si98 fwd g=1 shape=(2, 6, 3, 336, 336) rss_kb=50195492 avail_kb=242738656
+fold0 r336 ep0 si98 bwd rss_kb=50153868 avail_kb=242707764
+fold0 r336 ep0 si98 opt rss_kb=50153868 avail_kb=242671180
+fold0 r336 ep0 si99 fwd g=2 shape=(2, 6, 3, 336, 336) rss_kb=50284344 avail_kb=241593040
+fold0 r336 ep0 si99 bwd rss_kb=50269164 avail_kb=241532120
+fold0 r336 ep0 si99 opt rss_kb=50269164 avail_kb=241465004
+fold0 r336 ep0 si100 fwd g=0 shape=(2, 6, 3, 336, 336) rss_kb=50293844 avail_kb=240688204
+fold0 r336 ep0 si100 bwd rss_kb=50294536 avail_kb=240627088
+fold0 r336 ep0 si100 opt rss_kb=50294536 avail_kb=240661992
+fold0 r336 ep0 si101 fwd g=0 shape=(2, 6, 3, 336, 336) rss_kb=50526972 avail_kb=240030832
+fold0 r336 ep0 si101 bwd rss_kb=50511800 avail_kb=240000332
+fold0 r336 ep0 si101 opt rss_kb=50511800 avail_kb=239974104
+fold0 r336 ep0 si102 fwd g=1 shape=(2, 6, 3, 336, 336) rss_kb=50587220 avail_kb=238856396
+fold0 r336 ep0 si102 bwd rss_kb=50587912 avail_kb=238829808
+fold0 r336 ep0 si102 opt rss_kb=50587912 avail_kb=238797072
+fold0 r336 ep0 si103 fwd g=2 shape=(2, 6, 3, 336, 336) rss_kb=50732372 avail_kb=238010588
+fold0 r336 ep0 si103 bwd rss_kb=50690732 avail_kb=237972716
+fold0 r336 ep0 si103 opt rss_kb=50690732 avail_kb=237909832
+fold0 r336 ep0 si104 fwd g=3 shape=(2, 6, 3, 336, 336) rss_kb=50864128 avail_kb=236930376
+fold0 r336 ep0 si104 bwd rss_kb=50838372 avail_kb=236945644
+fold0 r336 ep0 si104 opt rss_kb=50838372 avail_kb=236890804
+fold0 r336 ep0 si105 fwd g=1 shape=(2, 6, 3, 336, 336) rss_kb=50959924 avail_kb=235958948
+fold0 r336 ep0 si105 bwd rss_kb=50960620 avail_kb=235958948
+fold0 r336 ep0 si105 opt rss_kb=50960620 avail_kb=235919020
+fold0 r336 ep0 si106 fwd g=2 shape=(2, 6, 3, 336, 336) rss_kb=51223104 avail_kb=235010532
+fold0 r336 ep0 si106 bwd rss_kb=51181460 avail_kb=235039764
+fold0 r336 ep0 si106 opt rss_kb=51181460 avail_kb=235009004
+fold0 r336 ep0 si107 fwd g=0 shape=(2, 6, 3, 336, 336) rss_kb=51332228 avail_kb=233902332
+fold0 r336 ep0 si107 bwd rss_kb=51306460 avail_kb=233891232
+fold0 r336 ep0 si107 opt rss_kb=51306460 avail_kb=233816752
+fold0 r336 ep0 si108 fwd g=1 shape=(2, 6, 3, 336, 336) rss_kb=51353592 avail_kb=232873848
+fold0 r336 ep0 si108 bwd rss_kb=51280324 avail_kb=232823668
+fold0 r336 ep0 si108 opt rss_kb=51280324 avail_kb=232817692
+fold0 r336 ep0 si109 fwd g=0 shape=(2, 6, 3, 336, 336) rss_kb=51516104 avail_kb=231943704
+fold0 r336 ep0 si109 bwd rss_kb=51474464 avail_kb=231926428
+fold0 r336 ep0 si109 opt rss_kb=51474464 avail_kb=231868672
+fold0 r336 ep0 si110 fwd g=1 shape=(2, 6, 3, 336, 336) rss_kb=51630340 avail_kb=230853212
+fold0 r336 ep0 si110 bwd rss_kb=51599280 avail_kb=230867472
+fold0 r336 ep0 si110 opt rss_kb=51599280 avail_kb=230838844
+fold0 r336 ep0 si111 fwd g=3 shape=(2, 6, 3, 336, 336) rss_kb=51720096 avail_kb=229664708
+fold0 r336 ep0 si111 bwd rss_kb=51646828 avail_kb=229660536
+fold0 r336 ep0 si111 opt rss_kb=51646828 avail_kb=229625148
+fold0 r336 ep0 si112 fwd g=0 shape=(2, 6, 3, 336, 336) rss_kb=51837256 avail_kb=228331292
+fold0 r336 ep0 si112 bwd rss_kb=51795616 avail_kb=228467996
+fold0 r336 ep0 si112 opt rss_kb=51795616 avail_kb=228432716
+fold0 r336 ep0 si113 fwd g=2 shape=(2, 6, 3, 336, 336) rss_kb=51913200 avail_kb=227461088
+fold0 r336 ep0 si113 bwd rss_kb=51898012 avail_kb=227487376
+fold0 r336 ep0 si113 opt rss_kb=51898012 avail_kb=227477660
+fold0 r336 ep0 si114 fwd g=3 shape=(2, 6, 3, 336, 336) rss_kb=52092552 avail_kb=226279528
+fold0 r336 ep0 si114 bwd rss_kb=52093268 avail_kb=226293804
+fold0 r336 ep0 si114 opt rss_kb=52093268 avail_kb=226239892
+fold0 r336 ep0 si115 fwd g=3 shape=(2, 6, 3, 336, 336) rss_kb=52199024 avail_kb=225201984
+fold0 r336 ep0 si115 bwd rss_kb=52157380 avail_kb=225261324
+fold0 r336 ep0 si115 opt rss_kb=52157380 avail_kb=225227884
+fold0 r336 ep0 si116 fwd g=3 shape=(2, 6, 3, 336, 336) rss_kb=52356764 avail_kb=224267872
+fold0 r336 ep0 si116 bwd rss_kb=52315120 avail_kb=224291056
+fold0 r336 ep0 si116 opt rss_kb=52315120 avail_kb=224242064
+fold0 r336 ep0 si117 fwd g=1 shape=(2, 6, 3, 336, 336) rss_kb=52438916 avail_kb=223076456
+fold0 r336 ep0 si117 bwd rss_kb=52423732 avail_kb=223097780
+fold0 r336 ep0 si117 opt rss_kb=52423732 avail_kb=223050688
+fold0 r336 ep0 si118 fwd g=3 shape=(2, 6, 3, 336, 336) rss_kb=52521392 avail_kb=222176612
+fold0 r336 ep0 si118 bwd rss_kb=52522216 avail_kb=222150756
+fold0 r336 ep0 si118 opt rss_kb=52522216 avail_kb=222133724
+fold0 r336 ep0 si119 fwd g=3 shape=(2, 6, 3, 336, 336) rss_kb=52650856 avail_kb=221372908
+fold0 r336 ep0 si119 bwd rss_kb=52609212 avail_kb=221428780
+fold0 r336 ep0 si119 opt rss_kb=52609212 avail_kb=221380804
+fold0 r336 ep0 si120 fwd g=1 shape=(2, 6, 3, 336, 336) rss_kb=52751012 avail_kb=220202920
+fold0 r336 ep0 si120 bwd rss_kb=52735824 avail_kb=220212956
+fold0 r336 ep0 si120 opt rss_kb=52735824 avail_kb=220160508
+fold0 r336 ep0 si121 fwd g=2 shape=(2, 6, 3, 336, 336) rss_kb=52880680 avail_kb=218981872
+fold0 r336 ep0 si121 bwd rss_kb=52881376 avail_kb=218957628
+fold0 r336 ep0 si121 opt rss_kb=52881376 avail_kb=218920560
+fold0 r336 ep0 si122 fwd g=3 shape=(2, 6, 3, 336, 336) rss_kb=52938980 avail_kb=218309884
+fold0 r336 ep0 si122 bwd rss_kb=52939676 avail_kb=218230316
+fold0 r336 ep0 si122 opt rss_kb=52939676 avail_kb=218192272
+fold0 r336 ep0 si123 fwd g=0 shape=(2, 6, 3, 336, 336) rss_kb=53095472 avail_kb=217191984
+fold0 r336 ep0 si123 bwd rss_kb=53069704 avail_kb=217184584
+fold0 r336 ep0 si123 opt rss_kb=53069704 avail_kb=217177652
+fold0 r336 ep0 si124 fwd g=0 shape=(2, 6, 3, 336, 336) rss_kb=53222424 avail_kb=216162132
+fold0 r336 ep0 si124 bwd rss_kb=53207236 avail_kb=216107396
+fold0 r336 ep0 si124 opt rss_kb=53207236 avail_kb=216038588
+fold0 r336 ep0 si125 fwd g=0 shape=(2, 6, 3, 336, 336) rss_kb=53391220 avail_kb=214827488
+fold0 r336 ep0 si125 bwd rss_kb=53391916 avail_kb=214787548
+fold0 r336 ep0 si125 opt rss_kb=53391916 avail_kb=214751176
+fold0 r336 ep0 si126 fwd g=2 shape=(2, 6, 3, 336, 336) rss_kb=53451408 avail_kb=213790100
+fold0 r336 ep0 si126 bwd rss_kb=53452104 avail_kb=213746688
+fold0 r336 ep0 si126 opt rss_kb=53452104 avail_kb=213698060
+fold0 r336 ep0 si127 fwd g=3 shape=(2, 6, 3, 336, 336) rss_kb=53741024 avail_kb=212457164
+fold0 r336 ep0 si127 bwd rss_kb=53699376 avail_kb=212440172
+fold0 r336 ep0 si127 opt rss_kb=53699376 avail_kb=212401312
+fold0 r336 ep0 si128 fwd g=0 shape=(2, 6, 3, 336, 336) rss_kb=53857112 avail_kb=211566104
+fold0 r336 ep0 si128 bwd rss_kb=53831340 avail_kb=211560452
+fold0 r336 ep0 si128 opt rss_kb=53831340 avail_kb=211559748
+fold0 r336 ep0 si129 fwd g=0 shape=(2, 6, 3, 336, 336) rss_kb=53903080 avail_kb=210605880
+fold0 r336 ep0 si129 bwd rss_kb=53887896 avail_kb=210607388
+fold0 r336 ep0 si129 opt rss_kb=53888120 avail_kb=210561172
+fold0 r336 ep0 si130 fwd g=0 shape=(2, 6, 3, 336, 336) rss_kb=54020280 avail_kb=209580560
+fold0 r336 ep0 si130 bwd rss_kb=54020980 avail_kb=209567360
+fold0 r336 ep0 si130 opt rss_kb=54020980 avail_kb=209528700
+fold0 r336 ep0 si131 fwd g=0 shape=(2, 6, 3, 336, 336) rss_kb=54088160 avail_kb=208716872
+fold0 r336 ep0 si131 bwd rss_kb=54088852 avail_kb=208669360
+fold0 r336 ep0 si131 opt rss_kb=54088852 avail_kb=208649152
+fold0 r336 ep0 si132 fwd g=2 shape=(2, 6, 3, 336, 336) rss_kb=54255356 avail_kb=207768920
+fold0 r336 ep0 si132 bwd rss_kb=54224292 avail_kb=207774032
+fold0 r336 ep0 si132 opt rss_kb=54224292 avail_kb=207805976
+fold0 r336 ep0 si133 fwd g=3 shape=(2, 6, 3, 336, 336) rss_kb=54400776 avail_kb=206774244
+fold0 r336 ep0 si133 bwd rss_kb=54359132 avail_kb=206741256
+fold0 r336 ep0 si133 opt rss_kb=54359132 avail_kb=206707004
+fold0 r336 ep0 si134 fwd g=1 shape=(2, 6, 3, 336, 336) rss_kb=54599296 avail_kb=205699724
+fold0 r336 ep0 si134 bwd rss_kb=54584108 avail_kb=205737212
+fold0 r336 ep0 si134 opt rss_kb=54584108 avail_kb=205709820
+fold0 r336 ep0 si135 fwd g=2 shape=(2, 6, 3, 336, 336) rss_kb=54715384 avail_kb=204575708
+fold0 r336 ep0 si135 bwd rss_kb=54716076 avail_kb=204515508
+fold0 r336 ep0 si135 opt rss_kb=54716076 avail_kb=204583328
+fold0 r336 ep0 si136 fwd g=3 shape=(2, 6, 3, 336, 336) rss_kb=54761984 avail_kb=203871288
+fold0 r336 ep0 si136 bwd rss_kb=54762704 avail_kb=203839076
+fold0 r336 ep0 si136 opt rss_kb=54762704 avail_kb=203811140
+fold0 r336 ep0 si137 fwd g=3 shape=(2, 6, 3, 336, 336) rss_kb=54901632 avail_kb=202792300
+fold0 r336 ep0 si137 bwd rss_kb=54902328 avail_kb=202770036
+fold0 r336 ep0 si137 opt rss_kb=54902328 avail_kb=202710796
+fold0 r336 ep0 si138 fwd g=3 shape=(2, 6, 3, 336, 336) rss_kb=55071532 avail_kb=201723148
+fold0 r336 ep0 si138 bwd rss_kb=55072220 avail_kb=201709588
+fold0 r336 ep0 si138 opt rss_kb=55072220 avail_kb=201676064
+fold0 r336 ep0 si139 fwd g=0 shape=(2, 6, 3, 336, 336) rss_kb=55206544 avail_kb=200574968
+fold0 r336 ep0 si139 bwd rss_kb=55207236 avail_kb=200540028
+fold0 r336 ep0 si139 opt rss_kb=55207236 avail_kb=200481204
+fold0 r336 ep0 si140 fwd g=1 shape=(2, 6, 3, 336, 336) rss_kb=55339472 avail_kb=199366800
+fold0 r336 ep0 si140 bwd rss_kb=55340164 avail_kb=199361948
+fold0 r336 ep0 si140 opt rss_kb=55340164 avail_kb=199360936
+fold0 r336 ep0 si141 fwd g=1 shape=(2, 6, 3, 336, 336) rss_kb=55465524 avail_kb=198257116
+fold0 r336 ep0 si141 bwd rss_kb=55466220 avail_kb=198261152
+fold0 r336 ep0 si141 opt rss_kb=55466220 avail_kb=198272384
+fold0 r336 ep0 si142 fwd g=3 shape=(2, 6, 3, 336, 336) rss_kb=55596256 avail_kb=197203208
+fold0 r336 ep0 si142 bwd rss_kb=55596952 avail_kb=197202996
+fold0 r336 ep0 si142 opt rss_kb=55596952 avail_kb=197202996
+fold0 r336 ep0 si143 fwd g=0 shape=(2, 6, 3, 336, 336) rss_kb=55755272 avail_kb=196147332
+fold0 r336 ep0 si143 bwd rss_kb=55740088 avail_kb=196145744
+fold0 r336 ep0 si143 opt rss_kb=55740088 avail_kb=196124276
+fold0 r336 ep0 si144 fwd g=2 shape=(2, 6, 3, 336, 336) rss_kb=55904964 avail_kb=194945016
+fold0 r336 ep0 si144 bwd rss_kb=55873900 avail_kb=194965896
+fold0 r336 ep0 si144 opt rss_kb=55873900 avail_kb=194965348
+fold0 r336 ep0 si145 fwd g=0 shape=(2, 6, 3, 336, 336) rss_kb=56017116 avail_kb=193750096
+fold0 r336 ep0 si145 bwd rss_kb=56001928 avail_kb=193754644
+fold0 r336 ep0 si145 opt rss_kb=56001928 avail_kb=193754100
+fold0 r336 ep0 si146 fwd g=0 shape=(2, 6, 3, 336, 336) rss_kb=56171584 avail_kb=192480816
+fold0 r336 ep0 si146 bwd rss_kb=56172276 avail_kb=192474596
+fold0 r336 ep0 si146 opt rss_kb=56172276 avail_kb=192476556
+fold0 r336 ep0 si147 fwd g=1 shape=(2, 6, 3, 336, 336) rss_kb=56361224 avail_kb=191096888
+fold0 r336 ep0 si147 bwd rss_kb=56330160 avail_kb=191126732
+fold0 r336 ep0 si147 opt rss_kb=56330160 avail_kb=191126732
+fold0 r336 ep0 si148 fwd g=0 shape=(2, 6, 3, 336, 336) rss_kb=56531272 avail_kb=189792120
+fold0 r336 ep0 si148 bwd rss_kb=56531996 avail_kb=189749248
+fold0 r336 ep0 si148 opt rss_kb=56531996 avail_kb=189699524
+fold0 r336 ep0 si149 fwd g=1 shape=(2, 6, 3, 336, 336) rss_kb=56678008 avail_kb=188364888
+fold0 r336 ep0 si149 bwd rss_kb=56678704 avail_kb=188415612
+fold0 r336 ep0 si149 opt rss_kb=56678704 avail_kb=188400896
+fold0 r336 ep0 si150 fwd g=2 shape=(2, 6, 3, 336, 336) rss_kb=56858296 avail_kb=186945060
+fold0 r336 ep0 si150 bwd rss_kb=56858988 avail_kb=186951024
+fold0 r336 ep0 si150 opt rss_kb=56858988 avail_kb=187008344
+fold0 r336 ep0 si151 fwd g=0 shape=(2, 6, 3, 336, 336) rss_kb=57025988 avail_kb=185830396
+fold0 r336 ep0 si151 bwd rss_kb=57026680 avail_kb=185812848
+fold0 r336 ep0 si151 opt rss_kb=57026680 avail_kb=185780616
+fold0 r336 ep0 si152 fwd g=3 shape=(2, 6, 3, 336, 336) rss_kb=57203572 avail_kb=184505528
+fold0 r336 ep0 si152 bwd rss_kb=57204264 avail_kb=184488132
+fold0 r336 ep0 si152 opt rss_kb=57204264 avail_kb=184476564
+fold0 r336 ep0 si153 fwd g=0 shape=(2, 6, 3, 336, 336) rss_kb=57356580 avail_kb=183217828
+fold0 r336 ep0 si153 bwd rss_kb=57341396 avail_kb=183236232
+fold0 r336 ep0 si153 opt rss_kb=57341396 avail_kb=183196160
+fold0 r336 ep0 si154 fwd g=0 shape=(2, 6, 3, 336, 336) rss_kb=57514000 avail_kb=181854768
+fold0 r336 ep0 si154 bwd rss_kb=57514688 avail_kb=181833416
+fold0 r336 ep0 si154 opt rss_kb=57514688 avail_kb=181828580
+fold0 r336 ep0 si155 fwd g=3 shape=(2, 6, 3, 336, 336) rss_kb=57651936 avail_kb=180502112
+fold0 r336 ep0 si155 bwd rss_kb=57636748 avail_kb=180509384
+fold0 r336 ep0 si155 opt rss_kb=57636748 avail_kb=180505152
+fold0 r336 ep0 si156 fwd g=3 shape=(2, 6, 3, 336, 336) rss_kb=57891284 avail_kb=179118892
+fold0 r336 ep0 si156 bwd rss_kb=57891976 avail_kb=179112608
+fold0 r336 ep0 si156 opt rss_kb=57891976 avail_kb=179098676
+fold0 r336 ep0 si157 fwd g=3 shape=(2, 6, 3, 336, 336) rss_kb=58042200 avail_kb=177854808
+fold0 r336 ep0 si157 bwd rss_kb=58042896 avail_kb=177853684
+fold0 r336 ep0 si157 opt rss_kb=58042896 avail_kb=177853208
+fold0 r336 ep0 si158 fwd g=0 shape=(2, 6, 3, 336, 336) rss_kb=58205200 avail_kb=176310896
+fold0 r336 ep0 si158 bwd rss_kb=58190008 avail_kb=176324736
+fold0 r336 ep0 si158 opt rss_kb=58190008 avail_kb=176311292
+fold0 r336 ep0 si159 fwd g=0 shape=(2, 6, 3, 336, 336) rss_kb=58420732 avail_kb=174729740
+fold0 r336 ep0 si159 bwd rss_kb=58421424 avail_kb=174687776
+fold0 r336 ep0 si159 opt rss_kb=58421424 avail_kb=174645492
+fold0 r336 ep0 si160 fwd g=0 shape=(2, 6, 3, 336, 336) rss_kb=58587760 avail_kb=173179104
+fold0 r336 ep0 si160 bwd rss_kb=58572580 avail_kb=173144256
+fold0 r336 ep0 si160 opt rss_kb=58572580 avail_kb=173081996
+fold0 r336 ep0 si161 fwd g=1 shape=(2, 6, 3, 336, 336) rss_kb=58775500 avail_kb=171873332
+fold0 r336 ep0 si161 bwd rss_kb=58776192 avail_kb=171871352
+fold0 r336 ep0 si161 opt rss_kb=58776192 avail_kb=171863664
+fold0 r336 ep0 si162 fwd g=1 shape=(2, 6, 3, 336, 336) rss_kb=58949576 avail_kb=170553812
+fold0 r336 ep0 si162 bwd rss_kb=58934388 avail_kb=170545196
+fold0 r336 ep0 si162 opt rss_kb=58934388 avail_kb=170545548
+fold0 r336 ep0 si163 fwd g=0 shape=(2, 6, 3, 336, 336) rss_kb=59021944 avail_kb=169245240
+fold0 r336 ep0 si163 bwd rss_kb=59022636 avail_kb=169221824
+fold0 r336 ep0 si163 opt rss_kb=59022636 avail_kb=169288376
+fold0 r336 ep0 si164 fwd g=1 shape=(2, 6, 3, 336, 336) rss_kb=59177312 avail_kb=167910800
+fold0 r336 ep0 si164 bwd rss_kb=59178004 avail_kb=167891468
+fold0 r336 ep0 si164 opt rss_kb=59178004 avail_kb=167851844
+fold0 r336 ep0 si165 fwd g=2 shape=(2, 6, 3, 336, 336) rss_kb=59314280 avail_kb=166348176
+fold0 r336 ep0 si165 bwd rss_kb=59314976 avail_kb=166354764
+fold0 r336 ep0 si165 opt rss_kb=59314976 avail_kb=166410220
+fold0 r336 ep0 si166 fwd g=2 shape=(2, 6, 3, 336, 336) rss_kb=59505544 avail_kb=164944248
+fold0 r336 ep0 si166 bwd rss_kb=59506236 avail_kb=164943500
+fold0 r336 ep0 si166 opt rss_kb=59506236 avail_kb=164935992
+fold0 r336 ep0 si167 fwd g=3 shape=(2, 6, 3, 336, 336) rss_kb=59688364 avail_kb=163649820
+fold0 r336 ep0 si167 bwd rss_kb=59689056 avail_kb=163627536
+fold0 r336 ep0 si167 opt rss_kb=59689056 avail_kb=163590212
+fold0 r336 ep0 si168 fwd g=1 shape=(2, 6, 3, 336, 336) rss_kb=59804904 avail_kb=162307368
+fold0 r336 ep0 si168 bwd rss_kb=59805596 avail_kb=162276876
+fold0 r336 ep0 si168 opt rss_kb=59805596 avail_kb=162256732
+fold0 r336 ep0 si169 fwd g=2 shape=(2, 6, 3, 336, 336) rss_kb=60006500 avail_kb=160879664
+fold0 r336 ep0 si169 bwd rss_kb=60007192 avail_kb=160837596
+fold0 r336 ep0 si169 opt rss_kb=60007192 avail_kb=160800552
+fold0 r336 ep0 si170 fwd g=0 shape=(2, 6, 3, 336, 336) rss_kb=60134968 avail_kb=159306492
+fold0 r336 ep0 si170 bwd rss_kb=60135660 avail_kb=159299104
+fold0 r336 ep0 si170 opt rss_kb=60135660 avail_kb=159280644
+fold0 r336 ep0 si171 fwd g=1 shape=(2, 6, 3, 336, 336) rss_kb=60371820 avail_kb=157849968
+fold0 r336 ep0 si171 bwd rss_kb=60356632 avail_kb=157854324
+fold0 r336 ep0 si171 opt rss_kb=60356632 avail_kb=157791240
+fold0 r336 ep0 si172 fwd g=2 shape=(2, 6, 3, 336, 336) rss_kb=60532012 avail_kb=156328216
+fold0 r336 ep0 si172 bwd rss_kb=60532704 avail_kb=156305244
+fold0 r336 ep0 si172 opt rss_kb=60532704 avail_kb=156291680
+fold0 r336 ep0 si173 fwd g=3 shape=(2, 6, 3, 336, 336) rss_kb=60629228 avail_kb=154864812
+fold0 r336 ep0 si173 bwd rss_kb=60629940 avail_kb=154812048
+fold0 r336 ep0 si173 opt rss_kb=60629940 avail_kb=154793140
+fold0 r336 ep0 si174 fwd g=2 shape=(2, 6, 3, 336, 336) rss_kb=60813264 avail_kb=153253432
+fold0 r336 ep0 si174 bwd rss_kb=60813976 avail_kb=153176772
+fold0 r336 ep0 si174 opt rss_kb=60813976 avail_kb=153160980
+fold0 r336 ep0 si175 fwd g=1 shape=(2, 6, 3, 336, 336) rss_kb=61106688 avail_kb=151366532
+fold0 r336 ep0 si175 bwd rss_kb=61107380 avail_kb=151257220
+fold0 r336 ep0 si175 opt rss_kb=61107380 avail_kb=151240412
+fold0 r336 ep0 si176 fwd g=0 shape=(2, 6, 3, 336, 336) rss_kb=61295760 avail_kb=150000648
+fold0 r336 ep0 si176 bwd rss_kb=61296452 avail_kb=149989412
+fold0 r336 ep0 si176 opt rss_kb=61296452 avail_kb=149990608
+fold0 r336 ep0 si177 fwd g=2 shape=(2, 6, 3, 336, 336) rss_kb=61479724 avail_kb=148495616
+fold0 r336 ep0 si177 bwd rss_kb=61480416 avail_kb=148428736
+fold0 r336 ep0 si177 opt rss_kb=61480416 avail_kb=148411412
+fold0 r336 ep0 si178 fwd g=2 shape=(2, 6, 3, 336, 336) rss_kb=61655568 avail_kb=146922352
+fold0 r336 ep0 si178 bwd rss_kb=61656260 avail_kb=146909740
+fold0 r336 ep0 si178 opt rss_kb=61656260 avail_kb=146905896
+fold0 r336 ep0 si179 fwd g=0 shape=(2, 6, 3, 336, 336) rss_kb=61853500 avail_kb=145435396
+fold0 r336 ep0 si179 bwd rss_kb=61854208 avail_kb=145470784
+fold0 r336 ep0 si179 opt rss_kb=61854208 avail_kb=145445640
+fold0 r336 ep0 si180 fwd g=2 shape=(2, 6, 3, 336, 336) rss_kb=61991104 avail_kb=144005784
+fold0 r336 ep0 si180 bwd rss_kb=61991796 avail_kb=143992448
+fold0 r336 ep0 si180 opt rss_kb=61991796 avail_kb=143947864
+fold0 r336 ep0 si181 fwd g=2 shape=(2, 6, 3, 336, 336) rss_kb=62152228 avail_kb=142592660
+fold0 r336 ep0 si181 bwd rss_kb=62152920 avail_kb=142561284
+fold0 r336 ep0 si181 opt rss_kb=62152920 avail_kb=142528252
+fold0 r336 ep0 si182 fwd g=0 shape=(2, 6, 3, 336, 336) rss_kb=62396780 avail_kb=141037180
+fold0 r336 ep0 si182 bwd rss_kb=62397472 avail_kb=141037544
+fold0 r336 ep0 si182 opt rss_kb=62397472 avail_kb=140937540
+fold0 r336 ep0 si183 fwd g=2 shape=(2, 6, 3, 336, 336) rss_kb=62561292 avail_kb=139632316
+fold0 r336 ep0 si183 bwd rss_kb=62561984 avail_kb=139606008
+fold0 r336 ep0 si183 opt rss_kb=62561984 avail_kb=139570128
+fold0 r336 ep0 si184 fwd g=1 shape=(2, 6, 3, 336, 336) rss_kb=62715080 avail_kb=137705628
+fold0 r336 ep0 si184 bwd rss_kb=62699896 avail_kb=137677900
+fold0 r336 ep0 si184 opt rss_kb=62699896 avail_kb=137681120
+fold0 r336 ep0 si185 fwd g=1 shape=(2, 6, 3, 336, 336) rss_kb=62920892 avail_kb=126395200
+fold0 r336 ep0 si185 bwd rss_kb=62905708 avail_kb=126262548
+fold0 r336 ep0 si185 opt rss_kb=62905708 avail_kb=126129548
+fold0 r336 ep0 si186 fwd g=1 shape=(2, 6, 3, 336, 336) rss_kb=63056252 avail_kb=109591064
+fold0 r336 ep0 si186 bwd rss_kb=63041064 avail_kb=109328960
+fold0 r336 ep0 si186 opt rss_kb=63041064 avail_kb=109087636
+ep0 predict_pre rss_kb=63041064 avail_kb=109087372

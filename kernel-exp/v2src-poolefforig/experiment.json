@@ -1,0 +1,7 @@
+{
+  "name": "v2src-poolefforig",
+  "desc": "POOLING / FLUID, the OTHER side of the same bracket. `Synovitis` was explicitly pulled back to 'original_mean' - the NO-JITTER mean - which is evidence that jittered windows hurt at least one diffuse finding. `Effusion` is diffuse too and keeps the jittered mean. This gives it the exact treatment Synovitis received. Paired with `poolfluidmax`: one of the two directions, or neither, is the answer.",
+  "source": "kernel-fresh\\rsna-knee-ens-v2src.ipynb",
+  "source_sha256": "fa338297cc9f79d9f30400e21007272505e622250567cd077edc9525321210f6",
+  "result_sha256": "0ab5ed94a49f7396ebc3d03af4dc16d0cbbff154e07e799e7e3975124bbb349f"
+}

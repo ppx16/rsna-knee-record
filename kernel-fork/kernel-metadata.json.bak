@@ -1,0 +1,22 @@
+{
+  "id": "ppxl16/rsna-knee-baseline-v1",
+  "title": "RSNA Knee baseline v1",
+  "code_file": "rsna-knee-baseline-v1.ipynb",
+  "language": "python",
+  "kernel_type": "notebook",
+  "is_private": true,
+  "enable_gpu": true,
+  "enable_tpu": false,
+  "enable_internet": false,
+  "machine_shape": "NvidiaTeslaT4",
+  "dataset_sources": [
+    "pilkwang/rsna-knee-llm-labels",
+    "ppxl16/rsna-knee-train-weights-224"
+  ],
+  "competition_sources": [
+    "rsna-knee-abnormality-detection"
+  ],
+  "model_sources": [
+    "metaresearch/dinov2/PyTorch/small/1"
+  ]
+}

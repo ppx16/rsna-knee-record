@@ -1,0 +1,19 @@
+{
+  "id": "ppxl16/rsna-knee-corpus64-s4",
+  "title": "RSNA knee corpus64 s4",
+  "code_file": "build_corpus.py",
+  "language": "python",
+  "kernel_type": "script",
+  "is_private": true,
+  "enable_gpu": false,
+  "enable_internet": false,
+  "dataset_sources": [
+    "dreaddevelopment/knee-raptor-corpus",
+    "dreaddevelopment/knee-raptor-corpus-ext"
+  ],
+  "competition_sources": [
+    "rsna-knee-abnormality-detection"
+  ],
+  "kernel_sources": [],
+  "enable_tpu": false
+}

@@ -1,0 +1,7 @@
+{
+  "name": "v2src-default",
+  "desc": "The refreshed upstream with nothing changed - the CONTROL. It exists to separate two things the refresh did at once: the arm-grouping rewrite (advertised as numerically identical) and the new optional fifth view. If `v2src-v8rev` differs from the old baseline, this tells us whether the rewrite alone moved anything.",
+  "source": "kernel-fresh\\rsna-knee-ens-v2src.ipynb",
+  "source_sha256": "bb34d22e97d29f6cb0638bcf5effd1de9237778e420baba3d9b4258485855b91",
+  "result_sha256": "18a52e3e87dc3d8315c59b3b5ca753ed17322bc6b05deeb18c1c7c8d888ebea5"
+}

@@ -1,0 +1,6 @@
+{
+  "name": "add-widedense-arm",
+  "desc": "Add a fifth Raptor arm: raptor_ft_coatnet_v4_full.pt from dreaddevelopment/raptor-knee-widedense, at a real weight. This is the ONLY extra checkpoint whose view is both documented and non-redundant. Config copied from a working notebook (sankurero/rsna-knee-coatnet-raptor-only), not inferred: IMG 336, _SLOTS64, span (0.06, 0.94), k_eval 62, res from the checkpoint. The four shipped arms are (336,64,.02-.98) x2, (384,64,.02-.98), (384,44,.06-.94) - none of them is (336,64,.06-.94), so this is a genuinely new view. The standalone widedense notebook reports 0.924 public LB for it alone. The original four keep their exact ratios, scaled by 0.8, so this isolates the addition rather than reshuffling the blend.",
+  "source_sha256": "01f2d834a6c55726c7990e951a96c663405cb2a6bbc4929cae1fc5f07ce53cd6",
+  "result_sha256": "ef1a3b95c5603249ab27fce9479d226c51e1081e4822f93558776721f12c24b6"
+}

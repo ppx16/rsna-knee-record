@@ -1,0 +1,304 @@
+{
+  "corpus": "rsna-knee dense 64-slot (max-span)",
+  "why_not_one_file": "31.8 GB > Kaggle's 20 GB kernel-output limit; mount the shards instead",
+  "built_by": "kernel-corpus64/build_corpus.py --mode build64 (v2: one series scan per group, specific_tags, multiprocessing)",
+  "recipe": {
+    "slots_per_group": [
+      [
+        "Sagittal",
+        1,
+        18
+      ],
+      [
+        "Sagittal",
+        0,
+        14
+      ],
+      [
+        "Coronal",
+        1,
+        12
+      ],
+      [
+        "Coronal",
+        0,
+        8
+      ],
+      [
+        "Axial",
+        -1,
+        12
+      ]
+    ],
+    "slots": 64,
+    "span": [
+      0.02,
+      0.98
+    ],
+    "res": 336,
+    "crop_mm": 140.0,
+    "index_rule": "lo=floor(lo_frac*(n-1)); hi=floor(hi_frac*(n-1)); rint(linspace(lo, hi, k))"
+  },
+  "row_order_is_a_contract": {
+    "rule": "_open_ids() = concat(all_ids, extra_ids); vols/masks/ids/labels are ALL indexed by it. Row k of the corpus is the study ids[k] names.",
+    "parts": [
+      {
+        "dataset": "dreaddevelopment/knee-raptor-corpus",
+        "id_file": "all_ids.npy",
+        "rows": 3200
+      },
+      {
+        "dataset": "dreaddevelopment/knee-raptor-corpus-ext",
+        "id_file": "extra_ids.npy",
+        "rows": 1207
+      }
+    ],
+    "expected_rows": 4407,
+    "builder_guard": "pool = concat(all_ids, extra_ids) with the drop count printed; the first version read only all_ids.npy (3200 rows) and would have produced empty shards s6/s7 (FACTS A56)",
+    "pilot_guard": "SHARD_EXPECTED_ROWS assert in kernel-d64pilot/_open_corpus: ids and vols come from the same glob, so a DROPPED shard keeps their counts equal -- only the absolute total catches it"
+  },
+  "shards": [
+    {
+      "ref": "ppxl16/rsna-knee-corpus64-s0",
+      "status": "COMPLETE",
+      "shard": "s0",
+      "rows": 551,
+      "shape": [
+        551,
+        64,
+        336,
+        336
+      ],
+      "mask_density": 0.9441,
+      "mb": 3981,
+      "seconds": 391,
+      "traceback": false,
+      "pool_len": "not logged (built by the pre-fix builder)"
+    },
+    {
+      "ref": "ppxl16/rsna-knee-corpus64-s1",
+      "status": "COMPLETE",
+      "shard": "s1",
+      "rows": 551,
+      "shape": [
+        551,
+        64,
+        336,
+        336
+      ],
+      "mask_density": 0.9402,
+      "mb": 3981,
+      "seconds": 344,
+      "traceback": false,
+      "pool_len": "not logged (built by the pre-fix builder)"
+    },
+    {
+      "ref": "ppxl16/rsna-knee-corpus64-s2",
+      "status": "COMPLETE",
+      "shard": "s2",
+      "rows": 551,
+      "shape": [
+        551,
+        64,
+        336,
+        336
+      ],
+      "mask_density": 0.9414,
+      "mb": 3981,
+      "seconds": 344,
+      "traceback": false,
+      "pool_len": "not logged (built by the pre-fix builder)"
+    },
+    {
+      "ref": "ppxl16/rsna-knee-corpus64-s3",
+      "status": "COMPLETE",
+      "shard": "s3",
+      "rows": 551,
+      "shape": [
+        551,
+        64,
+        336,
+        336
+      ],
+      "mask_density": 0.9458,
+      "mb": 3981,
+      "seconds": 298,
+      "traceback": false,
+      "pool_len": "not logged (built by the pre-fix builder)"
+    },
+    {
+      "ref": "ppxl16/rsna-knee-corpus64-s4",
+      "status": "COMPLETE",
+      "shard": "s4",
+      "rows": 551,
+      "shape": [
+        551,
+        64,
+        336,
+        336
+      ],
+      "mask_density": 0.943,
+      "mb": 3981,
+      "seconds": 279,
+      "traceback": false,
+      "pool_len": "not logged (built by the pre-fix builder)"
+    },
+    {
+      "ref": "ppxl16/rsna-knee-corpus64-s5",
+      "status": "COMPLETE",
+      "shard": "s5",
+      "rows": 551,
+      "shape": [
+        551,
+        64,
+        336,
+        336
+      ],
+      "mask_density": 0.933,
+      "mb": 3981,
+      "seconds": 281,
+      "row_lo": 2755,
+      "row_hi": 3305,
+      "pool_len": 4407,
+      "traceback": false
+    },
+    {
+      "ref": "ppxl16/rsna-knee-corpus64-s6",
+      "status": "COMPLETE",
+      "shard": "s6",
+      "rows": 551,
+      "shape": [
+        551,
+        64,
+        336,
+        336
+      ],
+      "mask_density": 0.9491,
+      "mb": 3981,
+      "seconds": 347,
+      "row_lo": 3306,
+      "row_hi": 3856,
+      "pool_len": 4407,
+      "traceback": false
+    },
+    {
+      "ref": "ppxl16/rsna-knee-corpus64-s7",
+      "status": "COMPLETE",
+      "shard": "s7",
+      "rows": 550,
+      "shape": [
+        550,
+        64,
+        336,
+        336
+      ],
+      "mask_density": 0.9349,
+      "mb": 3974,
+      "seconds": 281,
+      "row_lo": 3857,
+      "row_hi": 4406,
+      "pool_len": 4407,
+      "traceback": false
+    }
+  ],
+  "totals": {
+    "rows": 4407,
+    "mb": 31841,
+    "seconds_sum": 2565
+  },
+  "measured_speed": {
+    "seconds_per_study": 0.582,
+    "note": "0.7 s/study at 4 threads; the whole corpus is a ~10 minute job. The old '105 s/study -> 32 h' figure was the v1 builder and is 150x off (FACTS A59)."
+  },
+  "consumers": {
+    "pilot": "ppxl16/rsna-knee-d64pilot (GPU, N-part memmap loader, kernel_sources=these 8)",
+    "mount_probe": "ppxl16/rsna-knee-d64probe (CPU-only: asserts the 8 shards mount in order and that the ids equal concat(all_ids, extra_ids) row for row)"
+  },
+  "verification": {
+    "row_order": "ids_sX.npy written by each shard (before any pixels) were downloaded for ALL EIGHT shards and compared against concat(published all_ids, extra_ids): every shard matched exactly, 4407 unique ids, no gap and no overlap.  s5 straddles the 3200-row split (445 corpus + 106 ext), which is the one place a two-part concatenation can go wrong.",
+    "row_order_per_shard": {
+      "0": {
+        "rows": [
+          0,
+          550
+        ],
+        "n": 551,
+        "match": true,
+        "corpus_part": 551,
+        "ext_part": 0
+      },
+      "1": {
+        "rows": [
+          551,
+          1101
+        ],
+        "n": 551,
+        "match": true,
+        "corpus_part": 551,
+        "ext_part": 0
+      },
+      "2": {
+        "rows": [
+          1102,
+          1652
+        ],
+        "n": 551,
+        "match": true,
+        "corpus_part": 551,
+        "ext_part": 0
+      },
+      "3": {
+        "rows": [
+          1653,
+          2203
+        ],
+        "n": 551,
+        "match": true,
+        "corpus_part": 551,
+        "ext_part": 0
+      },
+      "4": {
+        "rows": [
+          2204,
+          2754
+        ],
+        "n": 551,
+        "match": true,
+        "corpus_part": 551,
+        "ext_part": 0
+      },
+      "5": {
+        "rows": [
+          2755,
+          3305
+        ],
+        "n": 551,
+        "match": true,
+        "corpus_part": 445,
+        "ext_part": 106
+      },
+      "6": {
+        "rows": [
+          3306,
+          3856
+        ],
+        "n": 551,
+        "match": true,
+        "corpus_part": 0,
+        "ext_part": 551
+      },
+      "7": {
+        "rows": [
+          3857,
+          4406
+        ],
+        "n": 550,
+        "match": true,
+        "corpus_part": 0,
+        "ext_part": 550
+      }
+    },
+    "problems": [],
+    "ok": true
+  }
+}

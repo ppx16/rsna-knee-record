@@ -1,0 +1,7 @@
+{
+  "name": "v2src-routew75",
+  "desc": "ROUTING, WIDENED. `coatnet_w.__default__` 0.60 -> 0.75, moving the SEVEN findings upstream's 22 probes never touched (MCL, Medial OA, PF OA, Effusion, Synovitis, Baker's, Contusion) toward the CoAtNet arm. The measured dose-response says more CoAtNet is better and macro-AUC weights all twelve labels equally, so the untouched seven are the largest untested area in the RUN config. Paired with `routew85`.",
+  "source": "kernel-fresh\\rsna-knee-ens-v2src.ipynb",
+  "source_sha256": "fa338297cc9f79d9f30400e21007272505e622250567cd077edc9525321210f6",
+  "result_sha256": "db8b53228ba3798ad5d4615d9ddf4703ba3940f13fe7dea9a61a5bb303e55d8e"
+}

@@ -1,0 +1,7 @@
+{
+  "name": "v2src-poolfluidmax",
+  "desc": "POOLING / FLUID. Make `Effusion` aggregate like `Baker's` - the other joint-fluid finding - by adding it to the per-label pool map as 'max' instead of leaving it at the plain all-window mean. Single-variable; nothing else changes.",
+  "source": "kernel-fresh\\rsna-knee-ens-v2src.ipynb",
+  "source_sha256": "fa338297cc9f79d9f30400e21007272505e622250567cd077edc9525321210f6",
+  "result_sha256": "2eeeef329752eb14b932b093d9cff3aa300fa0449ed6e810260cabd204e9026e"
+}

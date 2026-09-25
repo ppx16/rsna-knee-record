@@ -1,0 +1,375 @@
+{
+  "format": 2,
+  "members": [
+    {
+      "id": "f326c3095c",
+      "file": "m_f326c3095c.pt",
+      "fold": 0,
+      "tag": "",
+      "config": {
+        "img": 336,
+        "slices": 3,
+        "group": 3,
+        "crop_mm": 130.0,
+        "band": [
+          0.2,
+          0.8
+        ],
+        "slots": [
+          "SAG_FLUID_FS",
+          "COR_FLUID_FS",
+          "AX_FLUID_FS",
+          "SAG_FLUID_NOFS",
+          "COR_T1",
+          "SAG_T1"
+        ],
+        "rules": {
+          "order": "normal",
+          "lat": "centre",
+          "slot_fallback": false,
+          "decode_fill": "nearest"
+        },
+        "variant": "small",
+        "backbone": "facebook/dinov2-small",
+        "unfreeze_last": 6,
+        "pool": "cls_mean",
+        "prior": false
+      },
+      "seed": 2026,
+      "epochs_done": 20,
+      "holdout": 0.8004033021519659,
+      "annot": 0.8302248677248678,
+      "fingerprint": [
+        [
+          -0.9027621150016785,
+          -2.6513617038726807,
+          -0.7915238738059998,
+          -1.9759492874145508,
+          -2.43455171585083,
+          -3.0645592212677,
+          -3.4965827465057373,
+          0.6590407490730286,
+          -1.0318511724472046,
+          -0.5060142278671265,
+          -1.2451781034469604,
+          -1.076599359512329
+        ],
+        [
+          -1.2099997997283936,
+          -2.772148370742798,
+          -0.9223536849021912,
+          -2.112347364425659,
+          -2.5344645977020264,
+          -3.1432580947875977,
+          -3.4703264236450195,
+          0.6112644672393799,
+          -1.0872583389282227,
+          -0.49031004309654236,
+          -1.2814828157424927,
+          -1.0763847827911377
+        ]
+      ],
+      "pixel_group": "{\"band\": [0.2, 0.8], \"crop_mm\": 130.0, \"group\": 3, \"img\": 336, \"rules\": {\"decode_fill\": \"nearest\", \"lat\": \"centre\", \"order\": \"normal\", \"slot_fallback\": false}, \"slices\": 3, \"slots\": [\"SAG_FLUID_FS\", \"COR_FLUID_FS\", \"AX_FLUID_FS\", \"SAG_FLUID_NOFS\", \"COR_T1\", \"SAG_T1\"]}",
+      "source_run": "train-r336-seed2026"
+    },
+    {
+      "id": "d1ee5de78a",
+      "file": "m_d1ee5de78a.pt",
+      "fold": 1,
+      "tag": "",
+      "config": {
+        "img": 336,
+        "slices": 3,
+        "group": 3,
+        "crop_mm": 130.0,
+        "band": [
+          0.2,
+          0.8
+        ],
+        "slots": [
+          "SAG_FLUID_FS",
+          "COR_FLUID_FS",
+          "AX_FLUID_FS",
+          "SAG_FLUID_NOFS",
+          "COR_T1",
+          "SAG_T1"
+        ],
+        "rules": {
+          "order": "normal",
+          "lat": "centre",
+          "slot_fallback": false,
+          "decode_fill": "nearest"
+        },
+        "variant": "small",
+        "backbone": "facebook/dinov2-small",
+        "unfreeze_last": 6,
+        "pool": "cls_mean",
+        "prior": false
+      },
+      "seed": 2026,
+      "epochs_done": 20,
+      "holdout": 0.7808600556154123,
+      "annot": 0.7756636303511305,
+      "fingerprint": [
+        [
+          -0.18293944001197815,
+          -1.8261730670928955,
+          -1.586377501487732,
+          -1.6579878330230713,
+          -1.3853150606155396,
+          -0.14423757791519165,
+          -0.7677245140075684,
+          0.7856569290161133,
+          0.2799558639526367,
+          -0.9040228724479675,
+          -1.2582893371582031,
+          -1.3161571025848389
+        ],
+        [
+          -0.6055890917778015,
+          -1.981958270072937,
+          -1.6443365812301636,
+          -1.8589129447937012,
+          -1.387694001197815,
+          -0.2966074049472809,
+          -0.8332479000091553,
+          0.7104961276054382,
+          0.19050626456737518,
+          -0.8755331635475159,
+          -1.2750844955444336,
+          -1.2769956588745117
+        ]
+      ],
+      "pixel_group": "{\"band\": [0.2, 0.8], \"crop_mm\": 130.0, \"group\": 3, \"img\": 336, \"rules\": {\"decode_fill\": \"nearest\", \"lat\": \"centre\", \"order\": \"normal\", \"slot_fallback\": false}, \"slices\": 3, \"slots\": [\"SAG_FLUID_FS\", \"COR_FLUID_FS\", \"AX_FLUID_FS\", \"SAG_FLUID_NOFS\", \"COR_T1\", \"SAG_T1\"]}",
+      "source_run": "train-r336-seed2026"
+    },
+    {
+      "id": "27bca4c61a",
+      "file": "m_27bca4c61a.pt",
+      "fold": 2,
+      "tag": "",
+      "config": {
+        "img": 336,
+        "slices": 3,
+        "group": 3,
+        "crop_mm": 130.0,
+        "band": [
+          0.2,
+          0.8
+        ],
+        "slots": [
+          "SAG_FLUID_FS",
+          "COR_FLUID_FS",
+          "AX_FLUID_FS",
+          "SAG_FLUID_NOFS",
+          "COR_T1",
+          "SAG_T1"
+        ],
+        "rules": {
+          "order": "normal",
+          "lat": "centre",
+          "slot_fallback": false,
+          "decode_fill": "nearest"
+        },
+        "variant": "small",
+        "backbone": "facebook/dinov2-small",
+        "unfreeze_last": 6,
+        "pool": "cls_mean",
+        "prior": false
+      },
+      "seed": 2026,
+      "epochs_done": 20,
+      "holdout": 0.8167935900185901,
+      "annot": 0.8060185185185186,
+      "fingerprint": [
+        [
+          0.4977017939090729,
+          -1.5493547916412354,
+          -1.5324667692184448,
+          -2.532501220703125,
+          -1.5547298192977905,
+          -1.2974969148635864,
+          -1.592964768409729,
+          0.6559374332427979,
+          -0.6233950257301331,
+          -0.9390239715576172,
+          -1.169967532157898,
+          -2.4566988945007324
+        ],
+        [
+          0.16103850305080414,
+          -1.7106635570526123,
+          -1.6709169149398804,
+          -2.6797759532928467,
+          -1.5958503484725952,
+          -1.3543187379837036,
+          -1.6263500452041626,
+          0.5202297568321228,
+          -0.6898285746574402,
+          -0.9850724935531616,
+          -1.2081040143966675,
+          -2.466397285461426
+        ]
+      ],
+      "pixel_group": "{\"band\": [0.2, 0.8], \"crop_mm\": 130.0, \"group\": 3, \"img\": 336, \"rules\": {\"decode_fill\": \"nearest\", \"lat\": \"centre\", \"order\": \"normal\", \"slot_fallback\": false}, \"slices\": 3, \"slots\": [\"SAG_FLUID_FS\", \"COR_FLUID_FS\", \"AX_FLUID_FS\", \"SAG_FLUID_NOFS\", \"COR_T1\", \"SAG_T1\"]}",
+      "source_run": "train-r336-seed2026"
+    },
+    {
+      "id": "5f274fc6ea",
+      "file": "m_5f274fc6ea.pt",
+      "fold": 3,
+      "tag": "",
+      "config": {
+        "img": 336,
+        "slices": 3,
+        "group": 3,
+        "crop_mm": 130.0,
+        "band": [
+          0.2,
+          0.8
+        ],
+        "slots": [
+          "SAG_FLUID_FS",
+          "COR_FLUID_FS",
+          "AX_FLUID_FS",
+          "SAG_FLUID_NOFS",
+          "COR_T1",
+          "SAG_T1"
+        ],
+        "rules": {
+          "order": "normal",
+          "lat": "centre",
+          "slot_fallback": false,
+          "decode_fill": "nearest"
+        },
+        "variant": "small",
+        "backbone": "facebook/dinov2-small",
+        "unfreeze_last": 6,
+        "pool": "cls_mean",
+        "prior": false
+      },
+      "seed": 2026,
+      "epochs_done": 20,
+      "holdout": 0.8097154156921467,
+      "annot": 0.8976190476190474,
+      "fingerprint": [
+        [
+          -0.039775628596544266,
+          -2.16998028755188,
+          -2.1132562160491943,
+          -1.0946930646896362,
+          -1.3229165077209473,
+          -0.10063090920448303,
+          -1.0186657905578613,
+          -0.17366108298301697,
+          -0.0522313117980957,
+          -1.2772971391677856,
+          -1.7382348775863647,
+          -1.3701504468917847
+        ],
+        [
+          -0.3960088789463043,
+          -2.2915568351745605,
+          -2.243907928466797,
+          -1.2419811487197876,
+          -1.3438572883605957,
+          -0.12315560132265091,
+          -1.014481782913208,
+          -0.2568667232990265,
+          -0.09205302596092224,
+          -1.3014960289001465,
+          -1.7907298803329468,
+          -1.3375271558761597
+        ]
+      ],
+      "pixel_group": "{\"band\": [0.2, 0.8], \"crop_mm\": 130.0, \"group\": 3, \"img\": 336, \"rules\": {\"decode_fill\": \"nearest\", \"lat\": \"centre\", \"order\": \"normal\", \"slot_fallback\": false}, \"slices\": 3, \"slots\": [\"SAG_FLUID_FS\", \"COR_FLUID_FS\", \"AX_FLUID_FS\", \"SAG_FLUID_NOFS\", \"COR_T1\", \"SAG_T1\"]}",
+      "source_run": "train-r336-seed2026"
+    },
+    {
+      "id": "dbc825714d",
+      "file": "m_dbc825714d.pt",
+      "fold": 4,
+      "tag": "",
+      "config": {
+        "img": 336,
+        "slices": 3,
+        "group": 3,
+        "crop_mm": 130.0,
+        "band": [
+          0.2,
+          0.8
+        ],
+        "slots": [
+          "SAG_FLUID_FS",
+          "COR_FLUID_FS",
+          "AX_FLUID_FS",
+          "SAG_FLUID_NOFS",
+          "COR_T1",
+          "SAG_T1"
+        ],
+        "rules": {
+          "order": "normal",
+          "lat": "centre",
+          "slot_fallback": false,
+          "decode_fill": "nearest"
+        },
+        "variant": "small",
+        "backbone": "facebook/dinov2-small",
+        "unfreeze_last": 6,
+        "pool": "cls_mean",
+        "prior": false
+      },
+      "seed": 2026,
+      "epochs_done": 20,
+      "holdout": 0.8054016517644117,
+      "annot": 0.808537249107102,
+      "fingerprint": [
+        [
+          -0.25109994411468506,
+          -1.6536794900894165,
+          -1.8345870971679688,
+          -1.1989357471466064,
+          -0.8813795447349548,
+          -0.19641545414924622,
+          0.688630998134613,
+          -0.2641465961933136,
+          -0.5588306188583374,
+          -1.0807558298110962,
+          -1.2584519386291504,
+          -1.3581840991973877
+        ],
+        [
+          -0.5327534079551697,
+          -1.7439452409744263,
+          -1.9641772508621216,
+          -1.3782609701156616,
+          -1.0052458047866821,
+          -0.28124988079071045,
+          0.7031570076942444,
+          -0.36710795760154724,
+          -0.6170809268951416,
+          -1.1212525367736816,
+          -1.3380992412567139,
+          -1.3453431129455566
+        ]
+      ],
+      "pixel_group": "{\"band\": [0.2, 0.8], \"crop_mm\": 130.0, \"group\": 3, \"img\": 336, \"rules\": {\"decode_fill\": \"nearest\", \"lat\": \"centre\", \"order\": \"normal\", \"slot_fallback\": false}, \"slices\": 3, \"slots\": [\"SAG_FLUID_FS\", \"COR_FLUID_FS\", \"AX_FLUID_FS\", \"SAG_FLUID_NOFS\", \"COR_T1\", \"SAG_T1\"]}",
+      "source_run": "train-r336-seed2026"
+    }
+  ],
+  "history": [],
+  "targets": [
+    "ACL",
+    "MCL",
+    "Medial Meniscus",
+    "Lateral Meniscus",
+    "Medial OA",
+    "Lateral OA",
+    "PF OA",
+    "Effusion",
+    "Synovitis",
+    "Baker's",
+    "Contusion",
+    "Fracture"
+  ]
+}

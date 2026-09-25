@@ -1,0 +1,7 @@
+{
+  "name": "v2src-denserev",
+  "desc": "Complete the back-to-front set. `reverse` is `windows.flip(1)` - it reverses the order of the three adjacent slices forming a window - and upstream clearly believes in it: the 0.940->0.941 step raised maxspan-v5-reverse from 0.10 to 0.15, and the refresh added exactly such a twin for native384-v8. `native384dense-v10` is the ONE arm with no reversed counterpart, so this adds `native384dense-v10-reverse` at 0.10. The refreshed module groups arms by volume recipe, so the twin shares the base arm's decode and costs GPU passes only.",
+  "source": "kernel-fresh\\rsna-knee-ens-v2src.ipynb",
+  "source_sha256": "bb34d22e97d29f6cb0638bcf5effd1de9237778e420baba3d9b4258485855b91",
+  "result_sha256": "97a6fb6244a48bd2673e2237b4cecbfa30caf232feb660f97d8c06a482bcfdae"
+}

@@ -1,0 +1,7 @@
+{
+  "name": "v2src-routew85",
+  "desc": "ROUTING, WIDENED FURTHER. Same seven findings, `__default__` 0.60 -> 0.85. Second point of the widening bracket: if `routew75` gains this says whether to keep going; if `routew75` is flat this bounds the direction.",
+  "source": "kernel-fresh\\rsna-knee-ens-v2src.ipynb",
+  "source_sha256": "fa338297cc9f79d9f30400e21007272505e622250567cd077edc9525321210f6",
+  "result_sha256": "8ebd24ccbdfa36c06b332d40ad469381caa26d2e3801ed81ad5b32fe7dd8f628"
+}

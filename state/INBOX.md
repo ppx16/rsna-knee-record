@@ -1,0 +1,120 @@
+# Director inbox
+
+Newest last. One line per notable event.
+
+- [2026-09-11T13:17:20Z] COMPLETE ppxl16/rsna-knee-ensemble-v1 v2 (ensemble-v1 (0.941-class public stack))
+- [2026-09-11T13:20:32Z] landed ppxl16/rsna-knee-ensemble-v1 v2 -> outputs\_landing\rsna-knee-ensemble-v1_v2_2026-09-11T131720Z (133 files)
+- [2026-09-11T13:20:34Z] SUBMIT FAILED ppxl16/rsna-knee-ensemble-v1 v2: 400 Client Error: Bad Request for url: https://api.kaggle.com/v1/competitions.CompetitionApiService/CreateCodeSubmission
+- [2026-09-11T13:58:54Z] COMPLETE ppxl16/rsna-knee-ens-exclude-fracture v1 ()
+- [2026-09-11T14:02:39Z] landed ppxl16/rsna-knee-ens-exclude-fracture v1 -> outputs\_landing\rsna-knee-ens-exclude-fracture_v1_2026-09-11T135854Z (133 files)
+- [2026-09-11T14:02:44Z] SUBMITTED ppxl16/rsna-knee-ens-exclude-fracture v1 - ppxl16/rsna-knee-ens-exclude-fracture v1
+- [2026-09-11T14:08:35Z] COMPLETE ppxl16/rsna-knee-ens-parent-routing v1 ()
+- [2026-09-11T14:11:52Z] landed ppxl16/rsna-knee-ens-parent-routing v1 -> outputs\_landing\rsna-knee-ens-parent-routing_v1_2026-09-11T140835Z (82 files)
+- [2026-09-11T14:11:52Z] NO submission.csv in ppxl16/rsna-knee-ens-parent-routing v1 output
+- [2026-09-11T14:16:36Z] NO submission.csv in ppxl16/rsna-knee-ens-parent-routing v1 output
+- [2026-09-11T14:20:52Z] SUBMITTED ppxl16/rsna-knee-ens-parent-routing v1 - ppxl16/rsna-knee-ens-parent-routing v1
+- [2026-09-11T14:20:55Z] COMPLETE ppxl16/rsna-knee-ens-add-widedense-arm v1 ()
+- [2026-09-11T14:28:55Z] landed ppxl16/rsna-knee-ens-add-widedense-arm v1 -> outputs\_landing\rsna-knee-ens-add-widedense-arm_v1_2026-09-11T142055Z (133 files)
+- [2026-09-11T14:28:58Z] SUBMITTED ppxl16/rsna-knee-ens-add-widedense-arm v1 - ppxl16/rsna-knee-ens-add-widedense-arm v1
+- [2026-09-11T14:29:02Z] COMPLETE ppxl16/rsna-knee-ens-halfway-routing v1 ()
+- [2026-09-11T14:40:08Z] landed ppxl16/rsna-knee-ens-halfway-routing v1 -> outputs\_landing\rsna-knee-ens-halfway-routing_v1_2026-09-11T143626Z (133 files)
+- [2026-09-11T14:40:12Z] SUBMIT FAILED ppxl16/rsna-knee-ens-halfway-routing v1: HTTPError: 400 Client Error: Bad Request for url: https://api.kaggle.com/v1/competitions.CompetitionApiService/CreateCodeSubmission body=None
+- [2026-09-11T14:41:12Z] SUBMIT BLOCKED ppxl16/rsna-knee-ens-halfway-routing v1: HTTPError: 400 Client Error: Bad Request for url: https://api.kaggle.com/v1/competitions.CompetitionApiService/CreateCodeSubmission body=None (retrying every pass; the daily cap is 5 per UTC day)
+- [2026-09-11T14:45:46Z] COMPLETE ppxl16/rsna-knee-ens-arm-weights-alt v1 ()
+- [2026-09-11T14:49:23Z] landed ppxl16/rsna-knee-ens-arm-weights-alt v1 -> outputs\_landing\rsna-knee-ens-arm-weights-alt_v1_2026-09-11T144546Z (133 files)
+- [2026-09-12T00:40:43Z] SCORE ppxl16/rsna-knee-ensemble-v1 v2 = **0.941** (public LB)
+- [2026-09-12T00:40:44Z] COMPLETE ppxl16/rsna-knee-train-v1 v5 (GPU training (biomedclip branch))
+- [2026-09-12T00:43:29Z] landed ppxl16/rsna-knee-train-v1 v5 -> outputs\_landing\rsna-knee-train-v1_v5_2026-09-12T004044Z (14 files)
+- [2026-09-12T00:43:31Z] COMPLETE ppxl16/rsna-knee-tpu-train-v1 v20 (TPU training (HBM decider))
+- [2026-09-12T00:44:15Z] landed ppxl16/rsna-knee-tpu-train-v1 v20 -> outputs\_landing\rsna-knee-tpu-train-v1_v20_2026-09-12T004331Z (36 files)
+- [2026-09-12T00:44:18Z] SCORE ppxl16/rsna-knee-ens-exclude-fracture v1 = **0.941** (public LB)
+- [2026-09-12T00:44:22Z] SCORE ppxl16/rsna-knee-ens-parent-routing v1 = **0.939** (public LB)
+- [2026-09-12T00:44:25Z] SCORE ppxl16/rsna-knee-ens-add-widedense-arm v1 = **0.941** (public LB)
+- [2026-09-12T00:44:31Z] SUBMITTED ppxl16/rsna-knee-ens-halfway-routing v1 - ppxl16/rsna-knee-ens-halfway-routing v1 (ref=56175178)
+- [2026-09-12T00:44:36Z] COMPLETE ppxl16/rsna-knee-ens-v2src-v8rev v1 ()
+- [2026-09-12T00:47:43Z] landed ppxl16/rsna-knee-ens-v2src-v8rev v1 -> outputs\_landing\rsna-knee-ens-v2src-v8rev_v1_2026-09-12T004436Z (133 files)
+- [2026-09-12T00:47:46Z] SUBMITTED ppxl16/rsna-knee-ens-v2src-v8rev v1 - ppxl16/rsna-knee-ens-v2src-v8rev v1 (ref=56175245)
+- [2026-09-12T00:47:50Z] COMPLETE ppxl16/rsna-knee-ens-v2src-default v1 ()
+- [2026-09-12T00:51:12Z] landed ppxl16/rsna-knee-ens-v2src-default v1 -> outputs\_landing\rsna-knee-ens-v2src-default_v1_2026-09-12T004750Z (133 files)
+- [2026-09-12T00:51:16Z] SUBMITTED ppxl16/rsna-knee-ens-v2src-default v1 - ppxl16/rsna-knee-ens-v2src-default v1 (ref=56175295)
+- [2026-09-12T04:34:10Z] COMPLETE ppxl16/rsna-knee-ens-v2src-denserev v1 ()
+- [2026-09-12T04:37:26Z] landed ppxl16/rsna-knee-ens-v2src-denserev v1 -> outputs\_landing\rsna-knee-ens-v2src-denserev_v1_2026-09-12T043410Z (133 files)
+- [2026-09-12T04:37:31Z] SUBMITTED ppxl16/rsna-knee-ens-v2src-denserev v1 - ppxl16/rsna-knee-ens-v2src-denserev v1 (ref=56178575)
+- [2026-09-12T04:37:34Z] COMPLETE ppxl16/rsna-knee-ens-v2src-w5050 v1 ()
+- [2026-09-12T04:40:59Z] landed ppxl16/rsna-knee-ens-v2src-w5050 v1 -> outputs\_landing\rsna-knee-ens-v2src-w5050_v1_2026-09-12T043734Z (133 files)
+- [2026-09-12T04:41:02Z] SUBMITTED ppxl16/rsna-knee-ens-v2src-w5050 v1 - ppxl16/rsna-knee-ens-v2src-w5050 v1 (ref=56178615)
+- [2026-09-12T04:41:27Z] COMPLETE ppxl16/rsna-knee-ens-v2src-private25 v1 ()
+- [2026-09-12T05:02:03Z] landed ppxl16/rsna-knee-ens-v2src-private25 v1 -> outputs\_landing\rsna-knee-ens-v2src-private25_v1_2026-09-12T045811Z (133 files)
+- [2026-09-12T05:02:06Z] SUBMIT BLOCKED ppxl16/rsna-knee-ens-v2src-private25 v1: HTTPError: 400 Client Error: Bad Request for url: https://api.kaggle.com/v1/competitions.CompetitionApiService/CreateCodeSubmission body=None (retrying every pass; the daily cap is 5 per UTC day)
+- [2026-09-12T05:02:10Z] COMPLETE ppxl16/rsna-knee-ens-v2src-private55 v1 ()
+- [2026-09-12T05:05:59Z] landed ppxl16/rsna-knee-ens-v2src-private55 v1 -> outputs\_landing\rsna-knee-ens-v2src-private55_v1_2026-09-12T050210Z (133 files)
+- [2026-09-12T05:06:01Z] SUBMIT BLOCKED ppxl16/rsna-knee-ens-v2src-private55 v1: HTTPError: 400 Client Error: Bad Request for url: https://api.kaggle.com/v1/competitions.CompetitionApiService/CreateCodeSubmission body=None (retrying every pass; the daily cap is 5 per UTC day)
+- [2026-09-12T05:16:42Z] COMPLETE ppxl16/rsna-knee-ens-v2src-a5w30 v1 ()
+- [2026-09-12T05:20:36Z] landed ppxl16/rsna-knee-ens-v2src-a5w30 v1 -> outputs\_landing\rsna-knee-ens-v2src-a5w30_v1_2026-09-12T051642Z (133 files)
+- [2026-09-12T05:20:38Z] SUBMIT BLOCKED ppxl16/rsna-knee-ens-v2src-a5w30 v1: HTTPError: 400 Client Error: Bad Request for url: https://api.kaggle.com/v1/competitions.CompetitionApiService/CreateCodeSubmission body=None (retrying every pass; the daily cap is 5 per UTC day)
+- [2026-09-12T05:20:44Z] COMPLETE ppxl16/rsna-knee-ens-v2src-a5w60 v1 ()
+- [2026-09-12T05:24:45Z] SUBMISSION ERROR ppxl16/fake v1 - it will never score. If it is a timeout, that is the 9h limit; a leaner variant is the only way to get a number (HANDOFF 20.8).
+- [2026-09-12T05:24:45Z] SCORE ppxl16/fake v1 = **0.941** (public LB)  rank 999
+- [2026-09-12T05:24:46Z] landed ppxl16/rsna-knee-ens-v2src-a5w60 v1 -> outputs\_landing\rsna-knee-ens-v2src-a5w60_v1_2026-09-12T052044Z (133 files)
+- [2026-09-12T05:24:47Z] SUBMIT BLOCKED ppxl16/rsna-knee-ens-v2src-a5w60 v1: HTTPError: 400 Client Error: Bad Request for url: https://api.kaggle.com/v1/competitions.CompetitionApiService/CreateCodeSubmission body=None (retrying every pass; the daily cap is 5 per UTC day)
+- [2026-09-12T05:31:33Z] SUBMIT BLOCKED ppxl16/rsna-knee-ens-arm-weights-alt v1: HTTPError: 400 Client Error: Bad Request for url: https://api.kaggle.com/v1/competitions.CompetitionApiService/CreateCodeSubmission body=None (retrying every pass; the daily cap is 5 per UTC day)
+- [2026-09-12T07:58:10Z] SCORE ppxl16/rsna-knee-ens-v2src-default v1 = **0.941** (public LB)  rank 152
+- [2026-09-12T12:22:34Z] SCORE ppxl16/rsna-knee-ens-v2src-w5050 v1 = **0.941** (public LB)  rank 158
+- [2026-09-12T12:22:46Z] SCORE ppxl16/rsna-knee-ens-v2src-v8rev v1 = **0.941** (public LB)  rank 158
+- [2026-09-12T12:22:59Z] SCORE ppxl16/rsna-knee-ens-halfway-routing v1 = **0.940** (public LB)  rank 158
+- [2026-09-12T12:31:19Z] SCORE ppxl16/rsna-knee-ens-v2src-denserev v1 = **0.941** (public LB)  rank 158
+- [2026-09-12T13:17:12Z] COMPLETE ppxl16/rsna-knee-ens-v2src-routew75 v1 ()
+- [2026-09-12T13:29:21Z] landed ppxl16/rsna-knee-ens-v2src-routew75 v1 -> outputs\_landing\rsna-knee-ens-v2src-routew75_v1_2026-09-12T131712Z (133 files)
+- [2026-09-12T13:29:24Z] SUBMIT BLOCKED ppxl16/rsna-knee-ens-v2src-routew75 v1: HTTPError: 400 Client Error: Bad Request for url: https://api.kaggle.com/v1/competitions.CompetitionApiService/CreateCodeSubmission body=None (retrying every pass; the daily cap is 5 per UTC day)
+- [2026-09-12T13:29:30Z] COMPLETE ppxl16/rsna-knee-ens-v2src-routew85 v1 ()
+- [2026-09-12T13:41:26Z] DOWNLOAD INCOMPLETE ppxl16/rsna-knee-ens-v2src-routew85 v1 (missing submission.csv) - will retry next pass
+- [2026-09-12T13:57:33Z] landed ppxl16/rsna-knee-ens-v2src-routew85 v1 -> outputs\_landing\rsna-knee-ens-v2src-routew85_v1_2026-09-12T134733Z (133 files)
+- [2026-09-12T13:57:36Z] SUBMIT BLOCKED ppxl16/rsna-knee-ens-v2src-routew85 v1: HTTPError: 400 Client Error: Bad Request for url: https://api.kaggle.com/v1/competitions.CompetitionApiService/CreateCodeSubmission body=None (retrying every pass; the daily cap is 5 per UTC day)
+- [2026-09-12T13:57:43Z] COMPLETE ppxl16/rsna-knee-ens-v2src-routedeep v1 ()
+- [2026-09-12T14:17:25Z] DOWNLOAD INCOMPLETE ppxl16/rsna-knee-ens-v2src-routedeep v1 (missing submission.csv) - will retry next pass
+- [2026-09-12T14:44:22Z] landed ppxl16/rsna-knee-ens-v2src-routedeep v1 -> outputs\_landing\rsna-knee-ens-v2src-routedeep_v1_2026-09-12T143313Z (133 files)
+- [2026-09-12T14:44:25Z] SUBMIT BLOCKED ppxl16/rsna-knee-ens-v2src-routedeep v1: HTTPError: 400 Client Error: Bad Request for url: https://api.kaggle.com/v1/competitions.CompetitionApiService/CreateCodeSubmission body=None (retrying every pass; the daily cap is 5 per UTC day)
+- [2026-09-13T01:31:51Z] SUBMITTED ppxl16/rsna-knee-ens-v2src-private25 v1 - ppxl16/rsna-knee-ens-v2src-private25 v1 (ref=56196394)
+- [2026-09-13T01:31:58Z] SUBMITTED ppxl16/rsna-knee-ens-v2src-private55 v1 - ppxl16/rsna-knee-ens-v2src-private55 v1 (ref=56196396)
+- [2026-09-13T01:32:07Z] SUBMITTED ppxl16/rsna-knee-ens-v2src-routew75 v1 - ppxl16/rsna-knee-ens-v2src-routew75 v1 (ref=56196402)
+- [2026-09-13T01:32:13Z] SUBMITTED ppxl16/rsna-knee-ens-v2src-routew85 v1 - ppxl16/rsna-knee-ens-v2src-routew85 v1 (ref=56196404)
+- [2026-09-13T01:32:20Z] SUBMITTED ppxl16/rsna-knee-ens-v2src-routedeep v1 - ppxl16/rsna-knee-ens-v2src-routedeep v1 (ref=56196406)
+- [2026-09-13T08:31:31Z] SCORE ppxl16/rsna-knee-ens-v2src-private25 v1 = **0.940** (public LB)  rank 177
+- [2026-09-13T08:31:50Z] SCORE ppxl16/rsna-knee-ens-v2src-routedeep v1 = **0.941** (public LB)  rank 177
+- [2026-09-13T08:46:36Z] SCORE ppxl16/rsna-knee-ens-v2src-private55 v1 = **0.940** (public LB)  rank 177
+- [2026-09-13T08:46:46Z] SCORE ppxl16/rsna-knee-ens-v2src-routew75 v1 = **0.940** (public LB)  rank 177
+- [2026-09-13T12:23:06Z] SCORE ppxl16/rsna-knee-ens-v2src-routew85 v1 = **0.940** (public LB)  rank 180
+- [2026-09-13T13:32:55Z] COMPLETE ppxl16/rsna-knee-ens-v2src-poolfluidmax v1 ()
+- [2026-09-13T13:45:37Z] landed ppxl16/rsna-knee-ens-v2src-poolfluidmax v1 -> outputs\_landing\rsna-knee-ens-v2src-poolfluidmax_v1_2026-09-13T133255Z (133 files)
+- [2026-09-13T13:45:42Z] SUBMIT BLOCKED ppxl16/rsna-knee-ens-v2src-poolfluidmax v1: HTTPError: 400 Client Error: Bad Request for url: https://api.kaggle.com/v1/competitions.CompetitionApiService/CreateCodeSubmission body=None (retrying every pass; the daily cap is 5 per UTC day)
+- [2026-09-13T13:45:54Z] COMPLETE ppxl16/rsna-knee-ens-v2src-pooloamax v1 ()
+- [2026-09-13T13:56:40Z] landed ppxl16/rsna-knee-ens-v2src-pooloamax v1 -> outputs\_landing\rsna-knee-ens-v2src-pooloamax_v1_2026-09-13T134554Z (133 files)
+- [2026-09-13T13:56:44Z] SUBMIT BLOCKED ppxl16/rsna-knee-ens-v2src-pooloamax v1: HTTPError: 400 Client Error: Bad Request for url: https://api.kaggle.com/v1/competitions.CompetitionApiService/CreateCodeSubmission body=None (retrying every pass; the daily cap is 5 per UTC day)
+- [2026-09-13T13:56:51Z] COMPLETE ppxl16/rsna-knee-ens-v2src-poolefforig v1 ()
+- [2026-09-13T14:06:05Z] landed ppxl16/rsna-knee-ens-v2src-poolefforig v1 -> outputs\_landing\rsna-knee-ens-v2src-poolefforig_v1_2026-09-13T135651Z (133 files)
+- [2026-09-13T14:06:07Z] SUBMIT BLOCKED ppxl16/rsna-knee-ens-v2src-poolefforig v1: HTTPError: 400 Client Error: Bad Request for url: https://api.kaggle.com/v1/competitions.CompetitionApiService/CreateCodeSubmission body=None (retrying every pass; the daily cap is 5 per UTC day)
+- [2026-09-14T01:09:54Z] SUBMITTED ppxl16/rsna-knee-ens-v2src-poolfluidmax v1 - ppxl16/rsna-knee-ens-v2src-poolfluidmax v1 (ref=56218191)
+- [2026-09-14T01:10:01Z] SUBMITTED ppxl16/rsna-knee-ens-v2src-pooloamax v1 - ppxl16/rsna-knee-ens-v2src-pooloamax v1 (ref=56218192)
+- [2026-09-14T01:10:08Z] SUBMITTED ppxl16/rsna-knee-ens-v2src-poolefforig v1 - ppxl16/rsna-knee-ens-v2src-poolefforig v1 (ref=56218195)
+- [2026-09-14T01:28:00Z] SUBMITTED ppxl16/rsna-knee-ens-arm-weights-alt v1 - ppxl16/rsna-knee-ens-arm-weights-alt v1 (ref=56218479)
+- [2026-09-14T01:28:09Z] SUBMITTED ppxl16/rsna-knee-ens-v2src-a5w30 v1 - ppxl16/rsna-knee-ens-v2src-a5w30 v1 (ref=56218483)
+- [2026-09-14T08:37:10Z] SCORE ppxl16/rsna-knee-ens-v2src-a5w30 v1 = **0.941** (public LB)  rank 196
+- [2026-09-14T08:37:25Z] SCORE ppxl16/rsna-knee-ens-v2src-pooloamax v1 = **0.941** (public LB)  rank 196
+- [2026-09-14T08:37:30Z] SCORE ppxl16/rsna-knee-ens-v2src-poolefforig v1 = **0.941** (public LB)  rank 196
+- [2026-09-14T09:01:47Z] SCORE ppxl16/rsna-knee-ens-v2src-poolfluidmax v1 = **0.941** (public LB)  rank 196
+- [2026-09-14T09:16:25Z] SCORE ppxl16/rsna-knee-ens-arm-weights-alt v1 = **0.941** (public LB)  rank 196
+- [2026-09-14T12:27:56Z] COMPLETE ppxl16/rsna-knee-ens-v2src-radcal00 v1 ()
+- [2026-09-14T12:36:28Z] landed ppxl16/rsna-knee-ens-v2src-radcal00 v1 -> outputs\_landing\rsna-knee-ens-v2src-radcal00_v1_2026-09-14T123202Z (133 files)
+- [2026-09-14T12:36:30Z] SUBMIT BLOCKED ppxl16/rsna-knee-ens-v2src-radcal00 v1: HTTPError: 401 Client Error: Unauthorized for url: https://api.kaggle.com/v1/competitions.CompetitionApiService/CreateCodeSubmission body=None (retrying every pass; the daily cap is 5 per UTC day)
+- [2026-09-15T02:16:28Z] SUBMITTED ppxl16/rsna-knee-ens-v2src-a5w60 v1 - ppxl16/rsna-knee-ens-v2src-a5w60 v1 (ref=56243098)
+- [2026-09-15T02:17:09Z] SUBMITTED ppxl16/rsna-knee-ens-v2src-radcal00 v1 - ppxl16/rsna-knee-ens-v2src-radcal00 v1 (ref=56243110)
+- [2026-09-15T02:32:21Z] COMPLETE ppxl16/rsna-knee-ens-v2src-radcal00-parent v1 ()
+- [2026-09-15T02:36:17Z] landed ppxl16/rsna-knee-ens-v2src-radcal00-parent v1 -> outputs\_landing\rsna-knee-ens-v2src-radcal00-parent_v1_2026-09-15T023221Z (133 files)
+- [2026-09-15T02:36:25Z] SUBMITTED ppxl16/rsna-knee-ens-v2src-radcal00-parent v1 - ppxl16/rsna-knee-ens-v2src-radcal00-parent v1 (ref=56243349)
+- [2026-09-15T12:17:31Z] SCORE ppxl16/rsna-knee-ens-v2src-a5w60 v1 = **0.940** (public LB)  rank 218
+- [2026-09-15T12:18:16Z] SCORE ppxl16/rsna-knee-ens-v2src-radcal00 v1 = **0.940** (public LB)  rank 218
+- [2026-09-15T12:18:27Z] SCORE ppxl16/rsna-knee-ens-v2src-radcal00-parent v1 = **0.938** (public LB)  rank 218
+- [2026-09-20T09:39:09Z] COMPLETE ppxl16/rsna-knee-ens-add-finespacing-arm v1 ()
+- [2026-09-20T09:46:06Z] landed ppxl16/rsna-knee-ens-add-finespacing-arm v1 -> outputs\_landing\rsna-knee-ens-add-finespacing-arm_v1_2026-09-20T094102Z (133 files)
+- [2026-09-20T09:46:16Z] SUBMITTED ppxl16/rsna-knee-ens-add-finespacing-arm v1 - ppxl16/rsna-knee-ens-add-finespacing-arm v1 (ref=56389731)
+- [2026-09-21T01:40:02Z] SCORE ppxl16/rsna-knee-ens-add-finespacing-arm v1 = **0.941** (public LB)  rank 393

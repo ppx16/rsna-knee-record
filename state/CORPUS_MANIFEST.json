@@ -1,0 +1,233 @@
+{
+ "root": "D:\\kaggle\\corpus",
+ "generated_utc": "2026-09-24T06:57:38Z",
+ "total_bytes": 38344971470,
+ "n_files": 15,
+ "datasets": [
+  {
+   "ref": "dreaddevelopment/knee-raptor-corpus",
+   "why": "Knee MRI preprocessed slice stacks, part 1 of 2 (all_vols.npy = 3200 studies)"
+  },
+  {
+   "ref": "dreaddevelopment/knee-raptor-corpus-ext",
+   "why": "part 2 of 2 (extra_vols.npy = the remaining 1207 studies)"
+  },
+  {
+   "ref": "flight0234/rsna-knee-hybrid-report-labels",
+   "why": "the training labels the raptor fine-tune reads"
+  },
+  {
+   "ref": "ppxl16/rsna-knee-cv-folds",
+   "why": "OUR fold assignment -- without it a rerun is not fold-comparable to our OOF"
+  }
+ ],
+ "expected_shapes": {
+  "all_vols.npy": [
+   3200,
+   44,
+   336,
+   336
+  ],
+  "extra_vols.npy": [
+   1207,
+   44,
+   336,
+   336
+  ]
+ },
+ "kaggle_server_files": {
+  "dreaddevelopment/knee-raptor-corpus": [
+   {
+    "name": "all_ids.npy",
+    "bytes": 819328,
+    "created": "2026-08-19 15:22:23.695000"
+   },
+   {
+    "name": "all_masks.npy",
+    "bytes": 140928,
+    "created": "2026-08-19 15:22:23.702000"
+   },
+   {
+    "name": "all_vols.npy",
+    "bytes": 15895756928,
+    "created": "2026-08-19 15:26:48.870000"
+   },
+   {
+    "name": "window_index.npy",
+    "bytes": 783936,
+    "created": "2026-08-19 15:22:23.701000"
+   }
+  ],
+  "dreaddevelopment/knee-raptor-corpus-ext": [
+   {
+    "name": "extra_ids.npy",
+    "bytes": 309120,
+    "created": "2026-08-21 23:14:53.715000"
+   },
+   {
+    "name": "extra_masks.npy",
+    "bytes": 53236,
+    "created": "2026-08-21 23:14:53.658000"
+   },
+   {
+    "name": "extra_meta.json",
+    "bytes": 85,
+    "created": "2026-08-21 23:14:53.669000"
+   },
+   {
+    "name": "extra_vols.npy",
+    "bytes": 5995680896,
+    "created": "2026-08-21 23:16:30.267000"
+   }
+  ],
+  "flight0234/rsna-knee-hybrid-report-labels": [
+   {
+    "name": "report_labels_v4hybrid.csv",
+    "bytes": 978591,
+    "created": "2026-08-11 13:23:18.974000"
+   }
+  ],
+  "ppxl16/rsna-knee-cv-folds": [
+   {
+    "name": "fold_file.json",
+    "bytes": 312908,
+    "created": "2026-09-14 01:17:30.767000"
+   }
+  ]
+ },
+ "files": [
+  {
+   "path": "data/knee-raptor-corpus/all_ids.npy",
+   "bytes": 819328,
+   "sha256": "ce332c0a673abde31856db1b3b86fba9e0a2f73d38fff23c7b02c51b869f3c30",
+   "npy": {
+    "shape": [
+     3200
+    ],
+    "dtype": "<U64",
+    "fortran": false
+   }
+  },
+  {
+   "path": "data/knee-raptor-corpus/all_masks.npy",
+   "bytes": 140928,
+   "sha256": "1e16d5f93fe0b779ddf5bd3aa5beba01ca216373a633f517f74e3b5e94cb8fac",
+   "npy": {
+    "shape": [
+     3200,
+     44
+    ],
+    "dtype": "|u1",
+    "fortran": false
+   }
+  },
+  {
+   "path": "data/knee-raptor-corpus/all_vols.npy",
+   "bytes": 15895756928,
+   "sha256": "fc3ce0f1150d84970bace68283dd201f7cf1c439d5176bd1b7dfa3c944df24a6",
+   "npy": {
+    "shape": [
+     3200,
+     44,
+     336,
+     336
+    ],
+    "dtype": "|u1",
+    "fortran": false
+   }
+  },
+  {
+   "path": "data/knee-raptor-corpus/window_index.npy",
+   "bytes": 783936,
+   "sha256": "5a772c281951304d24c16a4a053e7a61d4f4f798d9d3ec1010411581d4e6f9ba",
+   "npy": {
+    "shape": [
+     97976,
+     2
+    ],
+    "dtype": "<i4",
+    "fortran": false
+   }
+  },
+  {
+   "path": "data/knee-raptor-corpus-ext/extra_ids.npy",
+   "bytes": 309120,
+   "sha256": "65a32fe80ad4cffd20b847b3c36bda7b0c33178fff652d8828a4b0d4e1ccf9bb",
+   "npy": {
+    "shape": [
+     1207
+    ],
+    "dtype": "<U64",
+    "fortran": false
+   }
+  },
+  {
+   "path": "data/knee-raptor-corpus-ext/extra_masks.npy",
+   "bytes": 53236,
+   "sha256": "e1650f959055e12332fbfe5d4a035c8b95c3a22a1ec556ac324e968984dc6c40",
+   "npy": {
+    "shape": [
+     1207,
+     44
+    ],
+    "dtype": "|u1",
+    "fortran": false
+   }
+  },
+  {
+   "path": "data/knee-raptor-corpus-ext/extra_meta.json",
+   "bytes": 85,
+   "sha256": "f0fd178fa704da8ea909e549f16d616dbae91cdf137e0348506041143d367735"
+  },
+  {
+   "path": "data/knee-raptor-corpus-ext/extra_vols.npy",
+   "bytes": 5995680896,
+   "sha256": "e3395b23581b2ebc1ba9609fb7f10bde54f8624f3464392d80364fd2354575d7",
+   "npy": {
+    "shape": [
+     1207,
+     44,
+     336,
+     336
+    ],
+    "dtype": "|u1",
+    "fortran": false
+   }
+  },
+  {
+   "path": "data/rsna-knee-cv-folds/fold_file.json",
+   "bytes": 312908,
+   "sha256": "d950d92fcc8bada4ac6ef819debb999de37b7cdc4a1d0238a242fed34c6d48f1"
+  },
+  {
+   "path": "data/rsna-knee-hybrid-report-labels/report_labels_v4hybrid.csv",
+   "bytes": 978591,
+   "sha256": "77b00c832b7dfe3f477e86630eacd533beca648ce34fbf7dc6ee95d4a574ca92"
+  },
+  {
+   "path": "zips/fold_file.json",
+   "bytes": 312908,
+   "sha256": "d950d92fcc8bada4ac6ef819debb999de37b7cdc4a1d0238a242fed34c6d48f1"
+  },
+  {
+   "path": "zips/knee-raptor-corpus-ext.zip",
+   "bytes": 4520837587,
+   "sha256": "edc244f561aab338aee1892893605619d5b7ae6f115c3b795067b0a3e531e688"
+  },
+  {
+   "path": "zips/knee-raptor-corpus.zip",
+   "bytes": 11922316421,
+   "sha256": "d8f76ef66e6b3b5b735fcd9b26c6670b57ec8a1e7a641d791e52aa45424b0301"
+  },
+  {
+   "path": "zips/report_labels_v4hybrid.csv",
+   "bytes": 978591,
+   "sha256": "77b00c832b7dfe3f477e86630eacd533beca648ce34fbf7dc6ee95d4a574ca92"
+  },
+  {
+   "path": "zips/train.csv",
+   "bytes": 5690007,
+   "sha256": "8ca2203c0e9d61c080c7a314c7cdb51c1b03a1d9eb4770819f7f34af53ef4e33"
+  }
+ ]
+}

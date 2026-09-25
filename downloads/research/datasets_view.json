@@ -1,0 +1,291 @@
+{
+ "tonylica/rsna-knee-bend-dinov3-0917-repro-assets": {
+  "title": "RSNA Knee Bend the Knee 0.917 reproduction assets",
+  "subtitle": "",
+  "MB": 2698.3,
+  "lastUpdated": "2026-08-17",
+  "votes": 1,
+  "downloads": 4281,
+  "license": "Other (specified in description)",
+  "files": [],
+  "nfiles": 0
+ },
+ "tonylica/rsna2026-models": {
+  "title": "RSNA2026 Models",
+  "subtitle": "",
+  "MB": 1366.3,
+  "lastUpdated": "2026-08-07",
+  "votes": 1,
+  "downloads": 286,
+  "license": "Unknown",
+  "files": [],
+  "nfiles": 0
+ },
+ "stevenleehans/rsna-knee-llm-report-labels": {
+  "title": "RSNA Knee LLM Report Labels",
+  "subtitle": "LLM-read labels for all 4,407 studies: 0.893 vs gold, where regex scores 0.814",
+  "MB": 1.6,
+  "lastUpdated": "2026-08-09",
+  "votes": 46,
+  "downloads": 3590,
+  "license": "CC0: Public Domain",
+  "files": [],
+  "nfiles": 0
+ },
+ "lixin73/rsna-knee-llm-report-labels-sol56": {
+  "title": "RSNA Knee LLM Report Labels (GPT-5.6-Sol)",
+  "subtitle": "",
+  "MB": 1.2,
+  "lastUpdated": "2026-08-08",
+  "votes": 10,
+  "downloads": 1913,
+  "license": "CC0: Public Domain",
+  "files": [],
+  "nfiles": 0
+ },
+ "lixin73/rsna-knee-train-checkpoints": {
+  "title": "rsna-knee-train-checkpoints",
+  "subtitle": "",
+  "MB": 85.7,
+  "lastUpdated": "2026-08-15",
+  "votes": 2,
+  "downloads": 143,
+  "license": "Unknown",
+  "files": [],
+  "nfiles": 0
+ },
+ "royceplayz/rsna-medicalnet-resnet50-weights": {
+  "title": "rsna-medicalnet-resnet50-weights",
+  "subtitle": "",
+  "MB": 352.6,
+  "lastUpdated": "2025-10-09",
+  "votes": 0,
+  "downloads": 77,
+  "license": "Apache 2.0",
+  "files": [],
+  "nfiles": 0
+ },
+ "anhadmahajan06/images-for-competition-notebook": {
+  "title": "Images for Competition Notebook",
+  "subtitle": "Images That can be used in Competition notebooks",
+  "MB": 2.6,
+  "lastUpdated": "2026-08-18",
+  "votes": 1,
+  "downloads": 29,
+  "license": "Apache 2.0",
+  "files": [],
+  "nfiles": 0
+ },
+ "renta0426/rsna-knee-public0033-meniscus-bag-v1": {
+  "title": "RSNA Knee public0033 Meniscus10 fullfit inference",
+  "subtitle": "",
+  "MB": 331.9,
+  "lastUpdated": "2026-09-02",
+  "votes": 0,
+  "downloads": 848,
+  "license": "Apache 2.0",
+  "files": [],
+  "nfiles": 0
+ },
+ "prvsiyan/orthodiffusion-official-knee-mri-foundation": {
+  "title": "OrthoDiffusion Knee MRI Foundation Weights",
+  "subtitle": "",
+  "MB": 1582.1,
+  "lastUpdated": "2026-08-12",
+  "votes": 0,
+  "downloads": 612,
+  "license": "Unknown",
+  "files": [],
+  "nfiles": 0
+ },
+ "dreaddevelopment/raptor-knee-widedense": {
+  "title": "Knee MRI model weights: twelve findings",
+  "subtitle": "Trained CoAtNet weights that score twelve findings on a knee MRI study",
+  "MB": 558.5,
+  "lastUpdated": "2026-08-23",
+  "votes": 70,
+  "downloads": 1147,
+  "license": "CC0: Public Domain",
+  "files": [],
+  "nfiles": 0
+ },
+ "dreaddevelopment/raptor-knee-arms": {
+  "title": "raptor-knee-arms",
+  "subtitle": "Three knee MRI backbones, kept together for rank-mean ensembling",
+  "MB": 1065.9,
+  "lastUpdated": "2026-08-20",
+  "votes": 5,
+  "downloads": 185,
+  "license": "CC0: Public Domain",
+  "files": [],
+  "nfiles": 0
+ },
+ "dreaddevelopment/raptor-knee-arms-x": {
+  "title": "raptor-knee-arms-x",
+  "subtitle": "Single CoAtNet 384 knee MRI arm, 0.917 on the public leaderboard",
+  "MB": 279.3,
+  "lastUpdated": "2026-08-21",
+  "votes": 4,
+  "downloads": 86,
+  "license": "CC0: Public Domain",
+  "files": [],
+  "nfiles": 0
+ },
+ "dreaddevelopment/raptor-knee-finespacing": {
+  "title": "Knee MRI - Fine Spacing Corpus",
+  "subtitle": "CoAtNet fine-tuned for the 12 knee findings on the Fine Spacing slice sampling.",
+  "MB": 279.3,
+  "lastUpdated": "2026-08-23",
+  "votes": 3,
+  "downloads": 167,
+  "license": "CC0: Public Domain",
+  "files": [],
+  "nfiles": 0
+ },
+ "daoviet/conv-checkpoint": {
+  "title": "conv-checkpoint",
+  "subtitle": "",
+  "MB": 1717.8,
+  "lastUpdated": "2026-08-30",
+  "votes": 0,
+  "downloads": 34,
+  "license": "Unknown",
+  "files": [],
+  "nfiles": 0
+ },
+ "mattiaangeli/rsna-knee-radimagenet-foldsv1-heads": {
+  "title": "RSNA Knee RadImageNet folds_v1 heads",
+  "subtitle": "",
+  "MB": 60.6,
+  "lastUpdated": "2026-08-12",
+  "votes": 1,
+  "downloads": 361,
+  "license": "CC BY-NC-SA 4.0",
+  "files": [],
+  "nfiles": 0
+ },
+ "mattiaangeli/rsna-knee-rad-calibration": {
+  "title": "RSNA Knee Rad Calibration",
+  "subtitle": "",
+  "MB": 0.0,
+  "lastUpdated": "2026-08-20",
+  "votes": 0,
+  "downloads": 120,
+  "license": "CC0: Public Domain",
+  "files": [],
+  "nfiles": 0
+ },
+ "dreaddevelopment/knee-raptor-corpus": {
+  "title": "Knee MRI preprocessed slice stacks, part 1 of 2",
+  "subtitle": "Axial knee-MRI studies resampled into fixed-size volume stacks, ready to train.",
+  "MB": 15161.0,
+  "lastUpdated": "2026-08-19",
+  "votes": 27,
+  "downloads": 2767,
+  "license": "CC0: Public Domain",
+  "files": [],
+  "nfiles": 0
+ },
+ "dreaddevelopment/knee-raptor-corpus-ext": {
+  "title": "Knee MRI preprocessed slice stacks, part 2 of 2",
+  "subtitle": "The remaining studies in the same fixed-size stack format \u2014 attach both parts to",
+  "MB": 5718.3,
+  "lastUpdated": "2026-08-21",
+  "votes": 28,
+  "downloads": 935,
+  "license": "CC0: Public Domain",
+  "files": [],
+  "nfiles": 0
+ },
+ "dreaddevelopment/umud-seg-corpus-v1": {
+  "title": "UMUD Seg Corpus v1",
+  "subtitle": "Muscle ultrasound frames used to train an aponeurosis segmenter",
+  "MB": 5752.1,
+  "lastUpdated": "2026-08-18",
+  "votes": 0,
+  "downloads": 12,
+  "license": "CC0: Public Domain",
+  "files": [],
+  "nfiles": 0
+ },
+ "dreaddevelopment/raptor-cnn336": {
+  "title": "raptor-cnn336",
+  "subtitle": "ConvNeXt-Small 336 knee MRI arm, an early baseline kept for reference",
+  "MB": 189.6,
+  "lastUpdated": "2026-08-16",
+  "votes": 0,
+  "downloads": 37,
+  "license": "CC0: Public Domain",
+  "files": [],
+  "nfiles": 0
+ },
+ "mattiaangeli/rsna-knee-public0033-meniscus-bag-mirror": {
+  "title": "RSNA Knee public0033 meniscus bag (mirror)",
+  "subtitle": "Private byte-identical mirror of renta0426's public0033 meniscus bag",
+  "MB": 331.9,
+  "lastUpdated": "2026-09-04",
+  "votes": 1,
+  "downloads": 53,
+  "license": "Other (specified in description)",
+  "files": [],
+  "nfiles": 0
+ },
+ "mattiaangeli/rsna-knee-cnx-m448-f0-public": {
+  "title": "RSNA Knee ConvNeXt M448 Public Fold 0",
+  "subtitle": "",
+  "MB": 206.6,
+  "lastUpdated": "2026-08-31",
+  "votes": 0,
+  "downloads": 272,
+  "license": "Other (specified in description)",
+  "files": [],
+  "nfiles": 0
+ },
+ "mattiaangeli/rsna-knee-public0033": {
+  "_status": 403
+ },
+ "prvsiyan/rsna-knee-pulse-v6-checkpoints-public-20260813": {
+  "title": "RSNA Knee Pulse V6 Train-Derived Checkpoints",
+  "subtitle": "Fifteen authenticated train-only ResNet-18 fold checkpoints",
+  "MB": 452.6,
+  "lastUpdated": "2026-08-13",
+  "votes": 0,
+  "downloads": 195,
+  "license": "Other (specified in description)",
+  "files": [],
+  "nfiles": 0
+ },
+ "prvsiyan/rsna-knee-b3-v47-public-deployment": {
+  "title": "RSNA Knee B3 V47 Public Deployment Weights",
+  "subtitle": "",
+  "MB": 230.3,
+  "lastUpdated": "2026-08-13",
+  "votes": 0,
+  "downloads": 551,
+  "license": "Other (specified in description)",
+  "files": [],
+  "nfiles": 0
+ },
+ "prvsiyan/rsna-knee-v52-oof-receipt-20260810": {
+  "title": "RSNA Knee V52 OOF Receipt 20260810",
+  "subtitle": "",
+  "MB": 0.8,
+  "lastUpdated": "2026-08-12",
+  "votes": 0,
+  "downloads": 140,
+  "license": "Unknown",
+  "files": [],
+  "nfiles": 0
+ },
+ "prvsiyan/rsna-knee-two-teacher-bundle-v1": {
+  "title": "RSNA Knee OrthoDiffusion Two Teacher Bundle V1",
+  "subtitle": "",
+  "MB": 8.0,
+  "lastUpdated": "2026-08-12",
+  "votes": 1,
+  "downloads": 146,
+  "license": "Unknown",
+  "files": [],
+  "nfiles": 0
+ }
+}

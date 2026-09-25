@@ -1,0 +1,18 @@
+{
+  "id": "ppxl16/rsna-knee-diag-io",
+  "title": "RSNA knee diag io",
+  "code_file": "diag_io.py",
+  "language": "python",
+  "kernel_type": "script",
+  "is_private": true,
+  "enable_gpu": false,
+  "enable_internet": false,
+  "dataset_sources": [
+    "dreaddevelopment/knee-raptor-corpus",
+    "dreaddevelopment/knee-raptor-corpus-ext",
+    "ppxl16/rsna-knee-cv-folds"
+  ],
+  "competition_sources": [],
+  "kernel_sources": [],
+  "enable_tpu": false
+}

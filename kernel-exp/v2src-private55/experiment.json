@@ -1,0 +1,7 @@
+{
+  "name": "v2src-private55",
+  "desc": "Probe `coat_private_alpha` UP, 0.40 -> 0.55. The other half of the bracket around the never-tuned value: if the private residual-gated CoAt is stronger than its 40% share assumes, this direction gains; if the axis is flat, BOTH directions read as no rank movement and the weight can be left alone for the rest of the competition.",
+  "source": "kernel-fresh\\rsna-knee-ens-v2src.ipynb",
+  "source_sha256": "bb34d22e97d29f6cb0638bcf5effd1de9237778e420baba3d9b4258485855b91",
+  "result_sha256": "48f884f212711aff666b8ed84255e267411d19886795407c08d4e40adb5bd662"
+}

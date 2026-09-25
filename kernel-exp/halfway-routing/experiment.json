@@ -1,0 +1,6 @@
+{
+  "name": "halfway-routing",
+  "desc": "Pull the per-target outer CoAtNet routing halfway back to the flat 0.60 it was tuned from (the notebook's own `halfway` preset). The author warns in the source that weights fitted to the public split can do real damage privately; this measures whether the +0.002 survived.",
+  "source_sha256": "01f2d834a6c55726c7990e951a96c663405cb2a6bbc4929cae1fc5f07ce53cd6",
+  "result_sha256": "a7b0829fb3956a21fc69d4424f4b4f0e0b888ca6ee504a6ab89dda5d3c02926c"
+}

@@ -1,0 +1,73 @@
+# Long-term experiment record -- what is versioned and what is deliberately NOT.
+#
+# The workspace is 82 GB, almost all of it corpora and weights.  Git is used here for the RECORD
+# (facts, conclusions, scripts, notebooks, small result files, manifests), never for the data.  Data is
+# made ADDRESSABLE instead of versioned: state/CORPUS_MANIFEST.json and state/CORPUS64_MANIFEST.json
+# name exactly which dataset/kernel produced which rows, and `scripts/corpus*_manifest.py --check`
+# re-verifies it against the platform.
+
+# ---------------- corpora and weights: never versioned ----------------
+corpus/
+corpus64/
+*.pt
+*.pth
+*.safetensors
+*.zip
+*.tar
+*.tar.gz
+*.tgz
+*.bin
+
+# ---------------- SECRETS: must never leave this machine ----------------
+# state/autodl_token.txt is an AutoDL *billing* credential (it was measured to be able to read the
+# wallet balance and, for Pro instances, power them off).  A private repo is still a leak surface, so
+# it is excluded by filename rather than trusted to stay private.
+state/autodl_token.txt
+state/autodl.json
+**/access_token
+**/kaggle.json
+**/autodl_ed25519*
+*.pem
+*.key
+
+# ---------------- competition data: not ours to redistribute ----------------
+# data/raw/ holds the official train.csv / train_series.csv.  Competition rules restrict passing the
+# Data around, and a private repo is still a copy on a third-party service.  It has no archival value
+# either -- it re-downloads from the competition page in seconds -- so the cheap and prudent choice is
+# to leave it out.
+data/raw/
+
+# ---------------- transient / noisy ----------------
+.testtmp/
+*.log
+*_urls.tsv
+**/__pycache__/
+*.pyc
+*.egg-info/
+.venv/
+.pytest_cache/
+
+# ---------------- caches and scratch areas (measured, not guessed) ----------------
+# A first `git add -A` staged 6.5 GB, almost all of it HuggingFace model blobs duplicated ~15 times
+# (84 MB each) inside per-run caches.  Those are reproducible downloads, not records.
+.hf/
+**/.hf/
+**/hub/
+# outputs/_landing alone was 9.2 GB across 4451 files -- a landing/scratch tree, not results.
+outputs/_landing/
+**/.cache/
+
+# Vendored Python environments that came down with other people's artifacts (opencv's .so bundles
+# etc., 63 MB each and duplicated per run).  Dependencies, not results.
+**/_coat_env/
+**/site-packages/
+**/*.so
+**/*.so.*
+**/*.dll
+**/*.dylib
+**/*.libs/
+
+# NOTE what is deliberately KEPT: *.md, *.py, *.ps1, *.ipynb, *.json, *.csv, and small *.npz.
+# The .npz files are the raw OOF predictions -- 300 KB each and the actual evidence for every
+# conclusion in FACTS.md.  The 300+ MB *.pt checkpoints next to them are excluded above: they are
+# reproducible from the config recorded in the ledger, and the numbers are what matter.

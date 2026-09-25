@@ -1,0 +1,6 @@
+{
+  "name": "parent-routing",
+  "desc": "Drop the per-target outer routing entirely and use the flat 0.60 parent that scored 0.939. This is the control for `halfway-routing`: if flat 0.60 scores >= probe22, the per-target tuning was fitting noise.",
+  "source_sha256": "01f2d834a6c55726c7990e951a96c663405cb2a6bbc4929cae1fc5f07ce53cd6",
+  "result_sha256": "fd62297f8ddc5b2be51695cac506f7b433617277c678136ec8614001df20b176"
+}

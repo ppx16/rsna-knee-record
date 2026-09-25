@@ -1,0 +1,6 @@
+predict_start n=2 batch=2 ngroup=4
+b0_g0_xfer
+b0_g1_xfer
+b0_g2_xfer
+b0_g3_xfer
+predict_start n=2 batch=2 ngroup=4

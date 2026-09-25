@@ -1,0 +1,7 @@
+{
+  "name": "v2src-w5050",
+  "desc": "Extrapolate the one weight axis with direct LB evidence. The 0.940->0.941 step moved 0.05 of weight from maxspan-v5 onto its back-to-front twin (0.60/0.10/0.10/0.20 -> 0.55/0.10/0.15/0.20). This takes the next equal step in the same direction: 0.50/0.10/0.20/0.20. If back-to-front averaging is what earned that +0.002, another 0.05 should still be positive; if the axis is flat or already past its optimum, this reads as no movement (rank) and the axis can be abandoned cheaply.",
+  "source": "kernel-fresh\\rsna-knee-ens-v2src.ipynb",
+  "source_sha256": "bb34d22e97d29f6cb0638bcf5effd1de9237778e420baba3d9b4258485855b91",
+  "result_sha256": "b3455548164dca58006bd772e6a78f4bb8e008ac97144b25d8c0fcecc97d8da1"
+}

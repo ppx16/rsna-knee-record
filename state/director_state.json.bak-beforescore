@@ -1,0 +1,197 @@
+{
+  "watches": {
+    "ppxl16/rsna-knee-ens-add-widedense-arm": {
+      "handled": [
+        "notice:1:COMPLETE",
+        "download:v1",
+        "submit:v1",
+        "score:v1"
+      ],
+      "landing_dir": "D:\\kaggle\\rsna-knee\\outputs\\_landing\\rsna-knee-ens-add-widedense-arm_v1_2026-09-11T142055Z",
+      "last_poll": "2026-09-12T07:46:37Z",
+      "public_score": "0.941",
+      "status": "COMPLETE",
+      "submitted_message": "ppxl16/rsna-knee-ens-add-widedense-arm v1",
+      "version": 1
+    },
+    "ppxl16/rsna-knee-ens-arm-weights-alt": {
+      "handled": [
+        "notice:1:COMPLETE",
+        "download:v1",
+        "submitfail:v1"
+      ],
+      "landing_dir": "D:\\kaggle\\rsna-knee\\outputs\\_landing\\rsna-knee-ens-arm-weights-alt_v1_2026-09-11T144546Z",
+      "last_poll": "2026-09-12T07:46:39Z",
+      "status": "COMPLETE",
+      "version": 1
+    },
+    "ppxl16/rsna-knee-ens-exclude-fracture": {
+      "handled": [
+        "notice:1:COMPLETE",
+        "download:v1",
+        "submit:v1",
+        "score:v1"
+      ],
+      "landing_dir": "D:\\kaggle\\rsna-knee\\outputs\\_landing\\rsna-knee-ens-exclude-fracture_v1_2026-09-11T135854Z",
+      "last_poll": "2026-09-12T07:46:33Z",
+      "public_score": "0.941",
+      "status": "COMPLETE",
+      "submitted_message": "ppxl16/rsna-knee-ens-exclude-fracture v1",
+      "version": 1
+    },
+    "ppxl16/rsna-knee-ens-halfway-routing": {
+      "handled": [
+        "notice:1:COMPLETE",
+        "download:v1",
+        "submitfail:v1",
+        "submit:v1"
+      ],
+      "landing_dir": "D:\\kaggle\\rsna-knee\\outputs\\_landing\\rsna-knee-ens-halfway-routing_v1_2026-09-11T143626Z",
+      "last_poll": "2026-09-12T07:46:18Z",
+      "status": "COMPLETE",
+      "submitted_message": "ppxl16/rsna-knee-ens-halfway-routing v1",
+      "version": 1
+    },
+    "ppxl16/rsna-knee-ens-parent-routing": {
+      "handled": [
+        "notice:1:COMPLETE",
+        "download:v1",
+        "submit:v1",
+        "score:v1"
+      ],
+      "landing_dir": "D:\\kaggle\\rsna-knee\\outputs\\_landing\\redo_parent_routing",
+      "last_poll": "2026-09-12T07:46:35Z",
+      "public_score": "0.939",
+      "status": "COMPLETE",
+      "submitted_message": "ppxl16/rsna-knee-ens-parent-routing v1",
+      "version": 1
+    },
+    "ppxl16/rsna-knee-ens-v2src-a5w30": {
+      "handled": [
+        "notice:1:COMPLETE",
+        "download:v1",
+        "submitfail:v1"
+      ],
+      "landing_dir": "D:\\kaggle\\rsna-knee\\outputs\\_landing\\rsna-knee-ens-v2src-a5w30_v1_2026-09-12T051642Z",
+      "last_poll": "2026-09-12T07:47:00Z",
+      "status": "COMPLETE",
+      "version": 1
+    },
+    "ppxl16/rsna-knee-ens-v2src-a5w60": {
+      "handled": [
+        "notice:1:COMPLETE",
+        "download:v1",
+        "submitfail:v1"
+      ],
+      "landing_dir": "D:\\kaggle\\rsna-knee\\outputs\\_landing\\rsna-knee-ens-v2src-a5w60_v1_2026-09-12T052044Z",
+      "last_poll": "2026-09-12T07:47:06Z",
+      "status": "COMPLETE",
+      "version": 1
+    },
+    "ppxl16/rsna-knee-ens-v2src-default": {
+      "handled": [
+        "notice:1:COMPLETE",
+        "download:v1",
+        "submit:v1"
+      ],
+      "landing_dir": "D:\\kaggle\\rsna-knee\\outputs\\_landing\\rsna-knee-ens-v2src-default_v1_2026-09-12T004750Z",
+      "last_poll": "2026-09-12T07:46:15Z",
+      "status": "COMPLETE",
+      "submitted_message": "ppxl16/rsna-knee-ens-v2src-default v1",
+      "version": 1
+    },
+    "ppxl16/rsna-knee-ens-v2src-denserev": {
+      "handled": [
+        "notice:1:COMPLETE",
+        "download:v1",
+        "submit:v1"
+      ],
+      "landing_dir": "D:\\kaggle\\rsna-knee\\outputs\\_landing\\rsna-knee-ens-v2src-denserev_v1_2026-09-12T043410Z",
+      "last_poll": "2026-09-12T07:46:04Z",
+      "status": "COMPLETE",
+      "submitted_message": "ppxl16/rsna-knee-ens-v2src-denserev v1",
+      "version": 1
+    },
+    "ppxl16/rsna-knee-ens-v2src-private25": {
+      "handled": [
+        "notice:1:COMPLETE",
+        "download:v1",
+        "submitfail:v1"
+      ],
+      "landing_dir": "D:\\kaggle\\rsna-knee\\outputs\\_landing\\rsna-knee-ens-v2src-private25_v1_2026-09-12T045811Z",
+      "last_poll": "2026-09-12T07:46:47Z",
+      "status": "COMPLETE",
+      "version": 1
+    },
+    "ppxl16/rsna-knee-ens-v2src-private55": {
+      "handled": [
+        "notice:1:COMPLETE",
+        "download:v1",
+        "submitfail:v1"
+      ],
+      "landing_dir": "D:\\kaggle\\rsna-knee\\outputs\\_landing\\rsna-knee-ens-v2src-private55_v1_2026-09-12T050210Z",
+      "last_poll": "2026-09-12T07:46:53Z",
+      "status": "COMPLETE",
+      "version": 1
+    },
+    "ppxl16/rsna-knee-ens-v2src-v8rev": {
+      "handled": [
+        "notice:1:COMPLETE",
+        "download:v1",
+        "submit:v1"
+      ],
+      "landing_dir": "D:\\kaggle\\rsna-knee\\outputs\\_landing\\rsna-knee-ens-v2src-v8rev_v1_2026-09-12T004436Z",
+      "last_poll": "2026-09-12T07:46:11Z",
+      "status": "COMPLETE",
+      "submitted_message": "ppxl16/rsna-knee-ens-v2src-v8rev v1",
+      "version": 1
+    },
+    "ppxl16/rsna-knee-ens-v2src-w5050": {
+      "handled": [
+        "notice:1:COMPLETE",
+        "download:v1",
+        "submit:v1"
+      ],
+      "landing_dir": "D:\\kaggle\\rsna-knee\\outputs\\_landing\\rsna-knee-ens-v2src-w5050_v1_2026-09-12T043734Z",
+      "last_poll": "2026-09-12T07:46:08Z",
+      "status": "COMPLETE",
+      "submitted_message": "ppxl16/rsna-knee-ens-v2src-w5050 v1",
+      "version": 1
+    },
+    "ppxl16/rsna-knee-ensemble-v1": {
+      "handled": [
+        "notice:2:COMPLETE",
+        "download:v2",
+        "submit:v2",
+        "score:v2"
+      ],
+      "landing_dir": "D:\\kaggle\\rsna-knee\\outputs\\_landing\\rsna-knee-ensemble-v1_v2_2026-09-11T131720Z",
+      "last_poll": "2026-09-12T07:46:22Z",
+      "public_score": "0.941",
+      "status": "COMPLETE",
+      "submitted_message": "public 0.941-class ensemble (kernel_sources restored)",
+      "submitted_ref": 56166132,
+      "version": 2
+    },
+    "ppxl16/rsna-knee-tpu-train-v1": {
+      "handled": [
+        "notice:20:COMPLETE",
+        "download:v20"
+      ],
+      "landing_dir": "D:\\kaggle\\rsna-knee\\outputs\\_landing\\rsna-knee-tpu-train-v1_v20_2026-09-12T004331Z",
+      "last_poll": "2026-09-12T07:46:29Z",
+      "status": "COMPLETE",
+      "version": 20
+    },
+    "ppxl16/rsna-knee-train-v1": {
+      "handled": [
+        "notice:5:COMPLETE",
+        "download:v5"
+      ],
+      "landing_dir": "D:\\kaggle\\rsna-knee\\outputs\\_landing\\rsna-knee-train-v1_v5_2026-09-12T004044Z",
+      "last_poll": "2026-09-12T07:46:25Z",
+      "status": "COMPLETE",
+      "version": 5
+    }
+  }
+}

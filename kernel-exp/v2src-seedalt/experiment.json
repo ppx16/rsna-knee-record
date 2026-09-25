@@ -1,0 +1,7 @@
+{
+  "name": "v2src-seedalt",
+  "desc": "Reproducibility probe: SEED 2026 -> 2027, recipe otherwise identical. Measures how much our own submission pipeline moves run-to-run, which is the scale against which the radcal00 / radcal00-parent readings must be judged.",
+  "source": "kernel-fresh\\rsna-knee-ens-v2src.ipynb",
+  "source_sha256": "fa338297cc9f79d9f30400e21007272505e622250567cd077edc9525321210f6",
+  "result_sha256": "bad0fdbdc7c73afd25e2679ad6820c7973d866fce6bf82a1976a66a1cd8714df"
+}

@@ -1,0 +1,7 @@
+{
+  "name": "v2src-v8rev",
+  "desc": "THE author's own new lever: `probe22+v8rev` enables a fifth Raptor view - the native384-v8 checkpoint read BACK TO FRONT - at weight 0.10. The upstream comment calls 0.10 'a sane first try'. It is nearly free because the reversed view shares a volume recipe with native384-v8, so the arm-grouping rewrite decodes the study once for both. This is a view nobody in the public ecosystem has reported scoring, and it is the only lever found so far that is BOTH new and cheap.",
+  "source": "kernel-fresh\\rsna-knee-ens-v2src.ipynb",
+  "source_sha256": "bb34d22e97d29f6cb0638bcf5effd1de9237778e420baba3d9b4258485855b91",
+  "result_sha256": "9a8d27421ed3f17ea049c373845fb5b9e9fa1355ba22f87cf32dc87d7e63db2d"
+}

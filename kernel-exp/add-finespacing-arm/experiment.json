@@ -1,0 +1,7 @@
+{
+  "name": "add-finespacing-arm",
+  "desc": "Add the v9 `finespacing` view as a fifth Raptor arm: raptor_ft_coatnet_v9_full.pt from dreaddevelopment/raptor-knee-finespacing. WHY THIS ONE, and not another view: (a) its geometry is DOCUMENTED, not inferred -- the dataset description states 80 slots (22/18/15/10/15) over 2-98 percent, 140 mm crop, 336 px, and k_eval 78; no public notebook carries a v9 ARMS entry, so without that description this would have been a guess. (b) It is the STRONGEST single model in the family: 0.932 public LB solo, vs 0.926/0.927 for the maxspan view we already ship, and its checkpoint reports 0.9031 on the 58 official labels (above the ~0.90 harm line). (c) The author explicitly names the pairing -- 'pair it with the wide span and wide dense checkpoints for a diversity boost' -- i.e. our v5 and v10. (d) It sits at the END of the sampling axis we measured as the only large lever: the author's own numbers are 44 slices 0.926 -> 64 0.928 -> 80 0.932, and his wide-span-44 result (0.917) independently reproduces our gap0 (-0.012). See FACTS C47/C48. The four shipped arms keep their exact ratios scaled by 0.8, so this isolates the addition.",
+  "source": "kernel-ens\\rsna-knee-ensemble-v1.ipynb",
+  "source_sha256": "01f2d834a6c55726c7990e951a96c663405cb2a6bbc4929cae1fc5f07ce53cd6",
+  "result_sha256": "50675271bcd6d61438b8fd1e7f00bf1c7d2d68ef9aeb3ac1252d5faf81878335"
+}

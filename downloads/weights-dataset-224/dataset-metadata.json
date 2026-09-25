@@ -1,0 +1,9 @@
+{
+  "title": "RSNA Knee train weights 224x6 slices (seed2026)",
+  "id": "ppxl16/rsna-knee-train-weights-224",
+  "licenses": [
+    {
+      "name": "Apache-2.0"
+    }
+  ]
+}

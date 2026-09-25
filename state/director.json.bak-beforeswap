@@ -1,0 +1,168 @@
+{
+  "competition": "rsna-knee-abnormality-detection",
+  "poll_seconds": 300,
+  "watches": [
+    {
+      "actions": [
+        "download",
+        "submit",
+        "score"
+      ],
+      "ref": "ppxl16/rsna-knee-ens-v2src-denserev",
+      "version": 1
+    },
+    {
+      "actions": [
+        "download",
+        "submit",
+        "score"
+      ],
+      "ref": "ppxl16/rsna-knee-ens-v2src-w5050",
+      "version": 1
+    },
+    {
+      "actions": [
+        "download",
+        "submit",
+        "score"
+      ],
+      "ref": "ppxl16/rsna-knee-ens-v2src-v8rev",
+      "version": 1
+    },
+    {
+      "actions": [
+        "download",
+        "submit",
+        "score"
+      ],
+      "ref": "ppxl16/rsna-knee-ens-v2src-default",
+      "version": 1
+    },
+    {
+      "actions": [
+        "download",
+        "submit",
+        "score"
+      ],
+      "ref": "ppxl16/rsna-knee-ens-halfway-routing",
+      "version": 1
+    },
+    {
+      "actions": [
+        "download",
+        "submit",
+        "score"
+      ],
+      "label": "ensemble-v1 (0.941-class public stack)",
+      "ref": "ppxl16/rsna-knee-ensemble-v1",
+      "submit_message": "public 0.941-class ensemble stack (kernel_sources restored)",
+      "version": 2
+    },
+    {
+      "actions": [
+        "download"
+      ],
+      "label": "GPU training (biomedclip branch)",
+      "ref": "ppxl16/rsna-knee-train-v1",
+      "version": 5
+    },
+    {
+      "actions": [
+        "download"
+      ],
+      "label": "TPU training (HBM decider)",
+      "ref": "ppxl16/rsna-knee-tpu-train-v1",
+      "version": 20
+    },
+    {
+      "actions": [
+        "download",
+        "submit",
+        "score"
+      ],
+      "ref": "ppxl16/rsna-knee-ens-exclude-fracture",
+      "version": 1
+    },
+    {
+      "actions": [
+        "download",
+        "submit",
+        "score"
+      ],
+      "ref": "ppxl16/rsna-knee-ens-parent-routing",
+      "version": 1
+    },
+    {
+      "actions": [
+        "download",
+        "submit",
+        "score"
+      ],
+      "ref": "ppxl16/rsna-knee-ens-add-widedense-arm",
+      "version": 1
+    },
+    {
+      "actions": [
+        "download",
+        "submit",
+        "score"
+      ],
+      "ref": "ppxl16/rsna-knee-ens-arm-weights-alt",
+      "version": 1
+    },
+    {
+      "actions": [
+        "download",
+        "submit",
+        "score"
+      ],
+      "ref": "ppxl16/rsna-knee-ens-v2src-private25",
+      "version": 1
+    },
+    {
+      "actions": [
+        "download",
+        "submit",
+        "score"
+      ],
+      "ref": "ppxl16/rsna-knee-ens-v2src-private55",
+      "version": 1
+    },
+    {
+      "actions": [
+        "download",
+        "submit",
+        "score"
+      ],
+      "ref": "ppxl16/rsna-knee-ens-v2src-a5w30",
+      "version": 1
+    },
+    {
+      "actions": [
+        "download",
+        "submit",
+        "score"
+      ],
+      "ref": "ppxl16/rsna-knee-ens-v2src-a5w60",
+      "version": 1
+    },
+    {
+      "actions": [
+        "download",
+        "submit",
+        "score"
+      ],
+      "ref": "ppxl16/rsna-knee-ens-v2src-routew75",
+      "version": 1
+    },
+    {
+      "actions": [
+        "download",
+        "submit",
+        "score"
+      ],
+      "ref": "ppxl16/rsna-knee-ens-v2src-routew85",
+      "version": 1
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+fork_after rss_kb=40709896 avail_kb=317236452
+warmup_pre rss_kb=40709900 avail_kb=317236452
+warmup_done rss_kb=40797284 avail_kb=317170200
+fold0 r336 ep0 si0 fwd g=3 shape=(2, 6, 3, 336, 336) rss_kb=41830552 avail_kb=308551048
+fold0 r336 ep0 si0 bwd rss_kb=41838860 avail_kb=308571284
+fold0 r336 ep0 si0 opt rss_kb=41839156 avail_kb=308567400
+fold0 r336 ep0 si0 item_pre rss_kb=41839156 avail_kb=308567148
+fold0 r336 ep0 si0 item_post rss_kb=43963332 avail_kb=291898352
+fold0 r336 ep0 si1 fwd g=3 shape=(2, 6, 3, 336, 336) rss_kb=44074948 avail_kb=291462944
+fold0 r336 ep0 si1 bwd rss_kb=44060168 avail_kb=291464132
+fold0 r336 ep0 si1 opt rss_kb=44060168 avail_kb=291425552
+fold0 r336 ep0 si1 item_pre rss_kb=44060168 avail_kb=291425552
+fold0 r336 ep0 si1 item_post rss_kb=53726012 avail_kb=214422820
+fold0 r336 ep0 si2 fwd g=1 shape=(2, 6, 3, 336, 336) rss_kb=53087388 avail_kb=220483664
+fold0 r336 ep0 si2 bwd rss_kb=53088464 avail_kb=220727592
+fold0 r336 ep0 si2 opt rss_kb=53088464 avail_kb=220723576
+fold0 r336 ep0 si2 item_pre rss_kb=53088464 avail_kb=220723576
+fold0 r336 ep0 si2 item_post rss_kb=62258900 avail_kb=138967772
+fold0 r336 ep0 si3 fwd g=0 shape=(2, 6, 3, 336, 336) rss_kb=61301128 avail_kb=145664732
+fold0 r336 ep0 si3 bwd rss_kb=61302200 avail_kb=145693772
+fold0 r336 ep0 si3 opt rss_kb=61302200 avail_kb=145689308
+fold0 r336 ep0 si3 item_pre rss_kb=61302200 avail_kb=145689308

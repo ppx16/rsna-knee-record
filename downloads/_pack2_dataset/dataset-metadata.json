@@ -1,0 +1,9 @@
+{
+  "title": "RSNA Knee train weights two-group selftest",
+  "id": "ppxl16/rsna-knee-train-weights-2group",
+  "licenses": [
+    {
+      "name": "Apache-2.0"
+    }
+  ]
+}

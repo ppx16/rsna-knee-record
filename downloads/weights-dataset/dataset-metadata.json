@@ -1,0 +1,9 @@
+{
+  "title": "RSNA Knee train weights v1",
+  "id": "ppxl16/rsna-knee-train-weights",
+  "licenses": [
+    {
+      "name": "Apache-2.0"
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "id": "ppxl16/rsna-knee-raptor-train-rule-labels",
+  "title": "RSNA knee raptor train rule-labels",
+  "code_file": "knee-mri-training-the-twelve-finding-model.py",
+  "language": "python",
+  "kernel_type": "script",
+  "is_private": true,
+  "enable_gpu": true,
+  "enable_internet": true,
+  "dataset_sources": [
+    "dreaddevelopment/knee-raptor-corpus",
+    "dreaddevelopment/knee-raptor-corpus-ext",
+    "ppxl16/rsna-knee-labels-rule"
+  ],
+  "competition_sources": [
+    "rsna-knee-abnormality-detection"
+  ],
+  "kernel_sources": [],
+  "machine_shape": "NvidiaTeslaT4",
+  "enable_tpu": false
+}

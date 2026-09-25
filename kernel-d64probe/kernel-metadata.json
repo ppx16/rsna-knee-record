@@ -1,0 +1,27 @@
+{
+  "id": "ppxl16/rsna-knee-d64probe",
+  "title": "RSNA knee d64probe",
+  "code_file": "probe.py",
+  "language": "python",
+  "kernel_type": "script",
+  "is_private": true,
+  "enable_gpu": false,
+  "enable_internet": false,
+  "dataset_sources": [
+    "dreaddevelopment/knee-raptor-corpus",
+    "dreaddevelopment/knee-raptor-corpus-ext"
+  ],
+  "kernel_sources": [
+    "ppxl16/rsna-knee-corpus64-s0",
+    "ppxl16/rsna-knee-corpus64-s1",
+    "ppxl16/rsna-knee-corpus64-s2",
+    "ppxl16/rsna-knee-corpus64-s3",
+    "ppxl16/rsna-knee-corpus64-s4",
+    "ppxl16/rsna-knee-corpus64-s5",
+    "ppxl16/rsna-knee-corpus64-s6",
+    "ppxl16/rsna-knee-corpus64-s7"
+  ],
+  "competition_sources": [
+    "rsna-knee-abnormality-detection"
+  ]
+}

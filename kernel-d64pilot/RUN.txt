@@ -1,0 +1,2 @@
+# how to launch the pilot (script kernels take no argv, so these are baked in)
+python knee-mri-training-the-twelve-finding-model.py --labels $(ls /kaggle/input/rsna-knee-hybrid-report-labels/*.parquet | head -1) --folds 5 --fold 0 --fold_file /kaggle/input/rsna-knee-cv-folds/fold_file.json --arch coatnet_rmlp_2_rw_384.sw_in12k_ft_in1k --res 336 --bs 4 --k 8 --k_eval 16 --epochs 12 --grad_ckpt --tag d64cn0 --workers 2

@@ -1,0 +1,22 @@
+{
+  "id": "ppxl16/rsna-knee-cv-b-fold4",
+  "title": "RSNA knee cv b fold4",
+  "code_file": "knee-mri-training-the-twelve-finding-model.py",
+  "language": "python",
+  "kernel_type": "script",
+  "is_private": true,
+  "enable_gpu": true,
+  "enable_internet": true,
+  "dataset_sources": [
+    "dreaddevelopment/knee-raptor-corpus",
+    "dreaddevelopment/knee-raptor-corpus-ext",
+    "ppxl16/rsna-knee-labels-rule",
+    "ppxl16/rsna-knee-cv-folds"
+  ],
+  "competition_sources": [
+    "rsna-knee-abnormality-detection"
+  ],
+  "kernel_sources": [],
+  "machine_shape": "NvidiaTeslaT4",
+  "enable_tpu": false
+}

@@ -1,0 +1,7 @@
+{
+  "name": "v2src-pooloamax",
+  "desc": "POOLING / CARTILAGE. The three OA labels are the only cartilage targets and, with Effusion, the only ones left at the default pooling. Cartilage loss is regional, like the meniscal signal already pooled 'max'/'top2' - so push the three OA labels to 'top2' (mean of the two strongest windows).",
+  "source": "kernel-fresh\\rsna-knee-ens-v2src.ipynb",
+  "source_sha256": "fa338297cc9f79d9f30400e21007272505e622250567cd077edc9525321210f6",
+  "result_sha256": "171befbb9852c10fb8dd1715466ef00fea7110df8510d3e9cb848d770dde12c4"
+}

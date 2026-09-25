@@ -1,0 +1,6 @@
+{
+  "name": "exclude-fracture",
+  "desc": "Stop excluding Fracture from the RadImageNet blend. Every top public notebook ships _RAD_EXCLUDE=(\"Baker's\",'Fracture'). An independent audit (dariushafshar) measured Fracture as 4th of 12 in blend lift (+0.0077) while Baker's goes negative on gold-58; flipping only this line scored 0.921 vs 0.920 on the real LB (ref 55654006). +0.001 there, unverified on the 0.941 stack.",
+  "source_sha256": "01f2d834a6c55726c7990e951a96c663405cb2a6bbc4929cae1fc5f07ce53cd6",
+  "result_sha256": "fbd22eb006b15dd6cd6f1408b9544a629619327936a3be46e0e922a9696ecc02"
+}

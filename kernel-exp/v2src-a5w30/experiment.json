@@ -1,0 +1,7 @@
+{
+  "name": "v2src-a5w30",
+  "desc": "Next axis in the never-tuned region: `a5_w`, the share of the A5 folds (mattiaangeli's DINOv3 five-fold stage) against the DINO base inside the transformer stack. 0.45 is the value it was first typed in at and upstream's evolution never revisited it. The transformer stack carries 0.00-0.40 of the final blend (inverse of `coatnet_w`), so this is the second-highest-leverage untested weight. Probes DOWN to 0.30; paired with `v2src-a5w60`. Read the RANK, not the score.",
+  "source": "kernel-fresh\\rsna-knee-ens-v2src.ipynb",
+  "source_sha256": "bb34d22e97d29f6cb0638bcf5effd1de9237778e420baba3d9b4258485855b91",
+  "result_sha256": "22f0a266de1574aed2beb5bee02b21ee9656fac392fbbd98027314c5d23c189d"
+}

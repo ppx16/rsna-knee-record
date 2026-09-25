@@ -1,0 +1,193 @@
+[
+  {
+    "ref": "ppxl16/rsna-knee-ens-v2src-radcal00-parent",
+    "dir": "kernel-exp/v2src-radcal00-parent",
+    "note": "2x2 CORNER 4 (HANDOFF 100.1): flat 0.60 routing AND rad_cal_w 0.00. ~20 min of a slot, then submitted in the same 00:00 UTC window as radcal00.",
+    "priority": 0
+  },
+  {
+    "ref": "ppxl16/rsna-knee-ens-v2src-radcal00",
+    "dir": "kernel-exp/v2src-radcal00",
+    "note": "FRONTIER ALIGNMENT (HANDOFF 87): rad_cal_w 0.40 -> 0.00, the value the current public notebook uses. ~20 min of a slot, then submit it at 00:00 UTC",
+    "priority": 0
+  },
+  {
+    "ref": "ppxl16/rsna-knee-cv-a-fold0",
+    "dir": "kernel-cv-a-fold0",
+    "note": "A arm (12 ep) fold 0 -- pushed 09-14 08:40 UTC, ETA ~14:45 UTC",
+    "priority": 0,
+    "hold": "GPU POLICY 2026-09-21 (user): the 30 GPU-h/week is reserved for kernels that produce a submission; training folds move to TPU. Held by POLICY, not by quota -- clearing this hold is a deliberate policy change, not a retry."
+  },
+  {
+    "ref": "ppxl16/rsna-knee-cv-a-fold1",
+    "dir": "kernel-cv-a-fold1",
+    "note": "A arm (12 ep) fold 1 -- pushed 09-14 08:40 UTC, ETA ~14:45 UTC",
+    "priority": 0,
+    "hold": "GPU POLICY 2026-09-21 (user): the 30 GPU-h/week is reserved for kernels that produce a submission; training folds move to TPU. Held by POLICY, not by quota -- clearing this hold is a deliberate policy change, not a retry."
+  },
+  {
+    "ref": "ppxl16/rsna-knee-cv-gap-fold0",
+    "dir": "kernel-cv-gap-fold0",
+    "note": "CV EXP #1: 2.5D window spacing +-1 -> +-2 (a SLICE-SAMPLING change; author's own measurement puts sampling at +0.006..+0.011 vs architecture +0.001). Cost MEASURED at 2.8 GPU-h, not 6.2.",
+    "priority": 1,
+    "hold": "GPU POLICY 2026-09-21 (user): the 30 GPU-h/week is reserved for kernels that produce a submission; training folds move to TPU. Held by POLICY, not by quota -- clearing this hold is a deliberate policy change, not a retry."
+  },
+  {
+    "ref": "ppxl16/rsna-knee-cv-r288-fold0",
+    "dir": "kernel-cv-r288-fold0",
+    "note": "CV EXP #2: --res 288. The corpus stores 336px slices and the baseline trains at 224, discarding 30% of the linear detail; round-trip PSNR keeps climbing to 320. ~4.6 GPU-h.",
+    "priority": 2,
+    "hold": "GPU POLICY 2026-09-21 (user): the 30 GPU-h/week is reserved for kernels that produce a submission; training folds move to TPU. Held by POLICY, not by quota -- clearing this hold is a deliberate policy change, not a retry."
+  },
+  {
+    "ref": "ppxl16/rsna-knee-cv-r288-fold1",
+    "dir": "kernel-cv-r288-fold1",
+    "note": "CONFIRM r288: the fold-0 screen read +0.0049 OOF / +0.0261 gold-58 (HANDOFF 116). Needs the matching a-fold baseline. 4.6 GPU-h.",
+    "priority": 2,
+    "attempts_reset": true,
+    "attempts": 3,
+    "hold": "GPU POLICY 2026-09-21 (user): the 30 GPU-h/week is reserved for kernels that produce a submission; training folds move to TPU. Held by POLICY, not by quota -- clearing this hold is a deliberate policy change, not a retry."
+  },
+  {
+    "ref": "ppxl16/rsna-knee-cv-r288-fold2",
+    "dir": "kernel-cv-r288-fold2",
+    "note": "CONFIRM r288: the fold-0 screen read +0.0049 OOF / +0.0261 gold-58 (HANDOFF 116). Needs the matching a-fold baseline. 4.6 GPU-h.",
+    "priority": 2,
+    "attempts_reset": true,
+    "attempts": 3,
+    "hold": "GPU POLICY 2026-09-21 (user): the 30 GPU-h/week is reserved for kernels that produce a submission; training folds move to TPU. Held by POLICY, not by quota -- clearing this hold is a deliberate policy change, not a retry."
+  },
+  {
+    "ref": "ppxl16/rsna-knee-cv-a-fold2",
+    "dir": "kernel-cv-a-fold2",
+    "note": "A arm baseline fold 2 -- enables confirming an experiment on a SECOND fold and grows the pooled A-arm OOF. 2.8 GPU-h.",
+    "priority": 3,
+    "hold": "GPU POLICY 2026-09-21 (user): the 30 GPU-h/week is reserved for kernels that produce a submission; training folds move to TPU. Held by POLICY, not by quota -- clearing this hold is a deliberate policy change, not a retry."
+  },
+  {
+    "ref": "ppxl16/rsna-knee-cv-r336-fold1",
+    "dir": "kernel-cv-r336-fold1",
+    "note": "CONFIRM r336 (fold 1): fold 0 read +0.0121 OOF 95% CI [+0.0054, +0.0194] REAL, 100% of bootstraps -- the largest effect measured, and 2.4x the seed floor. 336 px is the corpus's NATIVE resolution = the information ceiling, so this axis ends here and the confirmation decides how much of it is real. Matching cva baseline already landed. 7 GPU-h.",
+    "priority": 3,
+    "hold": "GPU POLICY 2026-09-21 (user): the 30 GPU-h/week is reserved for kernels that produce a submission; training folds move to TPU. Held by POLICY, not by quota -- clearing this hold is a deliberate policy change, not a retry."
+  },
+  {
+    "ref": "ppxl16/rsna-knee-cv-r336-fold2",
+    "dir": "kernel-cv-r336-fold2",
+    "note": "CONFIRM r336 (fold 2): fold 0 read +0.0121 OOF 95% CI [+0.0054, +0.0194] REAL, 100% of bootstraps -- the largest effect measured, and 2.4x the seed floor. 336 px is the corpus's NATIVE resolution = the information ceiling, so this axis ends here and the confirmation decides how much of it is real. Matching cva baseline already landed. 7 GPU-h.",
+    "priority": 3,
+    "hold": "GPU POLICY 2026-09-21 (user): the 30 GPU-h/week is reserved for kernels that produce a submission; training folds move to TPU. Held by POLICY, not by quota -- clearing this hold is a deliberate policy change, not a retry."
+  },
+  {
+    "ref": "ppxl16/rsna-knee-cv-seed-fold0",
+    "dir": "kernel-cv-seed-fold0",
+    "note": "TRAINING-noise floor (seed 123 vs 42): splits the measured +-0.0026 paired CI into training vs evaluation noise, i.e. decides whether buying more folds is worth it. 2.8 GPU-h.",
+    "priority": 4,
+    "attempts": 3,
+    "hold": "GPU POLICY 2026-09-21 (user): the 30 GPU-h/week is reserved for kernels that produce a submission; training folds move to TPU. Held by POLICY, not by quota -- clearing this hold is a deliberate policy change, not a retry."
+  },
+  {
+    "ref": "ppxl16/rsna-knee-cv-r336-fold0",
+    "dir": "kernel-cv-r336-fold0",
+    "note": "EXP: --res 336 (the corpus's native resolution; 224 discards 30% of the linear detail and r288 already read +0.0049). ~7 h/fold at 12 epochs.",
+    "priority": 4,
+    "hold": "GPU POLICY 2026-09-21 (user): the 30 GPU-h/week is reserved for kernels that produce a submission; training folds move to TPU. Held by POLICY, not by quota -- clearing this hold is a deliberate policy change, not a retry."
+  },
+  {
+    "ref": "ppxl16/rsna-knee-cv-k24-fold0",
+    "dir": "kernel-cv-k24-fold0",
+    "note": "EXP: --k 12 -> 24 windows per study (the other way to feed more input per epoch). ~6 h/fold.",
+    "priority": 4,
+    "attempts": 0,
+    "hold": "GPU POLICY 2026-09-21 (user): the 30 GPU-h/week is reserved for kernels that produce a submission; training folds move to TPU. Held by POLICY, not by quota -- clearing this hold is a deliberate policy change, not a retry."
+  },
+  {
+    "ref": "ppxl16/rsna-knee-ens-v2src-seedalt",
+    "dir": "kernel-exp/v2src-seedalt",
+    "note": "REPRODUCIBILITY PROBE (not a promotion candidate): SEED 2026 -> 2027. Measures run-to-run movement of our own pipeline. ~20 min of a slot, submit in the 00:00 UTC window if slots allow.",
+    "priority": 5,
+    "attempts": 6,
+    "hold": "push failed after 6 attempt(s): Kernel push error: Maximum weekly GPU quota of 30.00 hours reached."
+  },
+  {
+    "ref": "ppxl16/rsna-knee-cv-fast-fold0",
+    "dir": "kernel-cv-fast-fold0",
+    "note": "k=6 fast screening baseline (HANDOFF 84.4) -- halves the epoch cost, needs its own baseline",
+    "priority": 7,
+    "hold": "GPU POLICY 2026-09-21 (user): the 30 GPU-h/week is reserved for kernels that produce a submission; training folds move to TPU. Held by POLICY, not by quota -- clearing this hold is a deliberate policy change, not a retry."
+  },
+  {
+    "ref": "ppxl16/rsna-knee-cv-g-fold1",
+    "dir": "kernel-cv-g-fold1",
+    "note": "G control, DEPRIORITISED: gate 1 already passed (gold-58 pairing +0.1109, CI [+0.072,+0.154]). ~50 min each if slots are idle.",
+    "priority": 8,
+    "attempts": 0,
+    "hold": "GPU POLICY 2026-09-21 (user): the 30 GPU-h/week is reserved for kernels that produce a submission; training folds move to TPU. Held by POLICY, not by quota -- clearing this hold is a deliberate policy change, not a retry."
+  },
+  {
+    "ref": "ppxl16/rsna-knee-cv-g-fold2",
+    "dir": "kernel-cv-g-fold2",
+    "note": "G control, DEPRIORITISED (see g-fold1).",
+    "priority": 8,
+    "attempts": 0,
+    "hold": "GPU POLICY 2026-09-21 (user): the 30 GPU-h/week is reserved for kernels that produce a submission; training folds move to TPU. Held by POLICY, not by quota -- clearing this hold is a deliberate policy change, not a retry."
+  },
+  {
+    "ref": "ppxl16/rsna-knee-cv-g-fold3",
+    "dir": "kernel-cv-g-fold3",
+    "note": "G control, DEPRIORITISED (see g-fold1).",
+    "priority": 8,
+    "attempts": 0,
+    "hold": "GPU POLICY 2026-09-21 (user): the 30 GPU-h/week is reserved for kernels that produce a submission; training folds move to TPU. Held by POLICY, not by quota -- clearing this hold is a deliberate policy change, not a retry."
+  },
+  {
+    "ref": "ppxl16/rsna-knee-cv-g-fold4",
+    "dir": "kernel-cv-g-fold4",
+    "note": "G control, DEPRIORITISED (see g-fold1).",
+    "priority": 8,
+    "attempts": 0,
+    "hold": "GPU POLICY 2026-09-21 (user): the 30 GPU-h/week is reserved for kernels that produce a submission; training folds move to TPU. Held by POLICY, not by quota -- clearing this hold is a deliberate policy change, not a retry."
+  },
+  {
+    "ref": "ppxl16/rsna-knee-cv-norm-fold0",
+    "dir": "kernel-cv-norm-fold0",
+    "note": "CV EXP: --norm imagenet. Low prior -- the author's own runs use norm=none and still score. 2.8 GPU-h.",
+    "priority": 9,
+    "attempts": 0,
+    "hold": "GPU POLICY 2026-09-21 (user): the 30 GPU-h/week is reserved for kernels that produce a submission; training folds move to TPU. Held by POLICY, not by quota -- clearing this hold is a deliberate policy change, not a retry."
+  },
+  {
+    "ref": "ppxl16/rsna-knee-cv-r288-fold3",
+    "dir": "kernel-cv-r288-fold3",
+    "note": "CONFIRM r288: the fold-0 screen read +0.0049 OOF / +0.0261 gold-58 (HANDOFF 116). Needs the matching a-fold baseline. 4.6 GPU-h.",
+    "priority": 12,
+    "attempts_reset": true,
+    "attempts": 3,
+    "hold": "GPU POLICY 2026-09-21 (user): the 30 GPU-h/week is reserved for kernels that produce a submission; training folds move to TPU. Held by POLICY, not by quota -- clearing this hold is a deliberate policy change, not a retry."
+  },
+  {
+    "ref": "ppxl16/rsna-knee-cv-r288-fold4",
+    "dir": "kernel-cv-r288-fold4",
+    "note": "CONFIRM r288: the fold-0 screen read +0.0049 OOF / +0.0261 gold-58 (HANDOFF 116). Needs the matching a-fold baseline. 4.6 GPU-h.",
+    "priority": 12,
+    "attempts_reset": true,
+    "attempts": 3,
+    "hold": "GPU POLICY 2026-09-21 (user): the 30 GPU-h/week is reserved for kernels that produce a submission; training folds move to TPU. Held by POLICY, not by quota -- clearing this hold is a deliberate policy change, not a retry."
+  },
+  {
+    "ref": "ppxl16/rsna-knee-cv-a-fold3",
+    "dir": "kernel-cv-a-fold3",
+    "note": "A arm baseline fold 3. 2.8 GPU-h.",
+    "priority": 12,
+    "attempts": 2,
+    "hold": "GPU POLICY 2026-09-21 (user): the 30 GPU-h/week is reserved for kernels that produce a submission; training folds move to TPU. Held by POLICY, not by quota -- clearing this hold is a deliberate policy change, not a retry."
+  },
+  {
+    "ref": "ppxl16/rsna-knee-cv-a-fold4",
+    "dir": "kernel-cv-a-fold4",
+    "note": "A arm baseline fold 4. 2.8 GPU-h.",
+    "priority": 12,
+    "attempts": 2,
+    "hold": "GPU POLICY 2026-09-21 (user): the 30 GPU-h/week is reserved for kernels that produce a submission; training folds move to TPU. Held by POLICY, not by quota -- clearing this hold is a deliberate policy change, not a retry."
+  }
+]

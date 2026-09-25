@@ -1,0 +1,6 @@
+{
+  "name": "arm-weights-alt",
+  "desc": "Swap the Raptor arm-weight vector from 0.55/0.10/0.15/0.20 to 0.60/0.10/0.10/0.20. The public sources CONTRADICT each other on this: evgendvorkin credits the 0.941 step with one vector and maverickss26 claims 0.941 with the other. A genuine +/-0.001 unknown, and the cheapest possible A/B.",
+  "source_sha256": "01f2d834a6c55726c7990e951a96c663405cb2a6bbc4929cae1fc5f07ce53cd6",
+  "result_sha256": "6f79a1e81ac40ee1be37921a579ad1cb0bc8975315112ad510b4e5549a47c030"
+}
