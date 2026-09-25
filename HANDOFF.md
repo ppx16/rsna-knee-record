@@ -13363,3 +13363,51 @@ pkill -f knee-mri-training-the-twelve-finding-model.py
 > 差点把前沿台账里的 v38 当成"新挖到的招"，而它恰好是我们**已经量过并且是负的**那一手。
 > ⇒ **凡是"从别人的配方里读出来"的改动，先在本仓搜它是否已经测过**；别人有效 ≠ 我们有效（栈不同）。
 
+---
+
+## 164. 用户报了"黑窗口 cmd" —— 是我早先建的两个计划任务，已停
+
+**用户原话**："为啥过一会就有个黑窗口cmd出现，你设置了啥"。
+
+### 164.1 是什么
+
+两个 Windows 计划任务（**我建的**，不是系统的，也不是任何外部程序）：
+
+| 任务 | 跑什么 | 触发 |
+|---|---|---|
+| `RSNAKneeDirector` | `scripts\director.cmd` ⇒ `director.py --once`（下载/提交/打分链） | `rep=PT3H`，**每 3 小时** |
+| `RSNAKneeQueue` | `scripts\queue.cmd` ⇒ `cv_queue.py --once`（补满空闲 GPU 槽） | `rep=PT3H`，**每 3 小时**，与上面**错开 13 分钟** |
+
+⇒ **每 3 小时弹两次**控制台窗口，一闪而过 —— 与用户描述完全一致。实测取证
+（2026-09-25 21:3x）：`LastRunTime` **21:16:01 / 21:29:01**，`NextRunTime` **次日 00:16 / 00:29**；
+`Logon Mode: Interactive only` ⇒ 它就在用户当前桌面上开窗。
+
+### 164.2 处置：**已停**（两条 `/disable`，实测 `State=Disabled`）
+
+```powershell
+schtasks /change /tn "RSNAKneeDirector" /disable
+schtasks /change /tn "RSNAKneeQueue"    /disable
+# 要恢复就把 /disable 换成 /enable
+```
+
+**依据（不只是"用户嫌烦"）**：这对任务**当时已经无事可做**——GPU 周额度耗尽 ⇒ 没有内核能跑、
+也就没有东西能提交；日志逐字为 `polled 0 of 25 watches (25 finished -> skipped)` 与
+`--once done (pushed 0)`，即**纯粹的定时空转**。再叠加 **A26**（正是这种轮询把只读路径打成过
+403 全封）与用户"**别太依赖设自动定时任务**"的明确偏好 ⇒ **停掉在两个方向上都对**。
+
+⚠️ **A25/A27 的语境变了**：09-20 用户曾决定"重新启用"（当时它们真在推折、真在下载）。
+现在没有任何东西在跑，它们唯一的作用就是弹窗 —— **所以这次停掉不违背那个决定，而是它的条件消失了**。
+⚠️ **周六流程不依赖任何定时任务**：`RUNBOOK-0943.md` 是**手工 copy-paste** 的。
+⇒ **不需要为了周六把它们开回来。**
+
+### 164.3 教训（写死）
+
+1. **命令行计划任务会在交互式桌面上弹控制台窗口**，用户会把它理解成"你偷偷跑了什么" ——
+   **凡是为无人值守建的定时任务，交付前必须主动说明"它会弹窗、多久一次"**，而不是等用户来问。
+2. **能不用计划任务就不用。** 本仓真正需要"无人值守"的场景（周六那次推送）本来就是一次
+   手工操作 + 一份 runbook，定时任务没有带来任何必要能力。
+3. 顺带：**`Get-ScheduledTask` 比 `schtasks /query` 好用**——
+   `Get-ScheduledTask -TaskName X | Get-ScheduledTaskInfo` 直接给 `LastRunTime`/`NextRunTime`，
+   而要拿"它到底跑什么命令"仍得看 `$_.Actions.Execute`（`schtasks /query /v` 的输出太长且中文列名不稳）。
+
+
