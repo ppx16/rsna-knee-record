@@ -37,8 +37,14 @@ EXPECT = {
     # 鈿狅笍 the fork's tuple is ("Baker's",) WITH a trailing comma -- that is a 1-element TUPLE.  Written
     # as ("Baker's") it would be the plain string, and `label not in _RAD_EXCLUDE` would silently turn
     # into SUBSTRING matching instead of membership.  Assert the comma.
-    "kernel-0943": {"rad_exclude": "\"Baker's\", 'Fracture'", "note": "0.943 control"},
-    "kernel-0943f": {"rad_exclude": "\"Baker's\",", "note": "0.943 + the one-token fracture fork"},
+    "kernel-0943": {"rad_exclude": "\"Baker's\", 'Fracture'", "preset": "speedy",
+                    "note": "0.943 control"},
+    "kernel-0943f": {"rad_exclude": "\"Baker's\",", "preset": "speedy",
+                     "note": "0.943 + the one-token fracture fork"},
+    "kernel-0943o": {"rad_exclude": "\"Baker's\", 'Fracture'", "preset": "outer060",
+                     "note": "flat-0.60 outer (robust second pick)"},
+    "kernel-0943s": {"rad_exclude": "\"Baker's\", 'Fracture'", "preset": "sparse",
+                     "note": "62/42 windows (the quota lever)"},
 }
 # The arm weights the fork is built on.  A public analysis of the 0.941 plateau argues that forks
 # stalling at 0.941 are the ones that moved these to 0.55/0.15, while the frontier's own submissions
@@ -192,6 +198,13 @@ def main():
                 problems.append("%s: _RAD_EXCLUDE is not (%s)" % (d, want_re))
         if "speedy" in src:
             print("  speedy preset : referenced")
+        want_preset = EXPECT.get(d, {}).get("preset")
+        if want_preset:
+            line = 'PRESET = os.environ.get("RSNA_PRESET", "%s")' % want_preset
+            hit = line in src
+            print("  preset default: %-9s %s" % (want_preset, "OK" if hit else "MISMATCH"))
+            if not hit:
+                problems.append("%s: default preset is not %r" % (d, want_preset))
 
         # ---- 7. runtime evidence (the one unfixable risk) ---------------
         rt = set()
