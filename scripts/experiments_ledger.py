@@ -82,10 +82,17 @@ CV_MAP = {
     "cn1": ("**AUTODL 4090D**: 同 cn0, fold 1",
             "⭐ OOF 0.8441 / gold 0.8873（**折间不可比**：不同折不是同一个仪器，只说明离散度）"),
     "d64nx3360": ("**TPU**: convnext_base, res 336, fold 0, **64 槽密语料**（已发布数据集）",
-                  "⭐⭐ **密语料线的首次真实证据**：对 `nx3360`（44 槽）soft ΔOOF **+0.0068** "
+                  "⭐⭐ **密语料线在 convnext 上的首次证据**：对 `nx3360`（44 槽）soft ΔOOF **+0.0068** "
                   "[+0.0024, +0.0108]，**100% 胜出 ⇒ REAL**（阈值 0.004）；二值口径 +0.0129"
                   "（0.8368 → 0.8497）；gold-58 +0.0014 NOT RESOLVED（D16 应验）。"
-                  "⚠️ 代理局限：convnext ≠ CoAtNet（D17）"),
+                  "⚠️ **但那是 convnext（D17 的替代品）—— 该增益在 CoAtNet 上没有复现，见 `d64cn0`**"),
+    "d64cn0": ("**AUTODL 4090D**: CoAtNet@384, k 12, 12ep, --grad_ckpt, **64 槽密语料**, fold 0",
+               "⛔ **密度增益【没有】在 CoAtNet 上复现 —— 判据不成立，密语料线对我们的生产架构无效。** "
+               "对 `cn0`（44 槽）soft ΔOOF(64−44) = **−0.0011** CI [−0.0047, +0.0025] "
+               "**NOT RESOLVED**（预先注册门槛是 **> +0.004**）；二值 0.8618 vs 0.8623、"
+               "gold-58 0.8768 vs 0.8779 —— **三个口径同向且都略低**。"
+               "⇒ 反面证实了 §156 坚持标注的代理局限（convnext ≠ CoAtNet，D17）**确实会误导**；"
+               "也与外部证据一致（自己的 0.85–0.87 成员只会拖后腿，§159.6）"),
     "nx3361": ("**TPU**: convnext_base, res 336, fold 1",
                "⚠️ **没有配对基线**：同折同架构的 res 224（`nx2241`）不存在 ⇒ 这一折本身证明不了"
                " res 增益。唯一有效的同折比较是 vs `cn1`：+0.0074 soft REAL（但混了架构+后端两个变量）"),
@@ -105,6 +112,7 @@ ARCH_BY_TAG = {
     "cn1": "coatnet_rmlp_2_rw_384.sw_in12k_ft_in1k",
     "nx3361": "convnext_base.fb_in22k_ft_in1k",
     "d64nx3360": "convnext_base.fb_in22k_ft_in1k",
+    "d64cn0": "coatnet_rmlp_2_rw_384.sw_in12k_ft_in1k",
 }
 DEFAULT_ARCH = "vit_small_patch16_224"
 # only the runs that are actually member CANDIDATES -- listing all ~20 vit_small fold runs here
