@@ -150,9 +150,28 @@ def prep(path):
             cy, cx = h // 2, w // 2
             half = want // 2
             a = a[cy - half:cy - half + want, cx - half:cx - half + want]
-    lo, hi = float(a.min()), float(a.max())
+    # ----------------------------------------------------------------------------------------
+    # ⚠️ ROBUST normalisation, NOT min-max.  Measured 2026-09-25 with
+    #    scripts/audit_corpus64_intensity.py: the min-max version produced a corpus whose mean
+    #    non-zero intensity was 58.1 against the published corpus's 102.2 -- 43% darker, and darker
+    #    even at the MIDDLE of every group (ratios 0.39-0.95), so it was not a span/end effect.
+    #    Cause: (a - a.min()) / (a.max() - a.min()) is decided by two extreme pixels, so one bright
+    #    artefact squeezes the whole image toward black.
+    #
+    #    Why the original validation missed it: verify44 compared rows with corr_rows(), which
+    #    mean-centres and normalises each row first, making it INVARIANT to any global or monotone
+    #    rescale.  A scale-invariant metric can never detect a scale problem.
+    #
+    #    Percentile clipping is the standard fix and is what a robust builder does.  The exact
+    #    percentiles the published corpus used are NOT known (the author's builder is not public and
+    #    their training notebook only consumes the finished stack), so this is robust, not matched --
+    #    any future comparison against the published corpus must therefore compare INTENSITY as well
+    #    as correlation, and the cleanest design is to build BOTH arms with the same builder.
+    # ----------------------------------------------------------------------------------------
+    lo, hi = (float(v) for v in np.percentile(a, (0.5, 99.5)))
     if hi > lo:
         a = (a - lo) / (hi - lo)
+    a = np.clip(a, 0.0, 1.0)
     try:
         import cv2
         a = cv2.resize(a, (OUT, OUT), interpolation=cv2.INTER_AREA)
