@@ -13365,7 +13365,7 @@ pkill -f knee-mri-training-the-twelve-finding-model.py
 
 ---
 
-## 164. 用户报了"黑窗口 cmd" —— 是我早先建的两个计划任务，已停
+## 164. 用户报了"黑窗口 cmd" —— 是我早先建的两个计划任务，已**删除**
 
 **用户原话**："为啥过一会就有个黑窗口cmd出现，你设置了啥"。
 
@@ -13382,23 +13382,52 @@ pkill -f knee-mri-training-the-twelve-finding-model.py
 （2026-09-25 21:3x）：`LastRunTime` **21:16:01 / 21:29:01**，`NextRunTime` **次日 00:16 / 00:29**；
 `Logon Mode: Interactive only` ⇒ 它就在用户当前桌面上开窗。
 
-### 164.2 处置：**已停**（两条 `/disable`，实测 `State=Disabled`）
+### 164.2 处置：先**停**，再按用户指示**删**
 
 ```powershell
-schtasks /change /tn "RSNAKneeDirector" /disable
+schtasks /change /tn "RSNAKneeDirector" /disable     # 先止血
 schtasks /change /tn "RSNAKneeQueue"    /disable
-# 要恢复就把 /disable 换成 /enable
+schtasks /delete /tn "RSNAKneeDirector" /f           # 用户说"删"
+schtasks /delete /tn "RSNAKneeQueue"    /f
+# 验证：Get-ScheduledTask | ? { $_.TaskName -match 'RSNA|Knee|Kaggle' }   -> 空
 ```
+
+实测：`/disable` 后 `State=Disabled`；`/delete` 两个都 `SUCCESS`，随后 `Get-ScheduledTask` 过滤
+**返回空**，`schtasks /query` 里也没有任何 `RSNAKnee` ⇒ **不存在了，不会再弹窗**。
+要重建只能照 `scripts\director.cmd` 头部注释里那行 `schtasks /create … /sc MINUTE /mo 15` 重来
+（⚠️ 那条注释写的间隔是 **15 分钟**，与后来实际用的 `/ri 180`（3 小时）**不一致**，别照抄）。
 
 **依据（不只是"用户嫌烦"）**：这对任务**当时已经无事可做**——GPU 周额度耗尽 ⇒ 没有内核能跑、
 也就没有东西能提交；日志逐字为 `polled 0 of 25 watches (25 finished -> skipped)` 与
 `--once done (pushed 0)`，即**纯粹的定时空转**。再叠加 **A26**（正是这种轮询把只读路径打成过
-403 全封）与用户"**别太依赖设自动定时任务**"的明确偏好 ⇒ **停掉在两个方向上都对**。
+403 全封）与用户"**别太依赖设自动定时任务**"的明确偏好 ⇒ **停掉、删掉在两个方向上都对**。
 
 ⚠️ **A25/A27 的语境变了**：09-20 用户曾决定"重新启用"（当时它们真在推折、真在下载）。
-现在没有任何东西在跑，它们唯一的作用就是弹窗 —— **所以这次停掉不违背那个决定，而是它的条件消失了**。
+现在没有任何东西在跑，它们唯一的作用就是弹窗 —— **所以这次删掉不违背那个决定，而是它的条件消失了**。
 ⚠️ **周六流程不依赖任何定时任务**：`RUNBOOK-0943.md` 是**手工 copy-paste** 的。
 ⇒ **不需要为了周六把它们开回来。**
+
+### 164.2b 🔴 差点误杀宿主进程：那个"长驻的黑窗口 cmd"就是 DSH 自己
+
+删完任务后做自启面清扫，`Get-Process cmd` 报出 **PID 19196 `cmd.exe`，启动于 21:29:43** ——
+**看着正像 queue 任务留下的僵尸**。**幸好先查了 `CommandLine` 和父子关系**：
+
+```
+PID 19196  cmd.exe      parent = explorer.exe (11240)
+   └─ 12124 node.exe  "D:\node-v24.2.0-win-x64\node.exe"  "...\@deepseek-ai\dsh\lib\bin.js" web
+```
+
+⇒ 那是**托管本会话与 http://127.0.0.1:3080 的窗口**。**关掉它 = 我和这个 GUI 一起断。**
+
+⇒ **教训（写死）**：**进程名 `cmd.exe` 完全不能作为判断依据 —— 我自己的宿主就是一个 `cmd.exe`。**
+杀进程前**必须先看 `CommandLine`、`ParentProcessId` 和子进程**（`Get-CimInstance Win32_Process`）；
+**"启动时间与某个任务吻合"只是线索，不是证据**。
+
+✅ **同一次清扫的结论（自启面干净）**：`HKCU/HKLM\…\Run` 里**没有我的任何条目**（全是用户自己的
+OneDrive / Steam / 百度云 / Epic / 夸克 / 豆包 / VPN / Chrome / Edge / VMware / 火绒 / MuMu…）；
+启动文件夹只有用户自己的 `Ollama.lnk`；**非微软的计划任务里没有我的任何东西**
+（Nahimic / NVIDIA / OneDrive / Google / 夸克 / SoftLanding）⇒
+**A75 那两个任务就是我在整台机器上留下的全部痕迹，现已删净。**
 
 ### 164.3 教训（写死）
 
@@ -13409,5 +13438,7 @@ schtasks /change /tn "RSNAKneeQueue"    /disable
 3. 顺带：**`Get-ScheduledTask` 比 `schtasks /query` 好用**——
    `Get-ScheduledTask -TaskName X | Get-ScheduledTaskInfo` 直接给 `LastRunTime`/`NextRunTime`，
    而要拿"它到底跑什么命令"仍得看 `$_.Actions.Execute`（`schtasks /query /v` 的输出太长且中文列名不稳）。
+4. **别再假设"黑窗口 = 我的某个脚本"**：先分清**周期性出现**（计划任务，A75）还是**常驻**
+   （很可能是宿主/GUI 自己，164.2b）。两者处置完全相反。
 
 
