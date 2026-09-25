@@ -71,3 +71,7 @@ outputs/_landing/
 # The .npz files are the raw OOF predictions -- 300 KB each and the actual evidence for every
 # conclusion in FACTS.md.  The 300+ MB *.pt checkpoints next to them are excluded above: they are
 # reproducible from the config recorded in the ledger, and the numbers are what matter.
+
+# scratch commit-message files
+state/cm.txt
+state/commitmsg.txt
