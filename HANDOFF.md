@@ -12948,3 +12948,71 @@ git config --local  credential.https://github.com.helper '!gh auth git-credentia
 ```
 （用户 2026-09-25 决定：**不迁移账号了，就用 `ppx16`**。`ppx16` 经用户确认**也是他自己的账号**，
 所以最初那个"要不要立刻删掉"的担心解除；仓库保持单一副本，不设第二个远端 —— 两份私有仓库等于把暴露面翻倍。）
+
+---
+
+## 158. A2 前置检查：`kernel-0943` / `kernel-0943f` 已通过（零 GPU 成本）
+
+动机：**GPU 额度是本项目最稀缺的资源**（30 h/周，每个 0.943 臂要一次约 8–9 h 的会话 ⇒ 一周最多 3 条臂）。
+**任何在额度花掉之后才发现的断裂，代价是整整一条臂。** 所以凡是可以提前知道的，全部提前查。
+
+工具：`scripts/preflight_0943.py`（可复用，逐项 PASS/FAIL）。
+
+### 158.1 结果：**PREFLIGHT OK（0 problems / 0 warnings）**
+
+| 检查项 | 结果 |
+|---|---|
+| title → slug 与实际 id 一致（A50 的坑） | ✅ 两个都对 |
+| `enable_gpu: true`、`code_file` 存在 | ✅ |
+| **14 个 `dataset_sources` 全部可达** | ✅ 逐个解析成功 |
+| **2 个 `kernel_sources` 都是 `COMPLETE`**（没跑完的内核源没有输出可挂） | ✅ `sofiaanjenje/rsna-knee-e11-train`、`-e13-train` |
+| `competition_sources` | ✅ |
+| notebook 解析 + **32 个代码 cell 全部 `compile()` 通过** | ✅ 0 SyntaxError |
+| **臂权重 = `maxspan-v5 0.60 / reverse 0.10 / native384dense-v10 0.10 / native384-v8 0.20`** | ✅ 见 158.3 |
+| 外层 CoAtNet 默认 **0.65** + `outer060` 开关 | ✅ |
+| `_RAD_EXCLUDE` 逐变体正确（对照 vs 断裂臂） | ✅ 见 158.4 |
+
+### 158.2 ⭐ 运行时长：作者**专门为"装进一次会话"设计过**
+
+```
+TIME_BUDGET = 8.0 * 3600                            # 内置 8 小时预算
+PRESET = os.environ.get("RSNA_PRESET", "speedy")    # 默认 preset = speedy = 0.943 run
+remaining = TIME_BUDGET - (time.time() - T0)
+process = subprocess.Popen(...); returncode = process.wait(timeout=remaining)
+raise TimeoutError('No time remains for a required model branch')
+```
+⇒ 每个模型分支是**带剩余预算超时的子进程**；预算耗尽会**大声 `raise`**（不会静默降级成一个更差的提交）。
+⇒ **推的时候必须用 `-t` 给足**（8 h 预算 + 启动/导入余量，例如 `-t 34200`）。
+
+### 158.3 🔑 顺带解答了一个悬而未决的问题：**`NvidiaTeslaT4` = 2×T4（共 32 GB）**
+
+notebook 里多处 `if torch.cuda.device_count() != 2: raise ...`，还有
+`raise RuntimeError('D4 requires exactly two T4 GPUs')`。前沿自己的 version-3 就是用
+`machine_shape: NvidiaTeslaT4` 跑到 0.943 的 ⇒ **这个 shape 给的就是两张 T4**。
+⇒ 这解释了 `jiweiliu/rsna-knee-fast-2xt4-inference` 的命名，也说明**对这条线不必担心 16 GB 单卡显存**。
+
+### 158.4 一个"检查器 vs 内核"的教训：`("Baker's")` 不是元组
+
+检查器最初报 `kernel-0943f: _RAD_EXCLUDE is not ("Baker's")` —— **是检查器写错了**：
+内核里是 **`("Baker's",)`（带尾逗号 = 单元组）**，而我写的 `("Baker's")` 是**字符串**。
+⚠️ 这个区别在这里**要命**：字符串会让 `label not in _RAD_EXCLUDE` 变成**子串匹配**而不是成员判断。
+已把期望值改成带逗号的形式，并让检查器**断言元组**。
+
+### 158.5 ⚠️ 新冒出来的预算风险（必须在周六第一次运行前后实测）
+
+一次运行是 **8 h × 2 GPU**。**额度按墙钟扣还是按 GPU 时扣？**
+- 若按墙钟：一次 8 h，30 h/周 ⇒ 约 3 条臂（原计划成立）。
+- 若按 GPU 时：一次 **16 h**，30 h/周 ⇒ **只有 1–2 条臂**，"一周跑完两条 0943 臂"就不成立。
+
+⇒ **实测方法**：周六第一次运行**前后各读一次额度**（注意：本机 CLI 2.1.2 **没有 `kaggle quota` 子命令**，
+之前那次能出表的原因不明 —— 到时候换 `kaggle competitions submissions` 或网页读数来对账）。
+**在这一点确认之前，不要在同一天排第二条臂。**
+
+### 158.6 顺带确认的前沿情报（详见 §156 与 `downloads/research/frontier3/`）
+
+- 公开最高仍是 **0.943**；`kolyaflexcu/rsna-knee-speedy947` 的名字是误导，它自己声明 **0.942**。
+- **Mattia 团队自己已到 0.946** ⇒ 还有未公开的东西。
+- `starkhushi/rsna-knee-why-public-forks-stop-at-0-941` 主张的「一个权重」（臂权重还原成 0.60/0.10）
+  —— **我们的 `kernel-0943` 已经在正确那一侧**，所以周六这条臂不受该问题拖累。
+- 若 0943 达不到预期，下一个 fork 目标是 Mattia 的 **"Speedy Raptors"**（另一条 lineage：24 cells、
+  44 槽 span 0.06–0.94、k_eval 42），已拉到本地待做逐字段差异表。
