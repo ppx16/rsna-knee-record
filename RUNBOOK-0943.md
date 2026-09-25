@@ -1,14 +1,14 @@
-# RUNBOOK — the four 0.943-line arms
+# RUNBOOK — the five 0.943-line arms
 
-**State:** all four arms are built and pass preflight (`PREFLIGHT OK`, 0 problems / 0 warnings —
-`state/preflight_4arms.txt`). They are blocked on one thing only: the weekly GPU quota
+**State:** all five arms are built and pass preflight (`PREFLIGHT OK`, 0 problems / 0 warnings —
+`state/preflight_5arms.txt`). They are blocked on one thing only: the weekly GPU quota
 (`refreshAt 2026-09-26T00:00:00Z`). A GPU kernel **cannot even be pushed** while quota is exhausted
 (FACTS A50), so arms must be pushed the moment quota returns.
 
 **Why a written runbook:** a mistake here costs a whole ~8 h session. Everything below is
 copy-pasteable, and the order matters — in particular the acceptance test in step 3 comes BEFORE the
-submission, because a run can complete "successfully" and still be 0.003 worse for a reason the log
-reveals.
+submission, because "COMPLETE" alone does not tell you *which* code path ran (and, per A73, a bad
+mount does not degrade quietly here — it dies — so read the log before you trust the run).
 
 | arm | preset | windows | `_RAD_EXCLUDE` | role |
 |---|---|---|---|---|
@@ -16,6 +16,7 @@ reveals.
 | `kernel-0943f` | `speedy` | 94 | `("Baker's",)` | our one-token fracture fork (+0.001 internally) |
 | `kernel-0943o` | `outer060` | 94 | published | flat-0.60 outer; a public analysis recommends a flat-0.60 version as the **second final pick** (the per-label outer map was tuned on the public split) |
 | `kernel-0943s` | `sparse` | 62/42 | published | **the quota lever** — the arms' native window count; ~90 min vs an 8 h budget, at some cost in score (94 windows is one of the 0.942→0.943 deltas) |
+| `kernel-0943h` | `halfway` | 94 | published | ⭐ per-label routing **softened toward its default** — our own C57 evidence says softening cost 0.001 where flattening cost 0.002 (see §5) |
 
 Rebuild any of them at any time with `python scripts/build_0943_arms.py` (one variable per arm, with
 exact-match assertions; the builder itself is versioned in `scripts/`).
@@ -55,7 +56,7 @@ would-be submission into a `TimeoutError`.
 ⚠️ **Corrected 2026-09-25 (A73). The 0943 arms are fail-CLOSED, not fail-soft.** The old text here
 said a missing source "degrades silently ... logs `dropped` twenty times, and scores 0.937". That
 describes the **`kernel-ens`/v2src** line, where a member that fails *at inference* is caught and
-"costs one vote, not the run" (`kernel-ens` line 1520). The four arms in this runbook are built on
+"costs one vote, not the run" (`kernel-ens` line 1520). The five arms in this runbook are built on
 `maverickss26/...restructured-version-3`, which has **no soft path at all** (`soft-hits = 0` across
 all five 094x dirs):
 
@@ -100,13 +101,20 @@ this week; if it cost ~16 h, we can fit at most one.
 * **If quota is plentiful** (`sparse` is cheap): run `kernel-0943s` (**sparse**) — it isolates what the
   94-window sampling contributed, and it is the cheap one.
 * **If quota is tight**: pick exactly one of
-  * `kernel-0943o` (**outer060**) — the public analysis's recommendation for the **second final pick**,
-    because the per-label outer map was tuned on the public split and `Lateral Meniscus = 1.00`
-    discards three of that column's four stages; or
+  * `kernel-0943h` (**halfway**) — ⭐ **the best-supported hedge.** It keeps the 0.65 default and pulls
+    every per-label override halfway toward it. Our own LB evidence (C57, on this same object — the
+    outer CoAtNet routing — in the older v2src line) is that **flattening cost 0.002 while softening
+    cost 0.001**; or
+  * `kernel-0943o` (**outer060**) — reverts the *default* 0.65→0.60 and keeps every override. A
+    different axis from `halfway`, and the public analysis's recommendation for the second final pick
+    (the per-label outer map was tuned on the public split, and `Lateral Meniscus = 1.00` discards
+    three of that column's four stages); or
   * `kernel-0943f` (**fracture fork**) — our own +0.001, strong internal evidence but never measured on
     our submission.
-  The choice is a judgement call between *robustness against public-LB overfitting* (`outer060`) and
-  *a measured internal gain* (`0943f`); both are submission arms, so the leaderboard will settle it.
+  ⚠️ `halfway` and `outer060` are **not interchangeable hedges** (one softens the overrides, the other
+  lowers the default) — see HANDOFF 163.3. This is a judgement call between *robustness against
+  public-LB overfitting* (`halfway`/`outer060`) and *a measured internal gain* (`0943f`); all three are
+  submission arms, so the leaderboard will settle it.
 
 ```powershell
 kaggle kernels push -p <arm dir> -t 34200

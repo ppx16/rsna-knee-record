@@ -11,7 +11,7 @@ WHY FORK INSTEAD OF PORT.  Our `kernel-0942/` is the 0.942 config field-for-fiel
 pays for sampling 94 windows per arm inside one session.  Hand-porting a ~10 KB cross-cell diff risks
 a silent prediction change; forking the published artifact does not.
 
-THE FOUR ARMS (one variable each; that is what makes the results readable):
+THE FIVE ARMS (one variable each; that is what makes the results readable):
 
   kernel-0943   speedy   published token      the 0.943 run itself -- highest expected score
   kernel-0943f  speedy   fracture fork        our one-token _RAD_EXCLUDE change, +0.001 internally
@@ -24,6 +24,11 @@ THE FOUR ARMS (one variable each; that is what makes the results readable):
                                               ~5x cheaper if the sibling notebook's "~90 min on
                                               T4 x2" holds, at some cost in score: 94 windows is one
                                               of the 0.942 -> 0.943 deltas.  The quota lever.
+  kernel-0943h  halfway  softened routing     keeps the 0.65 default and pulls every per-label
+                                              override halfway toward it.  Our own LB evidence (C57)
+                                              is that softening cost 0.001 where flattening cost
+                                              0.002 -- a different axis from outer060, and the
+                                              better-supported hedge.  See HANDOFF 163.3.
 
 ⚠️ Kaggle REFUSES to even push a GPU kernel while the weekly quota is exhausted (FACTS A50), so these
 have to be built now and pushed the moment quota returns.  `--timeout` matters too: the notebook
@@ -56,6 +61,14 @@ VARIANTS = [
      "flat-0.60 outer -- public analysis's recommended robust second pick"),
     ("kernel-0943s", "ppxl16/rsna-knee-0943s", "RSNA knee 0943s", "sparse", False,
      "62/42 windows -- the quota lever (cheaper, likely lower)"),
+    # Added 2026-09-25.  `outer060` reverts the *default* (0.65 -> 0.60) while keeping every
+    # per-label override; `halfway` keeps the default and softens the overrides toward it.  They are
+    # not the same axis, but our own LB evidence (C57, on the same object -- the outer CoAtNet
+    # routing -- in the older v2src line) is that flattening it cost 0.002 while taking it halfway
+    # cost 0.001.  So this is the better-supported hedge, and building it is free: pushing costs no
+    # quota, only *running* does.  See HANDOFF 163.3 -- the choice stays open until the first read.
+    ("kernel-0943h", "ppxl16/rsna-knee-0943h", "RSNA knee 0943h", "halfway", False,
+     "per-label routing softened toward its default (C57 says softening beats flattening)"),
 ]
 
 

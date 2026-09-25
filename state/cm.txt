@@ -1,0 +1,19 @@
+Add a fifth 0.943-line arm (halfway) and refresh the runbook
+
+Our own LB evidence (C57, recorded on the same object -- the outer CoAtNet
+routing -- in the older v2src line) is that taking the per-label routing
+halfway back to its default cost 0.001, while flattening it cost 0.002.
+The notebook carries a halfway preset that does exactly the first thing, so
+the better-supported hedge for the second final pick is now available.
+
+Building and pushing an arm is free; only running one costs GPU quota. So
+adding this costs nothing and gives Saturday's second-arm decision a
+better-evidenced option. halfway and outer060 are different axes (softening
+the overrides vs lowering the default), not interchangeable -- recorded as
+an open decision in HANDOFF 163.3 rather than switched silently.
+
+All five arms rebuild deterministically (the four existing ones come back
+byte-identical) and pass preflight 0 problems / 0 warnings; evidence in
+state/preflight_5arms.txt, superseding the four-arm file.
+
+Runbook updated for the fail-closed correction and the five-arm table.

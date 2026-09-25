@@ -45,6 +45,8 @@ EXPECT = {
                      "note": "flat-0.60 outer (robust second pick)"},
     "kernel-0943s": {"rad_exclude": "\"Baker's\", 'Fracture'", "preset": "sparse",
                      "note": "62/42 windows (the quota lever)"},
+    "kernel-0943h": {"rad_exclude": "\"Baker's\", 'Fracture'", "preset": "halfway",
+                     "note": "routing softened toward its default (C57-preferred hedge)"},
 }
 # The arm weights the fork is built on.  A public analysis of the 0.941 plateau argues that forks
 # stalling at 0.941 are the ones that moved these to 0.55/0.15, while the frontier's own submissions
