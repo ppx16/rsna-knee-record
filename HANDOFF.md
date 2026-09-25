@@ -13286,3 +13286,80 @@ pkill -f knee-mri-training-the-twelve-finding-model.py
 
 `d64cn1`（fold 1）仍在跑，预计 ~08:15 UTC。预先注册说好**两折都跑**，所以最终结论等它出来一起给
 （若 fold 1 也同向，则结论更硬；若反向，则说明这个差异本身就是噪声 —— 两者都不改变"不投密语料"的处置）。
+
+---
+
+## 163. 关键更正：0943 四臂是 **fail-CLOSED**（不是"缺源静默降级"）+ 源清单审计 + 剩余工作面
+
+### 163.1 🔴 更正：那条"缺源会静默降级成 0.937"的说法，对四个 0943 arm **不成立**
+
+问"还有啥能做"时先回去翻自己的历史，结果先撞上这条**会直接误导周六操作**的错误记录（`RUNBOOK-0943.md` §3 原来逐字写着
+"degrades silently … logs `dropped` twenty times, and scores 0.937"）。
+
+**真正出处**：那是 **`kernel-ens`（旧 v2src 线）第 1520 行** —— 成员在**推理时**失败 ⇒ 记
+`dropped -- costs one vote, not the run` 并继续跑。**"少一票"描述的是那条线。**
+
+**而四个新臂建立在 `maverickss26/…restructured-version-3` 上，那里没有任何 soft 路径**（实测五个目录
+`kernel-0942/0943/0943f/0943o/0943s` 的 `no-fallback` 命中数全为 1、soft 命中数全为 **0**）：
+
+| 触发条件 | 行为 |
+|---|---|
+| 任一成员推理失败 | `raise WeightsError('DINOv2 member failure; no fallback permitted')` |
+| `_DINOV2_MATCHED_MEMBERS != 20` | raise（**A5 之后还有两处再断言**：L2584、L4868） |
+| `find_weights() is None` | `raise WeightsError('required public checkpoint manifest not found')` |
+| `main()` | **裸调用**，外层没有 `try/except`；抛了就停在那格 |
+
+⇒ **缺一个源 = 没有 `submission.csv`，不是 0.937。** 两个操作后果：
+1. preflight 里"源必须 COMPLETE"**从建议升级为承载性检查**（现在它替我们挡的是一次空跑，不是 0.003）；
+2. **失败几分钟内就能从日志看出来**（manifest 找不到立刻抛）⇒ **不要照旧等满 8 小时**。
+
+### 163.2 ⭐ 源清单审计：引用侧**无缺口**（把"缺源"这条风险真正关掉）
+
+做法不是"看别人挂了什么"（那会得到 2 个**假缺口**），而是**把 notebook 代码里每一个
+`/kaggle/input/<root>` 字面量取出来，与 metadata 挂的 14 datasets + 2 kernels + 1 model 逐一比对**：
+
+- 22 个 root 里 **16 个直接命中**；剩下 6 个（`competitions`/`datasets`/`models`/`notebooks`/`dinov2`/比赛 slug）
+  **全部是"多候选回退列表"的片段**，不是独立挂载点 —— 代码同时列了
+  `/kaggle/input/datasets/<owner>/<slug>`、`/kaggle/input/<slug>`、`/kaggle/input/notebooks/<owner>/<slug>/`
+  以及 dinov2 的四种大小写/层级写法 ⇒ **两种挂载约定我们都能解析**（与 A61 一致）。
+- 对等方**确实有**两个我们没有的源：`tonylica/rsna-knee-bend-dinov3-0917-repro-assets`（0.917 dinov3 线）
+  与 `romantamrazov/rsna-knee-dinosaur-v5-train`（v5 线）⇒ **别的谱系的训练内核**；
+  我们这条线的上游 `maverickss26/…restructured-version-3` 是 **"no source we lack"**。
+- ⚠️ 运行时那一半静态查不了：**1 个 model_source 能否产出 20 个成员** —— 代码是**加载 20 个成员、
+  每个用 dinov2/small 当骨干**（manifest 必须恰好列 20 个唯一 id），所以 1 个骨干源够用；
+  最终判据仍是运行时那句 `DINOv2 fail-closed gate PASS: 20/20`。
+
+### 163.3 ⏳ 唯一新出现的方案级分岔：第二个"稳健臂"该用 `outer060` 还是 `halfway`
+
+查预设时确认这条线上有**五个**预设：`speedy`（默认）/ `parent` / `halfway` / `outer060` / `sparse`：
+- `parent` ⇒ `coatnet_w = {"__default__": 0.65}`（**去掉全部 per-label 覆盖**，最平）
+- `halfway` ⇒ 覆盖值**向 0.65 折半**，默认不动
+- `outer060` ⇒ 默认 0.65→0.60，**覆盖全留**
+
+我们自己的 LB 证据（C57，旧 v2src 线，对象同为**外层 CoAtNet 路由**）：
+**完全拉平 `parent-routing` 0.939 ／ 折半 `halfway-routing` 0.940 ／ 调过的 0.941**
+⇒ **"软化"比"拉平"少亏 0.001**。若这条教训可迁移，稳健臂的**证据支持更好的是 `halfway` 而不是 `outer060`**。
+⚠️ 但两者不是同一个轴（一个压默认值、一个柔和化覆盖），且 C57 出自**旧栈** ⇒ **记为待定，不擅自改臂**。
+**成本提示：改预设是一行、push 免费，只有"跑"才花 GPU** ⇒ 可以先把 `kernel-0943h` 建好备选。
+
+### 163.4 剩余工作面（全部在提交线内，按价值排序）
+
+| # | 事项 | 状态/成本 |
+|---|---|---|
+| 1 | **周六：推 `kernel-0943` → 验收 → 提交** | 唯一活线；`RUNBOOK-0943.md` 已按 163.1 改好 |
+| 2 | **测 2×GPU 的额度计量**（8 h×2 卡 = 8 还是 16 GPU-h） | 不是独立任务：**取第一次运行前后的 `kaggle quota` 差值**即可；**它决定本周能不能跑第二个臂**（§158.5） |
+| 3 | **第二臂二选一**：`0943o`(outer060) / `0943f`(fracture) / `0943s`(sparse) / 备选 `0943h`(halfway) | 见 163.3；等 1 的读数 |
+| 4 | **两个最终槽位**（现为 `56166132`=0.941、`56175178`=0.940） | 倾向留一个"平坦类"版本做对冲（C57 的理由：过拟合风险在路由/per-label 映射，不在校准器） |
+| 5 | **前沿台账巡查**：`notebook.metadata.rsna_optimization` 只存在于 `mattiaangeli/bend-the-knee-to-the-dinosaurs` | 低成本脚本、低频；⚠️ 已知 **v38 的唯一改动正是 D11 已否决的 `rad_cal_w`→0** |
+| 6 | **用户动作**：AutoDL 控制台点关机 | 我点不了（A63）；余额 ¥30.82 |
+
+### 163.5 ⛔ 本次复习重新确认"不要再提"的清单
+
+`rad_cal_w`→0（**D11：我们实测 0.940 < 0.941**，且这正是 v38 的那一手）、5 视角（D14）、容量放大（D15）、
+用 gold-58 判小差异（D16）、CoAtNet 上 XLA（D17）、多排 TPU（D18）、全量重训（D19）、
+再加成员（§159.6）、密语料（C85/C86）。
+
+> ⭐ **方法论收获（这一节的真正价值）**：这次是**"先查自己的历史"**救回了一个 8 GPU-小时的实验 ——
+> 差点把前沿台账里的 v38 当成"新挖到的招"，而它恰好是我们**已经量过并且是负的**那一手。
+> ⇒ **凡是"从别人的配方里读出来"的改动，先在本仓搜它是否已经测过**；别人有效 ≠ 我们有效（栈不同）。
+

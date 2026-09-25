@@ -1,0 +1,26 @@
+Fix a wrong operational belief: the 0943 arms are fail-CLOSED, not fail-soft
+
+RUNBOOK-0943.md section 3 told the operator that a missing model/kernel
+source "degrades silently ... logs dropped twenty times, and scores 0.937".
+That describes kernel-ens (the v2src line, line 1520, where a member that
+fails at inference costs one vote). The four arms built on
+maverickss26/...restructured-version-3 have no soft path at all: a member
+failure raises WeightsError("no fallback permitted"), the fingerprint gate
+raises when the count is not 20, find_weights() returning None raises, and
+main() is called bare with no enclosing try/except. So a missing source
+means no submission.csv at all, not a 0.937 consolation.
+
+Consequences recorded: the preflight source-COMPLETE check is load-bearing
+rather than advisory, and a broken run is visible within minutes instead of
+after eight hours.
+
+Also records the source-coverage audit: every /kaggle/input literal in the
+notebook resolves against our mounted sources; the six unmatched roots are
+fragments of multi-candidate fallback lists, and the two sources peers have
+that we lack belong to other lineages.
+
+Also records the new open choice for the robustness arm: our own C57
+evidence says half-flattening the outer CoAtNet routing cost 0.001 while
+flattening it cost 0.002, which favours the halfway preset over outer060.
+
+FACTS: add A73 (fail-closed correction) and A74 (source audit).

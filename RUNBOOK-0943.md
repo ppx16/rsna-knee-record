@@ -52,15 +52,29 @@ would-be submission into a `TimeoutError`.
 
 ## 3. On COMPLETE — **acceptance test before submitting**
 
-The pipeline **degrades silently**: with `model_sources`/`kernel_sources` missing it still runs to
-completion, logs `dropped -- costs one vote, not the run` twenty times, and scores **0.937** instead
-of 0.940. So check the log, not the vibe.
+⚠️ **Corrected 2026-09-25 (A73). The 0943 arms are fail-CLOSED, not fail-soft.** The old text here
+said a missing source "degrades silently ... logs `dropped` twenty times, and scores 0.937". That
+describes the **`kernel-ens`/v2src** line, where a member that fails *at inference* is caught and
+"costs one vote, not the run" (`kernel-ens` line 1520). The four arms in this runbook are built on
+`maverickss26/...restructured-version-3`, which has **no soft path at all** (`soft-hits = 0` across
+all five 094x dirs):
+
+- any member failure ⇒ `raise WeightsError('DINOv2 member failure; no fallback permitted')`
+- `_DINOV2_MATCHED_MEMBERS != 20` ⇒ raise (and re-asserted post-A5 at two more sites)
+- `find_weights() is None` ⇒ `raise WeightsError('required public checkpoint manifest not found')`
+- `main()` is called bare — no enclosing `try/except`
+
+Consequence: a missing or unreadable source means **no `submission.csv` at all**, not a 0.937
+consolation. The preflight's source-COMPLETE check is therefore load-bearing, and a failed run is
+visible within minutes — do not sit on it for 8 h.
 
 ```powershell
 kaggle kernels logs ppxl16/rsna-knee-0943 | Out-File -Encoding utf8 state\logs_0943.json
 python scripts/klog.py state\logs_0943.json > state\logs_0943.txt
 Select-String -Path state\logs_0943.txt -Pattern 'fingerprint matches within' | Measure-Object   # want >= 20
-Select-String -Path state\logs_0943.txt -Pattern 'dropped'                                     # want ZERO
+Select-String -Path state\logs_0943.txt -Pattern 'DINOv2 fail-closed gate PASS'                 # want 1
+Select-String -Path state\logs_0943.txt -Pattern 'no fallback permitted|WeightsError|Traceback' # want ZERO
+Select-String -Path state\logs_0943.txt -Pattern 'dropped'                                      # want ZERO
 ```
 
 **Only if that passes**, submit:
