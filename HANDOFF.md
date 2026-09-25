@@ -12882,3 +12882,49 @@ IDENTICAL
 ```
 ⇒ `train 3479 / held-out 870`、架构、grad-ckpt 全部与 `cn0` 一致 ⇒ **唯一变量确实只有语料**。
 链条：fold 0 → fold 1，nohup 常驻；本地看守作业 `pwsh-2`（每 3 分钟一轮，最多 5 h）。
+
+---
+
+## 157. 长期记录：本地 git + 私有 GitHub 远端（2026-09-25）
+
+用户问"需不需要 github 之类的工具记录长期实验内容和结论"。**需要 —— 但不是为了"记内容"（内容一直在记），
+而是为了【历史】和【机器外 durability】。**
+
+### 157.1 为什么（这次会话里真实发生过的痛）
+
+- **不可逆**：我这次弄坏过两个文件 —— FACTS.md 被覆盖掉一行表头、`experiments_ledger.py` 被转义写坏字符串
+  —— **当时没有 diff 可看、没有回滚**，只能手工修。
+- **可追溯**：Kaggle 提交是**绑定到特定 notebook 版本**的；有了 git 才能回答"某个榜单分数是哪个构建产出的"。
+
+### 157.2 落地
+
+| 项 | 值 |
+|---|---|
+| 本地仓库 | `D:\kaggle\rsna-knee`（`git init`，分支 `main`） |
+| 远端 | **私有** `https://github.com/ppx16/rsna-knee-record`（`gh repo create --private`） |
+| 首个提交 | `45f5223 Record repo: initialize long-term experiment history` |
+| 规模 | **1351 文件 / 190 MB**（远端 tree 1619 条目已核实） |
+| 凭据 | **不需要用户提供任何密钥** —— 本机 `gh` **早已登录**为 `ppx16`（token 在 Windows 凭据管理器，scopes `gist/read:org/repo`） |
+
+### 157.3 ⚠️ 靠"先量再做"避免的三件事
+
+1. **第一次 `git add -A` 暂存了 6.5 GB** —— 几乎全是**每轮运行里重复十几份的 HuggingFace blob（各 84 MB）**；
+   `outputs/_landing` 一个就 **9.2 GB / 4451 文件**；另有 ~300 MB 的 opencv `.so` 依赖包。
+2. **秘密必须先扫再加**：`state/autodl_token.txt`（**AutoDL 计费凭据**）、`state/autodl.json`（主机/端口）
+   按**文件名**排除；并对**已追踪内容**做过密钥扫描（严格 JWT 形状 / `KGAT_` / `gh[pousr]_` / 私钥 / 真实租机域名）
+   —— **无命中**（先前那批 `eyJ` 是 notebook 里的 base64 数据，误报）。
+3. **`.gitignore` 对【已被追踪】的文件无效** —— 第一版提交把 `data/raw/` 收进去了，规则后加不生效，
+   必须 `git rm -r --cached data/raw`（**只从库移除，不动工作区**）再 amend。
+   ⇒ 排除**竞赛官方数据**的理由：规则限制数据外传，私有仓库也是第三方副本，而它**秒级可重下、零留档价值**。
+
+### 157.4 顺手钉死的换行符
+
+`core.autocrlf=false` + `.gitattributes`（`*.sh text eol=lf`）—— 因为 **CRLF 的 `.sh` 传到 Linux 会报
+`bash: $'\r': command not found`**，这个坑在本项目已多次出现，git 的 Windows 默认行为恰好会重新引入它。
+
+### 157.5 纪律
+
+**每完成一个阶段就 commit + push**（本文档这一节就是第一次实践）。
+数据（`corpus64/` 29.7 GiB、`*.pt`、`*.zip`）**永不入库**，而是**可寻址**：
+`state/CORPUS_MANIFEST.json` / `state/CORPUS64_MANIFEST.json` 记录"哪一行来自哪个数据集/内核"，
+配套脚本可随时向平台复核。
