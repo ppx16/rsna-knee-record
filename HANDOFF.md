@@ -12928,3 +12928,23 @@ IDENTICAL
 数据（`corpus64/` 29.7 GiB、`*.pt`、`*.zip`）**永不入库**，而是**可寻址**：
 `state/CORPUS_MANIFEST.json` / `state/CORPUS64_MANIFEST.json` 记录"哪一行来自哪个数据集/内核"，
 配套脚本可随时向平台复核。
+
+### 157.6 ⚠️ 两个凭据相关的坑（都把我卡过）
+
+**① 私有仓库返回 `Repository not found` 通常是【凭据不对】，不是仓库没了。**
+第一次 `gh repo create --push` 成功（它用 **gh 自己的 token**），但之后普通 `git push` 失败：
+本机 `gh` 登录的是 **`ppx16`**，而 git 的凭据助手是 **`manager`**（Windows 凭据管理器）里
+**`ppx72991-svg`** 的凭据 ⇒ 那个账号看不到 ppx16 的**私有**仓库 ⇒ GitHub 回 `Repository not found`。
+⚠️ **别被这句话骗去重建仓库**：用 `gh repo view` 一查就知道仓库其实好好的。
+
+**② `gh auth setup-git` 改的是【全局】配置 —— 会连带影响你所有 GitHub 仓库。**
+它会写进 `<user-home>/.gitconfig`，之后**任何** github.com 仓库的推送都走 gh 的 token
+（而 gh 里只有 ppx16）⇒ 你自己推 `ppx72991-svg` 的仓库就会莫名其妙失败。
+**已改成只对本仓库生效**：
+
+```powershell
+git config --global --unset-all credential.https://github.com.helper   # 还原全局
+git config --local  credential.https://github.com.helper '!gh auth git-credential'   # 仅本仓库
+```
+（用户 2026-09-25 决定：**不迁移账号了，就用 `ppx16`**。`ppx16` 经用户确认**也是他自己的账号**，
+所以最初那个"要不要立刻删掉"的担心解除；仓库保持单一副本，不设第二个远端 —— 两份私有仓库等于把暴露面翻倍。）
