@@ -300,5 +300,18 @@
     },
     "problems": [],
     "ok": true
+  },
+  "STATUS": "DELETED 2026-09-25 by user decision. This corpus was built with min-max normalisation and is measurably 43% darker than the published corpus (FACTS C86, HANDOFF 161); the original verify44 could not detect it because corr_rows() is scale-invariant. All three copies were removed: the Kaggle dataset ppxl16/rsna-knee-corpus64-dense, the local corpus64/ tree (29.66 GiB) and the rented box. This manifest is kept as the record of what was built and how the defect was found; the numbers below are historical.",
+  "DELETION": {
+    "date": "2026-09-25",
+    "kaggle_dataset": "ppxl16/rsna-knee-corpus64-dense",
+    "local_freed_gib": 29.66,
+    "box_freed_gib": 30.0,
+    "kept_as_evidence": [
+      "state/corpus64_sha256.txt",
+      "state/corpus64_ids_verify.json",
+      "scripts/audit_corpus64.py",
+      "scripts/audit_corpus64_intensity.py"
+    ]
   }
 }
