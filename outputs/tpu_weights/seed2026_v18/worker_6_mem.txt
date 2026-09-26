@@ -1,6 +1,0 @@
-fork_after rss_kb=40780380 avail_kb=316832652
-warmup_pre rss_kb=40780384 avail_kb=316832148
-warmup_done rss_kb=40866464 avail_kb=317081004
-smoke_pre rss_kb=41811188 avail_kb=309280508
-smoke_done shape=(2, 12) mean=0.4907 rss_kb=43919564 avail_kb=293255440
-ep0 si0 a_rows rss_kb=43919564 avail_kb=293255440

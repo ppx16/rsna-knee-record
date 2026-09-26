@@ -1,1 +1,0 @@
-[tpu probe] chips=8 proc_bounds=4 n_procs=4

@@ -75,3 +75,42 @@ outputs/_landing/
 # scratch commit-message files
 state/cm.txt
 state/commitmsg.txt
+# ================= 2026-09-26 cleanup: payload vs record =================
+# At 1526 tracked files the repo was 212 MB and 182 MB of that was `downloads/`.  The principle was
+# already stated at the top of this file ("data is made ADDRESSABLE instead of versioned") -- but
+# `downloads/` had never been added to it.
+#
+# !! NOTE FOR THE NEXT EDITOR: git does NOT support a trailing "#" comment on a pattern line.  The
+# !! first attempt at this block put the reasons on the same line as the patterns, and every rule
+# !! silently became an unmatchable pattern -- nothing was ignored and nothing changed.  Reasons go
+# !! on their own comment lines only.
+#
+# KEPT under downloads/: *.npz (the raw OOF predictions, the evidence behind every FACTS entry),
+# *.json (manifests and audits), *.py, *.md.
+
+# raw arrays: intermediate, large, regenerable
+downloads/**/*.npy
+# label tables, re-downloadable from their datasets
+downloads/**/*.parquet
+# logs and dumps, not records
+downloads/**/*.txt
+# 83 MB of extensionless training blobs inside a pulled run
+downloads/**/data/
+downloads/**/*.pt
+# rented-box scratch
+downloads/rent/
+# 6.7 MB, and the probe rebuilds it in 128 seconds
+downloads/research/siteprobe/site_probe.csv
+# raw API dumps, reproducible
+downloads/research/*_raw*.json
+# competition data: not ours to redistribute
+downloads/**/train.csv
+downloads/**/test.csv
+downloads/**/sample_submission.csv
+# scratch and old submissions
+outputs/
+# vendored dependencies, not results
+_d4_env/
+_coat_env/
+# generated from ens_experiment.py plus a base notebook; the .json configs are the record
+kernel-exp/**/*.ipynb
