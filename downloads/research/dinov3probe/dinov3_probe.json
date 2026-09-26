@@ -1,0 +1,33 @@
+{
+  "torch": "2.10.0+cpu",
+  "torch_xla": "absent: ModuleNotFoundError",
+  "timm": "1.0.26",
+  "dinov3_names": [
+    "vit_7b_patch16_dinov3",
+    "vit_base_patch16_dinov3",
+    "vit_base_patch16_dinov3_qkvb",
+    "vit_huge_plus_patch16_dinov3",
+    "vit_huge_plus_patch16_dinov3_qkvb",
+    "vit_large_patch16_dinov3",
+    "vit_large_patch16_dinov3_qkvb",
+    "vit_small_patch16_dinov3",
+    "vit_small_patch16_dinov3_qkvb",
+    "vit_small_plus_patch16_dinov3",
+    "vit_small_plus_patch16_dinov3_qkvb"
+  ],
+  "buildable": {
+    "vit_small_patch16_dinov3": 384,
+    "vit_small_patch16_dinov3.lvd1689m": 384,
+    "vit_base_patch16_dinov3": 768,
+    "vit_small_patch16_224": 384
+  },
+  "pretrained_fetch": {
+    "name": "vit_small_patch16_dinov3",
+    "ok": true,
+    "out_shape": [
+      1,
+      384
+    ]
+  },
+  "HF_HOME": ""
+}

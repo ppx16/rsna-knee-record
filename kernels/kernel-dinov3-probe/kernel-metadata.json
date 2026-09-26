@@ -1,0 +1,18 @@
+{
+  "id": "ppxl16/rsna-knee-dinov3-probe",
+  "title": "RSNA knee dinov3 probe",
+  "code_file": "probe.py",
+  "language": "python",
+  "kernel_type": "script",
+  "is_private": true,
+  "enable_gpu": false,
+  "enable_tpu": false,
+  "enable_internet": true,
+  "keywords": [],
+  "dataset_sources": [],
+  "kernel_sources": [],
+  "competition_sources": [
+    "rsna-knee-abnormality-detection"
+  ],
+  "model_sources": []
+}

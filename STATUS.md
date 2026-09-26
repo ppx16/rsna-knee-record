@@ -73,6 +73,30 @@ cannot see** — unmeasurable *by construction*, not by lack of effort.
 | 3. Look at the frontier, rarely | the only source of a genuinely new idea; the last sweep found nothing (A116) |
 | 4. **Do not spend the weeks turning knobs** | 2026-09-26 is the demonstration — see below |
 
+### ⭐ And one line that reopened: training (2026-09-26, §197)
+
+The review's "don't turn knobs" applies to *fusion* knobs. **Training was closed on a measurement
+that turned out to compare us to the wrong arm**, and that is now fixed:
+
+| | |
+|---|---|
+| **A106 said** | our arm 0.8731 vs A5 0.9143 — "training line closed, −0.0412" |
+| **`arm_parity.py` measured** | A5 0.9089 · **our `cn0` 0.8769** · the frontier's own four DINOv2 seed-members **0.8676–0.8697** · Rad 0.8424 |
+| **⇒** | **we are +0.007 ABOVE the frontier's own DINOv2 members.** The 0.041 gap is *entirely* "A5 is a DINOv3 model" — not a property of our training. |
+| **`member_add_test.py` measured** | adding our arm to a 0.917-quality blend: **+0.0019, CI [+0.0002, +0.0035]**, at rank correlation **0.8008** — below the **0.8061** A5 and Rad already share |
+| **⇒** | `member additions` (§159.6) is not closed on this instrument either: our arm carries information the existing members do not. |
+
+⇒ **The live experiment (pre-registered, §197.5): train a DINOv3 arm on TPU.** Hypothesis: a DINOv3
+backbone lifts a single arm from 0.877 to **≥0.90** (A5 = 0.9089). The zero-quota probe already
+confirmed the backbone is reachable (timm 1.0.26, `vit_small_patch16_dinov3`, pretrained fetch and
+336px forward both work, `num_features=384` so the head is unchanged). **Kill condition: fold-0
+< 0.88 ⇒ stop and spend no more quota.** Trained on **TPU, not GPU** — the user's standing policy
+reserves GPU for kernels that produce a submission (A132).
+
+⚠️ **Kept honest:** the +0.0019 was measured on a **0.917** base and the parent is ~0.94, so by the
+A109/A112 pattern the real gain is smaller, and that side is unmeasurable. This is a route worth
+trying, not a +0.002 promise.
+
 ⭐ **The review's useful result is a negative one.** The instrument was first upgraded to the best we
 have ever had — a Rad-free honest surrogate at **0.9151 on 4406 studies** (previous stand-in: 0.8823
 on 870) — and on it the calibrator looked worth **+0.0075** on the gated labels with an optimal dose
