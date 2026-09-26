@@ -43,13 +43,27 @@ python scripts/preflight_0943.py          # must end with: PREFLIGHT OK
 
 ## 2. Push arm 1 — the 0.943 run itself
 
+⚠️ **Set `PYTHONUTF8=1` first — the push fails without it** (FACTS A77). The notebook's ipywidgets
+metadata contains a U+200B zero-width space, and on this zh-CN Windows the CLI opens the `.ipynb`
+with the locale codec (gbk) and dies with `'gbk' codec can't decode byte 0x8b in position 3768`.
+**That message looks nothing like a quota problem, and the first reading of it was "quota did not
+refresh" — it is not. Unlike most of this toolchain's failures, this one is visible in the exit code:
+`kernels push` returns **rc=1** here.
+
 ```powershell
-kaggle kernels push -p kernel-0943 -t 34200
-kaggle kernels status ppxl16/rsna-knee-0943
+$env:PYTHONUTF8 = '1'
+$env:PYTHONIOENCODING = 'utf-8'
+$env:KAGGLE_API_TOKEN = [Environment]::GetEnvironmentVariable('KAGGLE_API_TOKEN','User')
+kaggle kernels push -p kernel-0943 -t 34200      # must print: Kernel version N successfully pushed
+kaggle kernels status ppxl16/rsna-knee-0943      # expect KernelWorkerStatus.RUNNING
 ```
 `-t 34200` (9.5 h) because the notebook carries `TIME_BUDGET = 8.0 * 3600` internally and runs each
 model branch as a subprocess with the *remaining* budget as its timeout. Too small a `-t` turns a
 would-be submission into a `TimeoutError`.
+
+Then hand off to `powershell -File scripts\watch_0943.ps1`, which polls every 6 min (~10 calls/hour,
+deliberately far below the ~100/hour that got the read paths 403-banned in A26), fetches the log when
+the run reaches a terminal status, and prints the acceptance verdict.
 
 ## 3. On COMPLETE — **acceptance test before submitting**
 

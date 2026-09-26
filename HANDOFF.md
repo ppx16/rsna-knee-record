@@ -13441,4 +13441,61 @@ OneDrive / Steam / 百度云 / Epic / 夸克 / 豆包 / VPN / Chrome / Edge / VM
 4. **别再假设"黑窗口 = 我的某个脚本"**：先分清**周期性出现**（计划任务，A75）还是**常驻**
    （很可能是宿主/GUI 自己，164.2b）。两者处置完全相反。
 
+---
+
+## 165. 2026-09-26（周六）提交执行 —— 第一次推送被一个 gbk 编码 bug 挡住
+
+### 165.1 时间线
+
+| UTC | 动作 | 结果 |
+|---|---|---|
+| 03:35 | 对表 | 本地 11:35 / **UTC 03:35Z**，已过刷新点 `2026-09-26T00:00:00Z` |
+| 03:35 | 读额度 | CLI 2.1.2 **没有 `quota` 子命令**（`invalid choice: 'quota'`）；`kagglesdk` 只有 benchmark 额度 ⇒ **改以 push 为判据** |
+| 03:36 | `preflight_0943.py`（五臂） | **PREFLIGHT OK，0 problems / 0 warnings**（存证 `state/preflight_5arms.txt`） |
+| 03:36 | `kernels push -p kernel-0943 -t 34200` | 🔴 **崩**：`'gbk' codec can't decode byte 0x8b in position 3768`，rc=1 |
+| 03:37 | 逐字节定位 + 加 `PYTHONUTF8=1` 重推 | ✅ `Kernel version 1 successfully pushed` |
+| 03:37 | `kernels status` | `KernelWorkerStatus.RUNNING` |
+| 03:37 | 挂 `scripts\watch_0943.ps1`（后台 job `pwsh-1`） | 每 6 min 轮询，终态时自动拉日志 + 跑验收 |
+
+### 165.2 🔴 那个 bug：`kaggle kernels push` 在简中 Windows 上读不了含非 ASCII 的笔记本
+
+**报错逐字**：`'gbk' codec can't decode byte 0x8b in position 3768: illegal multibyte sequence`
+
+**定位过程（可复用）**：先数"哪个文件里有非 ASCII"——
+
+```
+kernel-metadata.json                     size=1457     nonascii=0    first_at=None
+rsna-knee-restructured-version-3.ipynb   size=284505   nonascii=141  first_at=3766
+   bytes @3766: ... "placeholder": "\xe2\x80\x8b", "style": "IPY_MODEL_..." ...
+```
+
+偏移 **3766** 正是 `\xe2\x80\x8b` = **U+200B 零宽度空格**，落在**原笔记 ipywidgets 元数据的
+`"placeholder"`** 里（作者环境的残留，**与流水线毫无关系**）。CLI 用 **gbk**（简中 Windows 的
+locale 默认编码）去 `open()` 这个 ipynb ⇒ 读到该序列第三个字节 `0x8b` 时崩 —— 与报错里的
+**`position 3768` + `0x8b` 逐字吻合**，可以确认根因，而不是猜。
+
+**修法**：推送前 `$env:PYTHONUTF8='1'`（Python UTF-8 模式 ⇒ `open()` 默认 UTF-8）。
+⚠️ **本仓的 `scripts\director.cmd` 第 22 行早就有这一行** —— 手工推的时候漏了它。
+**加环境变量后第一次尝试即成功，没有改任何文件。**
+
+⇒ **不要去改笔记本**：那样会让它的 sha256 与 preflight 验证过的那份不一致（五臂哈希已记在
+`RUNBOOK-0943.md` 的账里），而 U+200B 在 widget 元数据里**不参与任何计算**。要改代码去迁就
+工具，是这里最不该做的事。
+
+⚠️ **这条为什么值钱**：报错文本与**额度、权限、网络全都不沾边**，而当时的语境恰恰是
+"等额度恢复后的第一次推送" ⇒ **极易被读成"额度没恢复"或"又被 403 了"**，然后去重试、去查
+token、去等下一个刷新点 —— 全是错的方向。⇒ **规矩：push 失败先看报错里的 codec / 位置信息，
+再谈额度。**
+
+### 165.3 顺带确认的两件事
+
+1. **本机无法程序化读 GPU 额度**：CLI 2.1.2 无 `quota`；`kagglesdk 0.1.23` 只有
+   `ApiGetBenchmarkTaskQuotaRequest`。⇒ **`push` 的接受/拒绝就是唯一判据**（A50 GPU 会拒、A69 TPU 不拒）。
+   ⚠️ 因此 **§158.5「8 h×2 卡 = 8 还是 16 GPU-h」这个问题，只能用"第二次 push 是否被接受"来粗测**，
+   或者由用户从 Kaggle 网页界面上直接读剩余小时数给我们。
+2. **不把这次推送登记进 `director.py --record-push`**：那会在 `state/director_config.json` 里造出一条
+   `actions: [download, submit, score]` 的自动提交 watch。本次是**手工提交**（计划任务已按 §164 删除），
+   而提交槽位有限 ⇒ **不让任何自动化路径去消耗它**。
+
+
 
