@@ -23,7 +23,7 @@ producing three all-zero rows. All three are recorded, with the controls that no
 
 ## Layout
 
-The repository root holds **ten entries**, and nothing else — a flat root with eighty-odd
+The repository root holds **eleven entries**, and nothing else — a flat root with eighty-odd
 `kernel-*` directories made the history unreadable on GitHub, so the kernels now live under one
 directory and the one-off scrap under another.
 
@@ -37,6 +37,8 @@ scripts/           every tool worth keeping
 state/             manifests, ledgers, logs, and FACTS.md
 downloads/         pulled artifacts (evidence only; see the note below)
 archive/           one-off scrap kept for provenance, not for use
+.gitignore         payload/record split for downloads/
+.gitattributes     line-ending discipline
 ```
 
 ## Where things live
@@ -46,6 +48,7 @@ archive/           one-off scrap kept for provenance, not for use
 | `STATUS.md` | **Live state.** Rewritten every session. One screen. |
 | `state/FACTS.md` | **Atomic facts**, append-only, numbered `A1..An`. Each entry is one thing that is true and how it was measured. |
 | `docs/HANDOFF.md` | **Narrative**, numbered `§N` sections. What was attempted, what happened, what it cost. |
+| `docs/FINAL-SELECTION.md` | **The one manual step left.** Which two submissions to tick, and why those two — the browser action the CLI cannot perform. |
 | `docs/RUNBOOK-0943.md` | The copy-pasteable sequence for pushing and submitting the 0.943-line arms. Read it before touching the submission line. |
 | `docs/PLAN-arm-image-metadata.md` | The pre-registered plan for an image+metadata arm. **Marked NOT RECOMMENDED** — kept as a design record because the falsification ladder and the permutation control are the right shape. |
 | `state/EXPERIMENTS.md` | Registered experiments and their verdicts, including the ones closed as negative. |
@@ -66,7 +69,13 @@ record hard to use:
    and the section it came from. Never rewrite an old row; if it turns out wrong, add a new row that
    says so and cross-reference it. (A77 was corrected by A95 this way.)
 2. **A block of work** → a new `§N` section in `HANDOFF.md`: what was tried, what was observed, what
-   it cost, what changed as a result.
+   it cost, what changed as a result. **The section and its FACTS row land in the same commit** — an
+   audit on 2026-09-26 found 24 citations pointing at HANDOFF sections that were never written
+   (A119/§193), so the pairing is now checked rather than intended:
+
+   ```powershell
+   python scripts\check_facts_refs.py      # must exit 0; prints every recorded gap
+   ```
 3. **Live state** → `STATUS.md`, rewritten in place. If it grows past one screen, it is a HANDOFF
    section, not a status.
 4. **A tool** → `scripts/`, with a docstring that says what problem it solves and what it would get

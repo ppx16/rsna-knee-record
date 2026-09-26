@@ -1,4 +1,4 @@
-# STATUS — 2026-09-26 05:45Z
+# STATUS — 2026-09-26 12:30Z
 
 **One screen. Rewritten every session.** If this grows past a screen, the overflow belongs in a
 `HANDOFF.md` section, not here.
@@ -8,107 +8,61 @@
 | | |
 |---|---|
 | Deadline | **2026-10-22 23:59 UTC** (~4 weeks) |
-| Best ledger score | ⭐ **0.943** — `56568520` (the `0943` speedy arm). It **matches the public ceiling** and **+0.002 over the previous best 0.941**. Second: **0.942**, `56568524` (`0943h` halfway). Three more readouts pending. |
-| ⭐ What that score also proves | The **hidden rerun completes**: 1322 studies, no timeout, no fail-closed abort, valid `submission.csv`. The pipeline had only ever been validated on the visible 3 studies. **This is de-risking independent of the score.** |
-| Public LB noise | ±0.008 — so **0.943 vs 0.942 is not a difference**, and 0.943 vs 0.941 is *not* an established +0.002. Read it as "the displayed value reaches the ceiling", nothing more. The private split decides the medal. |
-| GPU quota | **1.58 h / 30 h**, refreshes 2026-10-03. TPU 0 h / 20 h |
-| Cost model | **1 h wall clock = 1 GPU hour even on the 2×T4 shape** (measured 05:43Z: +0.33 h over 20 min) ⇒ §158.5 answered: N hours is billed as N, not 2N. Scoring reruns are **not** billed at all. |
+| Best ledger score | ⭐ **0.943** — a **three-way tie**: `56568520` (`0943` speedy) · `56570144` (`0943f` fracture) · `56570151` (`0943s` sparse). Then `56568524` (`0943h`) and `56570148` (`0943o`) at **0.942**. |
+| Public LB noise | **±0.008** — so **the board cannot rank these five arms** and no "which is better" conclusion is drawn from it (A96). All five sit inside the noise band. |
+| ⭐ What the readouts actually bought | **All five arms completed the hidden rerun on 1322 studies.** Not just the baseline: both non-default presets and the reduced-window arm too. The submission path had only ever been exercised on the 3 visible studies. **That de-risking is independent of the score.** |
+| GPU quota | **1.58 h / 30 h**, refreshes 2026-10-03. TPU 0 h / 20 h. |
+| Cost model | **1 h wall clock = 1 GPU hour even on the 2×T4 shape.** Scoring reruns are **not** billed at all. |
+
+## 🔴 The one action left — and it is not something the CLI can do
+
+**Tick two rows on the competition's Submissions page: `56570144` (`0943f`) + `56568524` (`0943h`).**
+Full reasoning and the fallbacks: [`docs/FINAL-SELECTION.md`](docs/FINAL-SELECTION.md).
+
+⚠️ `kaggle` 2.2.4 has **no select command** (verified) ⇒ this needs the browser. And **doing nothing
+is not neutral**: Kaggle then auto-selects **by public score**, while three of our arms are tied at
+0.943, so the resulting pair is not the one we chose. Deadline 2026-10-22 23:59Z.
 
 ## Live right now
 
 | Thing | State |
 |---|---|
-| `ppxl16/rsna-knee-a5oof` — A5 OOF over all 4407 training studies | **COMPLETE and verified.** Shape `(5, 4407, 12)`, 4407/4407 applicable, no degenerate fold slices. |
-| A5 leakage check (pre-registered, A97) | **PASSED.** Fold discipline is real: the held-out model is worse than its siblings in **5 of 5 folds**, mean **−0.0278**, against the leaky parent's **+0.0022** (A104). |
-| 5 submissions, all `PENDING` | `56568520` 0943 speedy · `56568524` 0943h halfway · `56570144` 0943f fracture · `56570148` 0943o outer060 · `56570151` 0943s sparse |
-| Watcher | `pwsh-2` (scores) |
-
-⚠️ **The five readouts cannot rank the arms.** Their expected differences sit below the leaderboard's
-noise. They are useful for two things only: confirming the 0.943 recipe reproduces, and catching a
-gross failure. Today's quota of 5 submissions is spent; it refreshes at 00:00Z.
-
-## Next actions, in order
-
-1. ✅ **Done — our best arm measured against A5 on a genuinely common held-out set (A106):** 0.8731
-   against 0.9143, a gap of −0.0412 with a CI that excludes zero. That is below the archive's own
-   ~0.90 member threshold, so **the training line is closed by measurement**, not assumption.
-2. 🔴 **Closed — the champion-folds route (A107, A108).** The checkpoints do carry a config and a
-   fingerprint, but in a **different schema** (`lat_from_geometry`, `pad_short_fov`, `n_group`,
-   `layer_scale1/2`) that this pipeline does not implement, and `slices`/`band` are genuinely absent.
-   Forcing it would read their weights against the wrong geometry, and **neither gate we have can see
-   that**: `check_fingerprint` depends only on architecture and `img`, and the fold test validates the
-   weights' fold property. Wrong geometry would pass both and look reasonable.
-3. ⏳ **Read the five scores** (watcher `pwsh-2`). They cannot rank the arms; their job is to confirm
-   the 0.943 recipe reproduces and to catch a gross failure.
-4. **Final two slots** from the ledger (`scripts/lb_ledger.py`), once the scores land.
-5. **Fold 4 caveat:** its held-out gap is ~0 while the other four are −0.026 to −0.049. Report results
-   with and without it, or use folds 0–3 only.
-
-## Where the remaining weeks should go
-
-Every lever we can reach is now closed by measurement — **except one, and it now has a written,
-pre-registered plan with kill conditions: [`PLAN-arm-image-metadata.md`](PLAN-arm-image-metadata.md).**
-
-The reason it is the only survivor: acquisition metadata was **measured** to carry ordering
-information the image arms do not have (+0.008 on a weak arm, +0.002 on a strong one, weights stable
-across folds — A109), and **every arm in the four-stage pipeline is image-only**, so nothing uses that
-channel. The plan's decisive test is cheap (~5.6 GPU-hours on a rented 24 GB card) and its control leg
-— images plus **permuted** metadata — is what separates "the metadata's information helps" from
-"extra capacity helped".
-
-It is still likely to fail: the measured gain shrinks as the arm strengthens, extrapolating to
-~0.000–0.001 at the ensemble's level, and the required bar is ≥0.90 solo with error correlation below
-the **0.8061** that A5 and Rad already share.
-
-What comes first is not this plan but the discipline of banking what exists: read the five scores
-back, then choose the final two submissions from the ledger rather than from memory. The plan waits
-until both are done.
-
-## A measured rule for local tuning (from the user's "don't read only the public board")
-
-| tuning-set size | optimism of per-label tuning | per-label vs one shared weight |
-|---|---|---|
-| 100 | **+0.0055** | −0.0033 (worse) |
-| 200 | +0.0032 | −0.0015 (worse) |
-| **400 (≈ the public board)** | **+0.0028** | **−0.0013 (worse)** |
-| **870 (the frontier's OOF)** | +0.0016 | +0.0002 (even) |
-| 1600 | +0.0014 | +0.0001 |
-
-**Rule: a local tuning set needs ≈870 studies before per-label tuning is safe.** Below that it both
-overfits and transfers *worse than a single shared weight* — which is the quantified case for keeping
-a flattened/softened hedge among the final two. Our A5 OOF (4407 studies) clears the bar for
-arm-level work; the public board (~400) does not. (A111)
-
-## Our own ensemble OOF — the first locally validatable ensemble (A112)
-
-Fold 0 of our own arms is the only fold with a rich set (13 arms; folds 3 and 4 have none), so the
-ensemble is fold-0 only: one fold, one arm set, 870 studies — which is exactly the size A111 measured
-as necessary for safe per-label tuning.
-
-| | macro (report labels, n=870) |
-|---|---|
-| best single arm (`d64cn0`) | 0.8717 |
-| rank-mean of top 3 | **0.8823** |
-| rank-mean of **all 11** | 0.8765 |
-
-**Two results worth keeping.** Ensembling genuinely helps (+0.005 to +0.011). And **pruning is real:
-all eleven arms are worse than the top three**, which is the first local reproduction of D14's
-"members below ~0.90 cost more than their diversity buys".
-
-**And it killed the ¥12 plan for free.** Metadata added +0.008 to a weak arm and +0.002 to a strong
-one, but on top of this ensemble the honest gain is **−0.0033**; the apparent +0.0008 is entirely the
-optimism of fitting on the scored half. The plan is marked **NOT RECOMMENDED** and kept as a design
-record only.
+| Submissions | **none pending** — all five read back, ledger is 32 rows |
+| Background jobs | **none running** (the score watcher `pwsh-2` exited) |
+| Accelerators | **idle, deliberately** — every reachable lever is closed below |
 
 ## Closed — do not reopen without new evidence
 
 | Line | Why it is closed |
 |---|---|
-| **E2 parent OOF** | The 20 published members are **not held out**: on identical studies the parent scored 0.9295 against a genuine OOF's 0.8323, a gap the frontier's own gold-58 numbers say cannot be real (A93). Their `fold` field does not demarcate a held-out split either. |
-| **Fusion knobs on the frontier stack** (D11–D13) | No valid parent OOF exists, so they can only be judged on the ±0.008 leaderboard. |
-| **`rad_cal_w` locally** | Needs the 88-feature calibrator plus three arms' ranks and protocol features; none published. |
-| Dense corpus (C85/C86) · member additions (§159.6) · capacity scaling (D15) · full retrain (D19) · gold-58 for small deltas (D16) · CoAtNet on XLA (D17) · multi-TPU queues (D18) · rental box as a scoring route (A84) | Each closed by measurement, not assumption. |
-| Scheduled tasks | Deleted (§164). They were idle and were the black console window the user saw. |
+| **Training line** | Our best arm scores **0.8731** against A5's **0.9143** on the 181 studies where both are genuinely held out — a gap whose CI excludes zero (A106). Below the archive's own ~0.90 member bar. |
+| **Champion folds** | The checkpoints carry a config, but in a **different schema**, and **neither gate can see a wrong geometry** (A108). Forcing it would produce a confident, wrong result. |
+| **E2 parent OOF** | The 20 published members are **not held out** (A93): parent 0.9295 vs a genuine OOF's 0.8323 on the same studies. |
+| **Fusion knobs on the frontier stack** | No valid parent OOF exists, so they could only be judged on the ±0.008 board. `rad_cal_w`→0 was then **locally contradicted** (A117). |
+| **Image+metadata arm** | Measured honest gain on top of our own ensemble: **−0.0033** (A112). Plan marked NOT RECOMMENDED. |
+| Dense corpus · member additions · capacity scaling · full retrain · gold-58 for small deltas · CoAtNet on XLA · multi-TPU queues · rental box as a scoring route | Each closed by measurement, not assumption. |
+| Scheduled tasks | Deleted (§164) — they were idle and were the black console window the user saw. |
+
+## Two rules worth carrying forward
+
+**How much tuning data a per-label knob needs (A111).** Optimism of per-label tuning at n_fit =
+100 / 200 / **400 (≈ the public board)** / **870** / 1600 is **+0.0055 / +0.0032 / +0.0028 / +0.0016 /
++0.0014**, and per-label tuning beats one shared weight only from **n≈870** up (−0.0033 / −0.0015 /
+**−0.0013** / +0.0002 / +0.0001). ⇒ **below ~870 studies, per-label tuning transfers *worse* than a
+single shared weight** — the quantified case for keeping a softened/flattened hedge among the final
+two. Our A5 OOF (4407) clears the bar; **the public board (~400) does not.**
+
+**A submission confirms a locally-supported improvement; it never discovers one (A96).** Effects we
+chase are 0.001–0.003 against ±0.008 noise, so "submit and see" is multiple comparisons on noise —
+it can neither kill a good idea nor establish a bad one. This is why the final two were chosen on
+evidence that is **not** the displayed score.
+
+## Our own ensemble OOF (A112)
+
+Fold 0 is the only fold with a rich arm set (13 arms; folds 3–4 have none), so the ensemble is
+fold-0 only: n=870, which is exactly A111's safety line. Best single arm **0.8717**; rank-mean of
+top-3 **0.8823**; **all 11 arms 0.8765** ⇒ ensembling helps (+0.005 to +0.011) and **pruning is real**
+— the first local reproduction of D14. Metadata on top: **−0.0033 honest**.
 
 ## Known truth about our own instruments
 
@@ -116,7 +70,8 @@ record only.
 - **Epoch selection uses gold-58** (`--topk 3`), so our gold-58 numbers are optimistic and the OOF is
   computed at gold-selected weights. **The whole published lineage shares this** (A98).
 - **Report-group leak: 2 of 49 groups, 4 studies** (A100). **Scanner/site: measured, and it is a
-  covariate, not a leak** — only 46 scanner models cover 4407 studies and the hidden set draws from
-  the same pool (A101).
+  covariate, not a leak** (A101).
 - Consequence to respect: **we cannot claim generalisation to new sites**; the data cannot express
   that claim either way.
+- **Every `§` citation in FACTS is now machine-checked** (`scripts/check_facts_refs.py`): 24 citations
+  are recorded gaps (§168–§191 were never written), everything else resolves (A119, §193).

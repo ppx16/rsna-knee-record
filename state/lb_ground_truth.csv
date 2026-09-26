@@ -25,3 +25,9 @@ date,ref,desc,score,status
 2026-09-15 02:16:26.130000,56243098,ppxl16/rsna-knee-ens-v2src-a5w60 v1,0.940,COMPLETE
 2026-09-15 02:17:06.273000,56243110,ppxl16/rsna-knee-ens-v2src-radcal00 v1,0.940,COMPLETE
 2026-09-15 02:36:22.543000,56243349,ppxl16/rsna-knee-ens-v2src-radcal00-parent v1,0.938,COMPLETE
+2026-09-20 09:46:14.713000,56389731,ppxl16/rsna-knee-ens-add-finespacing-arm v1,0.941,COMPLETE
+2026-09-26 03:57:14.097000,56568520,"0943 speedy k94 v2 - internet off, 20/20 DINOv2 fingerprints, outer 0.65",0.943,COMPLETE
+2026-09-26 03:57:31.340000,56568524,"0943h halfway routing v2 - internet off, 20/20 fingerprints",0.942,COMPLETE
+2026-09-26 05:24:23.940000,56570144,"0943f fracture fork v1 - internet off, 20/20 fingerprints",0.943,COMPLETE
+2026-09-26 05:24:29.303000,56570148,"0943o outer060 v1 - internet off, 20/20 fingerprints",0.942,COMPLETE
+2026-09-26 05:24:34.130000,56570151,"0943s sparse 62/42 v1 - internet off, 20/20 fingerprints",0.943,COMPLETE
