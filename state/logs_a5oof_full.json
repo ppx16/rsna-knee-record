@@ -1,0 +1,172 @@
+﻿Warning: Looks like you're using an outdated `kaggle` version (installed: 2.1.2), please consider upgrading to the latest version (2.2.2)
+[{"stream_name":"stderr","time":7.699640016,"data":"0.00s - Debugger warning: It seems that frozen modules are being used, which may\n"}
+,{"stream_name":"stderr","time":7.700368607,"data":"0.00s - make the debugger miss breakpoints. Please pass -Xfrozen_modules=off\n"}
+,{"stream_name":"stderr","time":7.700373382,"data":"0.00s - to python to disable frozen modules.\n"}
+,{"stream_name":"stderr","time":7.700376488,"data":"0.00s - Note: Debugging will proceed. Set PYDEVD_DISABLE_FILE_VALIDATION=1 to disable this validation.\n"}
+,{"stream_name":"stderr","time":8.337740883,"data":"0.00s - Debugger warning: It seems that frozen modules are being used, which may\n"}
+,{"stream_name":"stderr","time":8.337783496,"data":"0.00s - make the debugger miss breakpoints. Please pass -Xfrozen_modules=off\n"}
+,{"stream_name":"stderr","time":8.337790006,"data":"0.00s - to python to disable frozen modules.\n"}
+,{"stream_name":"stderr","time":8.337793901,"data":"0.00s - Note: Debugging will proceed. Set PYDEVD_DISABLE_FILE_VALIDATION=1 to disable this validation.\n"}
+,{"stream_name":"stdout","time":9.501342923,"data":"[config] preset=speedy a5_w=0.52 rad_alpha=0.55 k_eval=94\n"}
+,{"stream_name":"stdout","time":9.502218951,"data":"[config] outer CoAtNet weight per finding: {'ACL': 0.75, 'Medial Meniscus': 0.8, 'Lateral Meniscus': 1.0, 'Lateral OA': 0.75, 'Fracture': 0.75}\n"}
+,{"stream_name":"stdout","time":10.663596866,"data":"[eda] 4,407 training studies, 24,371 training series, 15 test series\n"}
+,{"stream_name":"stdout","time":10.664586171,"data":"[eda] 58 studies carry all twelve labels; the rest are supervised only by what a text model read out of the report\n"}
+,{"stream_name":"stdout","time":11.301113479,"data":"Coverage of the six slots the models expect, over training studies:\n"}
+,{"stream_name":"stdout","time":11.301139756,"data":"               slot  studies with it  share\n"}
+,{"stream_name":"stdout","time":11.301145493,"data":"   Sagittal fat-sat             4150  0.942\n"}
+,{"stream_name":"stdout","time":11.301150147,"data":"Sagittal no fat-sat             4266  0.968\n"}
+,{"stream_name":"stdout","time":11.301154373,"data":"    Coronal fat-sat             4248  0.964\n"}
+,{"stream_name":"stdout","time":11.301158489,"data":" Coronal no fat-sat             3406  0.773\n"}
+,{"stream_name":"stdout","time":11.30116261,"data":"      Axial fat-sat             4407  1.000\n"}
+,{"stream_name":"stdout","time":11.301166701,"data":"   Axial no fat-sat              857  0.194\n"}
+,{"stream_name":"stdout","time":11.301170908,"data":"\n"}
+,{"stream_name":"stdout","time":11.301175401,"data":"A slot no study fills is a column of zeros fed to the encoder; a study that fills none of them can only be given a constant, and under ROC-AUC a block of identical constants earns half credit against everything it ties with. That is the cheapest score leak in this whole pipeline.\n"}
+,{"stream_name":"stdout","time":11.771049603,"data":"Most correlated pairs:\n"}
+,{"stream_name":"stdout","time":11.771083879,"data":"  Medial OA          + Baker's            +0.48\n"}
+,{"stream_name":"stdout","time":11.771088144,"data":"  Medial Meniscus    + Medial OA          +0.42\n"}
+,{"stream_name":"stdout","time":11.771090777,"data":"  Lateral Meniscus   + Lateral OA         +0.42\n"}
+,{"stream_name":"stdout","time":11.771093214,"data":"  Lateral Meniscus   + Medial OA          +0.41\n"}
+,{"stream_name":"stdout","time":11.771095758,"data":"  Lateral OA         + Baker's            +0.40\n"}
+,{"stream_name":"stdout","time":11.771098217,"data":"\n"}
+,{"stream_name":"stdout","time":11.771101019,"data":"The three osteoarthritis compartments move together, which is why the calibrator downstream groups them. Findings that co-occur are also findings an ensemble tends to get right or wrong together — worth remembering before reading any per-finding weight as skill.\n"}
+,{"stream_name":"stdout","time":12.798423075,"data":"0 studies have no report at all (0.0%) — those can only be supervised by the images.\n"}
+,{"stream_name":"stdout","time":12.798471499,"data":"The counts overlap because clinical vocabulary is shared across languages; they are a rough shape, not a classifier. The point is that a monolingual extractor silently drops whole slices of the training set, and a dropped study is not a wrong label — it is no label.\n"}
+,{"stream_name":"stdout","time":14.096556775,"data":"A 140 mm crop spans 398 to 896 pixels across these series — a 2.3x range. Cropping a fixed number of pixels instead would hand the model a different anatomical field of view per scanner, which is the kind of artefact a model will happily learn to read as signal.\n"}
+,{"stream_name":"stdout","time":26.62980096,"data":"Field strengths present: 1.5T x144, 3.0T x90, 1.2T x2\n"}
+,{"stream_name":"stdout","time":26.629846514,"data":"The single most common scanner model covers 23% of the sample.\n"}
+,{"stream_name":"stdout","time":26.62985191,"data":"\n"}
+,{"stream_name":"stdout","time":26.629855429,"data":"The training path in this notebook groups folds by md5(report text), which deduplicates identical reports but does nothing about the scanner. Manufacturer + model + matrix size + pixel spacing is a serviceable site key and costs nothing to compute from headers you are already reading. Grouping on it is what makes an offline number mean something.\n"}
+,{"stream_name":"stdout","time":27.025734524,"data":"Median series length 30 slices; 0.0% are shorter than twelve.\n"}
+,{"stream_name":"stdout","time":27.025771483,"data":"Where a series is shorter than its slot, the sampler repeats slices, so several of the 62 windows are duplicates and the attention pooling sees the same evidence more than once. Where a series is much longer, the sampler is skipping anatomy — and a meniscus tear visible on two slices can fall between samples entirely. That is the mechanism behind the max and top-2 window pooling used for the focal findings upstream.\n"}
+,{"stream_name":"stdout","time":33.74159268,"data":"cuda:0 probe PASS (compute 7.5)\n"}
+,{"stream_name":"stdout","time":33.779588083,"data":"cuda:1 probe PASS (compute 7.5)\n"}
+,{"stream_name":"stdout","time":33.779628986,"data":"devices: ['cuda:0', 'cuda:1']\n"}
+,{"stream_name":"stdout","time":33.77963345,"data":"[startup] imports+GPU preflight: 6.47s\n"}
+,{"stream_name":"stdout","time":33.845713743,"data":"[    0.1s] input root: /kaggle/input/competitions/rsna-knee-abnormality-detection\n"}
+,{"stream_name":"stdout","time":33.846554451,"data":"[startup] competition-root preflight: 0.07s\n"}
+,{"stream_name":"stdout","time":33.953914544,"data":"[    0.2s] memory: 29.4 GB available, 13.3 GB to the cache; sizing for 4407 train + 1322 test studies -\u003e 1 group(s) of 3 = 3 slices per slot\n"}
+,{"stream_name":"stdout","time":33.95463113,"data":"[    0.2s] cache layout: 1 groups x 3 slices = 3 per slot\n"}
+,{"stream_name":"stdout","time":35.863056594,"data":"[phase] {\"a5_without_matching_acquisition\": 0, \"elapsed_seconds\": 2.0821666717529297, \"gpus\": [{\"allocated_bytes\": 0, \"id\": 0, \"reserved_bytes\": 0}, {\"allocated_bytes\": 0, \"id\": 1, \"reserved_bytes\": 0}], \"max_rss_kib\": 1092292, \"memory.current\": \"1658281984\", \"memory.max\": \"32212254720\", \"missing_fluid_flags\": 0, \"stage\": \"input_metadata\", \"status\": \"COMPLETE\"}\n"}
+,{"stream_name":"stdout","time":36.562732749,"data":"[phase] {\"elapsed_seconds\": 2.7816545963287354, \"gpus\": [{\"allocated_bytes\": 0, \"id\": 0, \"reserved_bytes\": 0}, {\"allocated_bytes\": 0, \"id\": 1, \"reserved_bytes\": 0}], \"max_rss_kib\": 1092292, \"memory.current\": \"1672884224\", \"memory.max\": \"32212254720\", \"stage\": \"dinov2\", \"status\": \"START\"}\n"}
+,{"stream_name":"stdout","time":36.761219574,"data":"[    2.9s] OOF: DINOv2/E2 stage SKIPPED by design (this is an A5-only kernel)\n"}
+,{"stream_name":"stdout","time":36.763390721,"data":"[phase] {\"elapsed_seconds\": 2.981921911239624, \"gpus\": [{\"allocated_bytes\": 0, \"id\": 0, \"reserved_bytes\": 0}, {\"allocated_bytes\": 0, \"id\": 1, \"reserved_bytes\": 0}], \"max_rss_kib\": 1092292, \"memory.current\": \"1674080256\", \"memory.max\": \"32212254720\", \"stage\": \"dinov2\", \"status\": \"COMPLETE\"}\n"}
+,{"stream_name":"stdout","time":36.834736384,"data":"[phase] {\"elapsed_seconds\": 3.0537073612213135, \"gpus\": [{\"allocated_bytes\": 0, \"id\": 0, \"reserved_bytes\": 0}, {\"allocated_bytes\": 0, \"id\": 1, \"reserved_bytes\": 0}], \"max_rss_kib\": 1092292, \"memory.current\": \"1674354688\", \"memory.max\": \"32212254720\", \"stage\": \"a5\", \"status\": \"START\"}\n"}
+,{"stream_name":"stdout","time":47.846547543,"data":"series root: /kaggle/input/competitions/rsna-knee-abnormality-detection/train_series\n"}
+,{"stream_name":"stdout","time":49.390771181,"data":"[   15.6s] OOF: A5 cohort = fold all, 4407 studies, 4407 with series metadata (via v52_oof.csv)\n"}
+,{"stream_name":"stdout","time":52.100669723,"data":"A5 strict-loaded m_f0.pt; all encoder and head tensors present\n"}
+,{"stream_name":"stdout","time":54.234451508,"data":"A5 strict-loaded m_f1.pt; all encoder and head tensors present\n"}
+,{"stream_name":"stdout","time":55.988368728,"data":"A5 strict-loaded m_f2.pt; all encoder and head tensors present\n"}
+,{"stream_name":"stdout","time":57.316989983,"data":"A5 strict-loaded m_f3.pt; all encoder and head tensors present\n"}
+,{"stream_name":"stdout","time":58.420594825,"data":"A5 strict-loaded m_f4.pt; all encoder and head tensors present\n"}
+,{"stream_name":"stdout","time":59.284062787,"data":"device cuda | amp bfloat16 (on=True) | workers 4 | chunk 48 | micro 8\n"}
+,{"stream_name":"stdout","time":110.68612204,"data":"  48/4,407  0.9m  eta 78.1m\n"}
+,{"stream_name":"stdout","time":159.419261592,"data":"  96/4,407  1.7m  eta 74.9m\n"}
+,{"stream_name":"stdout","time":198.908874583,"data":"  144/4,407  2.3m  eta 68.8m\n"}
+,{"stream_name":"stdout","time":245.466607833,"data":"  192/4,407  3.1m  eta 68.1m\n"}
+,{"stream_name":"stdout","time":284.788248626,"data":"  240/4,407  3.8m  eta 65.2m\n"}
+,{"stream_name":"stdout","time":323.045772925,"data":"  288/4,407  4.4m  eta 62.9m\n"}
+,{"stream_name":"stdout","time":386.401863447,"data":"  336/4,407  5.5m  eta 66.1m\n"}
+,{"stream_name":"stdout","time":434.02476418,"data":"  384/4,407  6.2m  eta 65.4m\n"}
+,{"stream_name":"stdout","time":482.329861394,"data":"  432/4,407  7.0m  eta 64.9m\n"}
+,{"stream_name":"stdout","time":517.070338612,"data":"  480/4,407  7.6m  eta 62.4m\n"}
+,{"stream_name":"stdout","time":548.132948111,"data":"  528/4,407  8.1m  eta 59.8m\n"}
+,{"stream_name":"stdout","time":582.701698797,"data":"  576/4,407  8.7m  eta 58.0m\n"}
+,{"stream_name":"stdout","time":621.257143801,"data":"  624/4,407  9.4m  eta 56.8m\n"}
+,{"stream_name":"stdout","time":661.034287156,"data":"  672/4,407  10.0m  eta 55.7m\n"}
+,{"stream_name":"stdout","time":699.270011213,"data":"  720/4,407  10.7m  eta 54.6m\n"}
+,{"stream_name":"stdout","time":735.284872629,"data":"  768/4,407  11.3m  eta 53.4m\n"}
+,{"stream_name":"stdout","time":773.806707345,"data":"  816/4,407  11.9m  eta 52.4m\n"}
+,{"stream_name":"stdout","time":813.804520961,"data":"  864/4,407  12.6m  eta 51.6m\n"}
+,{"stream_name":"stdout","time":849.667775659,"data":"  912/4,407  13.2m  eta 50.5m\n"}
+,{"stream_name":"stdout","time":904.792949769,"data":"  960/4,407  14.1m  eta 50.6m\n"}
+,{"stream_name":"stdout","time":942.438450404,"data":"  1,008/4,407  14.7m  eta 49.6m\n"}
+,{"stream_name":"stdout","time":974.55274502,"data":"  1,056/4,407  15.3m  eta 48.4m\n"}
+,{"stream_name":"stdout","time":1010.479824049,"data":"  1,104/4,407  15.9m  eta 47.4m\n"}
+,{"stream_name":"stdout","time":1042.093672137,"data":"  1,152/4,407  16.4m  eta 46.3m\n"}
+,{"stream_name":"stdout","time":1072.937586799,"data":"  1,200/4,407  16.9m  eta 45.1m\n"}
+,{"stream_name":"stdout","time":1105.159293254,"data":"  1,248/4,407  17.4m  eta 44.1m\n"}
+,{"stream_name":"stdout","time":1140.694186694,"data":"  1,296/4,407  18.0m  eta 43.3m\n"}
+,{"stream_name":"stdout","time":1179.555923316,"data":"  1,344/4,407  18.7m  eta 42.6m\n"}
+,{"stream_name":"stdout","time":1210.31520856,"data":"  1,392/4,407  19.2m  eta 41.5m\n"}
+,{"stream_name":"stdout","time":1238.745493752,"data":"  1,440/4,407  19.7m  eta 40.5m\n"}
+,{"stream_name":"stdout","time":1278.732118109,"data":"  1,488/4,407  20.3m  eta 39.9m\n"}
+,{"stream_name":"stdout","time":1329.907327561,"data":"  1,536/4,407  21.2m  eta 39.6m\n"}
+,{"stream_name":"stdout","time":1377.811096367,"data":"  1,584/4,407  22.0m  eta 39.2m\n"}
+,{"stream_name":"stdout","time":1411.90668028,"data":"  1,632/4,407  22.5m  eta 38.3m\n"}
+,{"stream_name":"stdout","time":1442.182979245,"data":"  1,680/4,407  23.1m  eta 37.4m\n"}
+,{"stream_name":"stdout","time":1473.205568189,"data":"  1,728/4,407  23.6m  eta 36.5m\n"}
+,{"stream_name":"stdout","time":1505.354760669,"data":"  1,776/4,407  24.1m  eta 35.7m\n"}
+,{"stream_name":"stdout","time":1544.610235187,"data":"  1,824/4,407  24.8m  eta 35.1m\n"}
+,{"stream_name":"stdout","time":1580.885168437,"data":"  1,872/4,407  25.4m  eta 34.3m\n"}
+,{"stream_name":"stdout","time":1616.070881206,"data":"  1,920/4,407  25.9m  eta 33.6m\n"}
+,{"stream_name":"stdout","time":1654.56771285,"data":"  1,968/4,407  26.6m  eta 32.9m\n"}
+,{"stream_name":"stdout","time":1694.651917597,"data":"  2,016/4,407  27.3m  eta 32.3m\n"}
+,{"stream_name":"stdout","time":1728.443166204,"data":"  2,064/4,407  27.8m  eta 31.6m\n"}
+,{"stream_name":"stdout","time":1763.904830267,"data":"  2,112/4,407  28.4m  eta 30.9m\n"}
+,{"stream_name":"stdout","time":1813.725862244,"data":"  2,160/4,407  29.2m  eta 30.4m\n"}
+,{"stream_name":"stdout","time":1843.89198245,"data":"  2,208/4,407  29.7m  eta 29.6m\n"}
+,{"stream_name":"stdout","time":1880.339746447,"data":"  2,256/4,407  30.4m  eta 28.9m\n"}
+,{"stream_name":"stdout","time":1914.133938167,"data":"  2,304/4,407  30.9m  eta 28.2m\n"}
+,{"stream_name":"stdout","time":1944.518634593,"data":"  2,352/4,407  31.4m  eta 27.5m\n"}
+,{"stream_name":"stdout","time":1978.436089001,"data":"  2,400/4,407  32.0m  eta 26.7m\n"}
+,{"stream_name":"stdout","time":2013.683290639,"data":"  2,448/4,407  32.6m  eta 26.1m\n"}
+,{"stream_name":"stdout","time":2046.086568745,"data":"  2,496/4,407  33.1m  eta 25.4m\n"}
+,{"stream_name":"stdout","time":2083.454135981,"data":"  2,544/4,407  33.7m  eta 24.7m\n"}
+,{"stream_name":"stdout","time":2130.037958207,"data":"  2,592/4,407  34.5m  eta 24.2m\n"}
+,{"stream_name":"stdout","time":2169.451620508,"data":"  2,640/4,407  35.2m  eta 23.5m\n"}
+,{"stream_name":"stdout","time":2213.532949956,"data":"  2,688/4,407  35.9m  eta 23.0m\n"}
+,{"stream_name":"stdout","time":2263.358613052,"data":"  2,736/4,407  36.7m  eta 22.4m\n"}
+,{"stream_name":"stdout","time":2316.528579696,"data":"  2,784/4,407  37.6m  eta 21.9m\n"}
+,{"stream_name":"stdout","time":2352.953524523,"data":"  2,832/4,407  38.2m  eta 21.3m\n"}
+,{"stream_name":"stdout","time":2429.361683229,"data":"  2,880/4,407  39.5m  eta 20.9m\n"}
+,{"stream_name":"stdout","time":2485.171455069,"data":"  2,928/4,407  40.4m  eta 20.4m\n"}
+,{"stream_name":"stdout","time":2529.148809765,"data":"  2,976/4,407  41.2m  eta 19.8m\n"}
+,{"stream_name":"stdout","time":2582.362686976,"data":"  3,024/4,407  42.0m  eta 19.2m\n"}
+,{"stream_name":"stdout","time":2635.055169544,"data":"  3,072/4,407  42.9m  eta 18.7m\n"}
+,{"stream_name":"stdout","time":2682.807480252,"data":"  3,120/4,407  43.7m  eta 18.0m\n"}
+,{"stream_name":"stdout","time":2724.257963514,"data":"  3,168/4,407  44.4m  eta 17.4m\n"}
+,{"stream_name":"stdout","time":2770.70716259,"data":"  3,216/4,407  45.2m  eta 16.7m\n"}
+,{"stream_name":"stdout","time":2806.761184299,"data":"  3,264/4,407  45.8m  eta 16.0m\n"}
+,{"stream_name":"stdout","time":2850.200210881,"data":"  3,312/4,407  46.5m  eta 15.4m\n"}
+,{"stream_name":"stdout","time":2901.251440953,"data":"  3,360/4,407  47.4m  eta 14.8m\n"}
+,{"stream_name":"stdout","time":2946.052991547,"data":"  3,408/4,407  48.1m  eta 14.1m\n"}
+,{"stream_name":"stdout","time":2987.752161442,"data":"  3,456/4,407  48.8m  eta 13.4m\n"}
+,{"stream_name":"stdout","time":3028.723212196,"data":"  3,504/4,407  49.5m  eta 12.8m\n"}
+,{"stream_name":"stdout","time":3061.061244297,"data":"  3,552/4,407  50.0m  eta 12.0m\n"}
+,{"stream_name":"stdout","time":3097.933200273,"data":"  3,600/4,407  50.6m  eta 11.4m\n"}
+,{"stream_name":"stdout","time":3134.771116201,"data":"  3,648/4,407  51.3m  eta 10.7m\n"}
+,{"stream_name":"stdout","time":3180.209563567,"data":"  3,696/4,407  52.0m  eta 10.0m\n"}
+,{"stream_name":"stdout","time":3215.325661176,"data":"  3,744/4,407  52.6m  eta 9.3m\n"}
+,{"stream_name":"stdout","time":3248.21380514,"data":"  3,792/4,407  53.1m  eta 8.6m\n"}
+,{"stream_name":"stdout","time":3293.694377234,"data":"  3,840/4,407  53.9m  eta 8.0m\n"}
+,{"stream_name":"stdout","time":3328.240544171,"data":"  3,888/4,407  54.5m  eta 7.3m\n"}
+,{"stream_name":"stdout","time":3361.577828525,"data":"  3,936/4,407  55.0m  eta 6.6m\n"}
+,{"stream_name":"stdout","time":3423.542310355,"data":"  3,984/4,407  56.1m  eta 6.0m\n"}
+,{"stream_name":"stdout","time":3461.063667914,"data":"  4,032/4,407  56.7m  eta 5.3m\n"}
+,{"stream_name":"stdout","time":3495.109683969,"data":"  4,080/4,407  57.3m  eta 4.6m\n"}
+,{"stream_name":"stdout","time":3541.570824326,"data":"  4,128/4,407  58.0m  eta 3.9m\n"}
+,{"stream_name":"stdout","time":3572.938189522,"data":"  4,176/4,407  58.6m  eta 3.2m\n"}
+,{"stream_name":"stdout","time":3608.378132031,"data":"  4,224/4,407  59.1m  eta 2.6m\n"}
+,{"stream_name":"stdout","time":3665.952186274,"data":"  4,272/4,407  60.1m  eta 1.9m\n"}
+,{"stream_name":"stdout","time":3714.728115511,"data":"  4,320/4,407  60.9m  eta 1.2m\n"}
+,{"stream_name":"stdout","time":3763.217267095,"data":"  4,368/4,407  61.7m  eta 0.6m\n"}
+,{"stream_name":"stdout","time":3794.76014824,"data":"  4,407/4,407  62.3m  eta 0.0m\n"}
+,{"stream_name":"stdout","time":3795.134822096,"data":"\n"}
+,{"stream_name":"stdout","time":3795.134863769,"data":"inference done in 62.3 min\n"}
+,{"stream_name":"stdout","time":3795.474729087,"data":"[phase] {\"absent\": 0, \"applicable\": 4407, \"elapsed_seconds\": 3761.683121442795, \"gpus\": [{\"allocated_bytes\": 19136512, \"id\": 0, \"reserved_bytes\": 102760448}, {\"allocated_bytes\": 19136512, \"id\": 1, \"reserved_bytes\": 94371840}], \"max_rss_kib\": 3987740, \"memory.current\": \"31547498496\", \"memory.max\": \"32212254720\", \"stage\": \"a5\", \"status\": \"COMPLETE\"}\n"}
+,{"stream_name":"stderr","time":3802.910929878,"data":"/usr/local/lib/python3.12/dist-packages/mistune.py:435: SyntaxWarning: invalid escape sequence '\\|'\n"}
+,{"stream_name":"stderr","time":3802.910997386,"data":"  cells[i][c] = re.sub('\\\\\\\\\\|', '|', cell)\n"}
+,{"stream_name":"stderr","time":3803.221788706,"data":"/usr/local/lib/python3.12/dist-packages/nbconvert/filters/filter_links.py:36: SyntaxWarning: invalid escape sequence '\\_'\n"}
+,{"stream_name":"stderr","time":3803.221820385,"data":"  text = re.sub(r'_', '\\_', text) # Escape underscores in display text\n"}
+,{"stream_name":"stderr","time":3805.076569786,"data":"[NbConvertApp] Converting notebook __notebook__.ipynb to notebook\n"}
+,{"stream_name":"stderr","time":3805.467496884,"data":"[NbConvertApp] Writing 653889 bytes to __notebook__.ipynb\n"}
+,{"stream_name":"stderr","time":3808.508098947,"data":"[NbConvertApp] Converting notebook __notebook__.ipynb to html\n"}
+,{"stream_name":"stderr","time":3810.550199674,"data":"[NbConvertApp] Support files will be in __results___files/\n"}
+,{"stream_name":"stderr","time":3810.550421955,"data":"[NbConvertApp] Making directory __results___files\n"}
+,{"stream_name":"stderr","time":3810.55087325,"data":"[NbConvertApp] Making directory __results___files\n"}
+,{"stream_name":"stderr","time":3810.551109815,"data":"[NbConvertApp] Making directory __results___files\n"}
+,{"stream_name":"stderr","time":3810.551335567,"data":"[NbConvertApp] Making directory __results___files\n"}
+,{"stream_name":"stderr","time":3810.551550167,"data":"[NbConvertApp] Making directory __results___files\n"}
+,{"stream_name":"stderr","time":3810.551768545,"data":"[NbConvertApp] Making directory __results___files\n"}
+,{"stream_name":"stderr","time":3810.552030523,"data":"[NbConvertApp] Writing 1263808 bytes to __results__.html\n"}
+]

@@ -17,9 +17,10 @@
 
 | Thing | State |
 |---|---|
-| `ppxl16/rsna-knee-a5oof` — A5 OOF over all 4407 training studies | **RUNNING**, ~64 min from 05:20Z. One session yields every fold's held-out predictions. |
+| `ppxl16/rsna-knee-a5oof` — A5 OOF over all 4407 training studies | **COMPLETE and verified.** Shape `(5, 4407, 12)`, 4407/4407 applicable, no degenerate fold slices. |
+| A5 leakage check (pre-registered, A97) | **PASSED.** Fold discipline is real: the held-out model is worse than its siblings in **5 of 5 folds**, mean **−0.0278**, against the leaky parent's **+0.0022** (A104). |
 | 5 submissions, all `PENDING` | `56568520` 0943 speedy · `56568524` 0943h halfway · `56570144` 0943f fracture · `56570148` 0943o outer060 · `56570151` 0943s sparse |
-| Watchers | `pwsh-17` (A5), `pwsh-18` (scores) |
+| Watcher | `pwsh-2` (scores) |
 
 ⚠️ **The five readouts cannot rank the arms.** Their expected differences sit below the leaderboard's
 noise. They are useful for two things only: confirming the 0.943 recipe reproduces, and catching a
@@ -27,15 +28,15 @@ gross failure. Today's quota of 5 submissions is spent; it refreshes at 00:00Z.
 
 ## Next actions, in order
 
-1. **Verify the A5 OOF** — `python scripts/verify_a5oof.py --raw <dir>/speed_a5_raw.npz --fold all`,
-   then the **leakage check that is already pre-registered (A97)**: compare the fold-0 slice against
-   the Rad arm's genuine published OOF **on the same studies**. At n=48 the A5 slice beat it by 0.089,
-   which is the same magnitude as the parent's measured leak, and n=48 cannot tell "genuinely
-   stronger" from "also leaky". If the gap stays ~0.09 at n≈4400 the A5 folds are not held out and
-   the experiment is void; if the arms trade wins within ~±0.02 it is usable.
-2. **Only then** run the blend experiments locally (`scripts/blend_lab.py`) on `a5_w` (0.45 vs 0.52)
-   and `rad_alpha` (0.50 vs 0.55) — CPU, free.
-3. **Submit only what clears the pre-registered bar**, one knob at a time against its control.
+1. ⚠️ **`a5_w` and `rad_alpha` are still not testable**, for a new but equally hard reason (A105):
+   both are blends *against stage 1*, and stage 1 is the arm measured to be leaky. The A5 OOF is
+   genuine but cannot unlock them alone. Unlocking them needs a **legitimate stage-1 OOF** — i.e.
+   retraining the 20 members with a real holdout — far more expensive than this run.
+2. ✅ **What the A5 OOF does enable, free and now:** use it as a **reference instrument** to place our
+   own trained arms on the same studies and the same report labels. Our best arm `cn0` has OOF 0.8623;
+   A5 scores 0.9082 held-out. That gap answers whether the training line can still compete at all.
+3. **Fold 4 caveat:** its held-out gap is ~0 while the other four are −0.026 to −0.049. Report results
+   with and without it, or use folds 0–3 only.
 
 ## Closed — do not reopen without new evidence
 

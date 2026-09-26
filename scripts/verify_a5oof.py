@@ -59,7 +59,12 @@ def main():
     with open(args.folds_csv, newline="", encoding="utf-8") as f:
         for r in csv.DictReader(f):
             fold[r["StudyInstanceUID"]] = r["fold"]
-    want = {k for k, v in fold.items() if str(v) == str(args.fold)}
+    # `--fold all` is the whole-training-set run, whose cohort is every study in the fold
+    # assignment; there the meaningful check is coverage of the assignment, not of one fold.
+    if str(args.fold).lower() in ("all", "*"):
+        want = set(fold)
+    else:
+        want = {k for k, v in fold.items() if str(v) == str(args.fold)}
     inside = sum(1 for u in uids if u in want)
     print("in the requested fold: %d / %d  (want all)" % (inside, len(uids)))
     if inside != len(uids):
