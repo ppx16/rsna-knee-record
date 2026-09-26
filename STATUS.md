@@ -87,6 +87,18 @@ that turned out to compare us to the wrong arm**, and that is now fixed:
 | **`member_add_test.py` measured** | adding our arm to a 0.917-quality blend: **+0.0019, CI [+0.0002, +0.0035]**, at rank correlation **0.8008** — below the **0.8061** A5 and Rad already share |
 | **⇒** | `member additions` (§159.6) is not closed on this instrument either: our arm carries information the existing members do not. |
 
+**And the payoff holds up on a parent-quality base (§199.2).** With the two Rad heads added to the base and
+**every** blend weight (including the member's) chosen on one half and scored on the other: honest base
+**0.9173 → 0.9201, +0.0028, CI [+0.0011, +0.0043]**. The gain did *not* shrink as the base strengthened —
+and the mechanism is the interesting part: **both halves independently gave our arm weight 0.2 and took it
+out of `public20`'s weight, leaving A5 untouched.** So the arm displaces the frontier's own DINOv2 seeds,
+which is exactly what `arm_parity.py` predicted from the other direction.
+
+⚠️ One fold, 870 studies, one arm; the base is still 0.917, not the parent's ~0.94. And **this does not yet
+mean score** — converting it requires putting our member into the validated submission notebook, which is a
+separate, risky step this repo has been burned by before. **The bottleneck has moved from "is training
+worth it" (now measured yes) to "can it be integrated".**
+
 ⇒ **The live experiment (pre-registered, §197.5): train a DINOv3 arm on TPU.** Hypothesis: a DINOv3
 backbone lifts a single arm from 0.877 to **≥0.90** (A5 = 0.9089). The zero-quota probe already
 confirmed the backbone is reachable (timm 1.0.26, `vit_small_patch16_dinov3`, pretrained fetch and

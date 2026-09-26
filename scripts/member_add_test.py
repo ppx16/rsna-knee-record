@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+﻿# -*- coding: utf-8 -*-
 """Would one of OUR arms add anything to a parent-quality blend?
 
 WHY THIS GATES THE TRAINING DECISION
@@ -38,7 +38,7 @@ from scipy.stats import rankdata, spearmanr
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "scripts"))
-from calibrator_probe import read_labels  # noqa: E402
+from calibrator_probe import read_labels, TARGETS  # noqa: E402
 
 OOF = ROOT / "downloads" / "oof"
 A5 = ROOT / "downloads" / "research" / "a5oof_full" / "speed_a5_raw.npz"
@@ -69,6 +69,10 @@ def macro(Y, M, P):
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--arm", default="cn0@f0")
+    ap.add_argument("--strong", action="store_true",
+                    help="add the two published Rad heads to the base and choose every blend "
+                         "weight on the fit half -- a parent-quality instrument, and the honest "
+                         "upper bound on what this arm can buy")
     ap.add_argument("--boot", type=int, default=400)
     ap.add_argument("--seed", type=int, default=20260926)
     a = ap.parse_args(argv)
@@ -111,6 +115,15 @@ def main(argv=None) -> int:
     p20 = np.load(OOF / "oof_arm_prob.npy").astype(np.float64)
     pos_p20 = {u: i for i, u in enumerate(p20_ids)}
 
+    # the two published Rad heads, for the strong-base variant below
+    rads = []
+    for name in ("v52_oof.csv", "v52_e11_oof.csv"):
+        rr = {}
+        for r in csv.DictReader(open(ROOT / "downloads/research/oof" / name, newline="",
+                                     encoding="utf-8")):
+            rr[r["StudyInstanceUID"]] = np.array([float(r[t]) for t in TARGETS])
+        rads.append(rr)
+
     # ⚠️ Do NOT require the two fold systems to agree.  Their fold maps are different partitions
     # (ours comes from rsna-knee-cv-folds, A5/public20 from v52_oof.csv), and intersecting them
     # leaves 181 studies -- which is how A106 came to compare us to A5 on 181 studies.  Honesty is
@@ -130,6 +143,68 @@ def main(argv=None) -> int:
     base = A5_W * A + (1 - A5_W) * P20
     print("base (A5 %.2f + public20 %.2f): %.4f" % (A5_W, 1 - A5_W, macro(Ys, Ms, base)))
     print("our arm alone:                  %.4f" % macro(Ys, Ms, O))
+
+    if a.strong:
+        # ---- the strong-base variant -------------------------------------------------------
+        # The fixed base above is A5 + public20 only (0.917).  The parent is ~0.94 and also
+        # carries the Rad heads, so a member-add gain measured at 0.917 is an UPPER bound on
+        # what the same arm would buy in the real stack -- exactly the A109/A112 pattern.
+        # Here the base gets the two published Rad heads as well AND its weights are chosen
+        # on the fit half (a well-set base is the A127 lesson: never measure an addition on a
+        # mis-set blend), and the member weight is chosen jointly with them.  The honest
+        # comparison is "best base found on the fit half" vs "best base + member found on the
+        # same half", both scored on the other half.
+        Rk = rank01(np.array([rads[0][u] for u in ids]))
+        Ek = rank01(np.array([rads[1][u] for u in ids]))
+        grid = []
+        for wa in np.arange(0.3, 0.91, 0.1):
+            for wr in np.arange(0.0, 0.31, 0.1):
+                for we in np.arange(0.0, 0.21, 0.1):
+                    for wm in np.arange(0.0, 0.51, 0.05):
+                        rest = 1.0 - wa - wr - we - wm
+                        if rest < -1e-9:
+                            continue
+                        grid.append((float(wa), float(wr), float(we), float(wm), max(0.0, rest)))
+        print("\nstrong base: %d candidate weightings over {A5, Rad-v52, Rad-e11, public20, ours}"
+              % len(grid))
+
+        def blend(p, sl):
+            wa, wr, we, wm, wp = p
+            return (wa * A[sl] + wr * Rk[sl] + we * Ek[sl] + wp * P20[sl] + wm * O[sl])
+
+        rng2 = np.random.default_rng(a.seed)
+        perm2 = rng2.permutation(len(ids))
+        h = [perm2[:len(ids) // 2], perm2[len(ids) // 2:]]
+        P_b = np.zeros_like(base)
+        P_m = np.zeros_like(base)
+        chosen = []
+        for fit_ix, ev_ix in ((h[0], h[1]), (h[1], h[0])):
+            sc_base = [macro(Ys[fit_ix], Ms[fit_ix], blend(p, fit_ix)) for p in grid if p[3] == 0.0]
+            gb = [p for p in grid if p[3] == 0.0]
+            pb = gb[int(np.nanargmax(sc_base))]
+            sc_mem = [macro(Ys[fit_ix], Ms[fit_ix], blend(p, fit_ix)) for p in grid]
+            pm = grid[int(np.nanargmax(sc_mem))]
+            chosen.append((pb, pm))
+            P_b[ev_ix] = blend(pb, ev_ix)
+            P_m[ev_ix] = blend(pm, ev_ix)
+        mb = macro(Ys, Ms, P_b)
+        mm = macro(Ys, Ms, P_m)
+        print("  chosen on half A: base %s | base+member %s"
+              % (tuple(round(x, 2) for x in chosen[0][0]), tuple(round(x, 2) for x in chosen[0][1])))
+        print("  chosen on half B: base %s | base+member %s"
+              % (tuple(round(x, 2) for x in chosen[1][0]), tuple(round(x, 2) for x in chosen[1][1])))
+        print("  honest strong base        : %.4f" % mb)
+        print("  honest strong base+member : %.4f   delta %+.4f" % (mm, mm - mb))
+        dd2 = []
+        for ix in rng2.integers(0, len(ids), (a.boot, len(ids))):
+            x, y = macro(Ys[ix], Ms[ix], P_m[ix]), macro(Ys[ix], Ms[ix], P_b[ix])
+            if not (np.isnan(x) or np.isnan(y)):
+                dd2.append(x - y)
+        dd2 = np.array(dd2)
+        lo2, hi2 = np.percentile(dd2, [2.5, 97.5])
+        print("  95%% CI [%+.4f, %+.4f]  P(delta>0)=%.2f"
+              % (lo2, hi2, float((dd2 > 0).mean())))
+        return 0
 
     # diversity diagnostic: per-label Spearman of our arm against the base
     cors = [spearmanr(O[:, j], base[:, j]).statistic for j in range(12)]
