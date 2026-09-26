@@ -14150,3 +14150,43 @@ A117 自己的 caveat ① 想到了"基座强度"的问题，**没想到"输入�
    这是构造上不可测，不是不够努力。** 剩下四周的正确姿势很窄也很无聊：**守住天花板、把终局选择推到截止前、
    偶尔看一眼前沿**；并且**不要靠拧旋钮过这四周** —— 因为 195.4 就是拧旋钮的结果：
    一个跨五折都稳定的 `+0.0020`，最后是仪器的产物。**这一轮最有价值的东西就是这个否定。**
+
+---
+
+## 196. 建两个"前沿自己登记过"的候选臂（REVIEW §4 第 1 项）
+
+**为什么建**：终局勾选被用户推到截止前，而**未被提交过的臂无法被勾选** ⇒ 手里只有五个臂时，
+"押哪两个"这个问题实际上被限制在三个轴上（Rad 纳入集合 / 外层路由 / 窗口数）。
+而前沿**自己**登记过另外两手，我们一个都还没建：
+
+| 臂 | 改动 | 出处 |
+|---|---|---|
+| `kernel-0943p` | preset `parent` —— **完全拉平** `coatnet_w` 到 0.65 | 作者源码注释：per-label 映射"on the strength of a public split…the likeliest place to give back points privately, **which is what the `parent` preset is for**"（A122） |
+| `kernel-0943r` | `rad_cal_w` 0.40 → **0.00** | 前沿自己的 v38 revision（`only_predictive_change: "Rad 88-feature calibration blend 0.40 to 0.00"`） |
+
+**两处实现细节值得记**：
+
+1. ⚠️ **`rad_cal_w` 是【配置值】，不是硬编码。** A116 曾写"`values = 0.6*values + 0.4*adjusted` 就是硬编码"——
+   那句不准确：cell 43 读的是 `float(RUN['rad_cal_w'])`，那一行的 0.6/0.4 只是**默认权重下的展开式**。
+   ⇒ v38 那一手与 `preset`／`_RAD_EXCLUDE` 一样，是**配置 token 的一 token 改动**。
+   构建器因此新增 `RAD_CAL_OLD`/`RAD_CAL_ZERO` 两个常量，并沿用同一条纪律 ——
+   **必须恰好匹配一次，否则拒绝写出**（本仓对"静默改错"的一贯处置）。
+2. ⚠️ `parent` 是 dispatch 链的**第一环**，写的是 `if PRESET == "parent":` 而**不是** `elif` ——
+   构建器原本对非默认 preset 只断言 `elif PRESET == "<p>"`，于是先在这里绊了一下
+   （`AssertionError: preset branch 'parent' missing`）。修法是给 `parent` 单独一条断言，
+   **不是放宽断言**：跳过默认那条分支会让"preset 真的生效了吗"失去检查。
+
+**验证（三步，都通过）**：
+
+```
+python scripts/build_0943_arms.py      # 七个臂
+  → git status 里【没有】任何 kernels/kernel-0943*/ 改动
+    ⇒ 五个老臂逐字节不变（A113 那条不变量：重建是构建器改动无害的验证）
+python scripts/preflight_0943.py       # PROBLEMS 0 / WARNINGS 0 / PREFLIGHT OK
+kaggle kernels push -p kernels/kernel-0943p -t 34200   # v1 成功，运行 COMPLETE
+kaggle kernels push -p kernels/kernel-0943r -t 34200   # v1 成功，运行 QUEUED（GPU 并发上限 2）
+```
+
+⚠️ **必须说清楚的边界**：这两个臂**扩大的是选择集，不是期望分**。公榜分辨不了这些臂的高低（±0.008 vs 0.001–0.003），
+所以建它们**不产生"谁更好"的信息**；它们的价值是**让截止前的那次挑选真的有得挑** ——
+而且**要在截止前各提交一次**（每天 5 槽、无 GPU 成本）才会变成可勾选的 ref。

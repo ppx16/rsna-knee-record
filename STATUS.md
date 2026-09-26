@@ -32,6 +32,14 @@ test set… It may be real. It is also the likeliest place to give back points p
 the `parent` preset is for" (A122, §194.3). That covers the *direction*; the *dose* is still
 unresolvable — see the caveats in the selection doc.
 
+**The choice set is now seven arms, all preflighted.** Two more were built and pushed on 2026-09-26
+(§196) so that the deferred decision has something real to choose from: **`0943p`** (preset `parent` —
+flatten the outer routing completely, the author's own registered insurance) and **`0943r`**
+(`rad_cal_w` 0.40 → 0.00, the author's v38 move). Both are one-token forks of the same notebook; the
+five existing arms rebuilt **byte-identical**, and preflight is 0 problems. ⚠️ Creating them widens
+the choice set, it does **not** raise the expected score — and **an arm that was never submitted
+cannot be selected**, so each needs one submission (free, 5/day) before the deadline.
+
 ## Live right now
 
 | Thing | State |

@@ -31,6 +31,27 @@ exactly what that gives up. Nothing else in this repository depends on the choic
 
 ---
 
+## The candidate set (as of 2026-09-26)
+
+Seven arms now exist, all preflighted (`PREFLIGHT OK`, 0 problems), each a one-token change from the
+same published notebook. The axes they disagree on are what matter, not their scores:
+
+| arm | what it changes | who set the shipped value, and where |
+|---|---|---|
+| `0943` (`56568520`) | — the published recipe | — |
+| `0943f` (`56570144`) | `_RAD_EXCLUDE` also excludes `Fracture` | **58 gold labels — and it was wrong** (n=4185 re-measurement, +0.001 macro) |
+| `0943h` (`56568524`) | per-label outer routing softened halfway | the public split (A122) |
+| `0943o` (`56570148`) | outer default 0.65 → 0.60 | the public split |
+| `0943s` (`56570151`) | 94 → 62/42 windows | measured: **no score difference**, only cost |
+| `0943p` *(pushed, not yet submitted)* | outer routing **fully flattened** | the public split — the author's own insurance (A122) |
+| `0943r` *(pushed, not yet submitted)* | `rad_cal_w` 0.40 → 0.00 | 58 gold labels (the 0.40); the frontier's own v38 turns it off |
+
+⚠️ `0943p` and `0943r` have **never been submitted**, so they cannot be selected yet. One submission
+each (free; 5 per UTC day) makes them selectable if the decision goes that way.
+**The recommendation below is unchanged** — `0943f` + `0943h`.
+
+---
+
 ## Why this pair — when three arms scored 0.943 and two scored 0.942
 
 **The board cannot rank these arms, so it was not used to.** Public noise is ±0.008 and the effects
