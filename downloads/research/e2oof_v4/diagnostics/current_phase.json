@@ -1,0 +1,22 @@
+{
+  "elapsed_seconds": 139.85748934745789,
+  "error": "A5 test/sample UID mismatch",
+  "error_type": "RuntimeError",
+  "gpus": [
+    {
+      "allocated_bytes": 9568256,
+      "id": 0,
+      "reserved_bytes": 23068672
+    },
+    {
+      "allocated_bytes": 9568256,
+      "id": 1,
+      "reserved_bytes": 195035136
+    }
+  ],
+  "max_rss_kib": 4288592,
+  "memory.current": "11768107008",
+  "memory.max": "32212254720",
+  "stage": "a5",
+  "status": "FAILED"
+}

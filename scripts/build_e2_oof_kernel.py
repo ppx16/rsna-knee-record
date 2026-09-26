@@ -211,9 +211,36 @@ def main():
         if counts[old] != 1:
             raise SystemExit("!! %s: matched %d times (need exactly 1)" % (what, counts[old]))
 
-    joined = "\n".join("".join(c.get("source", [])) for c in nb["cells"])
+    # Assert the walk substitution on the EDITED-BUT-NOT-YET-TRUNCATED notebook.  `walk('test_series')`
+    # legitimately appears a second time in the A5/Rad stage, so the honest statement is "exactly one
+    # occurrence was replaced"; after truncation that stage is gone and the count must be zero, which
+    # is asserted separately below.  Checking it only after truncation silently compared against a
+    # different text (and the first version of this assertion failed for exactly that reason).
+    edited_joined = "\n".join("".join(c.get("source", [])) for c in nb["cells"])
     src_joined = "\n".join("".join(c.get("source", [])) for c in
                            json.loads(SRC_NB.read_text(encoding="utf-8"))["cells"])
+    was = src_joined.count("walk('test_series')")
+    now_edited = edited_joined.count("walk('test_series')")
+    assert now_edited == was - 1, \
+        "expected exactly one test_series walk to be replaced (%d -> %d)" % (was, now_edited)
+
+    # ---- truncate: everything after the E2 stage is not ours to run -----------
+    # The A5/Rad stage that follows is built around the TEST set -- it hard-requires
+    # `test_series` ("train-series fallback is forbidden") and takes its cohort from the test split --
+    # so in an OOF run on training studies it necessarily fails.  It contributes nothing to
+    # `rank(E2)`, and its failure turned two otherwise-correct runs into ERRORs, which is exactly the
+    # kind of misleading signal this project keeps paying for.  Cut it and everything after it.
+    cut = None
+    for i, c in enumerate(nb["cells"]):
+        if c.get("cell_type") == "code" and "rsna_phase('a5', 'START')" in "".join(c.get("source", [])):
+            cut = i
+            break
+    if cut is None:
+        raise SystemExit("!! could not find the A5-stage boundary to truncate at")
+    dropped_code = sum(1 for c in nb["cells"][cut:] if c.get("cell_type") == "code")
+    nb["cells"] = nb["cells"][:cut]
+
+    joined = "\n".join("".join(c.get("source", [])) for c in nb["cells"])
 
     # ---- assertions on the artefact we are about to push ---------------------
     want_fold = "os.environ.get('RSNA_OOF_FOLD', '%s')" % args.fold
@@ -221,16 +248,14 @@ def main():
     assert want_fold in joined, "fold default was not baked in"
     assert want_limit in joined, "limit default was not baked in"
     assert "walk('train_series')" in joined, "the E2 walk was not redirected to train_series"
-    # ⚠️ `walk('test_series')` still legitimately appears in the A5/Rad stage further down (and that
-    # stage is never reached).  Assert the COUNT dropped by exactly one instead of asserting the
-    # string is gone, which would fail on the untouched stage.
-    was = src_joined.count("walk('test_series')")
-    now = joined.count("walk('test_series')")
-    assert now == was - 1, "expected exactly one test_series walk to be replaced (%d -> %d)" % (was, now)
+    # after truncation the only remaining test_series walk must be gone as well
+    assert "walk('test_series')" not in joined, "a test_series walk survived the truncation"
     assert "_RSNA_OOF_ONLY and study.name not in _RSNA_OOF_ONLY" in joined, "study filter missing"
     assert "and study.name not in _RSNA_OOF_ONLY:\n            continue" in joined, "filter body wrong"
-    # the parent's hard constraint downstream must be untouched and unreachable
-    assert "train-series fallback is forbidden" in joined, "the A5 stage guard changed"
+    # The E2 stage's own gate must survive the truncation, and the A5 stage must be gone.
+    assert "_DINOV2_MATCHED_MEMBERS" in joined, "the DINOv2 fingerprint gate was truncated away"
+    assert "def main():" in joined, "main() was truncated away"
+    assert "train-series fallback is forbidden" not in joined, "the A5 stage was NOT truncated away"
     assert "EXPECTED_DINOV2_MEMBERS = 20" in joined, "member count changed"
     # compile every code cell
     bad = 0
@@ -263,8 +288,9 @@ def main():
     print("  datasets : %d   kernels: %d   internet: %s"
           % (len(m.get("dataset_sources") or []), len(m.get("kernel_sources") or []),
              m.get("enable_internet")))
-    print("  cells    : %d total, %d code, all compile"
-          % (len(nb["cells"]), sum(1 for c in nb["cells"] if c.get("cell_type") == "code")))
+    print("  cells    : %d total, %d code, all compile (dropped %d code cell(s) after the E2 stage)"
+          % (len(nb["cells"]), sum(1 for c in nb["cells"] if c.get("cell_type") == "code"),
+             dropped_code))
     return 0
 
 
