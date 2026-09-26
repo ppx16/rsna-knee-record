@@ -47,10 +47,41 @@ unresolvable — see the caveats in the selection doc.
 | **Training line** | Our best arm scores **0.8731** against A5's **0.9143** on the 181 studies where both are genuinely held out — a gap whose CI excludes zero (A106). Below the archive's own ~0.90 member bar. |
 | **Champion folds** | The checkpoints carry a config, but in a **different schema**, and **neither gate can see a wrong geometry** (A108). Forcing it would produce a confident, wrong result. |
 | **E2 parent OOF** | The 20 published members are **not held out** (A93): parent 0.9295 vs a genuine OOF's 0.8323 on the same studies. |
-| **Fusion knobs on the frontier stack** | No valid parent OOF exists, so they could only be judged on the ±0.008 board. `rad_cal_w`→0 was then **locally contradicted** (A117). |
+| **Fusion knobs on the frontier stack** | No valid parent OOF exists, so they could only be judged on the ±0.008 board. `rad_cal_w`→0 was "locally contradicted" by A117 — **that basis is retracted** (A127): the probe measured the calibrator repairing a mis-set blend, not adding information. |
 | **Image+metadata arm** | Measured honest gain on top of our own ensemble: **−0.0033** (A112). Plan marked NOT RECOMMENDED. |
 | Dense corpus · member additions · capacity scaling · full retrain · gold-58 for small deltas · CoAtNet on XLA · multi-TPU queues · rental box as a scoring route | Each closed by measurement, not assumption. |
 | Scheduled tasks | Deleted (§164) — they were idle and were the black console window the user saw. |
+
+## Where the remaining weeks go — 复盘 of 2026-09-26
+
+**The review changed the answer: [`docs/REVIEW-2026-09-26.md`](docs/REVIEW-2026-09-26.md).**
+**The score is at the public ceiling, and what is left is selection risk on knobs fitted to data we
+cannot see** — unmeasurable *by construction*, not by lack of effort.
+
+| | |
+|---|---|
+| 1. Hold the ceiling | done — five arms submitted, all ran the hidden rerun end to end |
+| 2. Keep the final choice open | decide at the deadline, hedging different unmeasurable axes (`FINAL-SELECTION.md`) |
+| 3. Look at the frontier, rarely | the only source of a genuinely new idea; the last sweep found nothing (A116) |
+| 4. **Do not spend the weeks turning knobs** | 2026-09-26 is the demonstration — see below |
+
+⭐ **The review's useful result is a negative one.** The instrument was first upgraded to the best we
+have ever had — a Rad-free honest surrogate at **0.9151 on 4406 studies** (previous stand-in: 0.8823
+on 870) — and on it the calibrator looked worth **+0.0075** on the gated labels with an optimal dose
+of 0.7–0.8, **chosen identically in all five folds**. Then the rival explanation killed it: the
+calibrator's inputs contain *both sides* of the blend it corrects, and the full `rad_alpha ×
+rad_cal_w` surface peaks at **`rad_alpha≈0, cal_w=0`** with the calibrator's best dose rising
+monotonically in `rad_alpha` — the signature of a correction term, not of information (A127). So
+**`rad_cal_w=0.8` is not submitted**, and **`0943r` reverts to "a bet with a public source,
+unverifiable locally"** (A128).
+
+**The rule to carry: a probe asking "does X add information on top of Y?" must first show that Y is at
+its own optimum — otherwise it measures repair.**
+
+⚠️ **Every knob in the 0.943 recipe is gated on the same missing instrument.** `coatnet_w` was set on
+the public split (A122 — the author's own words); the Rad family on 58 gold labels; `a5_w`, the view
+weights and `coat_private_alpha` would each need the DINO base's honest OOF, and **the twenty
+published DINOv2 members are not fold-trained, so that OOF does not exist** (A93).
 
 ## Two rules worth carrying forward
 

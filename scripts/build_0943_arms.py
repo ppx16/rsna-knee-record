@@ -50,25 +50,45 @@ SRC_NB = SRC / "rsna-knee-restructured-version-3.ipynb"
 PRESET_OLD = 'PRESET = os.environ.get("RSNA_PRESET", "speedy")'
 RAD_OLD = '_RAD_EXCLUDE = ("Baker\'s", \'Fracture\')'
 RAD_FORK = '_RAD_EXCLUDE = ("Baker\'s",)'
+# `rad_cal_w` is a CONFIG value in RUN, not a hardcoded blend constant (cell 43 reads
+# `float(RUN['rad_cal_w'])`), so the frontier's own v38 revision -- "Rad 88-feature calibration
+# blend 0.40 to 0.00" -- is a one-token fork exactly like the fracture edit.  We verified the
+# config form after A116 asserted the opposite from memory; the token below has matched exactly
+# once in every arm built so far, and the assertion refuses to proceed otherwise.
+RAD_CAL_OLD = '"rad_cal_w": 0.40,'
+RAD_CAL_ZERO = '"rad_cal_w": 0.00,'
 
-# dir, id, title (MUST slugify to the id), preset default, fracture fork, role
+# dir, id, title (MUST slugify to the id), preset default, fracture fork, calibrator-off fork, role
 VARIANTS = [
-    ("kernel-0943", "ppxl16/rsna-knee-0943", "RSNA knee 0943", "speedy", False,
+    ("kernel-0943", "ppxl16/rsna-knee-0943", "RSNA knee 0943", "speedy", False, False,
      "the 0.943 run itself"),
-    ("kernel-0943f", "ppxl16/rsna-knee-0943f", "RSNA knee 0943f", "speedy", True,
+    ("kernel-0943f", "ppxl16/rsna-knee-0943f", "RSNA knee 0943f", "speedy", True, False,
      "0.943 + one-token fracture fork"),
-    ("kernel-0943o", "ppxl16/rsna-knee-0943o", "RSNA knee 0943o", "outer060", False,
+    ("kernel-0943o", "ppxl16/rsna-knee-0943o", "RSNA knee 0943o", "outer060", False, False,
      "flat-0.60 outer -- public analysis's recommended robust second pick"),
-    ("kernel-0943s", "ppxl16/rsna-knee-0943s", "RSNA knee 0943s", "sparse", False,
-     "62/42 windows -- the quota lever (cheaper, likely lower)"),
+    ("kernel-0943s", "ppxl16/rsna-knee-0943s", "RSNA knee 0943s", "sparse", False, False,
+     "62/42 windows -- the quota lever (cheaper, measured to score the same)"),
     # Added 2026-09-25.  `outer060` reverts the *default* (0.65 -> 0.60) while keeping every
     # per-label override; `halfway` keeps the default and softens the overrides toward it.  They are
     # not the same axis, but our own LB evidence (C57, on the same object -- the outer CoAtNet
     # routing -- in the older v2src line) is that flattening it cost 0.002 while taking it halfway
     # cost 0.001.  So this is the better-supported hedge, and building it is free: pushing costs no
-    # quota, only *running* does.  See HANDOFF 163.3 -- the choice stays open until the first read.
-    ("kernel-0943h", "ppxl16/rsna-knee-0943h", "RSNA knee 0943h", "halfway", False,
+    # quota, only *running* does.  See HANDOFF 163.3.
+    ("kernel-0943h", "ppxl16/rsna-knee-0943h", "RSNA knee 0943h", "halfway", False, False,
      "per-label routing softened toward its default (C57 says softening beats flattening)"),
+    # Added 2026-09-26 (REVIEW-2026-09-26 §4, item 1).  These two are the frontier's OWN registered
+    # remedies, and neither the board nor our instruments can rank them -- so they are built to
+    # widen the deadline's choice set, NOT because we expect the readouts to inform anything:
+    #   * `parent` (upstream preset, verbatim): flatten `coatnet_w` completely.  The author's own
+    #     source comment names the per-label map as the likeliest place to give back points
+    #     privately and says the `parent` preset is what it is for (A122).
+    #   * `cal00`: the author's v38 revision, `rad_cal_w` 0.40 -> 0.00.  A117 rejected this on a
+    #     measurement that A127 then showed to be the calibrator repairing a mis-set blend, so the
+    #     rejection is withdrawn and this reverts to "a bet with a public source" (A128).
+    ("kernel-0943p", "ppxl16/rsna-knee-0943p", "RSNA knee 0943p", "parent", False, False,
+     "flat outer routing -- the frontier's own registered insurance (A122)"),
+    ("kernel-0943r", "ppxl16/rsna-knee-0943r", "RSNA knee 0943r", "speedy", False, True,
+     "rad_cal_w 0.40 -> 0.00 -- the frontier's v38 move (A128)"),
 ]
 
 
@@ -77,7 +97,7 @@ def slugify(t):
     return re.sub(r"[^A-Za-z0-9]+", "-", t.strip().lower()).strip("-")
 
 
-def build(dst_name, kid, title, preset, fracture, role):
+def build(dst_name, kid, title, preset, fracture, cal00, role):
     dst = ROOT / "kernels" / dst_name
     dst.mkdir(parents=True, exist_ok=True)
     nb = json.loads(SRC_NB.read_text(encoding="utf-8", errors="replace"))
@@ -89,6 +109,7 @@ def build(dst_name, kid, title, preset, fracture, role):
 
     want_line = PRESET_OLD.replace('"speedy"', '"%s"' % preset)
     n_rad = 0
+    n_cal = 0
     for c in nb["cells"]:
         txt = "".join(c.get("source", []))
         if PRESET_OLD in txt:
@@ -96,10 +117,15 @@ def build(dst_name, kid, title, preset, fracture, role):
         n_rad += txt.count(RAD_OLD)
         if fracture and RAD_OLD in txt:
             txt = txt.replace(RAD_OLD, RAD_FORK)
+        n_cal += txt.count(RAD_CAL_OLD)
+        if cal00 and RAD_CAL_OLD in txt:
+            txt = txt.replace(RAD_CAL_OLD, RAD_CAL_ZERO)
         if txt != "".join(c.get("source", [])):
             c["source"] = [txt]
     if n_rad != 1:
         raise SystemExit("!! _RAD_EXCLUDE matched %d times (need exactly 1)" % n_rad)
+    if n_cal != 1:
+        raise SystemExit("!! rad_cal_w config token matched %d times (need exactly 1)" % n_cal)
 
     t = "\n".join("".join(c.get("source", [])) for c in nb["cells"])
 
@@ -109,6 +135,10 @@ def build(dst_name, kid, title, preset, fracture, role):
     # must have an explicit branch; in every case the dispatch block must still be intact.
     if preset == "speedy":
         assert 'PRESET == "parent"' in t, "preset dispatch block is missing"
+    elif preset == "parent":
+        # `parent` is the FIRST link of the dispatch chain -- written as `if PRESET == "parent":`,
+        # not `elif` -- so the same string the speedy arm checks is the correct check here.
+        assert 'PRESET == "parent"' in t, "parent preset branch missing"
     else:
         assert 'elif PRESET == "%s"' % preset in t, "preset branch %r missing" % preset
     assert '"coatnet_w": {"__default__": 0.65' in t, "the 0.943 outer default is missing"
@@ -117,6 +147,10 @@ def build(dst_name, kid, title, preset, fracture, role):
         assert RAD_FORK in t and RAD_OLD not in t, "fracture edit did not take"
     else:
         assert RAD_OLD in t, "non-fracture arm must keep the published token"
+    if cal00:
+        assert RAD_CAL_ZERO in t and RAD_CAL_OLD not in t, "calibrator-off edit did not take"
+    else:
+        assert RAD_CAL_OLD in t, "non-cal00 arm must keep the published rad_cal_w"
     if slugify(title) != kid.split("/")[-1]:
         raise SystemExit("!! title %r does not slugify to %r" % (title, kid.split("/")[-1]))
 
@@ -139,7 +173,8 @@ def build(dst_name, kid, title, preset, fracture, role):
     (dst / "kernel-metadata.json").write_text(
         json.dumps(m, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
 
-    print("== %-14s %-32s preset=%-9s fracture=%-5s" % (dst_name, kid, preset, fracture))
+    print("== %-14s %-32s preset=%-9s fracture=%-5s cal00=%-5s" % (
+        dst_name, kid, preset, fracture, cal00))
     print("   %s" % role)
     print("   %d cells | %d datasets | kernels %s | machine %s" % (
         len(nb["cells"]), len(m.get("dataset_sources") or []), m.get("kernel_sources"),
@@ -159,7 +194,7 @@ def main():
     print()
     print("push when the weekly GPU quota returns (a GPU kernel cannot even be pushed while it is")
     print("exhausted, FACTS A50).  The notebook budgets 8 h internally -- give the run room:")
-    for d, kid, _, p, _, _ in VARIANTS:
+    for d, kid, _, p, _, _, _ in VARIANTS:
         if a.only and d != a.only:
             continue
         print("  kaggle kernels push -p kernels/%s -t 34200   # preset=%s" % (d, p))

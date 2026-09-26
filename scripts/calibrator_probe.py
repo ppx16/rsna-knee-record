@@ -180,6 +180,9 @@ def main():
     ap.add_argument("--labels", default="downloads/research/oof/report_labels_v2.csv")
     ap.add_argument("--probe", default="downloads/research/siteprobe/site_probe.csv")
     ap.add_argument("--boot", type=int, default=300)
+    ap.add_argument("--baseline-npz", default="",
+                    help="use this (ids, pred) npz as the stand-in parent instead of the fold-0 "
+                         "ensemble mean; scripts/oof_surrogate.py builds the strongest one we have")
     ap.add_argument("--seed", type=int, default=20260926)
     args = ap.parse_args()
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
@@ -190,7 +193,13 @@ def main():
     print("  protocol_columns (%d): %s" % (len(cal["protocol_columns"]), cal["protocol_columns"]))
     print("  coef shape: %s" % (np.asarray(cal["coef"]).shape,))
 
-    # --- the stand-in parent: our own fold-0 ensemble (genuine OOF) -------------
+    # --- the stand-in parent ----------------------------------------------------
+    # Default: our own fold-0 ensemble (genuine OOF, 870 studies, 0.8823 -- A112).
+    # `--baseline-npz` supplies a STRONGER honest baseline, e.g. the Rad-free surrogate built by
+    # scripts/oof_surrogate.py (4406 studies, 0.9151).  Strength is the whole point: A109/A112
+    # showed the same gain shrinking as the base strengthens (+0.008 at 0.842, +0.002 at 0.909,
+    # ~0 on a 0.882 ensemble), so the 0.88 stand-in can only bound this answer from below -- and
+    # whether the calibrator survives at all is exactly what decides the `rad_cal_w` question.
     arms = {}
     for pat in (r"downloads\cv\**\raptor_oof_*.npz", r"downloads\rent\raptor_oof_*.npz"):
         for p in glob.glob(pat, recursive=True):
@@ -202,18 +211,28 @@ def main():
             if len(d["ids"]) >= 800:
                 arms[m.group(1)] = ([str(u) for u in d["ids"]],
                                     np.asarray(d["pred"], dtype=np.float64))
-    if not arms:
-        raise SystemExit("!! no fold-0 arms found")
-    common = None
-    for ids, _ in arms.values():
-        common = set(ids) if common is None else (common & set(ids))
     ids_l, Y, M = read_labels(args.labels)
     pos_l = {u: i for i, u in enumerate(ids_l)}
-    ids = [u for u in ids_l if u in common]
-    base = np.mean([rank_columns(np.array([P[{u: i for i, u in enumerate(a)}[u]]
-                                            for u in ids])) for a, P in arms.values()], axis=0)
+    if args.baseline_npz:
+        d = np.load(args.baseline_npz, allow_pickle=True)
+        b_ids = [str(u) for u in d["ids"]]
+        b_pred = np.asarray(d["pred"], dtype=np.float64)
+        pos_b = {u: i for i, u in enumerate(b_ids)}
+        ids = [u for u in ids_l if u in pos_b]
+        base = rank_columns(np.array([b_pred[pos_b[u]] for u in ids]))
+        label = "SUPPLIED baseline %s" % os.path.basename(args.baseline_npz)
+    else:
+        if not arms:
+            raise SystemExit("!! no fold-0 arms found")
+        common = None
+        for b_ids, _ in arms.values():
+            common = set(b_ids) if common is None else (common & set(b_ids))
+        ids = [u for u in ids_l if u in common]
+        base = np.mean([rank_columns(np.array([P[{u: i for i, u in enumerate(a)}[u]]
+                                                for u in ids])) for a, P in arms.values()], axis=0)
+        label = "%d arms (our own fold-0 ensemble)" % len(arms)
     Ys = np.array([Y[pos_l[u]] for u in ids]); Ms = np.array([M[pos_l[u]] for u in ids])
-    print("\nstand-in parent: %d arms, %d studies (our own fold-0 ensemble)" % (len(arms), len(ids)))
+    print("\nstand-in parent: %s, %d studies" % (label, len(ids)))
 
     # --- the two published Rad ranks -------------------------------------------
     rad = {}
@@ -280,6 +299,119 @@ def main():
     for t in gated:
         print("   %-16s w=0 %.4f  w=0.40 %.4f  calibrator-alone %.4f"
               % (t, per0[t], per40[t], per_adj[t]))
+
+    # --- the DOSE, which 0.40 does not settle ---------------------------------
+    # 0.40 is the shipped value, but A115 traced it to a selection on 58 gold labels -- below
+    # every safety line A111 measured.  So "does the calibrator help" and "is 0.40 the right
+    # dose" are separate questions, and only the first one has been asked.  A monotone-rising
+    # sweep means the shipped value is too small; a peak at 0.40 means the 58-label choice
+    # happened to land in the right place.
+    print("\ncalibration-weight sweep on the gated labels (shipped value is 0.40):")
+    sweep = {}
+    for w in np.arange(0.0, 1.0001, 0.1):
+        vw = values.copy()
+        for t in gated:
+            j = TARGETS.index(t)
+            vw[:, j] = (1 - w) * values[:, j] + w * adjusted[:, j]
+        mw, _ = macro(Ys, Ms, rank_columns(vw), gated)
+        sweep[round(float(w), 2)] = mw
+        print("   rad_cal_w=%.1f   %.4f%s" % (w, mw, "   <- shipped" if abs(w - 0.4) < 1e-9 else ""))
+    w_star = max(sweep, key=sweep.get)
+    print("   best on these studies: rad_cal_w=%.1f (%.4f), %+.4f vs shipped 0.40"
+          % (w_star, sweep[w_star], sweep[w_star] - sweep[0.4]))
+    print("   NOTE the dose is chosen on the same studies it is scored on, so that gap is an")
+    print("   upper bound: a weight picked from 11 points on n=%d buys roughly +0.0005-0.001" % len(ids))
+    print("   of pure selection (HANDOFF 86.2 measured +0.0012 for 300 draws on this scale).")
+
+    # --- the honest dose: choose w on four folds, apply it to the fifth ---------
+    # Without this the sweep above cannot distinguish "0.7 is genuinely better" from "0.7 won a
+    # lottery among 11 candidates".  The fold map rides along inside the baseline npz.
+    fold = None
+    if args.baseline_npz:
+        d = np.load(args.baseline_npz, allow_pickle=True)
+        if "fold" in d.files:
+            fmap = {str(u): int(k) for u, k in zip(d["ids"], d["fold"])}
+            fold = np.array([fmap.get(u, -1) for u in ids])
+    if fold is None:
+        print("\n(no fold map on the supplied baseline; honest dose test skipped)")
+        return 0
+
+    grid = np.arange(0.0, 1.0001, 0.1)
+
+    def blend_at(w):
+        vw = values.copy()
+        for t in gated:
+            j = TARGETS.index(t)
+            vw[:, j] = (1 - w) * values[:, j] + w * adjusted[:, j]
+        return rank_columns(vw)
+
+    ok = fold >= 0
+    P_fix = np.zeros_like(values)
+    P_dose = np.zeros_like(values)
+    chosen = []
+    for k in sorted(set(fold[ok].tolist())):
+        te = fold == k
+        tr = ok & ~te
+        if te.sum() == 0 or tr.sum() == 0:
+            continue
+        sc = [macro(Ys[tr], Ms[tr], blend_at(w)[tr], gated)[0] for w in grid]
+        w_k = float(grid[int(np.argmax(sc))])
+        chosen.append((k, w_k))
+        P_fix[te] = blend_at(0.4)[te]
+        P_dose[te] = blend_at(w_k)[te]
+    print("\nhonest dose test (w chosen on the other four folds):")
+    print("   chosen per fold: %s" % ", ".join("f%d->%.1f" % (k, w) for k, w in chosen))
+    m_fix = macro(Ys[ok], Ms[ok], P_fix[ok], gated)[0]
+    m_dose = macro(Ys[ok], Ms[ok], P_dose[ok], gated)[0]
+    m_zero = macro(Ys[ok], Ms[ok], blend_at(0.0)[ok], gated)[0]
+    print("   held-out gated macro: w=0.0 %.4f | w=0.4 (shipped) %.4f | fold-chosen w %.4f"
+          % (m_zero, m_fix, m_dose))
+    rng = np.random.default_rng(args.seed + 1)
+    n = int(ok.sum())
+    idx_all = np.where(ok)[0]
+    dd = []
+    for _ in range(args.boot):
+        b = idx_all[rng.integers(0, n, n)]
+        a = macro(Ys[b], Ms[b], P_dose[b], gated)[0]
+        c = macro(Ys[b], Ms[b], P_fix[b], gated)[0]
+        if not (np.isnan(a) or np.isnan(c)):
+            dd.append(a - c)
+    dd = np.array(dd)
+    lo, hi = np.percentile(dd, [2.5, 97.5])
+    print("   fold-chosen minus shipped: %+.4f  95%% CI [%+.4f, %+.4f]  P(>0)=%.2f"
+          % (m_dose - m_fix, lo, hi, float((dd > 0).mean())))
+    # and what a change here is worth on the FULL twelve-label macro: the calibrator only touches
+    # gated labels, so the effect is diluted by 5/12.
+    all_lab = macro(Ys[ok], Ms[ok], P_dose[ok], TARGETS)[0]
+    all_fix = macro(Ys[ok], Ms[ok], P_fix[ok], TARGETS)[0]
+    all_zero = macro(Ys[ok], Ms[ok], blend_at(0.0)[ok], TARGETS)[0]
+    print("   same three on the FULL 12-label macro: w=0.0 %.4f | w=0.4 %.4f | fold-chosen %.4f"
+          % (all_zero, all_fix, all_lab))
+
+    # --- the rival explanation: is the calibrator just "more Rad"? --------------
+    # `values = (1-rad_alpha)*base + rad_alpha*reference`, and the calibrator is then blended on
+    # top of that.  On a Rad-FREE base, a calibrator that mostly re-expresses the Rad heads would
+    # look valuable here and be worth ~nothing in the real pipeline, whose `baseline_rank` already
+    # contains the Rad arm at rad_alpha = 0.55.  So: can raising rad_alpha alone recover the same
+    # gated gain?  If yes, the calibrator's apparent value is an artefact of our base being
+    # Rad-free, and the real knob to move is rad_alpha, not rad_cal_w.
+    print("\nrival explanation test -- rad_alpha sweep, with and without the calibrator")
+    print("   (gated labels, n=%d).  rad_alpha shipped = %.2f" % (int(ok.sum()), RAD_ALPHA))
+    alphas = np.arange(0.0, 1.0001, 0.1)
+    print("   %-8s %-12s %-12s %-12s" % ("alpha", "cal_w=0.0", "cal_w=0.40", "cal_w=0.80"))
+    for a in alphas:
+        vals_a = (1 - a) * br + a * rr_
+        cells = []
+        for w in (0.0, 0.4, 0.8):
+            vv = vals_a.copy()
+            for t in gated:
+                j = TARGETS.index(t)
+                vv[:, j] = (1 - w) * vals_a[:, j] + w * adjusted[:, j]
+            cells.append(macro(Ys[ok], Ms[ok], rank_columns(vv)[ok], gated)[0])
+        print("   %-8.2f %-12.4f %-12.4f %-12.4f%s"
+              % (a, cells[0], cells[1], cells[2], "   <- shipped" if abs(a - RAD_ALPHA) < 1e-9 else ""))
+    print("   => if the cal_w columns rise with alpha, the calibrator is partly re-expressing Rad;")
+    print("      if the rows are flat in alpha, the calibrator carries something Rad does not.")
     return 0
 
 
