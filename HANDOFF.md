@@ -13603,6 +13603,76 @@ Code competition 不能上传预测值，分数由 **Kaggle 用隐藏集（1322 
 **冻结出一个可被提交引用的 notebook 版本**；8 h 预算只对隐藏集那次重跑有意义。
 ⇒ **"改了就得再跑一遍"的代价是 5 分钟，不是 8 小时**，迭代循环其实很便宜。
 
+---
+
+## 167. 巡检前沿：**没有前进**，"找新招"的路都是空的；三个臂跑起来备好
+
+### 167.1 结论先说
+
+**我们这五个臂就是当前公开前沿的配方本身，没有可抄的新东西了。** 这不是"懒得找"，
+而是三条途径各自查到底、都是空的：
+
+| 途径 | 结果 |
+|---|---|
+| 改进台账 `metadata.rsna_optimization` | 仍停 **v38**（`rad_cal_w` 0.40→0.00）—— ⚠️ **正是 D11 已在我们栈上实测否决的那一手**（0.940 < 0.941） |
+| 鲁棒台账 `metadata.rsna_revision` | 仍停 **`v559d`**，`v559d_notebook_sha256 = 9e16f34e…` 与我们 09-24 快照**逐字相同** ⇒ **我们已经带着它** |
+| 公榜"新"笔记本 | `stefanoblando/rsna-knee-master-4-arm-ensemble`（09-26 跑）**是 Mattia 那份的转发**，markdown 逐字是他的原文 ⇒ 无新内容 |
+
+### 167.2 三个值得单记的发现
+
+**① 台账的键名会变，而改名会伪装成"没有台账"。**
+`bend-the-knee-to-speedy-raptors-the-original` 与 `maverickss26/…restructured-version-3` 现在用的是
+**`rsna_revision`**（我们上次记录的是 `rsna_optimization`）。如果脚本硬编码旧键名，输出就是
+"no rsna_optimization in metadata" —— **读起来像"前沿没写台账"，实际是前沿换了名字**。
+⇒ 已改成**匹配所有 `rsna_*` 键**。这条与 A61（挂载路径写错 ⇒ 静默回退 ⇒ 假阴性）是**同一个家族**：
+**一个查不到东西的探针，会静默地让我们放弃一条本来有效的路。**
+
+而 `rsna_revision` 的内容本身也很有信息量 —— 它说明**前沿自己认为隐藏集上的失败是真实风险**：
+
+```
+chain: v8 → codex-v559 → v559b → v559c → v559d
+scope: "data-driven aborts relaxed to flagged degradations; fp16 non-finite shield on
+        every autocast site; asset/contract/checkpoint aborts unchanged"
+hidden_failure_cause_proven: false      ← 前沿自己也没证明根因
+t4_end_to_end_executed_here: false      ← 也没有在 T4 上端到端跑过
+```
+
+⇒ 这正好对上 A73 我们发现的 fail-closed 行为：**"数据驱动的中止"被放松成"降级并标记"，
+而"资产/契约/检查点中止"保持致命**。我们臂里那些 `rsna_event(...)` 降级点
+（`dino_jitter_fp16_nonfinite_dropped`、`a5_order_unreadable_dropped`、`slot_shape_mismatch`）
+**就是 v559 系列留下的**。
+
+**② `kaggle kernels list --sort-by scoreDescending` 是一个会误导人的列表。**
+API **不返回 `score` 字段**（25 条全是空），所以那个"按分数排序"的列表**证明不了任何分数**，
+却会让人以为第一行就是最强。公开分数只写在笔记本的**叙述文字**里。
+⇒ **判前沿要读文本，不能读列表**；`scripts/scan_frontier.py` 已把这一点写在输出里（"nothing public
+at or above X" 这句话在 score 字段为空时是**无意义**的，工具会照打，所以别把它当结论）。
+
+**③ `push` 的拒绝有三种，处置完全不同 —— 别混淆。**
+
+| 拒绝文本 | 含义 | 处置 |
+|---|---|---|
+| `Maximum weekly GPU quota of 30.00 hours reached.` | **额度**耗尽（A50） | 等刷新 |
+| `Maximum batch GPU session count of 2 reached.` | **并发**占满（本次新发现） | **等一个会话结束**（约 6 min） |
+| `403 … SaveKernel` | 权限/限流（A26/A34） | 停手，次日自愈 |
+
+⚠️ 顺带：`0943f`/`0943o` **都被接受** ⇒ **§158.5（8 h×2 卡算 8 还是 16 GPU-h）仍未被回答**——
+拒绝我们的从头到尾都不是额度。这个问题现在**没有便宜的观测方式**（CLI 无 `quota`、
+`kagglesdk` 无加速器额度接口），只能靠用户在网页上看，或等某天真的撞上额度墙。
+
+### 167.3 处置：三个臂跑起来（**用户选择"只跑不提交"**）
+
+| 臂 | 推送 | 说明 |
+|---|---|---|
+| `kernel-0943f` | ✅ v1 | fracture fork |
+| `kernel-0943o` | ✅ v1 | outer060 |
+| `kernel-0943s` | ⏳ **等一个会话结束再推** | 被并发上限拒（A82） |
+
+**"只跑不提交"的实际价值**：三个臂各自**备好一个可被立即引用的版本**（真要用时不必再等 5 分钟），
+并且顺带做完全部烟测。⚠️ 但要记住 **A80**：可见集产物**无法区分这些臂**，所以这一步**不产生
+关于谁更好的信息** —— 它只保证"它们都能跑、都通过 20/20 门"。
+
+
 
 
 
