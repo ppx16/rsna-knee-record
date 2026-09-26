@@ -16,12 +16,21 @@
 
 ## 🔴 The one action left — and it is not something the CLI can do
 
-**Tick two rows on the competition's Submissions page: `56570144` (`0943f`) + `56568524` (`0943h`).**
-Full reasoning and the fallbacks: [`docs/FINAL-SELECTION.md`](docs/FINAL-SELECTION.md).
+**Kaggle has auto-ticked `56568520` (`0943` v2, 0.943) + `56570144` (`0943f`, 0.943).**
+The recommended pair is **`56570144` (`0943f`) + `56568524` (`0943h`)**.
 
-⚠️ `kaggle` 2.2.4 has **no select command** (verified) ⇒ this needs the browser. And **doing nothing
-is not neutral**: Kaggle then auto-selects **by public score**, while three of our arms are tied at
-0.943, so the resulting pair is not the one we chose. Deadline 2026-10-22 23:59Z.
+⇒ **Untick `RSNA knee 0943 - Version 2`, tick `RSNA knee 0943h - Version 2`.** Full reasoning, and
+what leaving the default costs: [`docs/FINAL-SELECTION.md`](docs/FINAL-SELECTION.md).
+
+⚠️ `kaggle` 2.2.4 has **no select command** (verified) ⇒ this needs the browser. And the default is
+not predictable: three of our arms tie at 0.943 and auto-select took two of them, **not** the ones we
+would choose (A123). Deadline 2026-10-22 23:59Z.
+
+⭐ **The routing hedge is no longer an analogy.** The frontier notebook's own source comment says the
+per-label `coatnet_w` overrides were set "on the strength of a public split that is a fraction of the
+test set… It may be real. It is also the likeliest place to give back points privately, which is what
+the `parent` preset is for" (A122, §194.3). That covers the *direction*; the *dose* is still
+unresolvable — see the caveats in the selection doc.
 
 ## Live right now
 

@@ -13948,3 +13948,84 @@ A79 的假 FAIL、A87 的假 PASS、A103 的假"已清理"、以及 A111 那次�
 
 **一个工作块的 HANDOFF 节与它的 FACTS 行必须在同一次提交里落地。**
 提交前跑 `python scripts/check_facts_refs.py`；新出现的悬空引用必须**要么补节、要么登记理由**。
+
+---
+
+## 194. Kaggle 自己勾了哪两个；以及一条【一手证据】把对冲从"类比"升级成"前沿自己也这么说"（2026-09-26）
+
+### 194.1 实测：Kaggle 自动勾选的行为
+
+用户 2026-09-26 在 Submissions 页面看到（并截图）：被勾选的是 **`56570144`（`0943f` v1，0.943）**
+与 **`56568520`（`0943` v2，0.943）**；**同样 0.943 的 `56570151`（`0943s` v1）没有被勾**。
+
+⇒ ① **"什么都不做 ≠ 选中我们的候选"这个判断成立**；
+⇒ ② 但**并列时它怎么挑是未知的** —— 三个 0.943 里挑了其中两个，规则不明：**不是"最近两次"**
+（最近的三条是 `0943s` / `0943o` / `0943f`），**也不是纯按分数**（三个同分）
+⇒ **任何"让系统自动去挑"的想法都不可依赖**；
+⇒ ③ 页面确实有 **Select 复选框列**（每行一个）⇒ 手动改就是"取消一个、勾上另一个"。
+
+### 194.2 结构问题：自动挑出的那一对是【嵌套】的
+
+`0943f` = `0943` + **一个 token**（`_RAD_EXCLUDE` 不再排除 `'Fracture'`）⇒ 两者**只在 12 列里的
+1 列（Fracture）上不同**，而该 token 的实测效应是 **macro +0.00099 偏向 `0943f`**（C81：n=4185、
+5 折里 4 折为正）⇒ 在"选中两个、取较好者"的规则下，**`0943` 近似是 `0943f` 的劣版**：
+**第二槽买到的基本是同一个注。**
+
+⇒ **由此得到一条比"软化到底对不对"更干净的判据**：**第二槽不要放第一槽的嵌套劣版，要放在
+另一条轴上有改动过的臂。** `0943h` 改的是另一条轴（per-label outer 路由的锐度），所以它才用得上第二槽。
+
+⚠️ **这条判据不依赖 A111 的同构类比是否成立**：即使 `0943h` 的期望值与 `0943` **完全相等**，
+把第二槽从"近似重复"换成"同均值、不同轴"也会提高 E[max]（分散度本身有价值）。
+
+### 194.3 ⭐⭐ 一手证据：前沿【自己】说那五个 per-label outer 权重是在公榜上拟合的，而且点名它是私有集最可能掉分的地方
+
+A115 原先的依据是**我们自己 C57 的一条笔记**（逐字 "tuned on the public split"）。这次直接在
+**前沿 notebook 的源码注释里**读到原文 —— `downloads/research/fresh0924/`
+`maverickss26_rsna_knee_restructured_version_3/rsna-knee-restructured-version-3.ipynb`，cell 2，
+`coatnet_w` 定义的正上方：
+
+```
+# --- final fusion: CoAtNet arm against the transformer stack -----------
+# The default rose 0.60 -> 0.65 in this release; the five overrides are
+# unchanged from the 0.941 routing. Lateral Meniscus at 1.00 discards the
+# DINO, A5 and RadImageNet stages entirely for that column - three of four
+# stages, on the strength of a public split that is a fraction of the test
+# set. It may be real. It is also the likeliest place to give back points
+# privately, which is what the "parent" preset is for.
+"coatnet_w": {"__default__": 0.65, "ACL": 0.75, "Medial Meniscus": 0.80,
+              "Lateral Meniscus": 1.00, "Lateral OA": 0.75, "Fracture": 0.75},
+```
+
+另一处（cell 47，逐标签诊断打印的说明）逐字：
+
+```
+These findings have genuinely different arms, which is where an outer weight
+actually decides the ordering — and therefore where a weight fitted to the
+public split can do real damage privately:
+```
+
+⇒ **三条结论**：
+
+① **调参集确认是公榜**（"on the strength of a public split that is a fraction of the test set"）
+—— 与 A115 的判断一致，而这次是**前沿自己的话**，不是我们的转述；
+② 前沿自己也**不确定它是不是真的**（"It may be real"），并且把它**点名为"私有集上最可能丢分的地方"**；
+③ 前沿**自己的对策**就是 `parent` preset（**完全拉平** `coatnet_w` 到 0.65）
+⇒ **"软化/拉平路由"这个方向不是我们的发明，是前沿自己登记的保险。**
+
+⚠️ 这**没有**告诉我们 `halfway`（软化一半）与 `parent`（完全拉平）哪个更好 —— C57 那两个数
+（软化 0.001 / 拉平 0.002）**都是在公榜（= 调参集）上量的**，对私有集同样有偏，所以它们
+**不能**给这两个对冲排序。A111 的曲线（n≈400 时 per-label 比单个共享权重差 **−0.0013**）
+**轻微偏向完全拉平**，但那是**同构类比**，不是那个对象本身。
+
+### 194.4 为什么不干脆去建一个 `parent` 臂（结论：不建）
+
+`parent` 是前沿 notebook **原生实现**的 preset（与 `halfway` / `outer060` / `sparse` 并列），
+我们的构建器加一条 `VARIANTS` 记录即可，成本不高（1 个提交槽 + 约 0.1 GPU-h 的可见集运行；
+今天 5 槽已用完，00:00Z 复位，而截止还有 4 周 ⇒ **时间与额度都不是障碍**）。
+
+**不做的理由是"它的读数在构造上不可用"**：`coatnet_w` 的影响**只能在公榜上读数**，而公榜
+**正是这套权重被拟合的那一集** ⇒ **`parent` 的公榜分数无论多少，都不能确认也不能否证它**。
+⇒ 提交它**在原理上就是"提交看看"**（A96 禁止），**不是**"确认一个已有证据支持的改进"。
+
+**已提交的 `halfway` 不花任何新成本**，且它只需要**方向**成立（一手证据 + A111 指向同一方向），
+**不需要档位选对**。⇒ **最终两槽 = `0943f` + `0943h`。**
