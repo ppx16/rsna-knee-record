@@ -104,7 +104,7 @@ The submission notebook adopts **each member's own config** (`adopt_config_globa
 
 | | |
 |---|---|
-| `cn0` — the arm that produced **+0.0028** | ⭐ **weights RECOVERED (§201).** They were on the rented box after all — `/root/autodl-tmp/kaggle/working/`, which the first search missed because `-xdev` prunes that separate mount. Six checkpoints (1.68 GB) are now in `downloads/rent/` (git-ignored), verified by content (`testzip()` clean, 492 entries) and **identified by `best_gold_auc = 0.877929` matching the recorded 0.8779**. ⚠️ Still not *shippable* yet: they must be published as a Kaggle dataset, and the notebook edit is a separate, risky step. |
+| `cn0` — the arm that produced **+0.0028** | ⭐ **weights RECOVERED and now DURABLE (§201–§202).** They were on the rented box after all — `/root/autodl-tmp/kaggle/working/`, which the first search missed because `-xdev` prunes that separate mount. Six checkpoints (1.68 GB) are local (git-ignored) **and published** as the private dataset **`ppxl16/rsna-knee-cn0-weights` (v2, ready)** — the only copy independent of both the box (now shut down) and this laptop. Identity confirmed by `best_gold_auc = 0.877929` against the recorded 0.8779; integrity by CRC-clean archives plus byte counts identical to the box's listing. ⚠️ Still not *shippable* into the submission until the notebook edit, which is a separate, risky step. |
 | the 22 fine-tuned checkpoints on disk | all below the frontier's own seeds (best available `r3362` 0.8663 vs their 0.868–0.870) ⇒ adding them would be a negative — `cvg0` already demonstrated that |
 | the published `rsna-knee-train-weights` | 5 × DINOv2-small@336 @ crop 130 mm, 20 epochs; their blend scored LB 0.842 on 09-06 |
 

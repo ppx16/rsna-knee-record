@@ -1,0 +1,10 @@
+{
+  "title": "RSNA knee cn0 CoAtNet@384 weights (rescued)",
+  "id": "ppxl16/rsna-knee-cn0-weights",
+  "licenses": [
+    {
+      "name": "CC0-1.0"
+    }
+  ],
+  "description": "All six CoAtNet-rmlp-2_rw_384 @384 checkpoints trained on the rented 4090D, rescued on 2026-09-26 before the box was shut down. cn0 (fold 0) is the arm scripts/member_add_test.py measured at +0.0028 on a 0.917-quality blend, and it is the only arm this repo has found that BEATS the frontier's own DINOv2 seed members (0.8769 vs 0.8676-0.8697, scripts/arm_parity.py). Each .pt ships with the .json training sidecar written next to it; raptor_ft_cn0.json records best_gold_auc 0.877929, which matches state/EXPERIMENTS.md and is how the file's identity was confirmed. SHA256SUMS.txt hashes the six .pt files. Geometry is recorded in state/EXPERIMENTS.md: coatnet_rmlp_2_rw_384, res 384, k 12, 12 epochs, grad_ckpt, 44-slot corpus. The payload is NOT in git (1.68 GB); this dataset is the durable copy."
+}
