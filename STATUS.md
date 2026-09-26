@@ -45,10 +45,23 @@ gross failure. Today's quota of 5 submissions is spent; it refreshes at 00:00Z.
 
 ## Where the remaining weeks should go
 
-Every lever we can reach is now closed by measurement. What is left is not a search for a new method
-but the discipline of not wasting the ones already banked: read the scores back, choose the final two
-submissions from the ledger rather than from memory, and keep the low-frequency watch on the public
-frontier in case someone publishes a genuinely new lever.
+Every lever we can reach is now closed by measurement — **except one, and it now has a written,
+pre-registered plan with kill conditions: [`PLAN-arm-image-metadata.md`](PLAN-arm-image-metadata.md).**
+
+The reason it is the only survivor: acquisition metadata was **measured** to carry ordering
+information the image arms do not have (+0.008 on a weak arm, +0.002 on a strong one, weights stable
+across folds — A109), and **every arm in the four-stage pipeline is image-only**, so nothing uses that
+channel. The plan's decisive test is cheap (~5.6 GPU-hours on a rented 24 GB card) and its control leg
+— images plus **permuted** metadata — is what separates "the metadata's information helps" from
+"extra capacity helped".
+
+It is still likely to fail: the measured gain shrinks as the arm strengthens, extrapolating to
+~0.000–0.001 at the ensemble's level, and the required bar is ≥0.90 solo with error correlation below
+the **0.8061** that A5 and Rad already share.
+
+What comes first is not this plan but the discipline of banking what exists: read the five scores
+back, then choose the final two submissions from the ledger rather than from memory. The plan waits
+until both are done.
 
 ## Closed — do not reopen without new evidence
 

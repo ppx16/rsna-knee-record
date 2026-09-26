@@ -29,6 +29,7 @@ producing three all-zero rows. All three are recorded, with the controls that no
 | `state/FACTS.md` | **Atomic facts**, append-only, numbered `A1..An`. Each entry is one thing that is true and how it was measured. |
 | `HANDOFF.md` | **Narrative**, numbered `§N` sections. What was attempted, what happened, what it cost. |
 | `RUNBOOK-0943.md` | The copy-pasteable sequence for pushing and submitting the 0.943-line arms. Read it before touching the submission line. |
+| `PLAN-arm-image-metadata.md` | **Pre-registered plan** (not started) for the one live research direction: an arm that consumes images *and* acquisition metadata. Read §3's kill conditions before spending anything on it. |
 | `state/EXPERIMENTS.md` | Registered experiments and their verdicts, including the ones closed as negative. |
 | `scripts/` | Every tool worth keeping. Reusable analysis lives here, not in ad-hoc commands. |
 | `kernel-*/` | Kaggle kernels we own: the five 0.943-line arms, the A5-OOF kernel, the CPU site probe. |
