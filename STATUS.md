@@ -79,6 +79,27 @@ overfits and transfers *worse than a single shared weight* — which is the quan
 a flattened/softened hedge among the final two. Our A5 OOF (4407 studies) clears the bar for
 arm-level work; the public board (~400) does not. (A111)
 
+## Our own ensemble OOF — the first locally validatable ensemble (A112)
+
+Fold 0 of our own arms is the only fold with a rich set (13 arms; folds 3 and 4 have none), so the
+ensemble is fold-0 only: one fold, one arm set, 870 studies — which is exactly the size A111 measured
+as necessary for safe per-label tuning.
+
+| | macro (report labels, n=870) |
+|---|---|
+| best single arm (`d64cn0`) | 0.8717 |
+| rank-mean of top 3 | **0.8823** |
+| rank-mean of **all 11** | 0.8765 |
+
+**Two results worth keeping.** Ensembling genuinely helps (+0.005 to +0.011). And **pruning is real:
+all eleven arms are worse than the top three**, which is the first local reproduction of D14's
+"members below ~0.90 cost more than their diversity buys".
+
+**And it killed the ¥12 plan for free.** Metadata added +0.008 to a weak arm and +0.002 to a strong
+one, but on top of this ensemble the honest gain is **−0.0033**; the apparent +0.0008 is entirely the
+optimism of fitting on the scored half. The plan is marked **NOT RECOMMENDED** and kept as a design
+record only.
+
 ## Closed — do not reopen without new evidence
 
 | Line | Why it is closed |

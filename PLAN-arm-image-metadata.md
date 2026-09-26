@@ -1,7 +1,32 @@
 # PLAN — feasibility of an image+metadata arm
 
-**Status: pre-registered, not started.** Written 2026-09-26. Nothing here runs until the five pending
-submissions are read back and the final two slots are chosen.
+**Status: NOT RECOMMENDED — rung 0 passed but the ensemble-level measurement killed it. Do not spend
+the ¥12.** (Written 2026-09-26; closed the same day, see FACTS A112.)
+
+The plan was written because metadata added to *individual arms*. It was then tested where it would
+actually have to work — on top of a real ensemble — using a genuine fold-0 ensemble OOF of eleven of
+our own arms (0.8823, versus a best single arm of 0.8717):
+
+| | macro |
+|---|---|
+| ensemble alone | 0.8823 |
+| ensemble + metadata, **honest** half-split (weight fitted on the other half) | **0.8790** |
+| ensemble + metadata, scored-half fit (the optimistic number) | 0.8831 |
+| **honest gain** | **−0.0033** |
+
+The apparent +0.0008 is *entirely* the optimism of fitting on the half being scored (+0.0041). This
+matches §1's own extrapolation — the metadata gain falls from +0.008 on a weak arm to +0.002 on a
+strong one, and an ensemble at 0.882 already absorbs what is left. The frontier's ensemble sits near
+0.94, so the trend runs the wrong way for this plan.
+
+⚠️ One honest limitation: the honest split fits on **435** studies, below the 870-study line that
+A111 measured as necessary for per-label tuning to be safe, so the *magnitude* cannot be trusted. The
+*direction* is supported by two independent measurements, which is why the verdict stands.
+
+The sections below are kept as the design record — the falsification ladder, the permutation control
+and the instrument rules remain the right shape if a related idea is ever proposed.
+
+---
 
 ## 1. The claim being tested
 
