@@ -1,0 +1,37 @@
+﻿probe rows (series): 24371
+study-level metadata features: 4407 studies x 55 features
+arm under test: rad
+scored studies (metadata + A5 + labels): 4406
+
+1. metadata ONLY (no images, no arm)         macro=0.6781
+2. A5 arm alone (genuine OOF)                macro=0.8424
+3. best train-fold-weight blend of the two   macro=0.8507
+   stacked minus A5 = +0.0082
+   alpha chosen on the TRAINING folds, per label per fold:
+      ACL                mean alpha=0.300   ['0.30', '0.30', '0.30', '0.30', '0.30']
+      MCL                mean alpha=0.220   ['0.20', '0.20', '0.30', '0.20', '0.20']
+      Medial Meniscus    mean alpha=0.160   ['0.10', '0.20', '0.20', '0.20', '0.10']
+      Lateral Meniscus   mean alpha=0.220   ['0.20', '0.30', '0.20', '0.20', '0.20']
+      Medial OA          mean alpha=0.200   ['0.20', '0.20', '0.20', '0.20', '0.20']
+      Lateral OA         mean alpha=0.300   ['0.30', '0.30', '0.30', '0.30', '0.30']
+      PF OA              mean alpha=0.280   ['0.30', '0.30', '0.20', '0.30', '0.30']
+      Effusion           mean alpha=0.200   ['0.20', '0.20', '0.20', '0.20', '0.20']
+      Synovitis          mean alpha=0.260   ['0.20', '0.30', '0.30', '0.20', '0.30']
+      Baker's            mean alpha=0.200   ['0.20', '0.20', '0.20', '0.20', '0.20']
+      Contusion          mean alpha=0.100   ['0.10', '0.10', '0.10', '0.10', '0.10']
+      Fracture           mean alpha=0.090   ['0.05', '0.10', '0.10', '0.10', '0.10']
+   95% CI [+0.0063, +0.0100]  P(stack>A5)=1.00
+
+per label:
+   ACL                meta-only=0.7152  A5=0.7907  stack=0.8111
+   MCL                meta-only=0.6729  A5=0.7975  stack=0.8054
+   Medial Meniscus    meta-only=0.6351  A5=0.8627  stack=0.8661
+   Lateral Meniscus   meta-only=0.6499  A5=0.7908  stack=0.8009
+   Medial OA          meta-only=0.6822  A5=0.8760  stack=0.8823
+   Lateral OA         meta-only=0.7119  A5=0.8375  stack=0.8524
+   PF OA              meta-only=0.7126  A5=0.8383  stack=0.8502
+   Effusion           meta-only=0.6583  A5=0.8399  stack=0.8461
+   Synovitis          meta-only=0.6771  A5=0.8589  stack=0.8657
+   Baker's            meta-only=0.6925  A5=0.8582  stack=0.8651
+   Contusion          meta-only=0.6407  A5=0.8585  stack=0.8605
+   Fracture           meta-only=0.6892  A5=0.9003  stack=0.9021
