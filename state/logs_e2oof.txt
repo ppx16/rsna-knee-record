@@ -1,0 +1,100 @@
+﻿0.00s - Debugger warning: It seems that frozen modules are being used, which may
+0.00s - make the debugger miss breakpoints. Please pass -Xfrozen_modules=off
+0.00s - to python to disable frozen modules.
+0.00s - Note: Debugging will proceed. Set PYDEVD_DISABLE_FILE_VALIDATION=1 to disable this validation.
+0.00s - Debugger warning: It seems that frozen modules are being used, which may
+0.00s - make the debugger miss breakpoints. Please pass -Xfrozen_modules=off
+0.00s - to python to disable frozen modules.
+0.00s - Note: Debugging will proceed. Set PYDEVD_DISABLE_FILE_VALIDATION=1 to disable this validation.
+[config] preset=speedy a5_w=0.52 rad_alpha=0.55 k_eval=94
+[config] outer CoAtNet weight per finding: {'ACL': 0.75, 'Medial Meniscus': 0.8, 'Lateral Meniscus': 1.0, 'Lateral OA': 0.75, 'Fracture': 0.75}
+[eda] 4,407 training studies, 24,371 training series, 15 test series
+[eda] 58 studies carry all twelve labels; the rest are supervised only by what a text model read out of the report
+Coverage of the six slots the models expect, over training studies:
+               slot  studies with it  share
+   Sagittal fat-sat             4150  0.942
+Sagittal no fat-sat             4266  0.968
+    Coronal fat-sat             4248  0.964
+ Coronal no fat-sat             3406  0.773
+      Axial fat-sat             4407  1.000
+   Axial no fat-sat              857  0.194
+
+A slot no study fills is a column of zeros fed to the encoder; a study that fills none of them can only be given a constant, and under ROC-AUC a block of identical constants earns half credit against everything it ties with. That is the cheapest score leak in this whole pipeline.
+Most correlated pairs:
+  Medial OA          + Baker's            +0.48
+  Medial Meniscus    + Medial OA          +0.42
+  Lateral Meniscus   + Lateral OA         +0.42
+  Lateral Meniscus   + Medial OA          +0.41
+  Lateral OA         + Baker's            +0.40
+
+The three osteoarthritis compartments move together, which is why the calibrator downstream groups them. Findings that co-occur are also findings an ensemble tends to get right or wrong together — worth remembering before reading any per-finding weight as skill.
+0 studies have no report at all (0.0%) — those can only be supervised by the images.
+The counts overlap because clinical vocabulary is shared across languages; they are a rough shape, not a classifier. The point is that a monolingual extractor silently drops whole slices of the training set, and a dropped study is not a wrong label — it is no label.
+A 140 mm crop spans 398 to 896 pixels across these series — a 2.3x range. Cropping a fixed number of pixels instead would hand the model a different anatomical field of view per scanner, which is the kind of artefact a model will happily learn to read as signal.
+Field strengths present: 1.5T x144, 3.0T x90, 1.2T x2
+The single most common scanner model covers 23% of the sample.
+
+The training path in this notebook groups folds by md5(report text), which deduplicates identical reports but does nothing about the scanner. Manufacturer + model + matrix size + pixel spacing is a serviceable site key and costs nothing to compute from headers you are already reading. Grouping on it is what makes an offline number mean something.
+Median series length 30 slices; 0.0% are shorter than twelve.
+Where a series is shorter than its slot, the sampler repeats slices, so several of the 62 windows are duplicates and the attention pooling sees the same evidence more than once. Where a series is much longer, the sampler is skipping anatomy — and a meniscus tear visible on two slices can fall between samples entirely. That is the mechanism behind the max and top-2 window pooling used for the focal findings upstream.
+cuda:0 probe PASS (compute 7.5)
+cuda:1 probe PASS (compute 7.5)
+devices: ['cuda:0', 'cuda:1']
+[startup] imports+GPU preflight: 9.53s
+[    0.1s] input root: /kaggle/input/competitions/rsna-knee-abnormality-detection
+[startup] competition-root preflight: 0.07s
+[    0.2s] memory: 29.5 GB available, 13.3 GB to the cache; sizing for 4407 train + 1322 test studies -> 1 group(s) of 3 = 3 slices per slot
+[    0.2s] cache layout: 1 groups x 3 slices = 3 per slot
+[phase] {"a5_without_matching_acquisition": 0, "elapsed_seconds": 0.7406313419342041, "gpus": [{"allocated_bytes": 0, "id": 0, "reserved_bytes": 0}, {"allocated_bytes": 0, "id": 1, "reserved_bytes": 0}], "max_rss_kib": 1092716, "memory.current": "1660276736", "memory.max": "32212254720", "missing_fluid_flags": 0, "stage": "input_metadata", "status": "COMPLETE"}
+[phase] {"elapsed_seconds": 1.475093126296997, "gpus": [{"allocated_bytes": 0, "id": 0, "reserved_bytes": 0}, {"allocated_bytes": 0, "id": 1, "reserved_bytes": 0}], "max_rss_kib": 1092716, "memory.current": "1676832768", "memory.max": "32212254720", "stage": "dinov2", "status": "START"}
+[    1.5s] weights package: 20 member(s) from /kaggle/input/datasets/pilkwang/rsna-knee-weights; 2 device(s)
+[phase] {"elapsed_seconds": 1.544348955154419, "error": "OOF run needs the published v52_oof.csv for the fold assignment", "error_type": "FileNotFoundError", "gpus": [{"allocated_bytes": 0, "id": 0, "reserved_bytes": 0}, {"allocated_bytes": 0, "id": 1, "reserved_bytes": 0}], "max_rss_kib": 1092716, "memory.current": "1676853248", "memory.max": "32212254720", "stage": "dinov2", "status": "FAILED"}
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+  File "/usr/local/lib/python3.12/dist-packages/papermill/execute.py", line 131, in execute_notebook
+    raise_for_execution_errors(nb, output_path)
+  File "/usr/local/lib/python3.12/dist-packages/papermill/execute.py", line 251, in raise_for_execution_errors
+    raise error
+papermill.exceptions.PapermillExecutionError: 
+---------------------------------------------------------------------------
+Exception encountered at "In [23]":
+---------------------------------------------------------------------------
+FileNotFoundError                         Traceback (most recent call last)
+/tmp/ipykernel_24/1965562819.py in <cell line: 0>()
+      1 rsna_phase('dinov2', 'START')
+----> 2 main()
+      3 log('done')
+      4 
+      5 _speed_dino_templates.clear()
+
+/tmp/ipykernel_24/533390026.py in main()
+     27     if pkg is None:
+     28         raise WeightsError('required public checkpoint manifest not found')
+---> 29     infer_from_package(pkg, DEVS[0])
+     30     # The parent validates the staged submission against test.csv.  Here the cohort is a fold of
+     31     # the TRAINING set, so that check cannot hold; the meaningful one is that the stage covered
+
+/tmp/ipykernel_24/6627649.py in infer_from_package(path, dev)
+    728             break
+    729     if _fold_csv is None:
+--> 730         raise FileNotFoundError('OOF run needs the published v52_oof.csv for the fold assignment')
+    731     _fold_df = pd.read_csv(_fold_csv, dtype={'StudyInstanceUID': str})
+    732     _want = _fold_df[_fold_df['fold'].astype(str) == str(_oof_fold)].StudyInstanceUID.tolist()
+
+FileNotFoundError: OOF run needs the published v52_oof.csv for the fold assignment
+
+/usr/local/lib/python3.12/dist-packages/mistune.py:435: SyntaxWarning: invalid escape sequence '\|'
+  cells[i][c] = re.sub('\\\\\|', '|', cell)
+/usr/local/lib/python3.12/dist-packages/nbconvert/filters/filter_links.py:36: SyntaxWarning: invalid escape sequence '\_'
+  text = re.sub(r'_', '\_', text) # Escape underscores in display text
+[NbConvertApp] Converting notebook __notebook__.ipynb to notebook
+[NbConvertApp] Writing 750292 bytes to __notebook__.ipynb
+[NbConvertApp] Converting notebook __notebook__.ipynb to html
+[NbConvertApp] Support files will be in __results___files/
+[NbConvertApp] Making directory __results___files
+[NbConvertApp] Making directory __results___files
+[NbConvertApp] Making directory __results___files
+[NbConvertApp] Making directory __results___files
+[NbConvertApp] Making directory __results___files
+[NbConvertApp] Making directory __results___files
+[NbConvertApp] Writing 1608142 bytes to __results__.html
