@@ -23,7 +23,7 @@ sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 import ens_experiment as E  # noqa: E402
 
 nb_path = pathlib.Path(sys.argv[1]) if len(sys.argv) > 1 else \
-    pathlib.Path("kernel-ens/rsna-knee-ensemble-v1.ipynb")
+    pathlib.Path("kernels/kernel-ens/rsna-knee-ensemble-v1.ipynb")
 nb = json.loads(nb_path.read_text(encoding="utf-8"))
 arms = E._arms_from_module(E.extract_module(nb))
 

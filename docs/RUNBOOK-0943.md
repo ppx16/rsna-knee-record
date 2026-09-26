@@ -54,7 +54,7 @@ refresh" — it is not. Unlike most of this toolchain's failures, this one is vi
 $env:PYTHONUTF8 = '1'
 $env:PYTHONIOENCODING = 'utf-8'
 $env:KAGGLE_API_TOKEN = [Environment]::GetEnvironmentVariable('KAGGLE_API_TOKEN','User')
-kaggle kernels push -p kernel-0943 -t 34200      # must print: Kernel version N successfully pushed
+kaggle kernels push -p kernels/kernel-0943 -t 34200   # must print: Kernel version N successfully pushed
 kaggle kernels status ppxl16/rsna-knee-0943      # expect KernelWorkerStatus.RUNNING
 ```
 `-t 34200` (9.5 h) because the notebook carries `TIME_BUDGET = 8.0 * 3600` internally and runs each
@@ -160,7 +160,7 @@ this week; if it cost ~16 h, we can fit at most one.
   submission arms, so the leaderboard will settle it.
 
 ```powershell
-kaggle kernels push -p <arm dir> -t 34200
+kaggle kernels push -p kernels/<arm dir> -t 34200
 # then repeat steps 3 and 4 for that arm
 ```
 

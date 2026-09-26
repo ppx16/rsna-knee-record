@@ -78,8 +78,8 @@ def slugify(t):
 
 
 def build(dst_name, kid, title, preset, fracture, role):
-    dst = ROOT / dst_name
-    dst.mkdir(exist_ok=True)
+    dst = ROOT / "kernels" / dst_name
+    dst.mkdir(parents=True, exist_ok=True)
     nb = json.loads(SRC_NB.read_text(encoding="utf-8", errors="replace"))
 
     n_preset = sum("".join(c.get("source", [])).count(PRESET_OLD)
@@ -162,7 +162,7 @@ def main():
     for d, kid, _, p, _, _ in VARIANTS:
         if a.only and d != a.only:
             continue
-        print("  kaggle kernels push -p %s -t 34200   # preset=%s" % (d, p))
+        print("  kaggle kernels push -p kernels/%s -t 34200   # preset=%s" % (d, p))
 
 
 if __name__ == "__main__":

@@ -42,7 +42,10 @@ import json
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-SRC = ROOT / "kernel-0943"
+KERNELS = ROOT / "kernels"
+SRC = KERNELS / "kernel-0943"
+if not SRC.is_dir():
+    SRC = ROOT / "kernel-0943"          # older flat layout, kept working
 SRC_NB = SRC / "rsna-knee-restructured-version-3.ipynb"
 NB_NAME = "rsna-knee-restructured-version-3.ipynb"
 
@@ -154,7 +157,7 @@ def main():
     ap.add_argument("--dir", default=None)
     args = ap.parse_args()
 
-    dst = ROOT / (args.dir or "kernel-a5oof")
+    dst = KERNELS / (args.dir or "kernel-a5oof")
     if not SRC_NB.is_file():
         raise SystemExit("!! missing %s" % SRC_NB)
     dst.mkdir(parents=True, exist_ok=True)

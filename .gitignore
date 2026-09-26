@@ -113,4 +113,10 @@ outputs/
 _d4_env/
 _coat_env/
 # generated from ens_experiment.py plus a base notebook; the .json configs are the record
-kernel-exp/**/*.ipynb
+# NOTE the leading `**/`: the 2026-09-26 reorganisation moved this directory under kernels/, and a
+# rule anchored at `kernel-exp/` silently stopped matching -- the symptom was twenty-four generated
+# notebooks reappearing as untracked.  Moving content can invalidate ignore rules, so this is
+# anchored loosely on purpose.
+**/kernel-exp/**/*.ipynb
+# local one-off pull directories, gathered here on 2026-09-26
+scratch/

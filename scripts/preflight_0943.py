@@ -72,7 +72,11 @@ def main():
     problems, warnings = [], []
 
     for d in a.dirs:
-        kdir = ROOT / d
+        # kernel directories live under kernels/ after the 2026-09-26 reorganisation; the flat
+        # location is still accepted so that an older checkout keeps working.
+        kdir = ROOT / "kernels" / d
+        if not kdir.is_dir():
+            kdir = ROOT / d
         print("=" * 72)
         print("### %s   (%s)" % (d, EXPECT.get(d, {}).get("note", "")))
         if not kdir.exists():

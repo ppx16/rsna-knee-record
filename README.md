@@ -21,19 +21,41 @@ producing three all-zero rows. All three are recorded, with the controls that no
 
 ---
 
+## Layout
+
+The repository root holds **ten entries**, and nothing else — a flat root with eighty-odd
+`kernel-*` directories made the history unreadable on GitHub, so the kernels now live under one
+directory and the one-off scrap under another.
+
+```
+README.md          entry point (this file)
+STATUS.md          live state, one screen, rewritten every session
+docs/              the written record
+kernels/           every Kaggle kernel we own, one directory each
+datasets/          dataset metadata we publish
+scripts/           every tool worth keeping
+state/             manifests, ledgers, logs, and FACTS.md
+downloads/         pulled artifacts (evidence only; see the note below)
+archive/           one-off scrap kept for provenance, not for use
+```
+
 ## Where things live
 
 | Path | What it is |
 |---|---|
 | `STATUS.md` | **Live state.** Rewritten every session. One screen. |
 | `state/FACTS.md` | **Atomic facts**, append-only, numbered `A1..An`. Each entry is one thing that is true and how it was measured. |
-| `HANDOFF.md` | **Narrative**, numbered `§N` sections. What was attempted, what happened, what it cost. |
-| `RUNBOOK-0943.md` | The copy-pasteable sequence for pushing and submitting the 0.943-line arms. Read it before touching the submission line. |
-| `PLAN-arm-image-metadata.md` | **Pre-registered plan** (not started) for the one live research direction: an arm that consumes images *and* acquisition metadata. Read §3's kill conditions before spending anything on it. |
+| `docs/HANDOFF.md` | **Narrative**, numbered `§N` sections. What was attempted, what happened, what it cost. |
+| `docs/RUNBOOK-0943.md` | The copy-pasteable sequence for pushing and submitting the 0.943-line arms. Read it before touching the submission line. |
+| `docs/PLAN-arm-image-metadata.md` | The pre-registered plan for an image+metadata arm. **Marked NOT RECOMMENDED** — kept as a design record because the falsification ladder and the permutation control are the right shape. |
 | `state/EXPERIMENTS.md` | Registered experiments and their verdicts, including the ones closed as negative. |
 | `scripts/` | Every tool worth keeping. Reusable analysis lives here, not in ad-hoc commands. |
-| `kernel-*/` | Kaggle kernels we own: the five 0.943-line arms, the A5-OOF kernel, the CPU site probe. |
+| `kernels/kernel-*/` | Kaggle kernels we own: the five 0.943-line arms, the A5-OOF kernel, the CPU site probe, and the retired CV/TPU/corpus families. |
 | `downloads/` | Pulled artifacts. **`*.npz` and `*.json` are tracked** (raw OOF predictions and audits are the evidence); weights, data blobs, logs and third-party notebooks are not. |
+
+⚠️ **Moving a kernel directory breaks every script that names it.** The builders and the preflight
+resolve `kernels/<name>` first and fall back to the old flat path, and the five arms were **rebuilt
+after the move and came back byte-identical** — that rebuild is the check that the paths are right.
 
 ## The recording protocol
 

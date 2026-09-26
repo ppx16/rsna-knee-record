@@ -23,7 +23,7 @@ PAT = re.compile(r"oof|out.?of.?fold|audit|fold|valid|holdout|\bcv\b", re.I)
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--meta", default="kernel-0943/kernel-metadata.json")
+    ap.add_argument("--meta", default="kernels/kernel-0943/kernel-metadata.json")
     args = ap.parse_args()
 
     try:
