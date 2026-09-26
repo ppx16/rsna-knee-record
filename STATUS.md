@@ -44,9 +44,10 @@ cannot be selected**, so each needs one submission (free, 5/day) before the dead
 
 | Thing | State |
 |---|---|
-| Submissions | **none pending** — all five read back, ledger is 32 rows |
-| Background jobs | **none running** (the score watcher `pwsh-2` exited) |
-| Accelerators | **idle, deliberately** — every reachable lever is closed below |
+| Submissions | **none pending** — all five read back, ledger is 32 rows. ⚠️ **`Remaining today: 0`** (5 used) ⇒ the two new arms below cannot be submitted — and therefore cannot be selected — until 00:00Z. |
+| `0943p` / `0943r` runs | **both `COMPLETE`, both passed the acceptance test** (20/20 fingerprints, fail-closed gate PASS, valid `submission.csv`, 0 tracebacks). `0943p`'s log even shows `outer CoAtNet weight per finding: flat 0.65` — the flattening demonstrably took effect. |
+| `kernel-tpu-d3f0` (DINOv3 fold 0) | **QUEUED** on TPU (queueing spends no quota; 0.00 h / 20 h used) |
+| Kept for later | the pilot's log also revealed that the `[config]` line prints `coatnet_w` but **not** `rad_cal_w` — so for `0943r` the log cannot certify its own change; the proof is the artifact + the code path instead (A134) |
 
 ## Closed — do not reopen without new evidence
 

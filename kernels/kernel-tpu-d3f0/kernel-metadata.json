@@ -1,0 +1,21 @@
+{
+  "id": "ppxl16/rsna-knee-tpu-d3f0",
+  "title": "RSNA knee tpu d3f0",
+  "code_file": "knee-mri-training-the-twelve-finding-model.py",
+  "language": "python",
+  "kernel_type": "script",
+  "is_private": true,
+  "enable_gpu": false,
+  "enable_internet": true,
+  "dataset_sources": [
+    "dreaddevelopment/knee-raptor-corpus",
+    "dreaddevelopment/knee-raptor-corpus-ext",
+    "flight0234/rsna-knee-hybrid-report-labels",
+    "ppxl16/rsna-knee-cv-folds"
+  ],
+  "competition_sources": [
+    "rsna-knee-abnormality-detection"
+  ],
+  "machine_shape": "Tpu1VmV38",
+  "enable_tpu": true
+}

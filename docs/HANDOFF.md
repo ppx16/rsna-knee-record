@@ -14281,3 +14281,64 @@ base 0.9171  ->  base + our arm 0.9190   delta +0.0019
 | **杀条件** | fold-0 **< 0.88** ⇒ DINOv3 在我们 harness 里没用，**停，不再花额度** |
 | **成功** | ≥0.90 ⇒ ① 补其余四折；② 用 `member_add_test.py` 在**更强**的基座上复测边际贡献；③ 只有前两步都过，才谈把臂接进提交 notebook |
 | ⚠️ **不预注册"一定提交"** | 把成员接进那条已验证的 notebook 是**独立的一步**（本仓反复被咬的正是这类改动：能通过所有门却悄悄降分），要单独评估 |
+
+---
+
+## 198. 两个新臂跑完并通过验收；以及一个"门看不见它认证的东西"的缺口（2026-09-26）
+
+用户报"跑完了一个"。查清是 **`kernel-0943r`**（`rad_cal_w` 0.40→0.00 那个臂）的**可见集运行**完成 ——
+**不是**提交、**也不是** TPU 上的 DINOv3 试点（`kernel-tpu-d3f0` 仍在 **QUEUED**）。三件事分开记。
+
+### 198.1 验收：两臂都过，逐条来自真实日志
+
+按 `docs/RUNBOOK-0943.md` 那套对 `state/logs_0943r.json`、`state/logs_0943p.json` 逐条 grep：
+
+| 检查 | `0943r`（cal 0.00） | `0943p`（parent） |
+|---|---|---|
+| `fingerprint matches within` | **20** ✅ | **20** ✅ |
+| `DINOv2 fail-closed gate PASS` | **1** ✅ | **1** ✅ |
+| `COMPLETE: /kaggle/working/submission.csv` | **1** ✅ | **1** ✅ |
+| `Traceback` / `WeightsError` | **0** ✅ | **0** ✅ |
+| `no fallback permitted` | **0** ✅ | **0** ✅ |
+
+配置行逐字：
+
+```
+0943r:  [config] preset=speedy a5_w=0.52 rad_alpha=0.55 k_eval=94
+        [config] outer CoAtNet weight per finding: {'ACL': 0.75, 'Medial Meniscus': 0.8,
+                 'Lateral Meniscus': 1.0, 'Lateral OA': 0.75, 'Fracture': 0.75}
+0943p:  [config] preset=parent a5_w=0.52 rad_alpha=0.55 k_eval=94
+        [config] outer CoAtNet weight per finding: flat 0.65
+```
+
+⭐ **`0943p` 那行是本轮最干净的证据**：`flat 0.65` 正是"完全没有 per-label 覆盖"时的打印形态
+⇒ **"完全拉平"确实生效**，不需要靠推断。
+
+### 198.2 ⚠️ 缺口：那行 `[config]` **不打印 `rad_cal_w`**
+
+`outer CoAtNet weight per finding` 打得很详细（连覆盖表都打），**但配置行里没有 `rad_cal_w`** ⇒
+**对 `0943r` 这种"改的是别的 config token"的臂，日志本身证明不了那个值。**
+本轮对 `0943r` 的证明链是**三层**，都不是日志：
+
+1. **产物字节级**：构建器对 `"rad_cal_w": 0.40` → `0.00` 做**"必须恰好匹配一次"**的断言；
+   实测三个产物 `kernel-0943`=**0.40** / `kernel-0943h`=**0.40** / `kernel-0943r`=**0.00**。
+2. **代码路径**：cell 43 逐字 `_cw = float(RUN['rad_cal_w'])`，紧接着
+   `values[:,j]=(1.0-_cw)*values[:,j]+_cw*adjusted[:,j]` ⇒ 这个 config 值**确实驱动那个混合**。
+3. **运行跑通**：20/20 指纹 + 门 PASS + 合法 `submission.csv`。
+
+⇒ **要日志级证据，就得在 notebook 里加一行 print —— 而那会改动一条已验证的 notebook**（本仓为此付过学费：
+A79 的假 FAIL、A87 的假 PASS、A103 的假"已清理"）。判断是**不值得**：加 print 换来的是一行更漂亮的日志，
+代价是重新验证一条流水线。但缺口必须写下来，因为它是**同一家族**的问题：
+**一道门如果不看它认证的那个东西，它的 PASS 就不是证据。**
+
+### 198.3 额度：今天提交不了
+
+`kaggle competitions submission-limits -c rsna-knee-abnormality-detection` 的权威读数：
+`Submissions today: 5` · `Lifetime submissions: 32` · **`Remaining today: 0`**。
+⇒ **两个新臂现在无法被提交 ⇒ 也就无法被勾选**。要进终局候选，需在 **00:00Z 复位后各提交一次**
+（免费、不耗 GPU、每天 5 槽）。
+
+### 198.4 TPU 试点仍在排队
+
+`kernel-tpu-d3f0`（DINOv3 fold 0）状态 **QUEUED**，TPU 额度 **0.00h/20h**（排队不扣额度）。
+按用户的资源政策，不着急的实验放 TPU 排队正是预期行为；**杀条件（fold-0 < 0.88 就停）在 §197.5 已预先登记**。
