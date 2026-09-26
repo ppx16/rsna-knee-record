@@ -40,68 +40,67 @@ Where a series is shorter than its slot, the sampler repeats slices, so several 
 cuda:0 probe PASS (compute 7.5)
 cuda:1 probe PASS (compute 7.5)
 devices: ['cuda:0', 'cuda:1']
-[startup] imports+GPU preflight: 5.35s
+[startup] imports+GPU preflight: 11.11s
 [    0.1s] input root: /kaggle/input/competitions/rsna-knee-abnormality-detection
-[startup] competition-root preflight: 0.07s
+[startup] competition-root preflight: 0.08s
 [    0.2s] memory: 29.5 GB available, 13.3 GB to the cache; sizing for 4407 train + 1322 test studies -> 1 group(s) of 3 = 3 slices per slot
 [    0.2s] cache layout: 1 groups x 3 slices = 3 per slot
-[phase] {"a5_without_matching_acquisition": 0, "elapsed_seconds": 0.8059158325195312, "gpus": [{"allocated_bytes": 0, "id": 0, "reserved_bytes": 0}, {"allocated_bytes": 0, "id": 1, "reserved_bytes": 0}], "max_rss_kib": 1092896, "memory.current": "1659506688", "memory.max": "32212254720", "missing_fluid_flags": 0, "stage": "input_metadata", "status": "COMPLETE"}
-[phase] {"elapsed_seconds": 1.6806831359863281, "gpus": [{"allocated_bytes": 0, "id": 0, "reserved_bytes": 0}, {"allocated_bytes": 0, "id": 1, "reserved_bytes": 0}], "max_rss_kib": 1092896, "memory.current": "1676271616", "memory.max": "32212254720", "stage": "dinov2", "status": "START"}
+[phase] {"a5_without_matching_acquisition": 0, "elapsed_seconds": 0.9961717128753662, "gpus": [{"allocated_bytes": 0, "id": 0, "reserved_bytes": 0}, {"allocated_bytes": 0, "id": 1, "reserved_bytes": 0}], "max_rss_kib": 1092796, "memory.current": "1659817984", "memory.max": "32212254720", "missing_fluid_flags": 0, "stage": "input_metadata", "status": "COMPLETE"}
+[phase] {"elapsed_seconds": 1.7551217079162598, "gpus": [{"allocated_bytes": 0, "id": 0, "reserved_bytes": 0}, {"allocated_bytes": 0, "id": 1, "reserved_bytes": 0}], "max_rss_kib": 1092796, "memory.current": "1676800000", "memory.max": "32212254720", "stage": "dinov2", "status": "START"}
 [    1.8s] weights package: 20 member(s) from /kaggle/input/datasets/pilkwang/rsna-knee-weights; 2 device(s)
-[    1.8s] OOF: fold assignment from /kaggle/input/datasets/antoinegg1/rsna-knee-e9-radimagenet-heads-v15/v52_oof.csv
-[    1.8s] OOF: fold 0 -> 48 training studies (limit=48)
+[    1.9s] OOF: fold assignment from /kaggle/input/datasets/antoinegg1/rsna-knee-e9-radimagenet-heads-v15/v52_oof.csv
+[    1.9s] OOF: fold 0 -> 48 training studies (limit=48)
 [    1.9s] OOF: 275 series over 48 studies
 [    2.8s] test header pass: 275 series
 [    2.8s] decode group 1/1: 336px x 12 slices, crop 130.0 mm -> 20 member(s)
-[    3.1s] test laterality: 22 from the tag, 25 from geometry, 1 unresolved; tag and geometry disagree on 0 (0.0% of the tagged)
-[    3.1s] test g1: 3 studies, 0 slot-series, 0.02 GiB pixels
-[    3.1s] test g1: 3 study(ies) with no series matching this layout kept as all-zero masked rows (parent policy): ['1.2.826.0.1.3680043.8.498.10047035057544427318018579121635276191', '1.2.826.0.1.3680043.8.498.10062861783145312629332250977456991776', '1.2.826.0.1.3680043.8.498.10067514707072572280263481548497591402']
-[    3.1s] test g1: COMPLETE 0/0; reused ordering for 0 series
-[   26.0s] backbone: 12 blocks, last 6 trainable (10.7M params), feature dim 768
-[   27.1s] e5427d6c21: fingerprint matches within 2.8e-06
-[   28.5s] ea3fbf6edf: fingerprint matches within 3.8e-06
-[   30.0s] 013dc75703: fingerprint matches within 3.3e-06
-[   31.3s] 8baecb9d1b: fingerprint matches within 2.4e-06
-[   32.6s] 44128e3ff3: fingerprint matches within 4.3e-06
-[   33.9s] ed427aa10a: fingerprint matches within 4.6e-06
-[   35.3s] 3d1f4c48fc: fingerprint matches within 1.3e-06
-[   36.5s] 8476b29285: fingerprint matches within 4.4e-06
-[   37.8s] 7f8321affc: fingerprint matches within 2.9e-06
-[   39.2s] b7c37cc80e: fingerprint matches within 1.1e-06
-[   40.6s] d47313baef: fingerprint matches within 2.1e-06
-[   42.0s] 5f8ba4c5ea: fingerprint matches within 3.3e-06
-[   43.6s] 2f7e785e82: fingerprint matches within 1.1e-06
-[   44.8s] 44bc3c6f14: fingerprint matches within 3.8e-06
-[   46.1s] 84079fe8cb: fingerprint matches within 1.2e-06
-[   47.4s] 2dce50ebd9: fingerprint matches within 3.8e-06
-[   48.6s] 91f171fe6f: fingerprint matches within 2.6e-06
-[   49.9s] 72081758ce: fingerprint matches within 2.9e-06
-[   51.2s] 1e553ba481: fingerprint matches within 1.7e-06
-[   52.5s] f335c812fe: fingerprint matches within 2.9e-06
-[   56.3s] shared first 6 DINOv2 blocks for 20 members; original views computed once per 2 device(s)
-[   56.3s]   banked e5427d6c21 fold 2 (10 window(s); 1 member(s)
-[   56.3s]   banked d47313baef fold 2 (10 window(s); 2 member(s)
-[   56.3s]   banked ea3fbf6edf fold 2 (10 window(s); 3 member(s)
-[   56.3s]   banked 5f8ba4c5ea fold 2 (10 window(s); 4 member(s)
-[   56.3s]   banked 013dc75703 fold 4 (10 window(s); 5 member(s)
-[   56.3s]   banked 2f7e785e82 fold 4 (10 window(s); 6 member(s)
-[   56.3s]   banked 8baecb9d1b fold 4 (10 window(s); 7 member(s)
-[   56.3s]   banked 44bc3c6f14 fold 0 (10 window(s); 8 member(s)
-[   56.3s]   banked 44128e3ff3 fold 0 (10 window(s); 9 member(s)
-[   56.3s]   banked 84079fe8cb fold 3 (10 window(s); 10 member(s)
-[   56.3s]   banked ed427aa10a fold 0 (10 window(s); 11 member(s)
-[   56.3s]   banked 2dce50ebd9 fold 0 (10 window(s); 12 member(s)
-[   56.3s]   banked 3d1f4c48fc fold 4 (10 window(s); 13 member(s)
-[   56.3s]   banked 91f171fe6f fold 1 (10 window(s); 14 member(s)
-[   56.3s]   banked 8476b29285 fold 1 (10 window(s); 15 member(s)
-[   56.3s]   banked 72081758ce fold 3 (10 window(s); 16 member(s)
-[   56.3s]   banked 7f8321affc fold 3 (10 window(s); 17 member(s)
-[   56.3s]   banked 1e553ba481 fold 1 (10 window(s); 18 member(s)
-[   56.3s]   banked b7c37cc80e fold 3 (10 window(s); 19 member(s)
-[   56.3s]   banked f335c812fe fold 1 (10 window(s); 20 member(s)
-[   56.6s] DINOv2 fail-closed gate PASS: 20/20 fingerprints and members
-[   56.6s] submission.csv = exact no-jitter public-frontier rank mean of 20 member(s); (48, 13)
-[phase] {"elapsed_seconds": 56.61580014228821, "error": "name 'test_df' is not defined", "error_type": "NameError", "gpus": [{"allocated_bytes": 9568256, "id": 0, "reserved_bytes": 23068672}, {"allocated_bytes": 9568256, "id": 1, "reserved_bytes": 195035136}], "max_rss_kib": 3201768, "memory.current": "6159716352", "memory.max": "32212254720", "stage": "dinov2", "status": "FAILED"}
+[    3.0s] test laterality: 22 from the tag, 25 from geometry, 1 unresolved; tag and geometry disagree on 0 (0.0% of the tagged)
+[    3.0s] test g1: 48 studies, 227 slot-series, 0.36 GiB pixels
+[   33.3s] test g1: COMPLETE 227/227; reused ordering for 0 series
+[   74.3s] backbone: 12 blocks, last 6 trainable (10.7M params), feature dim 768
+[   75.9s] e5427d6c21: fingerprint matches within 2.8e-06
+[   77.5s] ea3fbf6edf: fingerprint matches within 3.8e-06
+[   78.8s] 013dc75703: fingerprint matches within 3.3e-06
+[   80.4s] 8baecb9d1b: fingerprint matches within 2.4e-06
+[   81.9s] 44128e3ff3: fingerprint matches within 4.3e-06
+[   83.3s] ed427aa10a: fingerprint matches within 4.6e-06
+[   84.7s] 3d1f4c48fc: fingerprint matches within 1.3e-06
+[   86.0s] 8476b29285: fingerprint matches within 4.4e-06
+[   87.5s] 7f8321affc: fingerprint matches within 2.9e-06
+[   88.9s] b7c37cc80e: fingerprint matches within 1.1e-06
+[   90.5s] d47313baef: fingerprint matches within 2.1e-06
+[   91.9s] 5f8ba4c5ea: fingerprint matches within 3.3e-06
+[   93.3s] 2f7e785e82: fingerprint matches within 1.1e-06
+[   94.6s] 44bc3c6f14: fingerprint matches within 3.8e-06
+[   96.0s] 84079fe8cb: fingerprint matches within 1.2e-06
+[   97.6s] 2dce50ebd9: fingerprint matches within 3.8e-06
+[   98.9s] 91f171fe6f: fingerprint matches within 2.6e-06
+[  100.3s] 72081758ce: fingerprint matches within 2.9e-06
+[  101.6s] 1e553ba481: fingerprint matches within 1.7e-06
+[  102.9s] f335c812fe: fingerprint matches within 2.9e-06
+[  154.4s] shared first 6 DINOv2 blocks for 20 members; original views computed once per 2 device(s)
+[  154.4s]   banked e5427d6c21 fold 2 (10 window(s); 1 member(s)
+[  154.4s]   banked d47313baef fold 2 (10 window(s); 2 member(s)
+[  154.4s]   banked ea3fbf6edf fold 2 (10 window(s); 3 member(s)
+[  154.4s]   banked 5f8ba4c5ea fold 2 (10 window(s); 4 member(s)
+[  154.4s]   banked 013dc75703 fold 4 (10 window(s); 5 member(s)
+[  154.4s]   banked 2f7e785e82 fold 4 (10 window(s); 6 member(s)
+[  154.4s]   banked 8baecb9d1b fold 4 (10 window(s); 7 member(s)
+[  154.4s]   banked 44bc3c6f14 fold 0 (10 window(s); 8 member(s)
+[  154.4s]   banked 44128e3ff3 fold 0 (10 window(s); 9 member(s)
+[  154.4s]   banked 84079fe8cb fold 3 (10 window(s); 10 member(s)
+[  154.4s]   banked ed427aa10a fold 0 (10 window(s); 11 member(s)
+[  154.4s]   banked 2dce50ebd9 fold 0 (10 window(s); 12 member(s)
+[  154.4s]   banked 3d1f4c48fc fold 4 (10 window(s); 13 member(s)
+[  154.4s]   banked 91f171fe6f fold 1 (10 window(s); 14 member(s)
+[  154.4s]   banked 8476b29285 fold 1 (10 window(s); 15 member(s)
+[  154.4s]   banked 72081758ce fold 3 (10 window(s); 16 member(s)
+[  154.4s]   banked 7f8321affc fold 3 (10 window(s); 17 member(s)
+[  154.4s]   banked 1e553ba481 fold 1 (10 window(s); 18 member(s)
+[  154.4s]   banked b7c37cc80e fold 3 (10 window(s); 19 member(s)
+[  154.4s]   banked f335c812fe fold 1 (10 window(s); 20 member(s)
+[  154.7s] DINOv2 fail-closed gate PASS: 20/20 fingerprints and members
+[  154.7s] submission.csv = exact no-jitter public-frontier rank mean of 20 member(s); (48, 13)
+[phase] {"elapsed_seconds": 154.73710656166077, "error": "name 'test_df' is not defined", "error_type": "NameError", "gpus": [{"allocated_bytes": 9568256, "id": 0, "reserved_bytes": 23068672}, {"allocated_bytes": 9568256, "id": 1, "reserved_bytes": 195035136}], "max_rss_kib": 4167116, "memory.current": "11584004096", "memory.max": "32212254720", "stage": "dinov2", "status": "FAILED"}
 Traceback (most recent call last):
   File "<string>", line 1, in <module>
   File "/usr/local/lib/python3.12/dist-packages/papermill/execute.py", line 131, in execute_notebook
@@ -134,7 +133,7 @@ NameError: name 'test_df' is not defined
 /usr/local/lib/python3.12/dist-packages/nbconvert/filters/filter_links.py:36: SyntaxWarning: invalid escape sequence '\_'
   text = re.sub(r'_', '\_', text) # Escape underscores in display text
 [NbConvertApp] Converting notebook __notebook__.ipynb to notebook
-[NbConvertApp] Writing 754693 bytes to __notebook__.ipynb
+[NbConvertApp] Writing 755440 bytes to __notebook__.ipynb
 [NbConvertApp] Converting notebook __notebook__.ipynb to html
 [NbConvertApp] Support files will be in __results___files/
 [NbConvertApp] Making directory __results___files
@@ -143,4 +142,4 @@ NameError: name 'test_df' is not defined
 [NbConvertApp] Making directory __results___files
 [NbConvertApp] Making directory __results___files
 [NbConvertApp] Making directory __results___files
-[NbConvertApp] Writing 1614455 bytes to __results__.html
+[NbConvertApp] Writing 1615740 bytes to __results__.html

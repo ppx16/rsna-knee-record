@@ -149,14 +149,23 @@ NEW_STUDIES = """    # ---- OOF study selection: this kernel's entire reason to 
 # `rsna_phase('dinov2', 'START')`).  Requiring a "\n" here silently matched zero times.
 OLD_MAIN_VALIDATE = ("    _v37_validate_submission('_pipeline_stage.csv', "
                      "pd.read_csv(ROOT / 'test.csv'), 'public frontier')")
-NEW_MAIN_VALIDATE = """    # The parent validates the staged submission against test.csv.  Here the cohort is a fold of
-    # the TRAINING set, so that check cannot hold; the meaningful one is that the stage covered
-    # exactly the studies we asked for.
+NEW_MAIN_VALIDATE = """    # The parent validates the staged submission against test.csv.  Here the cohort is a fold of the
+    # TRAINING set, so that check cannot hold; the meaningful one is that the stage covered exactly
+    # the studies we asked for.
+    # ⚠️ The cohort must come from `_RSNA_OOF_ONLY`, which `infer_from_package` set as a global.
+    # `test_df` is a LOCAL of that function and is not visible here -- referencing it cost a whole
+    # smoke run (NameError after 155 s of correct work).
+    _want_ids = set(globals().get('_RSNA_OOF_ONLY') or ())
+    if not _want_ids:
+        # Refuse to pass vacuously: an empty cohort would make every comparison below trivially true,
+        # which is the "gate that cannot see" failure this project has already paid for twice.
+        raise RuntimeError('OOF coverage check has no cohort; refusing to pass vacuously')
     _staged = pd.read_csv(Path('/kaggle/working/_pipeline_stage.csv'),
                           dtype={'StudyInstanceUID': str})
-    _miss = set(test_df['StudyInstanceUID']) - set(_staged['StudyInstanceUID'])
+    _miss = _want_ids - set(_staged['StudyInstanceUID'])
     if _miss:
-        raise RuntimeError('OOF stage missed %d of the requested studies' % len(_miss))
+        raise RuntimeError('OOF stage missed %d of the %d requested studies'
+                           % (len(_miss), len(_want_ids)))
     log('OOF: E2 stage covered %d studies; per-member predictions are in '
         '/kaggle/working/diagnostics/' % len(_staged))
 """
