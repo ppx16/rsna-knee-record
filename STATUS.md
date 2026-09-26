@@ -28,15 +28,27 @@ gross failure. Today's quota of 5 submissions is spent; it refreshes at 00:00Z.
 
 ## Next actions, in order
 
-1. ⚠️ **`a5_w` and `rad_alpha` are still not testable**, for a new but equally hard reason (A105):
-   both are blends *against stage 1*, and stage 1 is the arm measured to be leaky. The A5 OOF is
-   genuine but cannot unlock them alone. Unlocking them needs a **legitimate stage-1 OOF** — i.e.
-   retraining the 20 members with a real holdout — far more expensive than this run.
-2. ✅ **What the A5 OOF does enable, free and now:** use it as a **reference instrument** to place our
-   own trained arms on the same studies and the same report labels. Our best arm `cn0` has OOF 0.8623;
-   A5 scores 0.9082 held-out. That gap answers whether the training line can still compete at all.
-3. **Fold 4 caveat:** its held-out gap is ~0 while the other four are −0.026 to −0.049. Report results
+1. ✅ **Done — our best arm measured against A5 on a genuinely common held-out set (A106):** 0.8731
+   against 0.9143, a gap of −0.0412 with a CI that excludes zero. That is below the archive's own
+   ~0.90 member threshold, so **the training line is closed by measurement**, not assumption.
+2. 🔴 **Closed — the champion-folds route (A107, A108).** The checkpoints do carry a config and a
+   fingerprint, but in a **different schema** (`lat_from_geometry`, `pad_short_fov`, `n_group`,
+   `layer_scale1/2`) that this pipeline does not implement, and `slices`/`band` are genuinely absent.
+   Forcing it would read their weights against the wrong geometry, and **neither gate we have can see
+   that**: `check_fingerprint` depends only on architecture and `img`, and the fold test validates the
+   weights' fold property. Wrong geometry would pass both and look reasonable.
+3. ⏳ **Read the five scores** (watcher `pwsh-2`). They cannot rank the arms; their job is to confirm
+   the 0.943 recipe reproduces and to catch a gross failure.
+4. **Final two slots** from the ledger (`scripts/lb_ledger.py`), once the scores land.
+5. **Fold 4 caveat:** its held-out gap is ~0 while the other four are −0.026 to −0.049. Report results
    with and without it, or use folds 0–3 only.
+
+## Where the remaining weeks should go
+
+Every lever we can reach is now closed by measurement. What is left is not a search for a new method
+but the discipline of not wasting the ones already banked: read the scores back, choose the final two
+submissions from the ledger rather than from memory, and keep the low-frequency watch on the public
+frontier in case someone publishes a genuinely new lever.
 
 ## Closed — do not reopen without new evidence
 
