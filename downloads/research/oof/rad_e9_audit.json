@@ -1,0 +1,180 @@
+{
+  "available_at_start_seconds": 31317.29115390778,
+  "base_oof_sha256": "62d47ba4c0c8347b5b24e7fd2aa517aae0fd6d4656fd5d829fd3a50f0159909c",
+  "blend_contract": "rank columns independently, then 80% E2 plus 20% RadImageNet",
+  "elapsed_before_v52_seconds": 74.70884609222412,
+  "encoder": "RadImageNet ResNet-50 official PyTorch release",
+  "encoder_license": "CC-BY-NC-SA-4.0 (Kaggle-hosted weight metadata)",
+  "encoder_sha256": "08629f7e7bd3e29b8ee9522ca3f65ce4d010a7ddf74f0ea3c7e3f3d0bbab0734",
+  "encoder_source_commit": "0ce16f7375db4236e646829d1eca61cdb4282133",
+  "evidence_boundary": "All OOF values are local diagnostics on 58 official image labels; they are not Kaggle competition scores. E2 remains the primary unless strict artifact, OOF, inference, and submission gates all pass.",
+  "head_count": 5,
+  "oof": {
+    "e2_macro_auc": 0.8400089312435326,
+    "final_alpha": 0.2,
+    "final_descriptive_macro_auc": 0.8515783449508936,
+    "full_grid_macro_auc": {
+      "0.000": 0.8400089312435326,
+      "0.025": 0.8402197010195196,
+      "0.050": 0.8420446750066958,
+      "0.100": 0.8454057424539977,
+      "0.150": 0.8486695269267854,
+      "0.200": 0.8515783449508936,
+      "0.250": 0.8542150211379038
+    },
+    "gold_fold_counts": {
+      "0": 10,
+      "1": 15,
+      "2": 16,
+      "3": 9,
+      "4": 8
+    },
+    "nested_blend_macro_auc": 0.8542150211379038,
+    "outer_fold_choices": [
+      0.25,
+      0.25,
+      0.25,
+      0.25,
+      0.25
+    ],
+    "outer_fold_penalized_train_scores": [
+      [
+        0.8629201037894315,
+        0.8628213439588204,
+        0.8641831441953002,
+        0.8658260444123891,
+        0.8675771953993456,
+        0.8686161678629174,
+        0.8697797405334837
+      ],
+      [
+        0.8323397001006146,
+        0.8322782370538577,
+        0.8342555855628108,
+        0.8369261770017784,
+        0.8400784134638772,
+        0.8413503461228291,
+        0.8426805006320911
+      ],
+      [
+        0.8322944954894865,
+        0.8324658593267986,
+        0.833532825893092,
+        0.8353672524552483,
+        0.8378009879381214,
+        0.8403338573775004,
+        0.8438037621302276
+      ],
+      [
+        0.8208989312727623,
+        0.8207926094336817,
+        0.8219690142868108,
+        0.8258993391187588,
+        0.8295953996520106,
+        0.8325101622020984,
+        0.8357128662185204
+      ],
+      [
+        0.8474833140787089,
+        0.8475226659305608,
+        0.8497328881522962,
+        0.8531922362481573,
+        0.8568247356931568,
+        0.8605621707118417,
+        0.8630166843694806
+      ]
+    ],
+    "per_target": {
+      "ACL": {
+        "blend_auc": 0.8762254901960784,
+        "blend_delta": 0.007352941176470562,
+        "e2_auc": 0.8688725490196079,
+        "radimagenet_auc": 0.8651960784313725
+      },
+      "Baker's": {
+        "blend_auc": 0.9565217391304348,
+        "blend_delta": 0.0018115942028985588,
+        "e2_auc": 0.9547101449275363,
+        "radimagenet_auc": 0.8931159420289856
+      },
+      "Contusion": {
+        "blend_auc": 0.8603238866396761,
+        "blend_delta": 0.018218623481781382,
+        "e2_auc": 0.8421052631578947,
+        "radimagenet_auc": 0.9014844804318487
+      },
+      "Effusion": {
+        "blend_auc": 0.9478260869565218,
+        "blend_delta": 0.00496894409937898,
+        "e2_auc": 0.9428571428571428,
+        "radimagenet_auc": 0.9229813664596274
+      },
+      "Fracture": {
+        "blend_auc": 0.8881944444444444,
+        "blend_delta": -0.006249999999999978,
+        "e2_auc": 0.8944444444444444,
+        "radimagenet_auc": 0.8083333333333335
+      },
+      "Lateral Meniscus": {
+        "blend_auc": 0.668944099378882,
+        "blend_delta": 0.026708074534161463,
+        "e2_auc": 0.6422360248447205,
+        "radimagenet_auc": 0.7776397515527951
+      },
+      "Lateral OA": {
+        "blend_auc": 0.7243713733075435,
+        "blend_delta": 0.01644100580270791,
+        "e2_auc": 0.7079303675048356,
+        "radimagenet_auc": 0.7911025145067698
+      },
+      "MCL": {
+        "blend_auc": 0.9002267573696145,
+        "blend_delta": 0.015873015873015817,
+        "e2_auc": 0.8843537414965987,
+        "radimagenet_auc": 0.891156462585034
+      },
+      "Medial Meniscus": {
+        "blend_auc": 0.859375,
+        "blend_delta": 0.009615384615384581,
+        "e2_auc": 0.8497596153846154,
+        "radimagenet_auc": 0.8137019230769231
+      },
+      "Medial OA": {
+        "blend_auc": 0.9534883720930232,
+        "blend_delta": 0.0031007751937983663,
+        "e2_auc": 0.9503875968992248,
+        "radimagenet_auc": 0.9457364341085271
+      },
+      "PF OA": {
+        "blend_auc": 0.814028314028314,
+        "blend_delta": 0.013513513513513375,
+        "e2_auc": 0.8005148005148006,
+        "radimagenet_auc": 0.8314028314028313
+      },
+      "Synovitis": {
+        "blend_auc": 0.7694145758661888,
+        "blend_delta": 0.02747909199522114,
+        "e2_auc": 0.7419354838709676,
+        "radimagenet_auc": 0.8100358422939068
+      }
+    },
+    "positive_outer_folds": 5,
+    "rad_gold_macro_auc": 0.8543239133509962,
+    "rows": 58,
+    "selection_supported": false,
+    "target_regressions": {
+      "Fracture": -0.006249999999999978
+    },
+    "weak_macro_auc": 0.8278261335825697
+  },
+  "parent": "E2 captured 20-member DINOv2 rank ensemble",
+  "pixel_rules": {
+    "decode_fill": "zero",
+    "lat": "corner_x",
+    "order": "dominant_axis",
+    "slot_fallback": true
+  },
+  "primary_sha256": "f9fb57b7bac8489a5d5285b3984b06df57f142572be6417eac6341c43e96707a",
+  "status": "OOF_REJECTED_E2_PRESERVED",
+  "train_available_slice_tokens": 101416
+}

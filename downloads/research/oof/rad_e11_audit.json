@@ -1,0 +1,154 @@
+{
+  "availability": {
+    "Axial_FS": {
+      "fraction": 0.9857045609257998,
+      "series": 4702,
+      "studies": 4344
+    },
+    "Axial_NOFS": {
+      "fraction": 0.20943952802359883,
+      "series": 1196,
+      "studies": 923
+    },
+    "Coronal_FS": {
+      "fraction": 0.9559791241207171,
+      "series": 4597,
+      "studies": 4213
+    },
+    "Coronal_NOFS": {
+      "fraction": 0.7721806217381438,
+      "series": 4012,
+      "studies": 3403
+    },
+    "Sagittal_FS": {
+      "fraction": 0.9348763331064216,
+      "series": 4635,
+      "studies": 4120
+    },
+    "Sagittal_NOFS": {
+      "fraction": 0.9652825051055139,
+      "series": 5229,
+      "studies": 4254
+    }
+  },
+  "available_at_start_seconds": 31315.740268230442,
+  "blend_vs_e2": {
+    "0.20": {
+      "macro": 0.8502215519602023,
+      "per_target_delta": {
+        "ACL": 0.02450980392156854,
+        "Baker's": -0.0036231884057971175,
+        "Contusion": 0.018893387314440013,
+        "Effusion": -0.007453416149068359,
+        "Fracture": -0.001388888888888884,
+        "Lateral Meniscus": 0.009937888198757738,
+        "Lateral OA": 0.03384912959381048,
+        "MCL": -0.01587301587301604,
+        "Medial Meniscus": 0.007211538461538547,
+        "Medial OA": 0.010852713178294504,
+        "PF OA": 0.01994851994851976,
+        "Synovitis": 0.025686977299880565
+      }
+    },
+    "0.35": {
+      "macro": 0.8539373626200404,
+      "per_target_delta": {
+        "ACL": 0.03676470588235292,
+        "Baker's": -0.0018115942028985588,
+        "Contusion": 0.037112010796221395,
+        "Effusion": -0.02111801242236022,
+        "Fracture": -0.009722222222222188,
+        "Lateral Meniscus": 0.006832298136645987,
+        "Lateral OA": 0.05029013539651839,
+        "MCL": -0.04081632653061229,
+        "Medial Meniscus": 0.009615384615384581,
+        "Medial OA": 0.018604651162790642,
+        "PF OA": 0.035392535392535285,
+        "Synovitis": 0.04599761051373963
+      }
+    },
+    "0.50": {
+      "macro": 0.8549398989320861,
+      "per_target_delta": {
+        "ACL": 0.049632352941176516,
+        "Baker's": -0.0045289855072464524,
+        "Contusion": 0.04993252361673417,
+        "Effusion": -0.04037267080745344,
+        "Fracture": -0.01805555555555549,
+        "Lateral Meniscus": 0.011801242236024745,
+        "Lateral OA": 0.0667311411992263,
+        "MCL": -0.08276643990929722,
+        "Medial Meniscus": 0.008413461538461675,
+        "Medial OA": 0.02248062015503871,
+        "PF OA": 0.05019305019305009,
+        "Synovitis": 0.06571087216248517
+      }
+    }
+  },
+  "correlation_with_parent_arm": {
+    "ACL": 0.7122642960410962,
+    "Baker's": 0.6341320864991233,
+    "Contusion": 0.8049155618444123,
+    "Effusion": 0.7562521147989788,
+    "Fracture": 0.7425943584853424,
+    "Lateral Meniscus": 0.6761512196622476,
+    "Lateral OA": 0.7371804730997567,
+    "MCL": 0.39665938663139433,
+    "Medial Meniscus": 0.7333046233350765,
+    "Medial OA": 0.731705066289335,
+    "PF OA": 0.7803685133347686,
+    "Synovitis": 0.7068504106555106
+  },
+  "e2_base_gold_macro": 0.8400089312435326,
+  "elapsed_before_e11_seconds": 76.25973176956177,
+  "encoder": "RadImageNet ResNet-50 official PyTorch release",
+  "encoder_license": "CC-BY-NC-SA-4.0 (Kaggle-hosted weight metadata)",
+  "encoder_sha256": "08629f7e7bd3e29b8ee9522ca3f65ce4d010a7ddf74f0ea3c7e3f3d0bbab0734",
+  "evidence_boundary": "Every value here is a local out-of-fold diagnostic on 58 official image labels. It is not a Kaggle score, and this mode never replaces the parent submission under any outcome.",
+  "gold_oof_auc": 0.8256384321234712,
+  "heads_sha256": "df98518d0a8f7cc506b4b806da03c3fca18c8f8f743e813c5401759b45e0f1fe",
+  "mode": "e11-diverse-recipe-training-only",
+  "oof_sha256": "f5415485f57103fe86370e3d4bba420485a7497ef199d40545a20f6e53a0f0e2",
+  "overall_fill": 0.7204447388648987,
+  "primary_sha256": "f9fb57b7bac8489a5d5285b3984b06df57f142572be6417eac6341c43e96707a",
+  "recipe": {
+    "cache_slices": 8,
+    "crop_mm": 130.0,
+    "differs_from_parent_arm": "parent reads 3 fat-suppressed slots at full frame; this reads 3 non-suppressed slots plus 1 suppressed anchor at a 130 mm physical crop",
+    "img": 224,
+    "slots": [
+      [
+        "SAG_NOFS",
+        "Sagittal",
+        null,
+        false
+      ],
+      [
+        "COR_NOFS",
+        "Coronal",
+        null,
+        false
+      ],
+      [
+        "AX_NOFS",
+        "Axial",
+        null,
+        false
+      ],
+      [
+        "SAG_FS",
+        "Sagittal",
+        null,
+        true
+      ]
+    ]
+  },
+  "slot_fill": {
+    "AX_NOFS": 0.20943953096866608,
+    "COR_NOFS": 0.7721806168556213,
+    "SAG_FS": 0.9348763227462769,
+    "SAG_NOFS": 0.9652824997901917
+  },
+  "status": "E11_TRAINED_E2_PRESERVED",
+  "weak_oof_auc": 0.8223240882910581
+}
