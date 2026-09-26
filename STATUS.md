@@ -95,9 +95,23 @@ out of `public20`'s weight, leaving A5 untouched.** So the arm displaces the fro
 which is exactly what `arm_parity.py` predicted from the other direction.
 
 ⚠️ One fold, 870 studies, one arm; the base is still 0.917, not the parent's ~0.94. And **this does not yet
-mean score** — converting it requires putting our member into the validated submission notebook, which is a
-separate, risky step this repo has been burned by before. **The bottleneck has moved from "is training
-worth it" (now measured yes) to "can it be integrated".**
+mean score** — converting it requires putting our member into the validated submission notebook.
+
+**Scoping that step (§200) changed the picture: the mechanics are easy, the *quality* is the blocker.**
+The submission notebook adopts **each member's own config** (`adopt_config_globals(cfg)`, per-member
+`crop_mm`/`band`/`rules`), and our manifest is in that same schema with the same six slot names and the same
+`RULES_NATIVE` — so a compatible member is close to drop-in, not a new inference path. But:
+
+| | |
+|---|---|
+| `cn0` — the arm that produced **+0.0028** | ⚠️ **its weights are not ours to ship** (no `cn*` checkpoint anywhere; it was trained on the rented box, now off) ⇒ **that measurement proves the *mechanism*, not a shippable gain** |
+| the 22 fine-tuned checkpoints on disk | all below the frontier's own seeds (best available `r3362` 0.8663 vs their 0.868–0.870) ⇒ adding them would be a negative — `cvg0` already demonstrated that |
+| the published `rsna-knee-train-weights` | 5 × DINOv2-small@336 @ crop 130 mm, 20 epochs; their blend scored LB 0.842 on 09-06 |
+
+⇒ **A better member whose weights we hold is now the only thing that converts this line into score — which
+makes the DINOv3 pilot the linchpin** (its checkpoint lands in the kernel's `/kaggle/working`).
+⭐ And one cheap unblock, if you want it: **power the AutoDL box on for ~10 minutes** to pull `cn0`/`d64cn0`'s
+checkpoints (≈ ¥0.5 at ¥2.88/h) — *if they still exist*; only the corpus is confirmed deleted.
 
 ⇒ **The live experiment (pre-registered, §197.5): train a DINOv3 arm on TPU.** Hypothesis: a DINOv3
 backbone lifts a single arm from 0.877 to **≥0.90** (A5 = 0.9089). The zero-quota probe already
