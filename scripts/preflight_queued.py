@@ -26,6 +26,7 @@ import pathlib
 import sys
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
+from kpaths import kdir          # kernels/ layout, see kpaths.py
 TARGETS = ROOT / "state" / "cv_targets.json"
 
 # kernel dir -> list of (label, source, pattern, expectation)
@@ -105,7 +106,7 @@ def main(argv=None) -> int:
     for d, ref, hold in dirs:
         if not d:
             continue
-        p = ROOT / d
+        p = kdir(d)
         if not p.is_dir():
             print("%-30s MISSING DIRECTORY" % d)
             bad.append(d)

@@ -40,10 +40,11 @@ import re
 import sys
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
+from kpaths import kdir          # kernels/ layout, see kpaths.py
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 import ens_experiment  # noqa: E402
 
-EXP_DIR = ROOT / "kernel-exp"
+EXP_DIR = kdir("kernel-exp")
 LANDING = ROOT / "outputs" / "_landing"
 
 
@@ -221,7 +222,7 @@ def main():
             # regenerates a table instead of substituting a literal, so the check below
             # cannot see it and printing the evidence is the honest alternative.
             hard = [p for p in problems if "verify by hand" not in p]
-            print("   artifact : kernel-exp/%s sha256=%s  %s"
+            print("   artifact : kernels/kernel-exp/%s sha256=%s  %s"
                   % (exp, sha, "OK" if not hard else "PROBLEM"))
             for p in hard:
                 print("              ! %s" % p)

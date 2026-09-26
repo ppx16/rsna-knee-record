@@ -17,7 +17,9 @@ torch_xla 2.x API throughout (xr.world_size / xr.global_ordinal; no xrt_world_si
 import json
 from pathlib import Path
 
-DST = Path("kernel-tpu-smoke/rsna-knee-tpu-smoke.ipynb")
+from kpaths import kdir          # kernels/ layout, see kpaths.py
+
+DST = kdir("kernel-tpu-smoke") / "rsna-knee-tpu-smoke.ipynb"
 
 CELLS = [
     # --- cell 1: XLA basics -------------------------------------------------- #
@@ -29,6 +31,7 @@ import torch.nn.functional as F
 import torch_xla
 import torch_xla.core.xla_model as xm
 import torch_xla.runtime as xr
+from kpaths import kdir          # kernels/ layout, see kpaths.py
 
 try:
     print("torch", torch.__version__, "| torch_xla", torch_xla.__version__)

@@ -101,7 +101,7 @@ def main():
     man = {
         "corpus": "rsna-knee dense 64-slot (max-span)",
         "why_not_one_file": "31.8 GB > Kaggle's 20 GB kernel-output limit; mount the shards instead",
-        "built_by": "kernel-corpus64/build_corpus.py --mode build64 (v2: one series scan per group, "
+        "built_by": "kernels/kernel-corpus64/build_corpus.py --mode build64 (v2: one series scan per group, "
                     "specific_tags, multiprocessing)",
         "recipe": {"slots_per_group": [["Sagittal", 1, 18], ["Sagittal", 0, 14], ["Coronal", 1, 12],
                                        ["Coronal", 0, 8], ["Axial", -1, 12]],
@@ -116,7 +116,7 @@ def main():
             "builder_guard": "pool = concat(all_ids, extra_ids) with the drop count printed; the "
                              "first version read only all_ids.npy (3200 rows) and would have "
                              "produced empty shards s6/s7 (FACTS A56)",
-            "pilot_guard": "SHARD_EXPECTED_ROWS assert in kernel-d64pilot/_open_corpus: ids and "
+            "pilot_guard": "SHARD_EXPECTED_ROWS assert in kernels/kernel-d64pilot/_open_corpus: ids and "
                            "vols come from the same glob, so a DROPPED shard keeps their counts "
                            "equal -- only the absolute total catches it",
         },

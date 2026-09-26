@@ -25,8 +25,9 @@ import json
 import shutil
 import sys
 from pathlib import Path
+from kpaths import kdir          # kernels/ layout, see kpaths.py
 
-NB = Path("kernel-fork/rsna-knee-baseline-v1.ipynb")
+NB = kdir("kernel-fork") / "rsna-knee-baseline-v1.ipynb"
 
 # ---- the block that gets inserted ahead of build_model ---------------------- #
 HELPERS = '''BIOMEDCLIP_MEAN = (0.48145466, 0.4578275, 0.40821073)

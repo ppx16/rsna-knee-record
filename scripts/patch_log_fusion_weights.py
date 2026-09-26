@@ -12,8 +12,9 @@ import hashlib
 import json
 import pathlib
 import sys
+from kpaths import kdir          # kernels/ layout, see kpaths.py
 
-P = pathlib.Path(__file__).resolve().parent.parent / "kernel-fresh" / "rsna-knee-ens-v2src.ipynb"
+P = kdir("kernel-fresh") / "rsna-knee-ens-v2src.ipynb"
 
 OLD = (
     'print("[config] outer CoAtNet weight per finding:",\n'

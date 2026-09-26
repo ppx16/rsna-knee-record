@@ -52,8 +52,9 @@ import json
 import shutil
 import sys
 from pathlib import Path
+from kpaths import kdir          # kernels/ layout, see kpaths.py
 
-DEFAULT_META = Path("kernel-fork/kernel-metadata.json")
+DEFAULT_META = kdir("kernel-fork") / "kernel-metadata.json"
 
 
 def looks_like_weights(ref: str) -> bool:
@@ -184,7 +185,7 @@ def main() -> int:
     meta["model_sources"] = new_models
     meta_path.write_text(json.dumps(meta, indent=2) + "\n", encoding="utf-8")
     print(f"\nwritten. backup at {backup}")
-    print("Next: kaggle kernels push -p kernel-fork   (this saves AND runs; wait for "
+    print("Next: kaggle kernels push -p kernels/kernel-fork   (this saves AND runs; wait for "
           "COMPLETE before competitions submit)")
     return 0
 

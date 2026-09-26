@@ -37,7 +37,8 @@ import sys
 
 sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 ROOT = pathlib.Path(__file__).resolve().parent.parent
-SRC = ROOT / "kernel-raptor-train" / "knee-mri-training-the-twelve-finding-model.py"
+from kpaths import kdir          # kernels/ layout, see kpaths.py
+SRC = kdir("kernel-raptor-train") / "knee-mri-training-the-twelve-finding-model.py"
 
 # ---------------------------------------------------------------------------------------------
 # The three patch bodies.  They live here as literals so that --selftest can exec exactly the code
@@ -579,7 +580,7 @@ def main():
         return selftest()
 
     if a.probe:
-        probe = build_probe(ROOT / "kernel-d64probe",
+        probe = build_probe(kdir("kernel-d64probe"),
                             ["ppxl16/rsna-knee-corpus64-s%d" % i for i in range(a.shards)], a.total)
         r = subprocess.run([sys.executable, str(ROOT / "scripts" / "check_names.py"),
                             str(probe / "probe.py")], capture_output=True, text=True)
@@ -591,7 +592,7 @@ def main():
         if not a.push:
             return 0
 
-    out = ROOT / "kernel-d64pilot"
+    out = kdir("kernel-d64pilot")
     out.mkdir(exist_ok=True)
     code = patch(SRC.read_text(encoding="utf-8"), a.total, require_shards=True)
     (out / "knee-mri-training-the-twelve-finding-model.py").write_text(code, encoding="utf-8")

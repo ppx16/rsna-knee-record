@@ -58,6 +58,7 @@ import subprocess
 import sys
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
+from kpaths import kdir          # kernels/ layout, see kpaths.py
 sys.path.insert(0, str(ROOT / "scripts"))
 
 from build_cv_kernel import build  # noqa: E402  (the exact GPU builder, reused)
@@ -308,7 +309,7 @@ def build_one(fold: int, folds: int, tag: str, res: int, epochs: int | None,
     # difference from the baseline port.
     sets.append(("--workers", "0"))
 
-    dst = build(fold, folds, tag, ROOT / "kernel-raptor-train",
+    dst = build(fold, folds, tag, kdir("kernel-raptor-train"),
                 suffix=variant or "tpu", epochs=epochs if epochs is not None else 12,
                 sets=sets, kernel_name=kernel_name)
 

@@ -213,7 +213,13 @@ def main(argv=None) -> int:
                 if t.get("hold"):
                     say("HOLD      %-42s %s" % (ref, t.get("hold")))
                     continue
-                rc, out = kaggle(["kernels", "push", "-p", d], timeout=900)
+                # Kernels live under kernels/ since the 2026-09-26 reorganisation, while
+                # state/cv_targets.json still stores the old relative paths.  Resolve at use time
+                # instead of rewriting the data: that keeps older configs working and does not have
+                # to be redone at the next move.  The string checks above still see the stored value.
+                _dp = os.path.join("kernels", d)
+                rc, out = kaggle(["kernels", "push", "-p", _dp if os.path.isdir(_dp) else d],
+                                 timeout=900)
                 tail = out.strip().splitlines()[-1] if out.strip() else "(no output)"
                 if "successfully pushed" in out:
                     st["pushed"][ref] = now()

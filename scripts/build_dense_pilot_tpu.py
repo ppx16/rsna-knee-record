@@ -43,11 +43,12 @@ import sys
 
 sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 ROOT = pathlib.Path(__file__).resolve().parent.parent
+from kpaths import kdir          # kernels/ layout, see kpaths.py
 sys.path.insert(0, str(ROOT / "scripts"))
 from build_dense_pilot import NPART_SRC, patch  # noqa: E402  (one source of truth for the loader)
 
-PROVEN_TPU = ROOT / "kernel-tpu-nx336f1" / "knee-mri-training-the-twelve-finding-model.py"
-OUT = ROOT / "kernel-d64pilot-tpu"
+PROVEN_TPU = kdir("kernel-tpu-nx336f1") / "knee-mri-training-the-twelve-finding-model.py"
+OUT = kdir("kernel-d64pilot-tpu")
 # the exact injected argv of the proven fold-1 run; we change only tag + fold
 ARGV_OLD = "'--tag', 'nx3361', '--folds', '5', '--fold', '1'"
 ARGV_NEW = "'--tag', 'd64nx3360', '--folds', '5', '--fold', '0'"

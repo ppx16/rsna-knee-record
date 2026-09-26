@@ -34,7 +34,8 @@ import json
 import pathlib
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
-SRC = ROOT / "kernel-raptor-train"
+from kpaths import kdir          # kernels/ layout, see kpaths.py
+SRC = kdir("kernel-raptor-train")
 FOLD_DATASET = "ppxl16/rsna-knee-cv-folds"
 FOLD_FILE_IN_KERNEL = "/kaggle/input/rsna-knee-cv-folds/fold_file.json"
 
@@ -96,7 +97,7 @@ def build(fold: int, folds: int, tag: str, base: pathlib.Path, suffix: str,
     ast.parse(code)                      # fail locally, not after a 5-minute Kaggle round-trip
 
     name = kernel_name or ("kernel-cv-%s-fold%d" % (suffix, fold))
-    dst = ROOT / name
+    dst = kdir(name)
     dst.mkdir(exist_ok=True)
     (dst / "knee-mri-training-the-twelve-finding-model.py").write_text(code, encoding="utf-8")
 
@@ -157,7 +158,7 @@ def main() -> int:
         print("edit: %r -> %r" % (old[:70], new[:70]))
 
     base_name, blurb = BASES[args.arm]
-    base = ROOT / base_name
+    base = kdir(base_name)
     if not base.is_dir():
         raise SystemExit("base kernel %s not found" % base)
     epochs = args.epochs if args.epochs is not None else (1 if args.arm == "G" else 12)

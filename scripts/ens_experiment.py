@@ -49,10 +49,11 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-SRC_DIR = ROOT / "kernel-ens"
+from kpaths import kdir          # kernels/ layout, see kpaths.py
+SRC_DIR = kdir("kernel-ens")
 SRC_NB = SRC_DIR / "rsna-knee-ensemble-v1.ipynb"
 SRC_META = SRC_DIR / "kernel-metadata.json"
-EXP_ROOT = ROOT / "kernel-exp"
+EXP_ROOT = kdir("kernel-exp")
 COMPETITION = "rsna-knee-abnormality-detection"
 
 # An experiment may fork a DIFFERENT upstream notebook.
@@ -69,8 +70,8 @@ COMPETITION = "rsna-knee-abnormality-detection"
 # because its submissions are still PENDING, and pushing a new version of a kernel with a
 # pending submission can destroy that submission.
 ALT_SOURCES = {
-    "v2src": (ROOT / "kernel-fresh" / "rsna-knee-ens-v2src.ipynb",
-              ROOT / "kernel-fresh" / "kernel-metadata.json"),
+    "v2src": (kdir("kernel-fresh") / "rsna-knee-ens-v2src.ipynb",
+              kdir("kernel-fresh") / "kernel-metadata.json"),
 }
 
 

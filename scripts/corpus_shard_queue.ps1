@@ -55,7 +55,9 @@ while ((Get-Date) -lt $deadline) {
 
     while ($active -lt $Slots -and $pend.Count -gt 0) {
         $i = $pend[0]; $pend = $pend[1..($pend.Count - 1)]
-        $dir = Join-Path $root "kernel-corpus64-s$i"
+        # kernels moved under kernels/ on 2026-09-26; fall back to the old flat layout if absent
+        $dir = Join-Path $root "kernels\kernel-corpus64-s$i"
+        if (-not (Test-Path $dir)) { $dir = Join-Path $root "kernel-corpus64-s$i" }
         Say "pushing s$i"
         $o = & kaggle kernels push -p $dir 2>&1 | Out-String
         Add-Content -Path $log -Value $o -Encoding UTF8

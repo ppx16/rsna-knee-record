@@ -44,7 +44,7 @@ def norm(line):
 
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--ours", default="kernel-ens/rsna-knee-ensemble-v1.ipynb")
+    ap.add_argument("--ours", default="kernels/kernel-ens/rsna-knee-ensemble-v1.ipynb")
     ap.add_argument("--theirs", default="downloads/ref/bend/bend-the-knee-to-the-dinosaurs.ipynb")
     ap.add_argument("--max-cells", type=int, default=12)
     a = ap.parse_args(argv)
