@@ -1,0 +1,22 @@
+{
+  "absent": 0,
+  "applicable": 48,
+  "elapsed_seconds": 63.57702684402466,
+  "gpus": [
+    {
+      "allocated_bytes": 9568256,
+      "id": 0,
+      "reserved_bytes": 79691776
+    },
+    {
+      "allocated_bytes": 9568256,
+      "id": 1,
+      "reserved_bytes": 75497472
+    }
+  ],
+  "max_rss_kib": 3707008,
+  "memory.current": "9506402304",
+  "memory.max": "32212254720",
+  "stage": "a5",
+  "status": "COMPLETE"
+}

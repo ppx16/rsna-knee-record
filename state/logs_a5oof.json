@@ -1,0 +1,81 @@
+﻿Warning: Looks like you're using an outdated `kaggle` version (installed: 2.1.2), please consider upgrading to the latest version (2.2.2)
+[{"stream_name":"stderr","time":6.185223082,"data":"0.00s - Debugger warning: It seems that frozen modules are being used, which may\n"}
+,{"stream_name":"stderr","time":6.185266689,"data":"0.00s - make the debugger miss breakpoints. Please pass -Xfrozen_modules=off\n"}
+,{"stream_name":"stderr","time":6.18527128,"data":"0.00s - to python to disable frozen modules.\n"}
+,{"stream_name":"stderr","time":6.18527406,"data":"0.00s - Note: Debugging will proceed. Set PYDEVD_DISABLE_FILE_VALIDATION=1 to disable this validation.\n"}
+,{"stream_name":"stderr","time":6.744238222,"data":"0.00s - Debugger warning: It seems that frozen modules are being used, which may\n"}
+,{"stream_name":"stderr","time":6.744276935,"data":"0.00s - make the debugger miss breakpoints. Please pass -Xfrozen_modules=off\n"}
+,{"stream_name":"stderr","time":6.744282533,"data":"0.00s - to python to disable frozen modules.\n"}
+,{"stream_name":"stderr","time":6.744286656,"data":"0.00s - Note: Debugging will proceed. Set PYDEVD_DISABLE_FILE_VALIDATION=1 to disable this validation.\n"}
+,{"stream_name":"stdout","time":7.775906238,"data":"[config] preset=speedy a5_w=0.52 rad_alpha=0.55 k_eval=94\n"}
+,{"stream_name":"stdout","time":7.77677326,"data":"[config] outer CoAtNet weight per finding: {'ACL': 0.75, 'Medial Meniscus': 0.8, 'Lateral Meniscus': 1.0, 'Lateral OA': 0.75, 'Fracture': 0.75}\n"}
+,{"stream_name":"stdout","time":8.684840875999999,"data":"[eda] 4,407 training studies, 24,371 training series, 15 test series\n"}
+,{"stream_name":"stdout","time":8.686033612,"data":"[eda] 58 studies carry all twelve labels; the rest are supervised only by what a text model read out of the report\n"}
+,{"stream_name":"stdout","time":9.184055486,"data":"Coverage of the six slots the models expect, over training studies:\n"}
+,{"stream_name":"stdout","time":9.184101779,"data":"               slot  studies with it  share\n"}
+,{"stream_name":"stdout","time":9.184108936,"data":"   Sagittal fat-sat             4150  0.942\n"}
+,{"stream_name":"stdout","time":9.184114001,"data":"Sagittal no fat-sat             4266  0.968\n"}
+,{"stream_name":"stdout","time":9.184118552,"data":"    Coronal fat-sat             4248  0.964\n"}
+,{"stream_name":"stdout","time":9.184123251,"data":" Coronal no fat-sat             3406  0.773\n"}
+,{"stream_name":"stdout","time":9.18412767,"data":"      Axial fat-sat             4407  1.000\n"}
+,{"stream_name":"stdout","time":9.184136831,"data":"   Axial no fat-sat              857  0.194\n"}
+,{"stream_name":"stdout","time":9.184140084,"data":"\n"}
+,{"stream_name":"stdout","time":9.184157692,"data":"A slot no study fills is a column of zeros fed to the encoder; a study that fills none of them can only be given a constant, and under ROC-AUC a block of identical constants earns half credit against everything it ties with. That is the cheapest score leak in this whole pipeline.\n"}
+,{"stream_name":"stdout","time":9.603755931,"data":"Most correlated pairs:\n"}
+,{"stream_name":"stdout","time":9.603782129,"data":"  Medial OA          + Baker's            +0.48\n"}
+,{"stream_name":"stdout","time":9.603788281,"data":"  Medial Meniscus    + Medial OA          +0.42\n"}
+,{"stream_name":"stdout","time":9.603792821999999,"data":"  Lateral Meniscus   + Lateral OA         +0.42\n"}
+,{"stream_name":"stdout","time":9.603797716,"data":"  Lateral Meniscus   + Medial OA          +0.41\n"}
+,{"stream_name":"stdout","time":9.603801654,"data":"  Lateral OA         + Baker's            +0.40\n"}
+,{"stream_name":"stdout","time":9.603806237,"data":"\n"}
+,{"stream_name":"stdout","time":9.603810514,"data":"The three osteoarthritis compartments move together, which is why the calibrator downstream groups them. Findings that co-occur are also findings an ensemble tends to get right or wrong together — worth remembering before reading any per-finding weight as skill.\n"}
+,{"stream_name":"stdout","time":10.523216757,"data":"0 studies have no report at all (0.0%) — those can only be supervised by the images.\n"}
+,{"stream_name":"stdout","time":10.523252289,"data":"The counts overlap because clinical vocabulary is shared across languages; they are a rough shape, not a classifier. The point is that a monolingual extractor silently drops whole slices of the training set, and a dropped study is not a wrong label — it is no label.\n"}
+,{"stream_name":"stdout","time":11.74862065,"data":"A 140 mm crop spans 398 to 896 pixels across these series — a 2.3x range. Cropping a fixed number of pixels instead would hand the model a different anatomical field of view per scanner, which is the kind of artefact a model will happily learn to read as signal.\n"}
+,{"stream_name":"stdout","time":16.71498417,"data":"Field strengths present: 1.5T x144, 3.0T x90, 1.2T x2\n"}
+,{"stream_name":"stdout","time":16.715038506,"data":"The single most common scanner model covers 23% of the sample.\n"}
+,{"stream_name":"stdout","time":16.715046075,"data":"\n"}
+,{"stream_name":"stdout","time":16.715051276,"data":"The training path in this notebook groups folds by md5(report text), which deduplicates identical reports but does nothing about the scanner. Manufacturer + model + matrix size + pixel spacing is a serviceable site key and costs nothing to compute from headers you are already reading. Grouping on it is what makes an offline number mean something.\n"}
+,{"stream_name":"stdout","time":17.030414002,"data":"Median series length 30 slices; 0.0% are shorter than twelve.\n"}
+,{"stream_name":"stdout","time":17.030462434,"data":"Where a series is shorter than its slot, the sampler repeats slices, so several of the 62 windows are duplicates and the attention pooling sees the same evidence more than once. Where a series is much longer, the sampler is skipping anatomy — and a meniscus tear visible on two slices can fall between samples entirely. That is the mechanism behind the max and top-2 window pooling used for the focal findings upstream.\n"}
+,{"stream_name":"stdout","time":22.717680322,"data":"cuda:0 probe PASS (compute 7.5)\n"}
+,{"stream_name":"stdout","time":22.749284749,"data":"cuda:1 probe PASS (compute 7.5)\n"}
+,{"stream_name":"stdout","time":22.749328125,"data":"devices: ['cuda:0', 'cuda:1']\n"}
+,{"stream_name":"stdout","time":22.749336627,"data":"[startup] imports+GPU preflight: 5.43s\n"}
+,{"stream_name":"stdout","time":22.805983151,"data":"[    0.1s] input root: /kaggle/input/competitions/rsna-knee-abnormality-detection\n"}
+,{"stream_name":"stdout","time":22.806998577,"data":"[startup] competition-root preflight: 0.06s\n"}
+,{"stream_name":"stdout","time":22.8995322,"data":"[    0.1s] memory: 29.5 GB available, 13.3 GB to the cache; sizing for 4407 train + 1322 test studies -\u003e 1 group(s) of 3 = 3 slices per slot\n"}
+,{"stream_name":"stdout","time":22.90028043,"data":"[    0.2s] cache layout: 1 groups x 3 slices = 3 per slot\n"}
+,{"stream_name":"stdout","time":24.283486754,"data":"[phase] {\"a5_without_matching_acquisition\": 0, \"elapsed_seconds\": 1.5329971313476562, \"gpus\": [{\"allocated_bytes\": 0, \"id\": 0, \"reserved_bytes\": 0}, {\"allocated_bytes\": 0, \"id\": 1, \"reserved_bytes\": 0}], \"max_rss_kib\": 1092176, \"memory.current\": \"1658785792\", \"memory.max\": \"32212254720\", \"missing_fluid_flags\": 0, \"stage\": \"input_metadata\", \"status\": \"COMPLETE\"}\n"}
+,{"stream_name":"stdout","time":24.927610941,"data":"[phase] {\"elapsed_seconds\": 2.1765730381011963, \"gpus\": [{\"allocated_bytes\": 0, \"id\": 0, \"reserved_bytes\": 0}, {\"allocated_bytes\": 0, \"id\": 1, \"reserved_bytes\": 0}], \"max_rss_kib\": 1092176, \"memory.current\": \"1672036352\", \"memory.max\": \"32212254720\", \"stage\": \"dinov2\", \"status\": \"START\"}\n"}
+,{"stream_name":"stdout","time":25.10185144,"data":"[    2.2s] OOF: DINOv2/E2 stage SKIPPED by design (this is an A5-only kernel)\n"}
+,{"stream_name":"stdout","time":25.103764427,"data":"[phase] {\"elapsed_seconds\": 2.353071689605713, \"gpus\": [{\"allocated_bytes\": 0, \"id\": 0, \"reserved_bytes\": 0}, {\"allocated_bytes\": 0, \"id\": 1, \"reserved_bytes\": 0}], \"max_rss_kib\": 1092176, \"memory.current\": \"1671757824\", \"memory.max\": \"32212254720\", \"stage\": \"dinov2\", \"status\": \"COMPLETE\"}\n"}
+,{"stream_name":"stdout","time":25.172404716,"data":"[phase] {\"elapsed_seconds\": 2.4216268062591553, \"gpus\": [{\"allocated_bytes\": 0, \"id\": 0, \"reserved_bytes\": 0}, {\"allocated_bytes\": 0, \"id\": 1, \"reserved_bytes\": 0}], \"max_rss_kib\": 1092176, \"memory.current\": \"1671901184\", \"memory.max\": \"32212254720\", \"stage\": \"a5\", \"status\": \"START\"}\n"}
+,{"stream_name":"stdout","time":35.253439675,"data":"series root: /kaggle/input/competitions/rsna-knee-abnormality-detection/train_series\n"}
+,{"stream_name":"stdout","time":35.253471543,"data":"[   12.5s] OOF: A5 cohort = fold 0, 48 studies, 48 with series metadata (via v52_oof.csv)\n"}
+,{"stream_name":"stdout","time":37.760274315,"data":"A5 strict-loaded m_f0.pt; all encoder and head tensors present\n"}
+,{"stream_name":"stdout","time":39.43833535,"data":"A5 strict-loaded m_f1.pt; all encoder and head tensors present\n"}
+,{"stream_name":"stdout","time":41.108560591,"data":"A5 strict-loaded m_f2.pt; all encoder and head tensors present\n"}
+,{"stream_name":"stdout","time":42.520149642,"data":"A5 strict-loaded m_f3.pt; all encoder and head tensors present\n"}
+,{"stream_name":"stdout","time":43.593261377,"data":"A5 strict-loaded m_f4.pt; all encoder and head tensors present\n"}
+,{"stream_name":"stdout","time":44.440901098,"data":"device cuda | amp bfloat16 (on=True) | workers 4 | chunk 48 | micro 8\n"}
+,{"stream_name":"stdout","time":86.025913528,"data":"  48/48  0.7m  eta 0.0m\n"}
+,{"stream_name":"stdout","time":86.226442595,"data":"\n"}
+,{"stream_name":"stdout","time":86.226478482,"data":"inference done in 0.7 min\n"}
+,{"stream_name":"stdout","time":86.327556432,"data":"[phase] {\"absent\": 0, \"applicable\": 48, \"elapsed_seconds\": 63.57702684402466, \"gpus\": [{\"allocated_bytes\": 9568256, \"id\": 0, \"reserved_bytes\": 79691776}, {\"allocated_bytes\": 9568256, \"id\": 1, \"reserved_bytes\": 75497472}], \"max_rss_kib\": 3707008, \"memory.current\": \"9506402304\", \"memory.max\": \"32212254720\", \"stage\": \"a5\", \"status\": \"COMPLETE\"}\n"}
+,{"stream_name":"stderr","time":91.491768787,"data":"/usr/local/lib/python3.12/dist-packages/mistune.py:435: SyntaxWarning: invalid escape sequence '\\|'\n"}
+,{"stream_name":"stderr","time":91.491803153,"data":"  cells[i][c] = re.sub('\\\\\\\\\\|', '|', cell)\n"}
+,{"stream_name":"stderr","time":91.636792795,"data":"/usr/local/lib/python3.12/dist-packages/nbconvert/filters/filter_links.py:36: SyntaxWarning: invalid escape sequence '\\_'\n"}
+,{"stream_name":"stderr","time":91.636819887,"data":"  text = re.sub(r'_', '\\_', text) # Escape underscores in display text\n"}
+,{"stream_name":"stderr","time":92.269853993,"data":"[NbConvertApp] Converting notebook __notebook__.ipynb to notebook\n"}
+,{"stream_name":"stderr","time":92.595487567,"data":"[NbConvertApp] Writing 649480 bytes to __notebook__.ipynb\n"}
+,{"stream_name":"stderr","time":94.924196352,"data":"[NbConvertApp] Converting notebook __notebook__.ipynb to html\n"}
+,{"stream_name":"stderr","time":96.513357199,"data":"[NbConvertApp] Support files will be in __results___files/\n"}
+,{"stream_name":"stderr","time":96.513386066,"data":"[NbConvertApp] Making directory __results___files\n"}
+,{"stream_name":"stderr","time":96.513631097,"data":"[NbConvertApp] Making directory __results___files\n"}
+,{"stream_name":"stderr","time":96.513831252,"data":"[NbConvertApp] Making directory __results___files\n"}
+,{"stream_name":"stderr","time":96.514023545,"data":"[NbConvertApp] Making directory __results___files\n"}
+,{"stream_name":"stderr","time":96.514200627,"data":"[NbConvertApp] Making directory __results___files\n"}
+,{"stream_name":"stderr","time":96.514380228,"data":"[NbConvertApp] Making directory __results___files\n"}
+,{"stream_name":"stderr","time":96.514634356,"data":"[NbConvertApp] Writing 1259792 bytes to __results__.html\n"}
+]
