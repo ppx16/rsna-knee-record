@@ -8,8 +8,9 @@
 | | |
 |---|---|
 | Deadline | **2026-10-22 23:59 UTC** (~4 weeks) |
-| Best ledger score | **0.941** (silver). Public ceiling seen: **0.943** (the recipe we now replicate) |
-| Public LB noise | ±0.008 — it cannot resolve the 0.001–0.003 effects we chase |
+| Best ledger score | ⭐ **0.943** — `56568520` (the `0943` speedy arm). It **matches the public ceiling** and **+0.002 over the previous best 0.941**. Second: **0.942**, `56568524` (`0943h` halfway). Three more readouts pending. |
+| ⭐ What that score also proves | The **hidden rerun completes**: 1322 studies, no timeout, no fail-closed abort, valid `submission.csv`. The pipeline had only ever been validated on the visible 3 studies. **This is de-risking independent of the score.** |
+| Public LB noise | ±0.008 — so **0.943 vs 0.942 is not a difference**, and 0.943 vs 0.941 is *not* an established +0.002. Read it as "the displayed value reaches the ceiling", nothing more. The private split decides the medal. |
 | GPU quota | **1.58 h / 30 h**, refreshes 2026-10-03. TPU 0 h / 20 h |
 | Cost model | **1 h wall clock = 1 GPU hour even on the 2×T4 shape** (measured 05:43Z: +0.33 h over 20 min) ⇒ §158.5 answered: N hours is billed as N, not 2N. Scoring reruns are **not** billed at all. |
 
