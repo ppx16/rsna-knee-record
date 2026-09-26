@@ -1,0 +1,113 @@
+{
+  "root": "/kaggle/input/competitions/rsna-knee-abnormality-detection",
+  "series": 24371,
+  "studies": 4407,
+  "read_errors": 0,
+  "elapsed_seconds": 128.5,
+  "distinct": {
+    "Manufacturer": 12,
+    "ManufacturerModelName": 46,
+    "StationName": 0,
+    "SoftwareVersions": 65,
+    "MagneticFieldStrength": 6,
+    "DeviceSerialNumber": 0,
+    "InstitutionName": 0,
+    "InstitutionalDepartmentName": 0,
+    "BodyPartExamined": 22,
+    "SeriesDescription": 776,
+    "ScanOptions": 262,
+    "SliceThickness": 143,
+    "Rows": 102,
+    "Columns": 97,
+    "PixelSpacing": 1087,
+    "RepetitionTime": 5278,
+    "EchoTime": 2205,
+    "ScanningSequence": 6,
+    "SequenceName": 88
+  },
+  "top_manufacturers": [
+    [
+      "Siemens Healthineers",
+      5309
+    ],
+    [
+      "GE MEDICAL SYSTEMS",
+      4914
+    ],
+    [
+      "SIEMENS",
+      4460
+    ],
+    [
+      "Philips Medical Systems",
+      3614
+    ],
+    [
+      "Philips",
+      3502
+    ],
+    [
+      "TOSHIBA",
+      1015
+    ],
+    [
+      "Philips Healthcare",
+      495
+    ],
+    [
+      "Siemens",
+      417
+    ],
+    [
+      "CANON_MEC",
+      328
+    ],
+    [
+      "GEHC",
+      187
+    ]
+  ],
+  "top_stations": [],
+  "top_models": [
+    [
+      "Ingenia",
+      3802
+    ],
+    [
+      "Aera",
+      2409
+    ],
+    [
+      "MAGNETOM Vida",
+      2399
+    ],
+    [
+      "Achieva dStream",
+      2217
+    ],
+    [
+      "MAGNETOM Avanto fit",
+      1377
+    ],
+    [
+      "SIGNA Explorer",
+      1101
+    ],
+    [
+      "SonataVision",
+      1072
+    ],
+    [
+      "SIGNA Artist",
+      1040
+    ],
+    [
+      "SIGNA EXCITE",
+      930
+    ],
+    [
+      "Optima MR450w",
+      811
+    ]
+  ]
+}

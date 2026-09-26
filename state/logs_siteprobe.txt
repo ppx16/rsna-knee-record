@@ -1,0 +1,134 @@
+﻿competition root: /kaggle/input/competitions/rsna-knee-abnormality-detection
+series to probe: 24371 (18.7 s to enumerate)
+  2000/24371  0.5 min  (69.7 series/s)
+  4000/24371  0.6 min  (104.3 series/s)
+  6000/24371  0.8 min  (126.2 series/s)
+  8000/24371  1.0 min  (138.5 series/s)
+  10000/24371  1.1 min  (149.8 series/s)
+  12000/24371  1.3 min  (158.7 series/s)
+  14000/24371  1.4 min  (166.9 series/s)
+  16000/24371  1.6 min  (172.0 series/s)
+  18000/24371  1.7 min  (178.3 series/s)
+  20000/24371  1.8 min  (182.7 series/s)
+  22000/24371  2.0 min  (186.7 series/s)
+  24000/24371  2.1 min  (189.7 series/s)
+{
+  "root": "/kaggle/input/competitions/rsna-knee-abnormality-detection",
+  "series": 24371,
+  "studies": 4407,
+  "read_errors": 0,
+  "elapsed_seconds": 128.5,
+  "distinct": {
+    "Manufacturer": 12,
+    "ManufacturerModelName": 46,
+    "StationName": 0,
+    "SoftwareVersions": 65,
+    "MagneticFieldStrength": 6,
+    "DeviceSerialNumber": 0,
+    "InstitutionName": 0,
+    "InstitutionalDepartmentName": 0,
+    "BodyPartExamined": 22,
+    "SeriesDescription": 776,
+    "ScanOptions": 262,
+    "SliceThickness": 143,
+    "Rows": 102,
+    "Columns": 97,
+    "PixelSpacing": 1087,
+    "RepetitionTime": 5278,
+    "EchoTime": 2205,
+    "ScanningSequence": 6,
+    "SequenceName": 88
+  },
+  "top_manufacturers": [
+    [
+      "Siemens Healthineers",
+      5309
+    ],
+    [
+      "GE MEDICAL SYSTEMS",
+      4914
+    ],
+    [
+      "SIEMENS",
+      4460
+    ],
+    [
+      "Philips Medical Systems",
+      3614
+    ],
+    [
+      "Philips",
+      3502
+    ],
+    [
+      "TOSHIBA",
+      1015
+    ],
+    [
+      "Philips Healthcare",
+      495
+    ],
+    [
+      "Siemens",
+      417
+    ],
+    [
+      "CANON_MEC",
+      328
+    ],
+    [
+      "GEHC",
+      187
+    ]
+  ],
+  "top_stations": [],
+  "top_models": [
+    [
+      "Ingenia",
+      3802
+    ],
+    [
+      "Aera",
+      2409
+    ],
+    [
+      "MAGNETOM Vida",
+      2399
+    ],
+    [
+      "Achieva dStream",
+      2217
+    ],
+    [
+      "MAGNETOM Avanto fit",
+      1377
+    ],
+    [
+      "SIGNA Explorer",
+      1101
+    ],
+    [
+      "SonataVision",
+      1072
+    ],
+    [
+      "SIGNA Artist",
+      1040
+    ],
+    [
+      "SIGNA EXCITE",
+      930
+    ],
+    [
+      "Optima MR450w",
+      811
+    ]
+  ]
+}
+wrote /kaggle/working/site_probe.csv and /kaggle/working/site_probe_summary.json
+/usr/local/lib/python3.12/dist-packages/mistune.py:435: SyntaxWarning: invalid escape sequence '\|'
+  cells[i][c] = re.sub('\\\\\|', '|', cell)
+/usr/local/lib/python3.12/dist-packages/nbconvert/filters/filter_links.py:36: SyntaxWarning: invalid escape sequence '\_'
+  text = re.sub(r'_', '\_', text) # Escape underscores in display text
+[NbConvertApp] Converting notebook __script__.ipynb to html
+[NbConvertApp] Writing 307939 bytes to __results__.html
