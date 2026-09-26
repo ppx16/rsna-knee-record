@@ -42,17 +42,32 @@ that is not the displayed score:
    same-sample reporting to be optimistic by +0.0028 and per-label tuning to transfer **worse** than a
    single shared weight by −0.0013. `outer060` hedges the same knob family more weakly; `halfway` is
    the better-supported direction (C57: softening cost 0.001 where flattening cost 0.002).
+
+   ⚠️ **Stated as an analogy, because that is what it is.** A111 measured that curve on the A5↔Rad
+   blend weight — per-label in shape, but a *different pair of arms* than `coatnet_w`. The reasoning
+   transfers; the number does not, and it should not be quoted as if it were measured on this knob.
+
 3. **Under a "best of the two selected counts" rule, dispersion is worth more than a second copy of
    the same bet.** `0943f` + `0943h` spread across two independent uncertainty axes (which labels the
    Rad arm is blended into × how sharp the outer routing is); `0943f` + `0943` would spread across one.
+   Precisely: neither arm covers both axes, but **the union does** — if either change is real, one of
+   the two picks collects it, and if the routing hedge is wrong, `0943f` still holds the measured gain.
 
-⚠️ Two honest caveats:
+⚠️ Three honest caveats:
 
 - Reason 3 depends on the widely-reported "better of the two selected" rule. **It could not be
-  verified from this machine** (kaggle.com is not fetchable here). It is safe, because the pair is
-  defensible on reasons 1 and 2 alone.
+  verified from this machine** (kaggle.com is not fetchable here). It is safe to rely on anyway,
+  because the pair is defensible on reasons 1 and 2 alone.
+- Reason 2 is a hedge against an *optimism*, not a discovered improvement. If the routing map's public
+  edge turns out to be real rather than overfit, `0943h` is the weaker of the two on the private
+  board. That is the bet being made, and it is the one A111 quantifies.
 - **If the interface allows only one selection, or only one is scored: pick `0943f` (`56570144`)** —
   reason 1 is the hardest evidence in this table.
+
+**The alternative, if you would rather not hedge at all:** pair `56570144` with **`56568520`** (`0943`,
+the exact published config, 0.943). That trades the routing hedge for a second copy of the published
+routing. Nothing we measured favours it over the pair above, and it gives up the A111 argument — but
+it is the choice with no deviation from the published recipe, so the tradeoff is yours to make.
 
 ---
 
