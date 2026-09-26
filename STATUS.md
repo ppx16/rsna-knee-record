@@ -11,8 +11,8 @@
 | Best ledger score | ⭐ **0.943** — a **three-way tie**: `56568520` (`0943` speedy) · `56570144` (`0943f` fracture) · `56570151` (`0943s` sparse). Then `56568524` (`0943h`) and `56570148` (`0943o`) at **0.942**. |
 | Public LB noise | **±0.008** — so **the board cannot rank these five arms** and no "which is better" conclusion is drawn from it (A96). All five sit inside the noise band. |
 | ⭐ What the readouts actually bought | **All five arms completed the hidden rerun on 1322 studies.** Not just the baseline: both non-default presets and the reduced-window arm too. The submission path had only ever been exercised on the 3 visible studies. **That de-risking is independent of the score.** |
-| GPU quota | **1.58 h / 30 h**, refreshes 2026-10-03. TPU 0 h / 20 h. |
-| Cost model | **1 h wall clock = 1 GPU hour even on the 2×T4 shape.** Scoring reruns are **not** billed at all. |
+| GPU quota | **2.24 h / 30 h** used, refreshes 2026-10-03. TPU 0 h / 20 h. ⚠️ The counter moves in **20-minute quanta** (A121), so it cannot resolve anything smaller. |
+| Cost model | **1 h wall clock = 1 GPU hour even on the 2×T4 shape.** Scoring reruns are **not** billed — re-confirmed over a 7-hour idle window (A121). |
 
 ## 🔴 The one action left — and it is not something the CLI can do
 
