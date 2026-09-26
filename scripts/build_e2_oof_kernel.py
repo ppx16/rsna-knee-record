@@ -121,6 +121,18 @@ NEW_STUDIES = """    # ---- OOF study selection: this kernel's entire reason to 
     globals()['_RSNA_OOF_ONLY'] = set(_want)
     log('OOF: fold %s -> %d training studies (limit=%d)'
         % (_oof_fold, len(_want), _oof_limit))
+    # ⚠️ THE COHORT GLOBAL MUST BE REPOINTED, and this is not optional.
+    # `build_cache` takes its study list from `_RSNA_TEST_IDS` (L1553:
+    #     studies = list(_RSNA_TEST_IDS) if _RSNA_TEST_IDS is not None else sorted(slot_map)
+    # ), and that global was set much earlier by `rsna_initialize(test.csv...)` to the 3 PUBLIC TEST
+    # studies.  Without this line the cache silently drops our training cohort: it notices the
+    # mismatch, records a `coverage_mismatch` event, and substitutes empty slots
+    # (`slot_map={s:{} for s in studies}`) -- so the run COMPLETES, the 20/20 fingerprint gate PASSES,
+    # and every member's saved prediction is 3 all-zero rows for the test studies.  That is exactly
+    # what the first two smoke runs produced; a silent-degradation failure, not a crash.
+    rsna_initialize(_want)
+    if set(_RSNA_TEST_IDS) != set(_want):
+        raise RuntimeError('cohort global did not take the OOF study list')
     test_df = pd.DataFrame({'StudyInstanceUID': _want})
     _all_series = pd.read_csv(ROOT / 'train_series.csv',
                               dtype={'StudyInstanceUID': str, 'SeriesInstanceUID': str})
