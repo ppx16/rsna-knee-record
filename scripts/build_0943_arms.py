@@ -126,6 +126,16 @@ def build(dst_name, kid, title, preset, fracture, role):
     m = json.loads((SRC / "kernel-metadata.json").read_text(encoding="utf-8"))
     m["id"], m["title"], m["is_private"] = kid, title, True
     m.pop("id_no", None)
+    # ⚠️ FORCED OFF, and it must stay off.  The upstream fork we inherit from ships
+    # enable_internet=true (its author was developing with it on) and we copied it verbatim,
+    # which is invisible until the very last step: the kernel PUSHES fine, RUNS fine, writes
+    # submission.csv -- and then the submission is refused with
+    #   400 "Your Notebook cannot use internet access in this competition.
+    #        Please disable internet in the Notebook editor and save a new version."
+    # (read from the server body, 2026-09-26).  Everything else in this lineage has it off,
+    # and the notebook makes no network calls at all -- the opencv wheel it needs comes from
+    # a mounted dataset, not from PyPI.  See FACTS A78.
+    m["enable_internet"] = False
     (dst / "kernel-metadata.json").write_text(
         json.dumps(m, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
 

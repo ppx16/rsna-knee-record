@@ -89,16 +89,45 @@ python scripts/klog.py state\logs_0943.json > state\logs_0943.txt
 Select-String -Path state\logs_0943.txt -Pattern 'fingerprint matches within' | Measure-Object   # want >= 20
 Select-String -Path state\logs_0943.txt -Pattern 'DINOv2 fail-closed gate PASS'                 # want 1
 Select-String -Path state\logs_0943.txt -Pattern 'no fallback permitted|WeightsError|Traceback' # want ZERO
-Select-String -Path state\logs_0943.txt -Pattern 'dropped'                                      # want ZERO
+Select-String -Path state\logs_0943.txt -Pattern 'COMPLETE: /kaggle/working/submission.csv'      # want 1
 ```
+
+⚠️ **`dropped` is NOT a clean greps target** — the notebook prints the sentence *"a dropped study is not
+a wrong label — it is no label"* as explanation, so a naive `dropped` count is 1 on a **perfectly
+healthy** run. Judge by the four markers above (and by the `COMPLETE: .../submission.csv` line, which is
+the one that actually says the artifact exists), not by the word.
+
+⚠️ **The decoder can lie; check the byte count first** (FACTS A79). If `state\logs_0943.txt` comes out
+absurdly small — a few bytes — the log was not converted, and every count above reads 0, which is
+indistinguishable from "the pipeline never ran". A healthy run's text is ~16 KB. The fixed `klog.py`
+skips the CLI's leading version warning; if a future `kaggle` version changes that warning's shape,
+re-check the byte count before believing a FAIL.
 
 **Only if that passes**, submit:
 
 ```powershell
-kaggle competitions submit rsna-knee-abnormality-detection -k ppxl16/rsna-knee-0943 -m "0943 speedy 94win"
+# `-f` (the output file name the kernel produced) and `-v` (the version) are BOTH REQUIRED for a
+# code competition.  Plain `-k` alone is rejected client-side with
+#   "Code competition submissions require both the output file name and the version number".
+kaggle competitions submit rsna-knee-abnormality-detection `
+    -k ppxl16/rsna-knee-0943 -f submission.csv -v 2 `
+    -m "0943 speedy k94 - 20/20 DINOv2 fingerprints, outer 0.65"
 ```
+
+⚠️ **If this returns `400 Bad Request`, do not guess** — the CLI discards the body, and a bare 400 has
+several very different causes (daily cap, FACTS A8; internet enabled, FACTS A78). Ask the server:
+
+```powershell
+python scripts\probe_submit_code.py --kernel ppxl16/rsna-knee-0943 --version 2
+```
+It prints the raw JSON error. A8's cap reads as a bare 400; A78's internet refusal reads as
+`FAILED_PRECONDITION: Your Notebook cannot use internet access in this competition`.
+
 It is a **code competition**: submit the *kernel* (`-k`), and Kaggle reruns it on the hidden test.
 The public board's visible test is **3 studies** — do not over-read a small difference there.
+Note the visible-side run is only ~5 min because there are 3 studies; the 8 h internal budget is
+sized for the hidden 1322, so **a short run is expected and is not evidence of an early exit** —
+the acceptance markers above are what tell you it ran.
 
 ## 4. Read the score back, and record the quota again
 

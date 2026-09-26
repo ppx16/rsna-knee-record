@@ -13517,6 +13517,93 @@ token、去等下一个刷新点 —— 全是错的方向。⇒ **规矩：push
 **事后必须补的读数**：本周任何**第三次** push 被接受还是被拒（A50 的拒绝文本），
 这是对 §158.5 那个问题唯一可得的数据点。
 
+---
+
+## 166. 周六提交执行（续）：联网开关、一个会撒谎的验收门、两次提交
+
+### 166.1 时间线
+
+| UTC | 动作 | 结果 |
+|---|---|---|
+| 03:37 | v1 推送两个臂（0943 / 0943h） | 都 RUNNING，实测**并发 2** 成立 |
+| 03:43 / 03:48 | 两个臂 v1 完成 | 各自 **20/20 指纹**、门 PASS、写了 `submission.csv` |
+| 03:44 | 提交 v1 的 0943 | 🔴 **400** |
+| 03:50 | `scripts/probe_submit_code.py` 问服务器 | **拿到真实正文**：不允许联网 |
+| 03:52 | 修 `enable_internet` + preflight 加断言 + 重建（笔记本**逐字节未变**） | preflight 五臂 `internet off: OK` |
+| 03:53 | 推 v2 两个臂 | 都 `Kernel version 2 successfully pushed` |
+| 03:57 | v2 完成 | 两个臂**再次 20/20 + 门 PASS + `submission.csv`** |
+| 03:57:14 | **提交 `56568520`**（`ppxl16/rsna-knee-0943` v2） | **PENDING** |
+| 03:57:31 | **提交 `56568524`**（`ppxl16/rsna-knee-0943h` v2） | **PENDING** |
+
+### 166.2 🔴 `enable_internet: true` —— 只在**最后一步**才拒绝
+
+CLI 把错误正文丢了，只给一句 `400 Bad Request`。**裸 400 至少有三个完全不同的原因**
+（A8 日限 5 次、结构性问题、版本/文件名不对），所以没有猜，而是**直接问服务器**
+（`scripts/probe_submit_code.py`，调 `competition_submit_code` 并打印 `response.text`）：
+
+```json
+{"error":{"code":400,
+ "message":"Submission not allowed:  Your Notebook cannot use internet access in this competition.
+            Please disable internet in the Notebook editor and save a new version.",
+ "status":"FAILED_PRECONDITION"}}
+```
+
+**根因**：我们照抄的 `maverickss26_rsna_knee_restructured_version_3` 元数据里 `enable_internet=true`，
+而 `build_0943_arms.py` 只覆盖 `id`/`title`/`is_private` ⇒ **原样继承**。
+**旁证**：`downloads/research/` 下 12 个对等/上游，**除 maverickss26 外全部 False**；
+我们**成功提交过**的 `kernel-ens`/`kernel-fresh`/`kernel-0942` 也全是 False。
+
+⚠️ **这是最坏的发现位置**：push 成功、运行成功、`submission.csv` 正常、验收全过 ——
+**只有"提交"这一步失败**。若不去问服务器，很容易误判成"额度用尽"或"日限 5 次"（A8）。
+
+**修法（已落地）**：构建器**强制** `m["enable_internet"] = False` 并写明缘由；
+**preflight 新增断言**（五臂现在都打印 `internet off: OK`）——**校验点要放在零成本的位置，
+而不是三小时后**。笔记本**没有联网需求**（全仓无 `pip install`/`urllib`/`requests.`/`http://`；
+它要的 opencv wheel 由挂载数据集提供）⇒ 关网不影响运行。
+
+### 166.3 🔴 验收门自己撒谎了两次（比前一个 bug 更值得记）
+
+两个臂 v1 都完成了，但守望报 `fingerprint matches within: 0` ⇒ **ACCEPTANCE FAIL**。
+根因是 `kaggle kernels logs` 把**一行 CLI 版本警告**写进同一个流，`json.loads(整段)` 失败，
+正则兜底只解析出 **5 字节** ⇒ 一切计数都是 0，**看起来和"流水线根本没跑"一模一样**。
+
+⇒ **修**：`klog.py` 新增 `payload()`，从第一个 `[{` 起切片（A79）。
+⇒ **但更重要的一步是给这个门补【正/负对照】**，因为**它第一次被使用时就撒了谎**：
+
+```
+负对照（伪造坏日志）→ VERDICT: DECODER FAILURE - the log did not convert; this says NOTHING
+                       about the run            (exit 3)
+正对照（0943 真日志）→ VERDICT: ACCEPTANCE PASS   (exit 0)
+正对照（0943h 真日志）→ VERDICT: ACCEPTANCE PASS  (exit 0)
+```
+
+为此给 `watch_0943.ps1` 加了 `-EvalOnly`（只重评已有日志、不碰 Kaggle）——
+**正对照必须能廉价地重跑**，否则下次还是没人做。
+⚠️ 加这个模式时自己先踩了一个顺序 bug（先查 txt 存在、后解码），**负对照把它暴露了出来** ——
+这正是为什么负对照也要做，不能只做正对照。
+
+### 166.4 ⭐ 两个臂在可见集上的产物**逐字节相同** —— 但预设确实生效了
+
+两者都是 `SHA256=7c6dfe8b…c23d`。而路由**确实不同**（各自日志逐字打印）：
+speedy `{0.75, 0.8, 1.0, 0.75, 0.75}` vs halfway `{0.7, 0.725, 0.825, 0.7, 0.7}`。
+
+**原因**：`write_submission` 用 `.rank(pct=True)` ⇒ **产物只编码次序**；可见集只有 **3 个研究**，
+这个路由改动没翻转任何一列的次序。
+
+⇒ **两条操作结论**：① **别拿"SHA 相同"当"预设没生效"的证据** —— 判据是日志里的
+`[config] outer CoAtNet weight per finding`，**两条都要打印、逐字比对**；
+② **可见集产物无法区分这些臂** ⇒ A/B **只能靠公榜**，而那正是 B11/B12 说噪声 ~0.008 的仪器
+⇒ 对 `halfway` vs `speedy` 这种量级的差异，**一次读数本来就判不了**（记录在案，免得事后过度解读）。
+
+### 166.5 顺带回答的一个问题：为什么"必须跑一遍"不等于"必须花 8 小时"
+
+Code competition 不能上传预测值，分数由 **Kaggle 用隐藏集（1322 研究）重跑我们的 notebook** 产生
+—— 隐藏真值只有主办方有，**本地无从计算**。而我们这边那次"必须先跑"的运行是在**可见集（3 研究）**
+上做的，只要 **~5 分钟**（日志 `15 test series`、`test g1: COMPLETE 12/12`）。它的唯一作用是
+**冻结出一个可被提交引用的 notebook 版本**；8 h 预算只对隐藏集那次重跑有意义。
+⇒ **"改了就得再跑一遍"的代价是 5 分钟，不是 8 小时**，迭代循环其实很便宜。
+
+
 
 
 

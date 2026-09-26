@@ -18,8 +18,27 @@ import sys
 REC = re.compile(r'\{"stream_name".*?\}(?=,\{|\]$)', re.S)
 
 
+def payload(text: str) -> str:
+    """Drop anything the CLI printed before the JSON array.
+
+    `kaggle kernels logs` writes "Warning: Looks like you're using an outdated `kaggle`
+    version ..." to the same stream, so the captured file starts with that line and
+    `json.loads` on the whole text fails.  The regex fallback then has to guess, and on a
+    2026-09-26 run it produced 5 bytes -- which looked exactly like a pipeline that never
+    ran, and the acceptance test reported FAIL for two runs that had in fact completed with
+    20/20 fingerprints.  A log decoder that turns success into failure is worse than no
+    decoder, so: find the array and read from there.
+    """
+    for marker in ('[{"stream_name"', '[{'):
+        i = text.find(marker)
+        if i >= 0:
+            return text[i:]
+    return text
+
+
 def records(text: str):
     """Yield (stream, data). Tries whole-array JSON first, falls back to regex."""
+    text = payload(text)
     try:
         for r in json.loads(text):
             yield r.get("stream_name", "?"), r.get("data", "")

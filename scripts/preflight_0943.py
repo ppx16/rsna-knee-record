@@ -95,6 +95,16 @@ def main():
         print("  enable_gpu    : %s" % meta.get("enable_gpu"))
         if not meta.get("enable_gpu"):
             problems.append("%s: enable_gpu is not true" % d)
+        # A code competition REFUSES a submission whose notebook has internet enabled, and it
+        # refuses it only at the last step -- after the push succeeded and the run completed:
+        #   400 "Your Notebook cannot use internet access in this competition."
+        # The check belongs here, where it costs nothing, not three hours later.  FACTS A78.
+        net = meta.get("enable_internet")
+        print("  internet off  : %s" % ("OK" if net is False else "WRONG (%r)" % (net,)))
+        if net is not False:
+            problems.append(
+                "%s: enable_internet is %r -- a code-competition submission will be refused "
+                "with 400 FAILED_PRECONDITION" % (d, net))
         cf = kdir / meta["code_file"]
         print("  code_file     : %s (%s)" % (meta["code_file"],
                                              "present" if cf.exists() else "MISSING"))
