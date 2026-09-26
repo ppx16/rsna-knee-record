@@ -64,6 +64,21 @@ What comes first is not this plan but the discipline of banking what exists: rea
 back, then choose the final two submissions from the ledger rather than from memory. The plan waits
 until both are done.
 
+## A measured rule for local tuning (from the user's "don't read only the public board")
+
+| tuning-set size | optimism of per-label tuning | per-label vs one shared weight |
+|---|---|---|
+| 100 | **+0.0055** | −0.0033 (worse) |
+| 200 | +0.0032 | −0.0015 (worse) |
+| **400 (≈ the public board)** | **+0.0028** | **−0.0013 (worse)** |
+| **870 (the frontier's OOF)** | +0.0016 | +0.0002 (even) |
+| 1600 | +0.0014 | +0.0001 |
+
+**Rule: a local tuning set needs ≈870 studies before per-label tuning is safe.** Below that it both
+overfits and transfers *worse than a single shared weight* — which is the quantified case for keeping
+a flattened/softened hedge among the final two. Our A5 OOF (4407 studies) clears the bar for
+arm-level work; the public board (~400) does not. (A111)
+
 ## Closed — do not reopen without new evidence
 
 | Line | Why it is closed |
