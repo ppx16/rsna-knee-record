@@ -14815,3 +14815,79 @@ CoAt 臂的混合：
   而我们实测 +0.0028 的那个成员来自**另一个族**（CoAtNet）⇒ 那次起作用的**可能主要是多样性，不是强度**。
 * ⇒ 所以这条路的**第一个**价值是"**我们终于有了 ≥0.90 档的自训能力**"，
   **第二个**才是"它作为成员能加多少" —— 而后者要造出来才知道。
+
+---
+
+## 207. 硬门通过：A5 的架构已经在我们仓库里，并且被**他们的权重**验证过（2026-09-27）
+
+用户说"做"，指的是 §206.4 的三步路线。这一节是第 1 步与第 2 步的结果 —— **门过了**。
+
+### 207.1 第 1 步：把模型抽出来并版本化
+
+`scripts/extract_a5_model.py` 把 `kernel-0943` **cell 39** 的 **13 个类**（16003 字符）逐字抽成
+`kernels/kernel-a5port/a5_model.py`，并带 `--check`：**重新比对 notebook**，前沿若改版会发现。
+类清单：`MeanMaxPool, LabelAttentionPool, TokenXAttnPool, ViTSlotToken, _GatedDepthBlock, DepthCompress,
+SlotDepthMixer, _GatedDelta, TokenResidualPool, CodexResidualPool, ClsAddPool, Readout, Net`。
+
+### 207.2 第 2 步：读配方 —— 不是猜
+
+`m_f0.pt['cfg']` 逐字给出（**这就是我们一直说"复现不出"的那份配方**）：
+
+```
+backbone  vit_small_patch16_dinov3.lvd1689m      ← 正是我上轮试的那个骨架
+cond      token        slot 类型 token 注入 ViT（N_SLOT_TYPES = 6）
+pool      xcodex       CodexResidualPool：按 slot 分段的门控残差跨注意力
+img       336
+norm      none         [0,1]，不是 imagenet
+n_slice   16           且 stem="native" ⇒ 前沿加载式 in_ch = n_slice = 16
+stem      native       16 层切片当 16 个通道进 ViT，【没有】深度压缩
+n_meta 0 · n_sites 109 · pe_init tiled · triplet none
+```
+
+`state_dict` **180 张量**，**23.5M 参数**。
+
+### 207.3 门：`kernels/kernel-a5port`（**CPU，零额度**）
+
+按前沿**自己的构造路径**搭模型，然后严格加载：
+
+```
+[gate] built: 23.5M params; patch_embed weight (384, 16, 16, 16)  <- in_chans 是第 2 维
+[gate] STRICT LOAD: OK -- our construction is layer-for-layer theirs
+[gate] forward OK: logits (1, 12) finite=True
+```
+
+⇒ **180/180 张量、零 missing、零 unexpected。**
+⇒ ⭐ 而 `patch_embed.proj.weight` 的 **(384, 16, 16, 16)** 就是 **`in_chans=16` 的硬证据** ——
+那正是"喂错切片数不会报错、只会静默降分"的那个细节，**这道门能看见它**。
+
+### 207.4 ⭐ 由此，0.853 vs 0.909 的机制清楚了
+
+我们的 DINOv3 臂用的是**同一个骨架**（`vit_small_patch16_dinov3`），但配的是**我们的 head**
+（3 通道窗口 + 窗口间 attention-MIL）。他们的 A5 是：**16 层切片当 16 个通道** + **slot token** +
+**按 slot 分段的 `xcodex` 残差跨注意力池化**。
+⇒ **差距从来不是骨架，而是【输入表示】与【池化】**。A142 的诊断（"不是骨架"）在这里得到机制层面的解释。
+
+### 207.5 ⚠️ 仍未知的、以及两个构建器 bug
+
+* ⚠️ **训练配方不在 checkpoint 里**：`cfg` 只有结构项（`stem_lr`、`pe_init`、`triplet`），**没有 LR / epoch / 增广 / loss**
+  ⇒ 要训练只能"**用他们的架构 + 我们的配方**"，结果**不保证**接近 0.909。
+* ⚠️ **输入缓存也不是现成的**：A5 要 **6 个 slot × 16 层 = 96 片**/研究 @336，而我们的语料是 44/64 槽
+  ⇒ 忠实训练需要先按 notebook 自己的构建器（cell 36/37/40）为训练研究造这份缓存。
+* ⚠️ **两个 bug（同一个家族："门不看它作用的东西"）**：
+  **(i)** Kaggle **script 内核只上传一个 `code_file`** ⇒ 并排放 `a5_model.py` 没用，第一次推送直接 `ModuleNotFoundError`；
+  改成构建器**内联**（`scripts/build_a5_gate.py`）。
+  **(ii)** 那个构建器第一版用**子串检查 + 整行替换**剥离 import 行，而那行**末尾有注释** ⇒
+  **检查通过、替换没发生**，于是**同一个报错又出现一次**；修法 = 锚定正则 + **断言替换后的结果里不再有它**。
+
+### 207.6 下一步的三条路（诚实的成本与期望值）
+
+| 路 | 成本 | 期望值 |
+|---|---|---|
+| **A. 造 6×16×336 缓存 → 用我们的配方训一折** | Kaggle 上数小时缓存 + 每折几 TPU-h | 未知：架构是他们的、**配方是我们的** ⇒ 可能明显低于 0.909。而且同架构成员**很可能与 A5 相关** ⇒ 边际成员价值不确定 |
+| **B. 到此为止** | 0 | 能力与配方已经**确立并验证**（本节的产出），可以随时再启动 |
+| **C. 先量"同架构成员有没有用"** | 不可能免费做（§206.3：A5 其它折是样本内）| —— |
+
+⚠️ **决策所需的一句实话**：这条线目前证明的是"**我们能不能复现**"（能，且已证），
+**不是**"复现出来能不能提分"（未知）。而本项目已经**两次**用测量关掉过训练线（A106、A142），
+两次的理由都是"造不出更好的成员"；现在**能造了**，但"更好的成员是否**有用**"取决于**多样性**，
+而这一点我们测到的唯一正证据（+0.0028）来自**另一个族**。

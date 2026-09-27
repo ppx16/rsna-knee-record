@@ -1,0 +1,14 @@
+﻿[{"stream_name":"stdout","time":27.580557377,"data":"[gate] checkpoint: /kaggle/input/datasets/mattiaangeli/knee-mri-fold-weights/m_f0.pt\n"}
+,{"stream_name":"stdout","time":28.657576355,"data":"[gate] cfg: {\"backbone\": \"vit_small_patch16_dinov3.lvd1689m\", \"cond\": \"token\", \"img\": 336, \"meta\": \"none\", \"pool\": \"xcodex\", \"norm\": \"none\", \"n_meta\": 0, \"n_sites\": 109, \"n_slice\": 16, \"stem\": \"native\", \"stem_lr\": 0.0, \"pe_init\": \"tiled\", \"triplet\": \"none\", \"cache_suffix\": \"\"}\n"}
+,{"stream_name":"stdout","time":28.657731248,"data":"[gate] fold: 0  state_dict tensors: 180\n"}
+,{"stream_name":"stdout","time":29.267728583,"data":"[gate] built: 23.5M params; patch_embed weight (384, 16, 16, 16)  \u003c- in_chans is the 2nd dim\n"}
+,{"stream_name":"stdout","time":29.284409747,"data":"[gate] STRICT LOAD: OK -- our construction is layer-for-layer theirs\n"}
+,{"stream_name":"stdout","time":31.670891885,"data":"[gate] forward OK: logits (1, 12) finite=True\n"}
+,{"stream_name":"stdout","time":31.671557576,"data":"[gate] wrote /kaggle/working/a5_gate.json\n"}
+,{"stream_name":"stderr","time":36.158514963,"data":"/usr/local/lib/python3.12/dist-packages/mistune.py:435: SyntaxWarning: invalid escape sequence '\\|'\n"}
+,{"stream_name":"stderr","time":36.158595653,"data":"  cells[i][c] = re.sub('\\\\\\\\\\|', '|', cell)\n"}
+,{"stream_name":"stderr","time":36.62570253,"data":"/usr/local/lib/python3.12/dist-packages/nbconvert/filters/filter_links.py:36: SyntaxWarning: invalid escape sequence '\\_'\n"}
+,{"stream_name":"stderr","time":36.625843838,"data":"  text = re.sub(r'_', '\\_', text) # Escape underscores in display text\n"}
+,{"stream_name":"stderr","time":37.588447984,"data":"[NbConvertApp] Converting notebook __script__.ipynb to html\n"}
+,{"stream_name":"stderr","time":39.750530319,"data":"[NbConvertApp] Writing 419184 bytes to __results__.html\n"}
+]
