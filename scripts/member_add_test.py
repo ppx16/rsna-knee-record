@@ -79,6 +79,9 @@ def main(argv=None) -> int:
                          "weight on the fit half -- a parent-quality instrument, and the honest "
                          "upper bound on what this arm can buy")
     ap.add_argument("--boot", type=int, default=400)
+    ap.add_argument("--curve", action="store_true",
+                    help="also print the descriptive dose-response on the fixed base (shape only; "
+                         "the in-sample argmax is NOT a decision)")
     ap.add_argument("--seed", type=int, default=20260926)
     a = ap.parse_args(argv)
     arms_wanted = a.arm or ["cn0@f0"]
@@ -167,6 +170,23 @@ def main(argv=None) -> int:
     print("base (A5 %.2f + public20 %.2f): %.4f" % (A5_W, 1 - A5_W, macro(Ys, Ms, base)))
     for (nm_, _i, _P), Oi in zip(ours, Os):
         print("arm %-14s alone:            %.4f" % (nm_, macro(Ys, Ms, Oi)))
+
+    if a.curve:
+        # DESCRIPTIVE dose-response on the fixed 0.917 base: what is still on the table between a
+        # small member dose and the optimum?  No fitting happens here, so this is a shape, not a
+        # choice -- the CHOICE is validated separately by the two-half protocol below.
+        print("\ndose-response on the fixed base (descriptive; no fitting):")
+        print("  %-6s %s" % ("w", "macro"))
+        best_w, best_v = 0.0, macro(Ys, Ms, base)
+        for w in np.arange(0.0, 0.501, 0.025):
+            v = macro(Ys, Ms, (1 - w) * base + w * O)
+            if v > best_v:
+                best_w, best_v = float(w), v
+            print("  %-6.3f %.4f  %s" % (w, v, "+" * int(round((v - 0.90) * 2000))))
+        print("  argmax w=%.3f -> %.4f  (gain %+.4f)"
+              % (best_w, best_v, best_v - macro(Ys, Ms, base)))
+        print("  ⚠️ this argmax is IN-SAMPLE and must not be used as a decision; it only shows the")
+        print("     SHAPE.  The honest choice is the two-half number below.")
 
     if a.strong:
         # ---- the strong-base variant -------------------------------------------------------
