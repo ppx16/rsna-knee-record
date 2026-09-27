@@ -1,17 +1,38 @@
-# STATUS — 2026-09-27 06:30Z
+# STATUS — 2026-09-27 22:30Z
 
 **One screen. Rewritten every session.** If this grows past a screen, the overflow belongs in a
 `HANDOFF.md` section, not here.
+
+## 🚨 The premise changed today — read this before anything below
+
+**We are NOT at the public ceiling.** The live leaderboard reads **0.959**, we are at **0.943**, so we
+are **rank ~219 / 4440 (top 4.9%)** and the gap is **+0.016 — exactly 2× the ±0.008 noise band**.
+
+The old belief ("ceiling ≈ 0.941–0.943, so we hold it") came from **A87.1, which read other
+competitors' *claims* off a discussion thread — not the leaderboard.** The leaderboard is free,
+authenticated and one command away, and it had never been read. ⇒ **A quantity that is cheaply and
+authoritatively measurable must never be carried as a remembered belief.**
+
+**Re-read it with `python scripts/lb_ceiling.py`** (has `--selftest`). Full plan:
+[`docs/REVIEW-2026-09-27.md`](docs/REVIEW-2026-09-27.md).
+
+| | |
+|---|---|
+| ⚠️ Is the gap real? | **Mixed.** Teams above us have median **83** submissions vs **15** in our band, so part is public overfitting. ⚠️ **But `daimaru` reached 0.955 on 8 submissions** — that cannot be hill-climbing ⇒ **a real recipe exists.** |
+| ⚠️ What it is NOT | **Not a missing checkpoint.** `kernel-0943` already mounts essentially the entire published model zoo (maxspan, native384, native384dense, coat-resgated, d4-depthzone, global96, e11, e9, llm-labels, v52, radimagenet, pilkwang + DINOv2-small). |
+| ⭐ The unlock | Training was closed on **"our arm cannot beat A5"** (A106, true). That is **not** the question: the requirement for an ensemble member is **strong AND decorrelated**, and `cn0` (0.8769, *below* A5) proved it adds **+0.0028, CI [+0.0011, +0.0043]** on a parent-quality base. **Two different questions were conflated.** |
+| ⇒ The plan | **Phase 1 (no quota):** sweep every member we hold through `member_add_test.py`; test per-finding specialists; **frontier watch weekly, not rarely**. **Phase 2:** train members in families the stack does *not* have (TPU, 1.28 h/fold). |
+| ⚠️ Not relaxed | **A96 stands** — 0.002 is still invisible. What changed is that **0.016 is visible**. The target is "climb past 0.943 with non-public-validated changes", **not** "reach 0.959". |
 
 ## Where we stand
 
 | | |
 |---|---|
-| Deadline | **2026-10-22 23:59 UTC** (~4 weeks) |
-| Best ledger score | ⭐ **0.943** — a **three-way tie**: `56568520` (`0943` speedy) · `56570144` (`0943f` fracture) · `56570151` (`0943s` sparse). Then `56568524` (`0943h`) and `56570148` (`0943o`) at **0.942**. ⚠️ Eight of nine now read back: `0943c` and `0943r` also **0.942**, and **`0943p` alone at `0.941`** — the lowest of the nine, and a **recommended** pair member. That does **not** disqualify it (the pre-registered line is ≤0.940) — see the dose-ladder analysis in [`docs/FINAL-SELECTION.md`](docs/FINAL-SELECTION.md): the public board mildly preferring the *fitted* routing is exactly what A122 predicts, so it cannot discriminate. Ledger **36 rows, 35 scored**. |
-| Public LB noise | **±0.008** — so **the board cannot rank these arms** and no "which is better" conclusion is drawn from it (A96). ⭐ **Now measured, not assumed**: all nine arms are in, they span four different axes of change, and the **entire spread is 0.002** (0.941–0.943) — a quarter of the noise band. |
-| ⭐ What the readouts actually bought | **All nine arms completed the hidden rerun on 1322 studies** — not just the baseline: both non-default presets, the reduced-window arm, **and our `cn0` member twice**. The submission path had only ever been exercised on the 3 visible studies. **That de-risking is independent of the score.** |
-| GPU quota | **10.33 h / 30 h** used (**19.67 h left**), refreshes 2026-10-03. TPU **1.85 h / 20 h** (18.15 h left). ⚠️ The counter moves in **20-minute quanta** (A121), so it cannot resolve anything smaller. |
+| Deadline | **2026-10-22 23:59 UTC** (~3.5 weeks) |
+| Best ledger score | ⭐ **0.943**, a **four-way tie**: `56568520` (`0943`) · `56570144` (`0943f`) · `56570151` (`0943s`) · **`56599932` (`0943cf`)**. Then `0943h`/`0943o`/`0943c`/`0943r` at **0.942** and **`0943p` alone at `0.941`**. ✅ **All nine in; ledger 36 rows, 36 scored.** |
+| Public LB noise | **±0.008** ⇒ the board cannot rank *these* arms (all nine span just **0.002**), but it **can** see the 0.016 to the top. ⭐ The `0943p` dose-ladder and why the board's preference there is non-discriminating: [`docs/FINAL-SELECTION.md`](docs/FINAL-SELECTION.md). |
+| ⭐ What the readouts bought | **All nine arms completed the hidden rerun on 1322 studies** — including **our `cn0` member twice** (`0943c` 0.942, `0943cf` 0.943), 0 failures, which **retires the largest unmeasurable risk on it** (§200). **That de-risking is independent of the score.** |
+| GPU quota | **10.33 h / 30 h** used (**19.67 h left**), refreshes 2026-10-03. TPU **1.85 h / 20 h** (18.15 h left). ⚠️ The counter moves in **20-minute quanta** (A121). ⇒ to the deadline ≈ **90–110 GPU-h + 78 TPU-h (≈60 folds) + ~125 submission slots**: **compute-rich, idea-poor.** |
 | Cost model | **1 h wall clock = 1 GPU hour even on the 2×T4 shape.** Scoring reruns are **not** billed — re-confirmed over a 7-hour idle window (A121). |
 
 ## 🔴 The one action left — and it is not something the CLI can do
@@ -74,18 +95,19 @@ read against a rule rather than fitted to a feeling.
 | Dense corpus · member additions · capacity scaling · full retrain · gold-58 for small deltas · CoAtNet on XLA · multi-TPU queues · rental box as a scoring route | Each closed by measurement, not assumption. |
 | Scheduled tasks | Deleted (§164) — they were idle and were the black console window the user saw. |
 
-## Where the remaining weeks go — 复盘 of 2026-09-26
+## Where the remaining weeks go — 复盘 of 2026-09-27
 
-**The review changed the answer: [`docs/REVIEW-2026-09-26.md`](docs/REVIEW-2026-09-26.md).**
-**The score is at the public ceiling, and what is left is selection risk on knobs fitted to data we
-cannot see** — unmeasurable *by construction*, not by lack of effort.
+**The 2026-09-26 review was superseded the next day, because its premise was false.**
+See [`docs/REVIEW-2026-09-27.md`](docs/REVIEW-2026-09-27.md) (and keep the 09-26 one for its
+*instrument* map, which is still correct). It said "the score is at the public ceiling, so what is
+left is unmeasurable selection risk". **The ceiling is 0.959; we are 0.016 below it.**
 
 | | |
 |---|---|
-| 1. Hold the ceiling | done — five arms submitted, all ran the hidden rerun end to end |
-| 2. Keep the final choice open | decide at the deadline, hedging different unmeasurable axes (`FINAL-SELECTION.md`) |
-| 3. Look at the frontier, rarely | the only source of a genuinely new idea; the last sweep found nothing (A116) |
-| 4. **Do not spend the weeks turning knobs** | 2026-09-26 is the demonstration — see below |
+| 1. ✅ What still holds | the instrument map, the five public-fitted knobs staying unjudgeable (A93), and the pre-registered hedge — **`0943cf` + `0943p`** |
+| 2. ⭐ **Climb** | Phase 1 (no quota): member sweep + per-finding specialists + weekly frontier watch. Phase 2: train members in families the stack lacks |
+| 3. ⚠️ **Not "reach 0.959"** | part of that gap is public overfitting with unknown private transfer, and we cannot see the leaders' methods. Target = **climb past 0.943 with non-public-validated changes** |
+| 4. **Do not spend the weeks turning fusion knobs** | still true — closed four independent ways, and the parent has no honest OOF |
 
 ### ⭐ And one line that reopened: training (2026-09-26, §197)
 
