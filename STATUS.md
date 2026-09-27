@@ -47,7 +47,7 @@ land so they get read against a rule rather than fitted to a feeling.
 
 | Thing | State |
 |---|---|
-| Submissions | **four PENDING** (`56599159` `0943p` · `56599162` `0943r` · `56599163` `0943c` · `56599932` `0943cf`) — the other five read back 0.943 / 0.943 / 0.943 / 0.942 / 0.942; ledger **36 rows**. |
+| Submissions | **three PENDING** (`56599159` `0943p` · `56599162` `0943r` · `56599932` `0943cf`). ⭐ **`56599163` (`0943c`) read back `0.942`** — our rescued `cn0` member's **first hidden rerun**, and it **completed clean** on 1322 studies. Ledger **36 rows**, 33 scored, best still **0.943**. |
 | ⭐ The A-lite paired arms | **both QUEUED** on GPU: `a5fa` (the frontier's A5 architecture) and `rfa` (our head) — same script, fold, epochs, bs, res, and **the same augmentation on both**. This is the transfer check that gates the 48 GB cache (§210.3). |
 | The augmented readout | **pre-registered before the numbers landed**: `scripts/a5lite_pair.py`, threshold **+0.02**. It reproduces A153 exactly (0.7941 / 0.7366, Δ +0.0575, P=1.00) and **asserts the self-pair invariant** (0.0000, degenerate CI) before printing any delta. |
 | Density rung `a5lite-n8` | ⚠️ **built, deliberately NOT pushed** — both GPU slots are held by the queued pair. See the reopened-training section below. |

@@ -88,6 +88,13 @@ here rather than later:
 | `0943c`/`0943cf` **completes** | ⭐ keep it as a candidate regardless of score: completing **1322 studies inside the 8-hour fail-closed budget** is the same de-risking A110 got from the five arms, and without it the arm is not selectable in good conscience |
 | the frontier publishes something new | re-open the whole table; that is the only source of a genuinely new idea |
 
+### Readouts so far, read against the table above
+
+| ref | arm | result | reading |
+|---|---|---|---|
+| `56599163` | `0943c` (our `cn0` member) | **COMPLETE, 0.942** | falls in the **0.941–0.945 ⇒ no information** band, so it neither promotes nor demotes the arm — **and it completed**, which is the row that matters: our member survived the hidden rerun on 1322 studies with a fifth view in the blend, 0 failures. ⚠️ **Not evidence the member helps.** 0.942 vs `0943`'s 0.943 is 0.001 against ±0.008 noise, and two pure-knob arms (`0943h`, `0943o`) also sit at 0.942 — so that value is not a fingerprint of the member. Equally it is **not** a regression: the pre-registered line was ≤ 0.940. |
+| `56599159` `56599162` `56599932` | `0943p` · `0943r` · `0943cf` | **PENDING** | — |
+
 ⚠️ The standing rule this repository paid for: **never spend a slot to "see if it helps"** (A96).
 Each of the nine submitted arms was submitted either to confirm a change with prior evidence or to
 create an option for this deadline — never to discover whether an idea works.
