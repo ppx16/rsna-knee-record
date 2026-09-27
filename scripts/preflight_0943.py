@@ -51,6 +51,9 @@ EXPECT = {
                      "note": "0.943 + OUR cn0 CoAtNet member as a fifth Raptor view"},
     "kernel-0943cf": {"rad_exclude": "\"Baker's\",", "preset": "speedy",
                       "note": "the member PLUS the C81 fracture fix (the two measured changes)"},
+    "kernel-0943cflat": {"rad_exclude": "\"Baker's\",", "preset": "parent",
+                         "note": "member + fracture fix + FLATTENED routing: differs from 0943cf "
+                                 "by exactly ONE line, so the final pair can hedge one axis"},
 }
 # The arm weights the fork is built on.  A public analysis of the 0.941 plateau argues that forks
 # stalling at 0.941 are the ones that moved these to 0.55/0.15, while the frontier's own submissions

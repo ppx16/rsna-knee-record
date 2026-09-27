@@ -123,6 +123,26 @@ ASSET_NEW = (r"\1\2, '/kaggle/input/datasets/ppxl16/rsna-knee-cn0-weights', "
 RADEX_OLD = r"_RAD_EXCLUDE = \(\"Baker's\", 'Fracture'\)"
 RADEX_NEW = "_RAD_EXCLUDE = (\"Baker's\",)"
 
+# ---- the routed variant: member + fracture + the FLATTENED outer routing -------------------
+# WHY `0943cflat` EXISTS.  The pre-registered pair is `0943cf` + `0943p`, but those two differ on
+# THREE axes at once (routing, our member, the fracture fix): if `0943p` wins we cannot say why, and
+# that arm carries NEITHER of the two changes this repo has measurements for.  `0943cflat` differs
+# from `0943cf` on EXACTLY ONE axis -- routing -- so the final pair becomes a clean single-axis
+# hedge with the measured changes in BOTH arms.  It also weakly dominates `0943p`: same flattened
+# routing, plus the +0.0028 member and the +0.00099 fracture fix (A131/A137, C81).
+# ⚠️ It is still a CONCENTRATED bet if only one slot is ever scored -- which is why this ADDS an
+# option rather than replacing the recommendation (docs/FINAL-SELECTION.md).
+# ⚠️⚠️ THE ANCHORS IN `apply_edits` ARE REGEXES, NOT LITERALS.  This bit me here: I first wrote
+# PRESET_OLD as the plain text 'PRESET = os.environ.get("RSNA_PRESET", "speedy")', and its unescaped
+# `(` and `)` were consumed as a GROUP DELIMITER, so the pattern required `get` followed immediately
+# by `"RSNA_PRESET"...` while the text has `get("RSNA_PRESET"...` -- the parens are never matched.
+# `old in text` was True while `re.search(old, text)` was None, which is exactly the confusing part.
+# The builder's raise ("found in 0 cells") is what caught it; use re.escape for literal anchors.
+PRESET_SPEEDY_TXT = 'PRESET = os.environ.get("RSNA_PRESET", "speedy")'
+PRESET_PARENT_TXT = 'PRESET = os.environ.get("RSNA_PRESET", "parent")'
+PRESET_OLD = re.escape(PRESET_SPEEDY_TXT)
+PRESET_NEW = PRESET_PARENT_TXT
+
 EDITS = [
     # ⚠️ SIXTH EDIT, and the first smoke run is why it exists.  `_asset_find_asset` does NOT search
     # /kaggle/input; it walks an explicit whitelist, `ASSET_ROOTS`.  So mounting the dataset is
@@ -139,7 +159,7 @@ EDITS = [
 ]
 
 
-def apply_edits(texts, extra_fracture=False):
+def apply_edits(texts, extra_fracture=False, flat=False):
     """Apply each edit to the ONE cell that contains it.
 
     ⚠️ The first version called this per cell and required all five edits inside that cell -- but
@@ -149,6 +169,9 @@ def apply_edits(texts, extra_fracture=False):
     edits = list(EDITS)
     if extra_fracture:
         edits.append(("_RAD_EXCLUDE drops 'Fracture' (the C81 fix)", RADEX_OLD, RADEX_NEW))
+    if flat:
+        # the whole preset line, so the assert below is on the RESULT and not on a substring
+        edits.append(("outer routing flattened (the `parent` preset)", PRESET_OLD, PRESET_NEW))
     for name, old, new in edits:
         hits = [i for i, t in enumerate(texts) if t is not None and re.search(old, t, re.S)]
         if len(hits) != 1:
@@ -161,7 +184,7 @@ def apply_edits(texts, extra_fracture=False):
     return texts
 
 
-def check(nb, meta, fracture=False):
+def check(nb, meta, fracture=False, flat=False):
     """Post-conditions on the built artifact.  Every one of these is a thing that would be SILENT."""
     text = "\n".join("".join(c.get("source", [])) for c in nb["cells"])
     assert '"cn0-ours": 0.20' in text, "view weight missing"
@@ -177,13 +200,21 @@ def check(nb, meta, fracture=False):
     assert '"k_eval_fixed": 24' in text, "our view does not pin k_eval"
     assert '"norm": "none"' in text, "our view does not pin norm"
     # the recipe's own invariants must still hold
-    assert 'PRESET = os.environ.get("RSNA_PRESET", "speedy")' in text, "preset line changed"
+    want_preset = PRESET_PARENT_TXT if flat else PRESET_SPEEDY_TXT
+    assert want_preset in text, "preset line is not %r" % want_preset
+    if flat:
+        # the dispatch must still CONTAIN the parent branch -- baking the default without the
+        # branch would silently fall through to `speedy` and produce a fitted-routing arm
+        assert 'PRESET == "parent"' in text, "parent preset branch is missing"
     if fracture:
         assert '_RAD_EXCLUDE = ("Baker\'s",)' in text, "the fracture fix did not take"
     else:
         assert '_RAD_EXCLUDE = ("Baker\'s", \'Fracture\')' in text, "unexpected fracture fix"
     assert '"rad_cal_w": 0.40,' in text, "rad_cal_w changed"
-    assert '"coatnet_w": {"__default__": 0.65' in text, "outer routing changed"
+    # ⚠️ `coatnet_w`'s LITERAL stays 0.65 even under `parent` -- the preset flattens it at RUNTIME
+    # through the dispatch block.  So this asserts the literal, and the branch assert above is what
+    # proves the flattening will actually happen.
+    assert '"coatnet_w": {"__default__": 0.65' in text, "outer routing literal changed"
     assert meta["enable_internet"] is False, "internet must be OFF (A78)"
     assert MEMBER_DATASET in (meta.get("dataset_sources") or []), "weights dataset not mounted"
     print("   post-conditions: all present")
@@ -195,25 +226,34 @@ def main():
     ap.add_argument("--fracture", action="store_true",
                     help="also build `kernel-0943cf`: the member PLUS the _RAD_EXCLUDE fracture fix "
                          "(the two changes this repo actually has measurements for)")
+    ap.add_argument("--flat", action="store_true",
+                    help="also build `kernel-0943cflat`: the member + the fracture fix + the "
+                         "FLATTENED outer routing, so the final pair can differ on ONE axis")
     a = ap.parse_args()
 
     if a.check:
-        for d in (DST, ROOT / "kernels" / "kernel-0943cf"):
+        for d, frac, flat in ((DST, False, False),
+                              (ROOT / "kernels" / "kernel-0943cf", True, False),
+                              (ROOT / "kernels" / "kernel-0943cflat", True, True)):
             if d.is_dir():
                 check(json.loads((d / NB).read_text(encoding="utf-8")),
-                      json.loads((d / "kernel-metadata.json").read_text(encoding="utf-8")))
+                      json.loads((d / "kernel-metadata.json").read_text(encoding="utf-8")),
+                      fracture=frac, flat=flat)
                 print("CHECK OK: %s" % d)
         return 0
 
-    targets = [(DST, "ppxl16/rsna-knee-0943c", "RSNA knee 0943c", False)]
+    targets = [(DST, "ppxl16/rsna-knee-0943c", "RSNA knee 0943c", False, False)]
     if a.fracture:
         targets.append((ROOT / "kernels" / "kernel-0943cf", "ppxl16/rsna-knee-0943cf",
-                        "RSNA knee 0943cf", True))
+                        "RSNA knee 0943cf", True, False))
+    if a.flat:
+        targets.append((ROOT / "kernels" / "kernel-0943cflat", "ppxl16/rsna-knee-0943cflat",
+                        "RSNA knee 0943cflat", True, True))
 
-    for dst, kid, title, frac in targets:
+    for dst, kid, title, frac, flat in targets:
         nb = json.loads((SRC / NB).read_text(encoding="utf-8", errors="replace"))
         texts = ["".join(c["source"]) if "source" in c else None for c in nb["cells"]]
-        texts = apply_edits(texts, extra_fracture=frac)
+        texts = apply_edits(texts, extra_fracture=frac, flat=flat)
         for c, t in zip(nb["cells"], texts):
             if t is not None:
                 c["source"] = t.splitlines(keepends=True)
@@ -228,12 +268,12 @@ def main():
         meta["dataset_sources"] = ds
         meta.pop("id_no", None)
 
-        check(nb, meta, fracture=frac)
+        check(nb, meta, fracture=frac, flat=flat)
         dst.mkdir(parents=True, exist_ok=True)
         (dst / NB).write_text(json.dumps(nb, ensure_ascii=False), encoding="utf-8")
         (dst / "kernel-metadata.json").write_text(
             json.dumps(meta, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
-        print("\nbuilt %s  (fracture=%s, %d datasets)" % (dst, frac, len(ds)))
+        print("\nbuilt %s  (fracture=%s flat=%s, %d datasets)" % (dst, frac, flat, len(ds)))
 
     print("   reminder: the member view is 24 windows on purpose; the other four stay at 94.")
     return 0
