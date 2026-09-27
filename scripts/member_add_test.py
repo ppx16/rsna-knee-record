@@ -1,4 +1,4 @@
-﻿# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 """Would one of OUR arms add anything to a parent-quality blend?
 
 WHY THIS GATES THE TRAINING DECISION
@@ -28,6 +28,7 @@ from __future__ import annotations
 import argparse
 import csv
 import glob
+import itertools
 import os
 import pathlib
 import re
@@ -68,7 +69,11 @@ def macro(Y, M, P):
 
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--arm", default="cn0@f0")
+    ap.add_argument("--arm", action="append", default=None,
+                    help="repeatable. ONE arm answers 'does it help?'; TWO OR MORE answer the "
+                         "question that actually matters before integrating both -- 'is the second "
+                         "one additive GIVEN the first?', because the gate is single-member and two "
+                         "arms of the same family are usually not additive.")
     ap.add_argument("--strong", action="store_true",
                     help="add the two published Rad heads to the base and choose every blend "
                          "weight on the fit half -- a parent-quality instrument, and the honest "
@@ -76,6 +81,7 @@ def main(argv=None) -> int:
     ap.add_argument("--boot", type=int, default=400)
     ap.add_argument("--seed", type=int, default=20260926)
     a = ap.parse_args(argv)
+    arms_wanted = a.arm or ["cn0@f0"]
 
     lab_ids, Y, M = read_labels(str(LABELS_CSV))
     pos_lab = {u: i for i, u in enumerate(lab_ids)}
@@ -84,21 +90,30 @@ def main(argv=None) -> int:
         for r in csv.DictReader(f):
             fold[r["StudyInstanceUID"]] = int(r["fold"])
 
-    # our arm
-    ours = None
+    # our arms (one per --arm; the gate is only meaningful for one, the JOINT question needs N)
+    found = {}
     for pat in (str(ROOT / "downloads/cv/**/raptor_oof_*.npz"),
-                str(ROOT / "downloads/rent/**/raptor_oof_*.npz")):
+                str(ROOT / "downloads/rent/**/raptor_oof_*.npz"),
+                # the A-lite paired arms land here rather than under cv/ (they are written by
+                # kernels/kernel-a5lite*, not by the cvtrain pipeline).  NOTE these use a DIFFERENT
+                # fold system (ppxl16/rsna-knee-cv-folds, 881 studies) from the base's v52_oof.csv,
+                # which is fine -- the id intersection handles it, and honesty is per-family.
+                str(ROOT / "downloads/a5lite_*/raptor_oof_*.npz")):
         for p in glob.glob(pat, recursive=True):
             m = re.search(r"raptor_oof_([A-Za-z0-9]+?)(?:_(ep\d+|epens|swa))?_fold(\d+)\.npz$",
                           os.path.basename(p))
             if not m or m.group(2):
                 continue
-            if "%s@f%s" % (m.group(1), m.group(3)) == a.arm:
-                d = np.load(p, allow_pickle=True)
-                ours = ([str(u) for u in d["ids"]], np.asarray(d["pred"], dtype=np.float64))
-    if ours is None:
-        raise SystemExit("!! arm %r not found among the fold OOF npz files" % a.arm)
-    o_ids, o_P = ours
+            found["%s@f%s" % (m.group(1), m.group(3))] = p
+    ours = []
+    for want in arms_wanted:
+        p = found.get(want)
+        if p is None:
+            raise SystemExit("!! arm %r not found among the fold OOF npz files (have: %s)"
+                             % (want, ", ".join(sorted(found))))
+        d = np.load(p, allow_pickle=True)
+        ours.append((want, [str(u) for u in d["ids"]], np.asarray(d["pred"], dtype=np.float64)))
+    o_ids = [u for u in ours[0][1]]
 
     # base components: A5 (fold-correct) and the public20 seed arms
     d = np.load(A5, allow_pickle=True)
@@ -130,19 +145,28 @@ def main(argv=None) -> int:
     # PER FAMILY: our arm's file is `..._fold0.npz`, so every study in it was held out by OUR
     # fold-0 model; A5's `raw[k]` is honest because m_f{k} never trained on it under v52's split;
     # public20's OOF is honest under its own split.  Mixing three honest predictions is honest.
-    ids = [u for u in o_ids if u in pos_lab and u in pos_a5 and u in pos_p20
+    ids = [u for u in o_ids if all(u in s for s in [set(o[1]) for o in ours])
+           and u in pos_lab and u in pos_a5 and u in pos_p20
            and np.isfinite(a5[pos_a5[u]]).all()]
-    print("arm %s: %d studies, each held out by its own family's fold discipline" % (a.arm, len(ids)))
+    print("arms %s: %d studies, each held out by its own family's fold discipline"
+          % (", ".join(o[0] for o in ours), len(ids)))
+    if len(ours) > 1:
+        print("  (intersection across all requested arms -- a joint number on a smaller n)")
     Ys = np.array([Y[pos_lab[u]] for u in ids])
     Ms = np.array([M[pos_lab[u]] for u in ids])
     A = rank01(np.array([a5[pos_a5[u]] for u in ids]))
     idx = [pos_p20[u] for u in ids]
     P20 = np.mean([rank01(p20[idx, j, :]) for j in range(p20.shape[1])], axis=0)
-    O = rank01(np.array([o_P[list(o_ids).index(u)] for u in ids]))
+    Os = []
+    for _n, a_ids, a_P in ours:
+        pos = {u: i for i, u in enumerate(a_ids)}
+        Os.append(rank01(np.array([a_P[pos[u]] for u in ids])))
+    O = Os[0]
 
     base = A5_W * A + (1 - A5_W) * P20
     print("base (A5 %.2f + public20 %.2f): %.4f" % (A5_W, 1 - A5_W, macro(Ys, Ms, base)))
-    print("our arm alone:                  %.4f" % macro(Ys, Ms, O))
+    for (nm_, _i, _P), Oi in zip(ours, Os):
+        print("arm %-14s alone:            %.4f" % (nm_, macro(Ys, Ms, Oi)))
 
     if a.strong:
         # ---- the strong-base variant -------------------------------------------------------
@@ -156,21 +180,31 @@ def main(argv=None) -> int:
         # same half", both scored on the other half.
         Rk = rank01(np.array([rads[0][u] for u in ids]))
         Ek = rank01(np.array([rads[1][u] for u in ids]))
+        nm = len(Os)
+        # one member keeps the shipped 0.05 grid (so the cn0 control reproduces bit-for-bit);
+        # a joint test coarsens to 0.1, because the grid is multiplicative in the member count.
+        mvals = np.arange(0.0, 0.501, 0.05 if nm == 1 else 0.1)
         grid = []
         for wa in np.arange(0.3, 0.91, 0.1):
             for wr in np.arange(0.0, 0.31, 0.1):
                 for we in np.arange(0.0, 0.21, 0.1):
-                    for wm in np.arange(0.0, 0.51, 0.05):
-                        rest = 1.0 - wa - wr - we - wm
+                    for wms in itertools.product(mvals, repeat=nm):
+                        rest = 1.0 - wa - wr - we - float(sum(wms))
                         if rest < -1e-9:
                             continue
-                        grid.append((float(wa), float(wr), float(we), float(wm), max(0.0, rest)))
-        print("\nstrong base: %d candidate weightings over {A5, Rad-v52, Rad-e11, public20, ours}"
-              % len(grid))
+                        grid.append((float(wa), float(wr), float(we))
+                                    + tuple(float(x) for x in wms) + (max(0.0, rest),))
+        nomem = [p for p in grid if not any(p[3:3 + nm])]
+        print("\nstrong base: %d candidate weightings over {A5, Rad-v52, Rad-e11, public20, %s}"
+              % (len(grid), ", ".join(o[0] for o in ours)))
+        print("  grid step for member weights: %.2f ; %d weightings use NO member"
+              % (0.05 if nm == 1 else 0.1, len(nomem)))
 
         def blend(p, sl):
-            wa, wr, we, wm, wp = p
-            return (wa * A[sl] + wr * Rk[sl] + we * Ek[sl] + wp * P20[sl] + wm * O[sl])
+            out = p[0] * A[sl] + p[1] * Rk[sl] + p[2] * Ek[sl] + p[3 + nm] * P20[sl]
+            for w, Oi in zip(p[3:3 + nm], Os):
+                out = out + w * Oi[sl]
+            return out
 
         rng2 = np.random.default_rng(a.seed)
         perm2 = rng2.permutation(len(ids))
@@ -179,8 +213,8 @@ def main(argv=None) -> int:
         P_m = np.zeros_like(base)
         chosen = []
         for fit_ix, ev_ix in ((h[0], h[1]), (h[1], h[0])):
-            sc_base = [macro(Ys[fit_ix], Ms[fit_ix], blend(p, fit_ix)) for p in grid if p[3] == 0.0]
-            gb = [p for p in grid if p[3] == 0.0]
+            sc_base = [macro(Ys[fit_ix], Ms[fit_ix], blend(p, fit_ix)) for p in nomem]
+            gb = nomem
             pb = gb[int(np.nanargmax(sc_base))]
             sc_mem = [macro(Ys[fit_ix], Ms[fit_ix], blend(p, fit_ix)) for p in grid]
             pm = grid[int(np.nanargmax(sc_mem))]
@@ -207,6 +241,9 @@ def main(argv=None) -> int:
         return 0
 
     # diversity diagnostic: per-label Spearman of our arm against the base
+    if len(Os) > 1:
+        raise SystemExit("!! the non-strong path is single-member by construction; use --strong "
+                         "for a joint test (it is the only variant with joint weight fitting)")
     cors = [spearmanr(O[:, j], base[:, j]).statistic for j in range(12)]
     print("rank correlation vs base: mean %.4f (min %.4f, max %.4f)"
           % (float(np.mean(cors)), float(np.min(cors)), float(np.max(cors))))

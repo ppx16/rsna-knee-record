@@ -24,6 +24,43 @@ authoritatively measurable must never be carried as a remembered belief.**
 | ⇒ The plan | **Phase 1 (no quota):** sweep every member we hold through `member_add_test.py`; test per-finding specialists; **frontier watch weekly, not rarely**. **Phase 2:** train members in families the stack does *not* have (TPU, 1.28 h/fold). |
 | ⚠️ Not relaxed | **A96 stands** — 0.002 is still invisible. What changed is that **0.016 is visible**. The target is "climb past 0.943 with non-public-validated changes", **not** "reach 0.959". |
 
+## ✅ Phase 1, first result: our existing checkpoints are exhausted
+
+**P1.1 member sweep is done** — all **24** arms through the honest gate (`member_sweep.py`, parent-quality
+base, every weight fitted on one half and scored on the other). Full detail: HANDOFF §215 / A158.
+
+| arm | Δ | 95% CI | verdict |
+|---|---|---|---|
+| `cn0@f0` | **+0.0028** | [+0.0011, +0.0041] | ⭐ **PASS** — already shipped in `0943cf` |
+| `d64cn0@f0` | **+0.0016** | [+0.0006, +0.0027] | passes alone ⚠️ but see below |
+| `nx3361` · `nx3360` · `d3f0` | +0.0009 · +0.0005 · +0.0003 | all straddle 0 | no signal |
+| 17 others | 0.0000 (weight 0 chosen in **both** halves) | [0, 0] | no signal |
+| `r3360` · `r3362` | **−0.0004** | both exclude 0 | ⚠️ **hurts** |
+
+⭐ **Only the CoAtNet family passes; none of ~15 DINOv2/other arms do, and two actively hurt** — consistent
+with the mechanism (our DINOv2 arms duplicate the frontier's own seeds; CoAtNet is the decorrelated one).
+The positive control reproduced `cn0`'s +0.0028 exactly, so the sweep is trustworthy.
+
+⚠️⚠️ **And the single-member gate is not sufficient.** `d64cn0` passes alone, but it is the *same family*
+as `cn0`, so I added a **joint** test (`--arm A --arm B`, one grid dimension per member; the single-arm path
+verified bit-for-bit unchanged):
+
+| combination | Δ | 95% CI |
+|---|---|---|
+| base + `cn0` | **+0.0028** | [+0.0011, +0.0041] |
+| base + `cn0` + `d64cn0` | **+0.0026** | [+0.0011, +0.0039] |
+
+⇒ **Adding `d64cn0` makes it no better, and the joint fit gives it weight 0 on one half. They are
+substitutes, not complements.** ⭐ Method lesson: *a single-member gate will pass two members that are
+substitutes; for same-family members the only valid question is the joint one.*
+
+⇒ **Consequence for the plan:** the member line is **exhausted with what we hold**. Climbing the 0.016
+requires **training new, decorrelated members** (families the stack lacks) — that is Phase 2, and it is now
+the only path. ✅ **Today's submission slot is therefore not used**: the one new candidate is redundant with
+the shipped `cn0`, and nothing else met the standing rule *"confirm it can raise the score before
+submitting"*. Slots reset per UTC day and cannot be banked, but adding an arm we would never select is a net
+negative at the deadline.
+
 ## Where we stand
 
 | | |
