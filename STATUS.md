@@ -5,24 +5,28 @@
 
 ## 🚨 The premise changed today — read this before anything below
 
-**We are NOT at the public ceiling.** The live leaderboard reads **0.959**, we are at **0.943**, so we
-are **rank ~219 / 4440 (top 4.9%)** and the gap is **+0.016 — exactly 2× the ±0.008 noise band**.
+**We are NOT at the public ceiling.** The live leaderboard reads **0.959**, we are at **0.943**, and the
+gap is **+0.016 — exactly 2× the ±0.008 noise band**. Our row: **rank 411, score 0.943, 36 submissions**.
 
 The old belief ("ceiling ≈ 0.941–0.943, so we hold it") came from **A87.1, which read other
 competitors' *claims* off a discussion thread — not the leaderboard.** The leaderboard is free,
 authenticated and one command away, and it had never been read. ⇒ **A quantity that is cheaply and
-authoritatively measurable must never be carried as a remembered belief.**
+authoritatively measurable must never be carried as a remembered belief.** ⚠️ I then violated that same
+rule once more, in the same hour: `lb_ceiling.py` **derived** our rank as "teams strictly above + 1" and
+reported **219**, when the file it had already downloaded contained a `Rank` column saying **411**. Every
+team gets a **distinct rank inside a block of equal scores**. Both bugs are now covered by `--selftest`.
 
-**Re-read it with `python scripts/lb_ceiling.py`** (has `--selftest`). Full plan:
+**Re-read it with `python scripts/lb_ceiling.py`.** Full plan:
 [`docs/REVIEW-2026-09-27.md`](docs/REVIEW-2026-09-27.md).
 
 | | |
 |---|---|
 | ⚠️ Is the gap real? | **Mixed.** Teams above us have median **83** submissions vs **15** in our band, so part is public overfitting. ⚠️ **But `daimaru` reached 0.955 on 8 submissions** — that cannot be hill-climbing ⇒ **a real recipe exists.** |
 | ⚠️ What it is NOT | **Not a missing checkpoint.** `kernel-0943` already mounts essentially the entire published model zoo (maxspan, native384, native384dense, coat-resgated, d4-depthzone, global96, e11, e9, llm-labels, v52, radimagenet, pilkwang + DINOv2-small). |
-| ⭐ The unlock | Training was closed on **"our arm cannot beat A5"** (A106, true). That is **not** the question: the requirement for an ensemble member is **strong AND decorrelated**, and `cn0` (0.8769, *below* A5) proved it adds **+0.0028, CI [+0.0011, +0.0043]** on a parent-quality base. **Two different questions were conflated.** |
-| ⇒ The plan | **Phase 1 (no quota):** sweep every member we hold through `member_add_test.py`; test per-finding specialists; **frontier watch weekly, not rarely**. **Phase 2:** train members in families the stack does *not* have (TPU, 1.28 h/fold). |
-| ⚠️ Not relaxed | **A96 stands** — 0.002 is still invisible. What changed is that **0.016 is visible**. The target is "climb past 0.943 with non-public-validated changes", **not** "reach 0.959". |
+| ⭐⭐ **The actionable target is +0.001, not +0.016** | Our 0.943 is a **448-team block spanning ranks 219–666**, and **both medal cutoffs fall inside it** (silver = top 5% = rank ≤222, bronze = top 10% = rank ≤444). So at 0.943 **whether we medal at all is decided by an opaque tie-break, not by score**. The next score up (**0.944**) is only a **46-team block** at ranks 173–218 ⇒ **+0.001 escapes the tie-break entirely and lands in silver.** ⚠️ Cutoffs are the standard Kaggle rule and medals are awarded on the **private** LB, so this is indicative, not decisive. |
+| ⭐ The unlock | Training was closed on **"our arm cannot beat A5"** (A106, true). That is **not** the question: an ensemble member needs to be **strong AND decorrelated**, and `cn0` (0.8769, *below* A5) proved it adds **+0.0028, CI [+0.0011, +0.0043]** on a parent-quality base. **Two different questions were conflated.** |
+| ⇒ The plan | **Phase 1 (no quota):** ✅ member sweep **done** — our existing stock is exhausted (only `cn0` adds). Still open: per-finding specialists; weekly frontier watch. **Phase 2:** train members in families the stack does *not* have (TPU, 1.28 h/fold) — **now the only path**. |
+| ⚠️ Not relaxed | **A96 stands** — 0.002 is still invisible on a *single* arm. But a **real +0.003** on the private split is exactly the size that decides this competition, and the +0.001 escape from the tie block is the concrete objective. |
 
 ## ✅ Phase 1, first result: our existing checkpoints are exhausted
 

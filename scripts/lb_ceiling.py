@@ -44,7 +44,7 @@ BANDS = [0.958, 0.955, 0.950, 0.948, 0.946, 0.945, 0.944, 0.943, 0.940]
 
 
 def parse(rows):
-    """rows -> list of dicts with float 'score' and int 'subs'; validates the schema loudly."""
+    """rows -> list of dicts with float 'score', int 'subs', int|None 'rank'; validates loudly."""
     if not rows:
         raise SystemExit("!! empty leaderboard")
     cols = set(rows[0])
@@ -61,7 +61,17 @@ def parse(rows):
             n = int(r.get("SubmissionCount") or 0)
         except (TypeError, ValueError):
             n = 0
-        out.append({"score": s, "subs": n, "team": (r.get("TeamName") or "").strip()})
+        try:
+            # ⚠️ READ THE RANK COLUMN.  Do NOT derive rank as "teams strictly above + 1" -- that
+            # was this script's first bug, and it reported 219 while our actual rank was 411,
+            # because Kaggle gives every team a DISTINCT rank inside a block of equal scores
+            # (the 0.943 block alone spans 448 ranks).  The tie-break is opaque: it is not
+            # submission date (162 order violations in the 448-team block).
+            rk = int(r["Rank"])
+        except (KeyError, TypeError, ValueError):
+            rk = None
+        out.append({"score": s, "subs": n, "rank": rk, "team": (r.get("TeamName") or "").strip(),
+                    "users": (r.get("TeamMemberUserNames") or "")})
     if not out:
         raise SystemExit("!! no parseable scores")
     return out
@@ -108,57 +118,137 @@ def our_best():
     return best, ref
 
 
-def report(rows, best):
-    rows = sorted(rows, key=lambda r: -r["score"])
+def report(rows, best, user="ppxl16"):
+    rows = sorted(rows, key=lambda r: -(r["rank"] or 10 ** 9) if r["rank"] else -r["score"])
     n = len(rows)
-    top = rows[0]["score"]
+    top = max(r["score"] for r in rows)
     print("\nteams scored : %d" % n)
-    print("board max    : %.3f  (%s)" % (top, rows[0]["team"][:34]))
-    if best is None:
-        print("our best     : unknown (no ledger)")
-    else:
-        above = sum(1 for r in rows if r["score"] > best)
-        at = sum(1 for r in rows if abs(r["score"] - best) < 1e-9)
-        print("our best     : %.3f   -> %d teams strictly above, %d teams on exactly that score"
-              % (best, above, at))
-        print("                rank ~%d / %d  (top %.1f%%)" % (above + 1, n, 100.0 * (above + 1) / n))
+    print("board max    : %.3f" % top)
+
+    me = next((r for r in rows if user and user in r["users"]), None)
+    if me is None and best is not None:
+        # fall back: the best-ranked row carrying our score
+        cand = [r for r in rows if abs(r["score"] - best) < 1e-9]
+        me = min(cand, key=lambda r: r["rank"] or 10 ** 9) if cand else None
+        if me is not None:
+            print("⚠️ team %r not found in TeamMemberUserNames; matched on score instead" % user)
+
+    if me is not None:
+        print("US           : rank %s  score %.3f  subs %d  (%s)"
+              % (me["rank"], me["score"], me["subs"], me["team"]))
+    above = sum(1 for r in rows if best is not None and r["score"] > best)
+    if best is not None:
+        print("strictly above us by SCORE: %d   (rank %s is decided by an opaque tie-break,"
+              % (above, me["rank"] if me else "?"))
+        print("                              NOT by score -- see the block table below)")
         gap = top - best
-        print("                gap to the board max: %+.3f  = %.1fx the +-0.008 noise band"
-              % (gap, gap / 0.008))
+        print("gap to board max: %+.3f  = %.1fx the +-0.008 noise band" % (gap, gap / 0.008))
         if gap > 0.008:
-            print("                ⚠️ REAL GAP -- larger than the noise band. We are NOT at the ceiling.")
+            print("  ⚠️ REAL GAP -- larger than the noise band. We are NOT at the ceiling.")
         else:
-            print("                inside the noise band -- the board cannot separate us from the top here.")
-    print("\n%-8s %-7s %-8s %s" % ("score", "teams", "median", "cumulative at-or-above"))
+            print("  inside the noise band -- the board cannot separate us from the top here.")
+
+    # ---- the part that decides MEDALS: where do the cutoffs fall relative to our score block? ----
+    blocks = collections.Counter(r["score"] for r in rows)
+    spans = {}
+    for r in rows:
+        if r["rank"] is None:
+            continue
+        lo, hi = spans.get(r["score"], (r["rank"], r["rank"]))
+        spans[r["score"]] = (min(lo, r["rank"]), max(hi, r["rank"]))
+    ranks = {s: list(v) for s, v in spans.items()}
+    print("\n-- medal cutoffs (standard rule: GOLD top-10 + top 0.2%, SILVER top 5%, BRONZE top 10%) --")
+    cut = [("gold (0.2%)", max(1, round(0.002 * n))), ("silver (5%)", max(1, round(0.05 * n))),
+           ("bronze (10%)", max(1, round(0.10 * n)))]
+    ordered = sorted(rows, key=lambda r: r["rank"] or 10 ** 9)
+    for name, k in cut:
+        r = ordered[k - 1]
+        print("  %-13s rank <= %-5d -> score %.3f  (a %d-team block)"
+              % (name, k, r["score"], blocks[r["score"]]))
+    if me is not None:
+        bloc = blocks[me["score"]]
+        lo, hi = ranks.get(me["score"], [None, None])
+        print("\n  ⚠️ OUR score %.3f is a %d-team block spanning ranks %s..%s."
+              % (me["score"], bloc, lo, hi))
+        for name, k in cut:
+            if lo is not None and lo <= k <= hi:
+                print("     -> the %s cutoff (rank %d) falls INSIDE that block: whether we get it is"
+                      % (name, k))
+                print("        decided by the tie-break, NOT by score.")
+        nxt = [s for s in blocks if s > me["score"]]
+        if nxt:
+            s2 = min(nxt)
+            print("     -> the very next score up (%.3f) is a %d-team block at ranks %s..%s,"
+                  % (s2, blocks[s2], ranks[s2][0], ranks[s2][1]))
+            print("        i.e. +%.3f ESCAPES the tie-break entirely. That is the actionable target,"
+                  % (s2 - me["score"]))
+            print("        and it is far smaller than the %+.3f gap to the top." % (top - me["score"]))
+
+    print("\n%-8s %-7s %-8s %-12s %s" % ("score", "teams", "median", "rank span", "cumulative"))
     for b in BANDS:
         band = [r for r in rows if b <= r["score"] < b + 0.001]
         cum = sum(1 for r in rows if r["score"] >= b)
         med = sorted(r["subs"] for r in band)
         med = med[len(med) // 2] if med else 0
-        print("%-8.3f %-7d %-8d %d" % (b, len(band), med, cum))
-    print("\n(median = median SubmissionCount in that 0.001 band; high medians above us mean an "
-          "unknown share of any gap is public-LB hill-climbing, not recipe)")
+        span = "%s..%s" % (ranks[b][0], ranks[b][1]) if b in ranks else "-"
+        print("%-8.3f %-7d %-8d %-12s %d" % (b, len(band), med, span, cum))
 
 
 def selftest():
-    """Prove the parser and the banding fire, on synthetic rows -- a gate that never fires is not a gate."""
-    rows = [{"Score": "0.959", "TeamName": "a", "SubmissionCount": "73"},
-            {"Score": "0.943", "TeamName": "b", "SubmissionCount": "15"},
-            {"Score": "0.943", "TeamName": "c", "SubmissionCount": "9"},
-            {"Score": "garbage", "TeamName": "d", "SubmissionCount": "1"}]
+    """Prove the parser and the rank/block logic -- a gate that never fires is not a gate.
+
+    The cases below include the two bugs this script actually had, so they cannot come back:
+    a missing Rank column must not silently become a derived guess, and a medal cutoff landing
+    INSIDE a block of equal scores must be reported as tie-break-decided.
+    """
+    rows = [{"Rank": "1", "Score": "0.959", "TeamName": "a", "SubmissionCount": "73",
+             "TeamMemberUserNames": "x"},
+            {"Rank": "2", "Score": "0.944", "TeamName": "b", "SubmissionCount": "4",
+             "TeamMemberUserNames": "y"},
+            {"Rank": "3", "Score": "0.943", "TeamName": "c", "SubmissionCount": "15",
+             "TeamMemberUserNames": "ppxl16"},
+            {"Rank": "4", "Score": "0.943", "TeamName": "d", "SubmissionCount": "9",
+             "TeamMemberUserNames": "z"},
+            {"Score": "garbage", "TeamName": "e", "SubmissionCount": "1"}]
     out = parse(rows)
-    assert len(out) == 3, "unparseable score must be dropped, got %d" % len(out)
-    assert out[1]["subs"] == 15, out[1]
+    assert len(out) == 4, "unparseable score must be dropped, got %d" % len(out)
+    assert out[2]["rank"] == 3 and out[2]["subs"] == 15, out[2]
+    assert out[4 - 1]["rank"] == 4, out[3]
     try:
         parse([{"Nope": "1"}])
     except SystemExit:
         pass
     else:
         raise AssertionError("a leaderboard with no Score column must fail loudly")
-    best = 0.943
-    above = sum(1 for r in out if r["score"] > best)
-    assert above == 1, above
-    print("SELFTEST OK: parser drops junk, validates the schema, and counts teams above us")
+    # the rank is READ, never derived: with two scores above 0.943 the derived rank would be 3,
+    # which happens to match here -- so also assert the case where deriving gives a WRONG answer
+    above = sum(1 for r in out if r["score"] > 0.943)
+    assert above == 2 and out[2]["rank"] == 3, (above, out[2]["rank"])
+    tie = [dict(r) for r in rows[:3]] + [{"Rank": "9", "Score": "0.943", "TeamName": "dup",
+                                          "SubmissionCount": "1", "TeamMemberUserNames": "w"}]
+    ot = parse(tie)
+    us = next(r for r in ot if "ppxl16" in r["users"])
+    assert us["rank"] == 3, us["rank"]
+    assert sum(1 for r in ot if r["score"] > us["score"]) == 2, "derived rank would say 3 -> right"
+    # ...and here the DERIVED rank is wrong, which is why Rank is read:
+    assert [r for r in ot if r["score"] == 0.943][-1]["rank"] == 9, "tie block must keep real ranks"
+    # block/cutoff detection: build a board where the 10% cutoff genuinely lands inside the big block
+    N = 20                                   # 1 team at 0.950, then 19 at 0.943
+    big = [{"Rank": str(i + 1), "Score": "0.950" if i == 0 else "0.943", "TeamName": "t%d" % i,
+            "SubmissionCount": "5", "TeamMemberUserNames": "ppxl16" if i == 6 else "u%d" % i}
+           for i in range(N)]
+    ob = parse(big)
+    blocks = collections.Counter(r["score"] for r in ob)
+    assert blocks[0.943] == N - 1, blocks
+    lo = min(r["rank"] for r in ob if r["score"] == 0.943)
+    hi = max(r["rank"] for r in ob if r["score"] == 0.943)
+    assert (lo, hi) == (2, N), (lo, hi)
+    cutoff10 = max(1, round(0.10 * N))       # derive it -- hardcoding it is how this test broke twice
+    assert lo <= cutoff10 <= hi, ("10%% cutoff rank %d should fall inside the 0.943 block %d..%d"
+                                  % (cutoff10, lo, hi))
+    cutoff02 = max(1, round(0.002 * N))
+    assert not (lo <= cutoff02 <= hi), "the 0.2% cutoff must NOT be inside the block here"
+    print("SELFTEST OK: parser reads Rank (never derives it), and block-vs-cutoff detection works")
     return 0
 
 
@@ -166,6 +256,7 @@ def main(argv=None) -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--csv", default="")
     ap.add_argument("--best", type=float, default=None, help="override our score")
+    ap.add_argument("--user", default="ppxl16", help="our Kaggle username, to find OUR row's rank")
     ap.add_argument("--selftest", action="store_true")
     a = ap.parse_args(argv)
     if a.selftest:
@@ -174,7 +265,7 @@ def main(argv=None) -> int:
     best = a.best
     if best is None:
         best, _ref = our_best()
-    report(rows, best)
+    report(rows, best, a.user)
     return 0
 
 
