@@ -1,4 +1,4 @@
-# STATUS — 2026-09-26 12:30Z
+# STATUS — 2026-09-27 06:30Z
 
 **One screen. Rewritten every session.** If this grows past a screen, the overflow belongs in a
 `HANDOFF.md` section, not here.
@@ -11,7 +11,7 @@
 | Best ledger score | ⭐ **0.943** — a **three-way tie**: `56568520` (`0943` speedy) · `56570144` (`0943f` fracture) · `56570151` (`0943s` sparse). Then `56568524` (`0943h`) and `56570148` (`0943o`) at **0.942**. |
 | Public LB noise | **±0.008** — so **the board cannot rank these five arms** and no "which is better" conclusion is drawn from it (A96). All five sit inside the noise band. |
 | ⭐ What the readouts actually bought | **All five arms completed the hidden rerun on 1322 studies.** Not just the baseline: both non-default presets and the reduced-window arm too. The submission path had only ever been exercised on the 3 visible studies. **That de-risking is independent of the score.** |
-| GPU quota | **2.24 h / 30 h** used, refreshes 2026-10-03. TPU 0 h / 20 h. ⚠️ The counter moves in **20-minute quanta** (A121), so it cannot resolve anything smaller. |
+| GPU quota | **10.33 h / 30 h** used (**19.67 h left**), refreshes 2026-10-03. TPU **1.85 h / 20 h** (18.15 h left). ⚠️ The counter moves in **20-minute quanta** (A121), so it cannot resolve anything smaller. |
 | Cost model | **1 h wall clock = 1 GPU hour even on the 2×T4 shape.** Scoring reruns are **not** billed — re-confirmed over a 7-hour idle window (A121). |
 
 ## 🔴 The one action left — and it is not something the CLI can do
@@ -47,17 +47,19 @@ land so they get read against a rule rather than fitted to a feeling.
 
 | Thing | State |
 |---|---|
-| Submissions | **three PENDING** (`56599159` `0943p` · `56599162` `0943r` · `56599163` `0943c`) — the rest read back; ledger is 35 rows. `Remaining today: 2`. |
+| Submissions | **four PENDING** (`56599159` `0943p` · `56599162` `0943r` · `56599163` `0943c` · `56599932` `0943cf`) — the other five read back 0.943 / 0.943 / 0.943 / 0.942 / 0.942; ledger **36 rows**. |
+| ⭐ The A-lite paired arms | **both QUEUED** on GPU: `a5fa` (the frontier's A5 architecture) and `rfa` (our head) — same script, fold, epochs, bs, res, and **the same augmentation on both**. This is the transfer check that gates the 48 GB cache (§210.3). |
+| The augmented readout | **pre-registered before the numbers landed**: `scripts/a5lite_pair.py`, threshold **+0.02**. It reproduces A153 exactly (0.7941 / 0.7366, Δ +0.0575, P=1.00) and **asserts the self-pair invariant** (0.0000, degenerate CI) before printing any delta. |
+| Density rung `a5lite-n8` | ⚠️ **built, deliberately NOT pushed** — both GPU slots are held by the queued pair. See the reopened-training section below. |
 | `0943c` integration | **proven to run**: `raptor_raw.npz` came back **(5, 3, 12)** — five arms, not four — with 0 failed studies and 0 neutral fills, and our view correlates most strongly (0.792) with the one sharing its geometry. Cost measured: Raptor stage **28.9 s → 33.2 s (+15%)** after moving it to the lighter GPU (A143). |
 | `0943p` / `0943r` runs | **both `COMPLETE`, both passed the acceptance test** (20/20 fingerprints, fail-closed gate PASS, valid `submission.csv`, 0 tracebacks). `0943p`'s log even shows `outer CoAtNet weight per finding: flat 0.65` — the flattening demonstrably took effect. |
-| `kernel-tpu-d3f0` (DINOv3 fold 0) | **QUEUED** on TPU (queueing spends no quota; 0.00 h / 20 h used) |
 | Kept for later | the pilot's log also revealed that the `[config]` line prints `coatnet_w` but **not** `rad_cal_w` — so for `0943r` the log cannot certify its own change; the proof is the artifact + the code path instead (A134) |
 
 ## Closed — do not reopen without new evidence
 
 | Line | Why it is closed |
 |---|---|
-| **Training line** | Our best arm scores **0.8731** against A5's **0.9143** on the 181 studies where both are genuinely held out — a gap whose CI excludes zero (A106). Below the archive's own ~0.90 member bar. |
+| **Training line — backbone swap** | Our best arm scores **0.8731** against A5's **0.9143** on the 181 studies where both are genuinely held out — a gap whose CI excludes zero (A106). Below the archive's own ~0.90 member bar. **And swapping in DINOv3 directly went backwards** (`d3f0` 0.8530, §203). ⚠️ The *architecture* half is separately live under A153 — the backbone is ruled out, the head is not. |
 | **Champion folds** | The checkpoints carry a config, but in a **different schema**, and **neither gate can see a wrong geometry** (A108). Forcing it would produce a confident, wrong result. |
 | **E2 parent OOF** | The 20 published members are **not held out** (A93): parent 0.9295 vs a genuine OOF's 0.8323 on the same studies. |
 | **Fusion knobs on the frontier stack** | No valid parent OOF exists, so they could only be judged on the ±0.008 board. `rad_cal_w`→0 was "locally contradicted" by A117 — **that basis is retracted** (A127): the probe measured the calibrator repairing a mis-set blend, not adding information. |
@@ -131,25 +133,63 @@ reaching `cn0` would need +0.024 against a family slope of +0.01–0.02.
 
 ⭐ **The diagnosis is the deliverable: swapping in the backbone did not solve it.** The frontier's ~0.05 edge
 on the DINOv3 family is **not the backbone** — it is their architecture (cross-series attention-MIL and
-slots), their recipe, and probably much longer training. **The training line is now closed by two independent
-measurements** (A106's 0.0412 gap to A5; and this direct swap that went backwards).
+slots), their recipe, and probably much longer training. The *backbone-swap* route is closed by two
+independent measurements (A106's 0.0412 gap to A5; and this direct swap that went backwards) — but see
+**A153 below**, which reopened the *architecture* half of that sentence with a paired measurement.
 
 ⇒ **The only live scoring question left is whether to integrate `cn0`** — the one member that beats the
 frontier's own seeds (0.8769 vs 0.8697), already published to Kaggle, with local support (+0.0019 / +0.0028 on
 a 0.917 base) and a compatible member schema — but also with the unmeasurable shrink-at-0.94 risk and this
-repo's history of changes that pass every gate and quietly degrade. **That is a user decision.**
+repo's history of changes that pass every gate and quietly degrade. **That is a user decision.** It has
+now been **built and submitted** as `0943c` / `0943cf` (see the nine-arm choice set above).
 
-⇒ **A better member whose weights we hold is now the only thing that converts this line into score — which
-makes the DINOv3 pilot the linchpin** (its checkpoint lands in the kernel's `/kaggle/working`).
-⭐ And one cheap unblock, if you want it: **power the AutoDL box on for ~10 minutes** to pull `cn0`/`d64cn0`'s
-checkpoints (≈ ¥0.5 at ¥2.88/h) — *if they still exist*; only the corpus is confirmed deleted.
+✅ **The weights are no longer a risk.** Both suggested unblocks are done: the AutoDL box was powered on,
+`cn0`'s six checkpoints (1.68 GB) were pulled from `/root/autodl-tmp/kaggle/working/`, verified by CRC and
+by `best_gold_auc = 0.877929`, and **published** as the private dataset `ppxl16/rsna-knee-cn0-weights`
+(6 × 279.3 MiB, ready). The box is shut down and the copy is now durable independent of it.
 
-⇒ **The live experiment (pre-registered, §197.5): train a DINOv3 arm on TPU.** Hypothesis: a DINOv3
-backbone lifts a single arm from 0.877 to **≥0.90** (A5 = 0.9089). The zero-quota probe already
-confirmed the backbone is reachable (timm 1.0.26, `vit_small_patch16_dinov3`, pretrained fetch and
-336px forward both work, `num_features=384` so the head is unchanged). **Kill condition: fold-0
-< 0.88 ⇒ stop and spend no more quota.** Trained on **TPU, not GPU** — the user's standing policy
-reserves GPU for kernels that produce a submission (A132).
+⚠️ **The diagnosis above needs one correction from A153.** "It is their architecture, their recipe, and
+probably much longer training" was right, but A152/A153 split it further: the architecture **does** carry a
+measurable advantage (+0.0575 paired) — the DINOv3 swap failed because it changed the *backbone* while
+leaving the head, which is not where the edge is.
+
+### ⭐⭐ A153: the paired arms came back, and they **reversed** the surface reading (§210)
+
+| macro-AUC — same 881 studies, same script / fold / 12 epochs / bs=2 / **no augmentation** / same backbone | |
+|---|---|
+| `a5f0` — the **frontier's** A5 architecture | **0.7941** |
+| `rf0` — **our** head (the control arm) | **0.7366** |
+| **Δ** | **+0.0575, 95% CI [+0.0411, +0.0763], P(a5>r)=1.00** |
+
+⭐ **The control arm is why the conclusion is right.** `a5f0` vs `d3f0` (the real trainer, same head as
+`rf0`) is **−0.0584, CI [−0.0706, −0.0455]** (A152) and reads as "their architecture is *worse*". But
+`rf0` and `d3f0` are the *same head*, and the **−0.116** between them is *my* simplified setup (no
+augmentation, bs=2, fixed windows) — not architecture. ⇒ **Without the control arm I would have written
+the opposite conclusion**, which is the empirical case for paired arms.
+
+⚠️ **But +0.0575 was measured at a degraded operating point**, and this repo has twice measured such
+gaps shrinking as the base strengthens (A109, A112). ⇒ **The augmented pair now in flight is the
+transfer check**, read against a rule fixed in advance (§210.3): **≥ +0.02 ⇒ the advantage is real and
+the 48 GB faithful cache is justified; collapse ⇒ route A stops**, and the ~0.05 lives in the 16-slice
+density + the frontier's recipe rather than in their checkpoint.
+
+⭐ **And "48 GB or nothing" was wrong on one point.** The corpus holds 44 slices in five groups of
+**12/10/8/6/8**, and `a5_study` windows *inside* each group — so `n_slice` was capped at 6 by the
+**smallest** group, not by the corpus. A rung at **`n_slice=8`** takes 8 **distinct** slices from the
+12/10/8/8 groups and pads only coronal-no-fluid (6→8): **four of five groups fully distinct**. Measured
+profile, so the rungs are not interchangeable (6 = zero padding; 10/12 are padding-dominated and would
+measure *channel capacity*, not density — which is why only 8 is built):
+
+| rung | distinct/total per group (12/10/8/6/8) | what it measures |
+|---|---|---|
+| `n_slice=6` | 6/6 · 6/6 · 6/6 · 6/6 · 6/6 | the honest ceiling of the corpus |
+| **`n_slice=8`** | 8/8 · 8/8 · 8/8 · **6/8** · 8/8 | **a real density rung** |
+| `n_slice=10` | 10/10 · 10/10 · 8/10 · 6/10 · 8/10 | half capacity |
+| `n_slice=12` | 12/12 · 10/12 · 8/12 · 6/12 · 8/12 | mostly capacity |
+
+⇒ It costs **one** arm, not two: the raptor control's input path never reads `n_slice`, so the queued
+`rfa` is a valid control for **every** rung. `kernel-a5lite-n8` is built and verified (`--check` OK for
+all three payloads) and **held back on purpose** — push it only if the augmented pair passes.
 
 ⚠️ **Kept honest:** the +0.0019 was measured on a **0.917** base and the parent is ~0.94, so by the
 A109/A112 pattern the real gain is smaller, and that side is unmeasurable. This is a route worth
