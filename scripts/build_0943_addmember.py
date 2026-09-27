@@ -111,6 +111,18 @@ ASSET_OLD = r"(ASSET_ROOTS = \[)(.*?)(\])"
 ASSET_NEW = (r"\1\2, '/kaggle/input/datasets/ppxl16/rsna-knee-cn0-weights', "
              r"'/kaggle/input/rsna-knee-cn0-weights'\3")
 
+# The SEVENTH edit, only for the `-cf` flavour: stack the second thing this repo has a *measurement*
+# for on top of the first.  `_RAD_EXCLUDE` dropping 'Fracture' is worth +0.001 macro at n=4185
+# (C81), and the member is worth +0.0028 on a 0.917 base (A137).  They act on different parts of
+# the pipeline (the Rad blend's label set vs the CoAt view set), so the two are at least plausibly
+# additive -- which is the only reason it is worth a slot rather than a knob.
+# ⚠️ The replacement must NOT be a raw string.  The first version used r'_RAD_EXCLUDE = ("Baker\'s",)'
+# and wrote the backslash into the notebook, producing `("Baker\'s",)` -- a plain string with an
+# escaped apostrophe instead of a 1-element tuple, i.e. exactly the silent substring-matching bug the
+# preflight's own comment warns about.  `check()` caught it because it asserts the RESULT, not the edit.
+RADEX_OLD = r"_RAD_EXCLUDE = \(\"Baker's\", 'Fracture'\)"
+RADEX_NEW = "_RAD_EXCLUDE = (\"Baker's\",)"
+
 EDITS = [
     # ⚠️ SIXTH EDIT, and the first smoke run is why it exists.  `_asset_find_asset` does NOT search
     # /kaggle/input; it walks an explicit whitelist, `ASSET_ROOTS`.  So mounting the dataset is
@@ -127,14 +139,17 @@ EDITS = [
 ]
 
 
-def apply_edits(texts):
+def apply_edits(texts, extra_fracture=False):
     """Apply each edit to the ONE cell that contains it.
 
     ⚠️ The first version called this per cell and required all five edits inside that cell -- but
-    they live in two different cells (the view weights in cell 2, the rest in cell 45), so it
+    they live in different cells (the view weights in cell 2, the rest in cell 45), so it
     refused on cell 0.  Correct shape: locate the unique cell per edit, then assert n == 1 within it.
     """
-    for name, old, new in EDITS:
+    edits = list(EDITS)
+    if extra_fracture:
+        edits.append(("_RAD_EXCLUDE drops 'Fracture' (the C81 fix)", RADEX_OLD, RADEX_NEW))
+    for name, old, new in edits:
         hits = [i for i, t in enumerate(texts) if t is not None and re.search(old, t, re.S)]
         if len(hits) != 1:
             raise SystemExit("!! edit %r found in %d cells (need exactly 1) -- refusing to write"
@@ -146,7 +161,7 @@ def apply_edits(texts):
     return texts
 
 
-def check(nb, meta):
+def check(nb, meta, fracture=False):
     """Post-conditions on the built artifact.  Every one of these is a thing that would be SILENT."""
     text = "\n".join("".join(c.get("source", [])) for c in nb["cells"])
     assert '"cn0-ours": 0.20' in text, "view weight missing"
@@ -163,7 +178,10 @@ def check(nb, meta):
     assert '"norm": "none"' in text, "our view does not pin norm"
     # the recipe's own invariants must still hold
     assert 'PRESET = os.environ.get("RSNA_PRESET", "speedy")' in text, "preset line changed"
-    assert '_RAD_EXCLUDE = ("Baker\'s", \'Fracture\')' in text, "rad exclude changed"
+    if fracture:
+        assert '_RAD_EXCLUDE = ("Baker\'s",)' in text, "the fracture fix did not take"
+    else:
+        assert '_RAD_EXCLUDE = ("Baker\'s", \'Fracture\')' in text, "unexpected fracture fix"
     assert '"rad_cal_w": 0.40,' in text, "rad_cal_w changed"
     assert '"coatnet_w": {"__default__": 0.65' in text, "outer routing changed"
     assert meta["enable_internet"] is False, "internet must be OFF (A78)"
@@ -174,41 +192,49 @@ def check(nb, meta):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--check", action="store_true", help="assert the built artifact, build nothing")
+    ap.add_argument("--fracture", action="store_true",
+                    help="also build `kernel-0943cf`: the member PLUS the _RAD_EXCLUDE fracture fix "
+                         "(the two changes this repo actually has measurements for)")
     a = ap.parse_args()
 
     if a.check:
-        nb = json.loads((DST / NB).read_text(encoding="utf-8"))
-        meta = json.loads((DST / "kernel-metadata.json").read_text(encoding="utf-8"))
-        check(nb, meta)
-        print("CHECK OK: %s" % DST)
+        for d in (DST, ROOT / "kernels" / "kernel-0943cf"):
+            if d.is_dir():
+                check(json.loads((d / NB).read_text(encoding="utf-8")),
+                      json.loads((d / "kernel-metadata.json").read_text(encoding="utf-8")))
+                print("CHECK OK: %s" % d)
         return 0
 
-    nb = json.loads((SRC / NB).read_text(encoding="utf-8", errors="replace"))
-    texts = ["".join(c["source"]) if "source" in c else None for c in nb["cells"]]
-    texts = apply_edits(texts)
-    for c, t in zip(nb["cells"], texts):
-        if t is not None:
-            c["source"] = t.splitlines(keepends=True)
+    targets = [(DST, "ppxl16/rsna-knee-0943c", "RSNA knee 0943c", False)]
+    if a.fracture:
+        targets.append((ROOT / "kernels" / "kernel-0943cf", "ppxl16/rsna-knee-0943cf",
+                        "RSNA knee 0943cf", True))
 
-    meta = json.loads((SRC / "kernel-metadata.json").read_text(encoding="utf-8"))
-    meta["id"] = "ppxl16/rsna-knee-0943c"
-    meta["title"] = "RSNA knee 0943c"
-    meta["is_private"] = True
-    meta["enable_internet"] = False
-    ds = list(meta.get("dataset_sources") or [])
-    if MEMBER_DATASET not in ds:
-        ds.append(MEMBER_DATASET)
-    meta["dataset_sources"] = ds
-    meta.pop("id_no", None)
+    for dst, kid, title, frac in targets:
+        nb = json.loads((SRC / NB).read_text(encoding="utf-8", errors="replace"))
+        texts = ["".join(c["source"]) if "source" in c else None for c in nb["cells"]]
+        texts = apply_edits(texts, extra_fracture=frac)
+        for c, t in zip(nb["cells"], texts):
+            if t is not None:
+                c["source"] = t.splitlines(keepends=True)
 
-    check(nb, meta)
+        meta = json.loads((SRC / "kernel-metadata.json").read_text(encoding="utf-8"))
+        meta["id"], meta["title"] = kid, title
+        meta["is_private"] = True
+        meta["enable_internet"] = False
+        ds = list(meta.get("dataset_sources") or [])
+        if MEMBER_DATASET not in ds:
+            ds.append(MEMBER_DATASET)
+        meta["dataset_sources"] = ds
+        meta.pop("id_no", None)
 
-    DST.mkdir(parents=True, exist_ok=True)
-    (DST / NB).write_text(json.dumps(nb, ensure_ascii=False), encoding="utf-8")
-    (DST / "kernel-metadata.json").write_text(
-        json.dumps(meta, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
-    print("\nbuilt %s" % DST)
-    print("   datasets: %d (incl. %s)" % (len(ds), MEMBER_DATASET))
+        check(nb, meta, fracture=frac)
+        dst.mkdir(parents=True, exist_ok=True)
+        (dst / NB).write_text(json.dumps(nb, ensure_ascii=False), encoding="utf-8")
+        (dst / "kernel-metadata.json").write_text(
+            json.dumps(meta, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+        print("\nbuilt %s  (fracture=%s, %d datasets)" % (dst, frac, len(ds)))
+
     print("   reminder: the member view is 24 windows on purpose; the other four stay at 94.")
     return 0
 

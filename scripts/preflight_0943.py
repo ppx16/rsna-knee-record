@@ -49,6 +49,8 @@ EXPECT = {
                      "note": "routing softened toward its default (C57-preferred hedge)"},
     "kernel-0943c": {"rad_exclude": "\"Baker's\", 'Fracture'", "preset": "speedy",
                      "note": "0.943 + OUR cn0 CoAtNet member as a fifth Raptor view"},
+    "kernel-0943cf": {"rad_exclude": "\"Baker's\",", "preset": "speedy",
+                      "note": "the member PLUS the C81 fracture fix (the two measured changes)"},
 }
 # The arm weights the fork is built on.  A public analysis of the 0.941 plateau argues that forks
 # stalling at 0.941 are the ones that moved these to 0.55/0.15, while the frontier's own submissions
@@ -228,7 +230,7 @@ def main():
         # These are the five integration edits plus the mount.  They are checked HERE as well as in
         # the builder because they are exactly the kind of thing that is invisible when wrong: the
         # notebook would still run, still write a submission, and quietly use the wrong member.
-        if d == "kernel-0943c":
+        if d.startswith("kernel-0943c"):
             mounted = json.dumps(meta.get("dataset_sources") or [])
             member = [
                 ('"name": "cn0-ours"', "the cn0-ours arm entry"),

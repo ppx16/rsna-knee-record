@@ -32,19 +32,23 @@ test set… It may be real. It is also the likeliest place to give back points p
 the `parent` preset is for" (A122, §194.3). That covers the *direction*; the *dose* is still
 unresolvable — see the caveats in the selection doc.
 
-**The choice set is now seven arms, all preflighted.** Two more were built and pushed on 2026-09-26
-(§196) so that the deferred decision has something real to choose from: **`0943p`** (preset `parent` —
-flatten the outer routing completely, the author's own registered insurance) and **`0943r`**
-(`rad_cal_w` 0.40 → 0.00, the author's v38 move). Both are one-token forks of the same notebook; the
-five existing arms rebuilt **byte-identical**, and preflight is 0 problems. ⚠️ Creating them widens
-the choice set, it does **not** raise the expected score — and **an arm that was never submitted
-cannot be selected**, so each needs one submission (free, 5/day) before the deadline.
+**The choice set is now NINE arms, and the decision is pre-registered** — see
+[`docs/FINAL-SELECTION.md`](docs/FINAL-SELECTION.md), which was written **before** the last readouts
+land so they get read against a rule rather than fitted to a feeling.
+
+| | |
+|---|---|
+| New since §196 | **`0943c`** = `0943` + **our rescued `cn0` as a fifth Raptor view** (built, smoke-tested, submitted `56599163`) and **`0943cf`** = the same **plus** the fracture fix — the two changes this repo actually has measurements for |
+| Recommendation | **`0943cf` + `0943p`** — the pair puts the published per-label routing against the flattened one, i.e. it hedges the single knob whose provenance is documented as public-fitted, and covers three of the four axes between them |
+| ⚠️ The board still cannot rank them | ±0.008 noise vs 0.001–0.003 effects; the readouts can only **disqualify** (a ≤0.940 return, or a failed run), and that rule is written down in the doc |
+| ⚠️ An arm that was never submitted cannot be selected | eight are submitted now; `0943cf` follows its smoke run |
 
 ## Live right now
 
 | Thing | State |
 |---|---|
-| Submissions | **none pending** — all five read back, ledger is 32 rows. ⚠️ **`Remaining today: 0`** (5 used) ⇒ the two new arms below cannot be submitted — and therefore cannot be selected — until 00:00Z. |
+| Submissions | **three PENDING** (`56599159` `0943p` · `56599162` `0943r` · `56599163` `0943c`) — the rest read back; ledger is 35 rows. `Remaining today: 2`. |
+| `0943c` integration | **proven to run**: `raptor_raw.npz` came back **(5, 3, 12)** — five arms, not four — with 0 failed studies and 0 neutral fills, and our view correlates most strongly (0.792) with the one sharing its geometry. Cost measured: Raptor stage **28.9 s → 33.2 s (+15%)** after moving it to the lighter GPU (A143). |
 | `0943p` / `0943r` runs | **both `COMPLETE`, both passed the acceptance test** (20/20 fingerprints, fail-closed gate PASS, valid `submission.csv`, 0 tracebacks). `0943p`'s log even shows `outer CoAtNet weight per finding: flat 0.65` — the flattening demonstrably took effect. |
 | `kernel-tpu-d3f0` (DINOv3 fold 0) | **QUEUED** on TPU (queueing spends no quota; 0.00 h / 20 h used) |
 | Kept for later | the pilot's log also revealed that the `[config]` line prints `coatnet_w` but **not** `rad_cal_w` — so for `0943r` the log cannot certify its own change; the proof is the artifact + the code path instead (A134) |

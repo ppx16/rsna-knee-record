@@ -1,145 +1,103 @@
-# Final submission selection — the one manual step left
+# Final submission selection — the decision, pre-registered
 
-**Deadline: 2026-10-22 23:59 UTC.** Everything else on this project is closed by measurement.
-This is the only action that remains, and it is a **two-click job in the browser** — the Kaggle CLI
-cannot do it (verified on 2.2.4: `kaggle competitions` has `list/files/download/submit/submissions/
-leaderboard/team-submissions/submission-limits`, and no `select`).
+**Deadline: 2026-10-22 23:59 UTC.** Two submissions may be selected, and it is a **two-click job in
+the browser**: the Kaggle CLI cannot do it (verified on 2.2.4 — `kaggle competitions` exposes
+`list/files/download/submit/submissions/leaderboard/team-submissions/submission-limits`, no `select`).
+The recommendation below is written **before** the last three readouts land, so that whatever they
+show gets read against a rule instead of being fitted to a feeling. Every claim carries its FACTS row.
 
 ---
 
-## Current state — Kaggle picked two on its own, and it is not the pair we want
+## The rule that governs everything below
 
-As of 2026-09-26 the Submissions page has **`RSNA knee 0943 - Version 2`** (`56568520`, 0.943) and
-**`RSNA knee 0943f - Version 1`** (`56570144`, 0.943) ticked. It did **not** tick `0943s` (also
-0.943), so the tie-break among three equal scores is not something we can predict — which is exactly
-why this cannot be left to the default.
+**The public board cannot rank these arms.** Its noise is ±0.008 and the effects in play are
+0.001–0.003 (A96). Three of our arms scored 0.943 and two 0.942, and that ordering carries no
+information. So the choice is made on **what each arm changes and what evidence that change has**,
+never on the displayed score.
 
-### Make these two clicks
+⚠️ Corollary that cuts the other way: **a readout can still catch a regression.** ±0.008 is the
+resolution for *ranking*; an arm returning 0.938 or below is a real signal that something broke.
+That is what the pending readouts are for.
 
-1. **Untick** `RSNA knee 0943 - Version 2` (0.943).
-2. **Tick** `RSNA knee 0943h - Version 2` (0.942).
+---
 
-Leave the `0943f` row ticked. Then confirm the page shows **`56570144` + `56568524`** as selected.
+## The nine candidates, by the axis each one moves
 
-| # | ref | arm | public |
+| arm | ref | what it changes | evidence for that change |
 |---|---|---|---|
-| 1 | **`56570144`** | `0943f` — fracture fork | 0.943 |
-| 2 | **`56568524`** | `0943h` — halfway routing | 0.942 |
+| `0943` | 56568520 | — the published recipe | — (the control) |
+| `0943f` | 56570144 | `_RAD_EXCLUDE` no longer excludes `Fracture` | ⭐ **measured, external, large n**: +0.0118 on that column, **+0.00099 macro**, 4/5 folds positive, n=4185 (C81) |
+| `0943h` | 56568524 | per-label outer routing softened halfway | the public split is that map's tuning set; A111's iso says per-label transfers **worse** than one shared weight at n≈400 |
+| `0943p` | 56599159 | outer routing **fully flattened** | the frontier's **own written statement** that this map is "the likeliest place to give back points privately" and that flat "is what the `parent` preset is for" (A122) — plus A111's direction |
+| `0943o` | 56570148 | outer **default** 0.65 → 0.60 | as `0943h`, weaker dose, no independent support |
+| `0943r` | 56599162 | `rad_cal_w` 0.40 → 0.00 (the frontier's v38) | the author's own revision, motivation unstated; our A117 basis for *rejecting* it was **retracted** as confounded (A127), and the trend we did measure — calibrator value falling as the base strengthens — leans that way |
+| `0943s` | 56570151 | 94 → 62/42 windows | **measured neutral** (both 0.943) ⇒ a cost lever, not a score lever |
+| `0943c` | 56599163 | ⭐ **+ our rescued `cn0` as a fifth Raptor view** | ⭐ **measured by us**: +0.0019 at a 0.917 base, **+0.0028** on a parent-quality base, CIs excluding zero, and **both halves chose weight 0.2 out of `public20`'s share** (A131/A137). Integration proven to run: five arms in the blend, 0 failures (A143) |
+| `0943cf` | *(pending smoke)* | the member **plus** the fracture fix | the two changes this repository actually has measurements for, on different parts of the pipeline (the CoAt view set vs the Rad blend's label set), so at least plausibly additive |
 
-**If you would rather not touch it**, leaving Kaggle's pair is defensible — see the last section for
-exactly what that gives up. Nothing else in this repository depends on the choice.
-
----
-
-## The candidate set (as of 2026-09-26)
-
-Seven arms now exist, all preflighted (`PREFLIGHT OK`, 0 problems), each a one-token change from the
-same published notebook. The axes they disagree on are what matter, not their scores:
-
-| arm | what it changes | who set the shipped value, and where |
-|---|---|---|
-| `0943` (`56568520`) | — the published recipe | — |
-| `0943f` (`56570144`) | `_RAD_EXCLUDE` also excludes `Fracture` | **58 gold labels — and it was wrong** (n=4185 re-measurement, +0.001 macro) |
-| `0943h` (`56568524`) | per-label outer routing softened halfway | the public split (A122) |
-| `0943o` (`56570148`) | outer default 0.65 → 0.60 | the public split |
-| `0943s` (`56570151`) | 94 → 62/42 windows | measured: **no score difference**, only cost |
-| `0943p` *(pushed, not yet submitted)* | outer routing **fully flattened** | the public split — the author's own insurance (A122) |
-| `0943r` *(pushed, not yet submitted)* | `rad_cal_w` 0.40 → 0.00 | 58 gold labels (the 0.40); the frontier's own v38 turns it off |
-
-⚠️ `0943p` and `0943r` have **never been submitted**, so they cannot be selected yet. One submission
-each (free; 5 per UTC day) makes them selectable if the decision goes that way.
-**The recommendation below is unchanged** — `0943f` + `0943h`.
+**Four axes, two slots.** Rad exclusion set · outer routing sharpness · calibrator weight · our member.
 
 ---
 
-## Why this pair — when three arms scored 0.943 and two scored 0.942
+## Recommendation: **`0943cf` + `0943p`**
 
-**The board cannot rank these arms, so it was not used to.** Public noise is ±0.008 and the effects
-in play are 0.001–0.003 (A96). All five arms sit inside the noise band. The choice rests on evidence
-that is not the displayed score:
+**Why `0943cf` is the primary.** It is the only candidate carrying **two independently measured**
+improvements, and one of them — `cn0` — is the only member this repo has ever measured **above the
+frontier's own DINOv2 seed members** (0.8769 vs 0.8676–0.8697, A130). Its machinery is proven rather
+than assumed: five arms in the blend, no failed studies, no neutral filling, and the Raptor stage
+cost measured at +15% (A143).
 
-1. **Kaggle's default pair spends its second slot on a near-duplicate.** `0943f` is `0943` with a
-   single token changed (`_RAD_EXCLUDE` no longer excludes `Fracture`), so the two differ in **one of
-   twelve columns** — and that token's measured effect is +0.00099 macro in `0943f`'s favour
-   (n=4185, positive in 4 of 5 folds). Under "best of the two counts", `0943` is close to a dominated
-   version of `0943f`: the second slot buys almost the same bet twice. **Starting from the default
-   pair, the fix is to make the second slot a different axis, not a nested variant.**
+⚠️ One honest dilution: inside the CoAt arm our view's share is 0.167, and that arm is itself
+weighted ~0.65 against the stack, so the **effective weight is ≈ 0.11, not the 0.2 that was
+measured**. The measured base was also weaker (0.917 vs ~0.94), and a stronger base wants a *smaller*
+dose — so a dose below 0.2 is the coherent direction rather than a fudge.
 
-   ⚠️ This reason does **not** depend on the routing argument below. Even if `0943h` had exactly the
-   same expected score as `0943`, replacing a near-duplicate with an equal-mean, different-axis arm
-   still raises E[max of the two].
+**Why `0943p` is the second slot.** It is the frontier's own registered remedy for the one knob
+family they describe, in their own source, as fitted to a public split that is a fraction of the test
+set (A122) — and our own tuning-transfer curve points the same way (A111: below ~870 studies,
+per-label tuning transfers *worse* than a single shared weight). `0943h` moves the same axis at a
+weaker dose; `0943o` barely moves it at all.
 
-2. **`0943f` is the only arm whose change carries large-sample, non-public evidence.** Dropping
-   `'Fracture'` from `_RAD_EXCLUDE` was re-measured in the published analysis at **n=4185, 156
-   positives**: Fracture AUC 0.9187 → 0.9305, **macro +0.00099, positive in 4 of 5 folds**, reproduced
-   by five independent label sources, with a single-peaked alpha curve (no new constant). By the rule
-   this repository measured (A111: a tuning set needs ≈870 studies before per-label choices are
-   safe), n=4185 is far past the bar.
+**Why this pair.** `0943cf` keeps the published per-label routing; `0943p` flattens it. So the two
+picks sit on **opposite sides of the one knob whose provenance is documented as public-fitted** —
+the pair hedges that axis instead of doubling it — and between them they cover three of the four
+axes (Rad exclusion, our member, routing). The fourth is left alone deliberately: the calibrator's
+only local measurement was confounded (A127), and `0943r` is a bet whose direction we cannot check.
 
-3. **`0943h` hedges the one knob family that is documented as public-fitted — by its own author.**
-   This no longer rests on our note about the frontier, or on an analogy. The frontier notebook says
-   it in its own source comments, above the weights themselves:
+**Alternatives, documented rather than hidden:**
+* `0943cf` + `0943r` — swaps the routing hedge for the calibrator bet; defensible, less supported.
+* `0943cf` + `0943h` — the milder routing dose. `h` vs `p` rests on A122 versus C57, and A122 is a
+  primary source while C57 was measured on the fitting set.
+* `0943f` + `0943c` — if you would rather not stack two changes in one arm: same two axes, no stacking.
 
-   > `# stages, on the strength of a public split that is a fraction of the test`
-   > `# set. It may be real. It is also the likeliest place to give back points`
-   > `# privately, which is what the "parent" preset is for.`
-
-   …and, at the diagnostic that prints per-finding arm agreement:
-
-   > `actually decides the ordering — and therefore where a weight fitted to the`
-   > `public split can do real damage privately:`
-
-   So: the per-label outer routing (`coatnet_w`) was fitted to a public split that is **a fraction of
-   the test set**, the author flags it as **the likeliest place to lose private points**, and the
-   author's own remedy is a flattened preset. `0943h` softens that map halfway toward its default —
-   the same direction, the milder dose (C57 measured softening as the cheaper of the two).
-
-   ⚠️ **Honest limits.** This establishes the *direction*, not the *dose*: nothing we own can rank
-   "soften halfway" against "flatten completely", because the only two numbers we have for that
-   (C57's 0.001 and 0.002) were both measured on the public board — the very set the weights were
-   fitted to — so they are biased the same way. And A111's −0.0013 for per-label versus one shared
-   weight is an **isomorphism** (measured on the A5↔Rad blend weight, not on `coatnet_w`): the
-   reasoning transfers, the number does not. That is why `0943h` is the second slot and not the
-   first — it needs the direction to be right, not the dose.
-
-4. **Under a "best of the two counts" rule, dispersion is worth more than a second copy of the same
-   bet.** Neither arm covers both axes, but **the union does**: if either change is real, one of the
-   two picks collects it, and if the routing hedge is wrong, `0943f` still holds the measured gain.
-
-⚠️ Reason 4 depends on the widely-reported "better of the two selected" rule. **It could not be
-verified from this machine** (web fetching is unavailable here). The pair is defensible on reasons
-1–3 alone, so nothing hinges on it — but if you know the rule to be different, reason 1 is the one to
-keep.
-
-**If the interface allows only one selection, or only one is scored: pick `0943f` (`56570144`)** —
-reason 2 is the hardest evidence in this table.
+**If only one selection is allowed, or only one is scored: `0943cf`.**
 
 ---
 
-## What leaving the default costs, stated plainly
+## Pre-registered rules for the pending readouts
 
-Keeping Kaggle's pair gives you `0943f` (the arm with the real evidence) **plus a second slot spent on
-an arm that differs from it in one column**. You keep the exact published recipe and take no bet
-against it. You give up the second slot's option value — which is small, and unmeasurable, and on the
-private board sits inside ±0.005 of noise either way.
+Three submissions are in flight (`0943p`, `0943r`, `0943c`) and a fourth (`0943cf`) follows. **They do
+not rank anything** — but they can disqualify, and that call is made here rather than later:
 
-**Not building a "flatten completely" arm either.** The frontier's `parent` preset would be a few
-lines to add, one submission slot, and ~0.1 GPU-hours — the cost is not the obstacle. The obstacle is
-that **its readout cannot inform anything**: `coatnet_w`'s effect is only observable on the public
-board, and the public board is the set those weights were fitted to. Submitting it would be
-"submit and see" (A96), not confirmation of an evidenced improvement.
+| observation | action |
+|---|---|
+| any comes back **≤ 0.940** while `0943` sits at 0.943 | treat as a **regression signal** and drop that arm from the pair, even though the gap is nominally inside the noise — a 0.003+ move in the *wrong* direction is the one thing the board can show |
+| `0943c`/`0943cf` comes back 0.941–0.945 | **no information**; proceed with the recommendation above |
+| any **fails** (FAILED, or no `submission.csv`) | drop it — the hidden rerun is the only test that matters for a code competition |
+| `0943c`/`0943cf` **completes** | ⭐ keep it as a candidate regardless of score: completing **1322 studies inside the 8-hour fail-closed budget** is the same de-risking A110 got from the five arms, and without it the arm is not selectable in good conscience |
+| the frontier publishes something new | re-open the whole table; that is the only source of a genuinely new idea |
+
+⚠️ The standing rule this repository paid for: **never spend a slot to "see if it helps"** (A96).
+Each of the eight submitted arms was submitted either to confirm a change with prior evidence or to
+create an option for this deadline — never to discover whether an idea works.
 
 ---
 
 ## What is already banked (no action needed)
 
-- **All five arms ran the hidden rerun end to end** on 1322 studies and came back `COMPLETE` with a
-  score — not just the baseline, but both non-default presets and the reduced-window arm. The
-  pipeline had only ever been exercised on the 3 visible studies. De-risking that is independent of
-  the score.
-- **Window count is not a score lever**: `0943s` (62/42 windows) tied the 94-window config at 0.943.
-  It is a *quota* lever (~5× cheaper) if this pipeline is ever run again.
-- **Ledger:** `state/lb_ground_truth.csv` — 32 rows, best 0.943. Regenerate with
-  `python scripts/lb_ledger.py`; it is generated from the competition's submission list, not by hand.
-- **Quota:** GPU 2.24 h / 30 h, TPU 0 h / 20 h, refresh 2026-10-03. Selecting a final submission
-  spends no quota — it is a flag on a submission that has already been scored.
+- **Five arms completed the hidden rerun** end to end on 1322 studies (A110); `0943c` now tests
+  whether that holds **with a fifth view** (A143).
+- **Ledger:** `state/lb_ground_truth.csv`, regenerated by `python scripts/lb_ledger.py`.
+- **Quota:** GPU 2.62 h / 30 h, TPU 1.85 h / 20 h, refresh 2026-10-03. Selecting spends no quota.
+- **The weights:** `ppxl16/rsna-knee-cn0-weights`, six checkpoints, private, ready — the only copy
+  independent of the rented box, which is now shut down.
