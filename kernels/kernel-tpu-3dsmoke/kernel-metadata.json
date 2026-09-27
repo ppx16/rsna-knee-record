@@ -1,0 +1,19 @@
+{
+  "id": "ppxl16/rsna-knee-tpu-3dsmoke",
+  "title": "RSNA knee tpu 3dsmoke",
+  "code_file": "kernel_main.py",
+  "language": "python",
+  "kernel_type": "script",
+  "is_private": true,
+  "enable_gpu": false,
+  "enable_tpu": true,
+  "enable_internet": true,
+  "keywords": [],
+  "dataset_sources": [
+    "dreaddevelopment/knee-raptor-corpus",
+    "flight0234/rsna-knee-hybrid-report-labels"
+  ],
+  "kernel_sources": [],
+  "competition_sources": [],
+  "model_sources": []
+}
