@@ -130,16 +130,42 @@ def read_labels():
     return y
 
 
+def _as_fold_map(d, depth=0):
+    """Accept both `{uid: fold}` and the wrapped `{"folds": {uid: fold, ...}}`.
+
+    ⚠️ The first version assumed the flat shape and died with
+    `TypeError: int() argument must be ... not 'dict'` -- `ppxl16/rsna-knee-cv-folds` ships
+    `{"folds": {...}}`.  (I had "checked" this locally and read the INNER dict, because my probe
+    printed `d[first_key]` rather than the value type distribution -- which is why the fix below is
+    a recursive search plus a printed receipt rather than another guess.)
+    """
+    if not isinstance(d, dict) or depth > 3:
+        return None
+    if d and all(isinstance(v, (int, float)) for v in d.values()):
+        return {str(k): int(v) for k, v in d.items()}, "flat"
+    for k, v in d.items():
+        got = _as_fold_map(v, depth + 1)
+        if got:
+            return got[0], "under %r" % k
+    return None
+
+
 def read_folds():
     p = _find(["fold_file.json", "v52_oof.csv"])
     if p.endswith(".json"):
-        d = json.loads(open(p).read())
-        fold = {str(k): int(v) for k, v in d.items()} if isinstance(d, dict) else {}
+        got = _as_fold_map(json.loads(open(p).read()))
+        if not got:
+            raise SystemExit("could not find a uid->fold map in %s" % p)
+        fold, how = got
     else:
         import pandas as pd
         df = pd.read_csv(p)
-        fold = {str(u): int(f) for u, f in zip(df["StudyInstanceUID"], df["fold"])}
-    print("[a5lite] folds: %d studies" % len(fold), flush=True)
+        fold, how = {str(u): int(f) for u, f in
+                     zip(df["StudyInstanceUID"], df["fold"])}, "v52_oof.csv"
+    print("[a5lite] folds from %s (%s): %d studies, fold counts %s"
+          % (os.path.basename(p), how, len(fold),
+             {k: sum(1 for v in fold.values() if v == k) for k in sorted(set(fold.values()))}),
+          flush=True)
     return fold
 
 
