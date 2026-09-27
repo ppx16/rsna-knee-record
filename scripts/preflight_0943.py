@@ -47,6 +47,8 @@ EXPECT = {
                      "note": "62/42 windows (the quota lever)"},
     "kernel-0943h": {"rad_exclude": "\"Baker's\", 'Fracture'", "preset": "halfway",
                      "note": "routing softened toward its default (C57-preferred hedge)"},
+    "kernel-0943c": {"rad_exclude": "\"Baker's\", 'Fracture'", "preset": "speedy",
+                     "note": "0.943 + OUR cn0 CoAtNet member as a fifth Raptor view"},
 }
 # The arm weights the fork is built on.  A public analysis of the 0.941 plateau argues that forks
 # stalling at 0.941 are the ones that moved these to 0.55/0.15, while the frontier's own submissions
@@ -221,6 +223,31 @@ def main():
             print("  preset default: %-9s %s" % (want_preset, "OK" if hit else "MISMATCH"))
             if not hit:
                 problems.append("%s: default preset is not %r" % (d, want_preset))
+
+        # ---- 6b. the added member (kernel-0943c only) --------------------
+        # These are the five integration edits plus the mount.  They are checked HERE as well as in
+        # the builder because they are exactly the kind of thing that is invisible when wrong: the
+        # notebook would still run, still write a submission, and quietly use the wrong member.
+        if d == "kernel-0943c":
+            mounted = json.dumps(meta.get("dataset_sources") or [])
+            member = [
+                ('"name": "cn0-ours"', "the cn0-ours arm entry"),
+                ('"cn0-ours": 0.20', "its view weight"),
+                ('"norm": "none"', "pinned norm (notebook global is imagenet)"),
+                ('"k_eval_fixed": 24', "pinned window count (RUN forces 94 otherwise)"),
+                ("norm=arm.get('norm', _KE_NS['NORM']))", "per-arm norm honoured at call site"),
+                ("_arm.get('k_eval_fixed')", "per-arm k_eval honoured"),
+                ("run_single(4, torch.device(", "index 4 is actually run"),
+                ("ppxl16/rsna-knee-cn0-weights", "the weights dataset is mounted"),
+            ]
+            for probe, label in member:
+                where = mounted if label.endswith("mounted") else src
+                hit = probe in where
+                print("  %-46s %s" % (label + ":", "present" if hit else "ABSENT"))
+                if not hit:
+                    problems.append("%s: %s missing" % (d, label))
+            if src.count('"name": "cn0-ours"') != 1:
+                problems.append("%s: the cn0-ours arm entry is not unique" % d)
 
         # ---- 7. runtime evidence (the one unfixable risk) ---------------
         rt = set()
