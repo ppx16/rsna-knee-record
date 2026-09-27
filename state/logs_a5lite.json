@@ -1,12 +1,1 @@
-﻿[{"stream_name":"stderr","time":25.256804138,"data":"usage: script.py [-h] --head {a5,raptor} [--fold FOLD] [--folds FOLDS]\n"}
-,{"stream_name":"stderr","time":25.256884016,"data":"                 [--epochs EPOCHS] [--bs BS] [--res RES] [--n-slice N_SLICE]\n"}
-,{"stream_name":"stderr","time":25.256890944,"data":"                 [--k K] [--bb-lr BB_LR] [--head-lr HEAD_LR] [--wd WD]\n"}
-,{"stream_name":"stderr","time":25.256895118,"data":"                 [--backbone BACKBONE] [--tag TAG] [--limit LIMIT]\n"}
-,{"stream_name":"stderr","time":25.256978885,"data":"script.py: error: the following arguments are required: --head\n"}
-,{"stream_name":"stderr","time":32.156754431,"data":"/usr/local/lib/python3.12/dist-packages/mistune.py:435: SyntaxWarning: invalid escape sequence '\\|'\n"}
-,{"stream_name":"stderr","time":32.156786627,"data":"  cells[i][c] = re.sub('\\\\\\\\\\|', '|', cell)\n"}
-,{"stream_name":"stderr","time":32.56425667,"data":"/usr/local/lib/python3.12/dist-packages/nbconvert/filters/filter_links.py:36: SyntaxWarning: invalid escape sequence '\\_'\n"}
-,{"stream_name":"stderr","time":32.564289091,"data":"  text = re.sub(r'_', '\\_', text) # Escape underscores in display text\n"}
-,{"stream_name":"stderr","time":33.294993736,"data":"[NbConvertApp] Converting notebook __script__.ipynb to html\n"}
-,{"stream_name":"stderr","time":35.077621859,"data":"[NbConvertApp] Writing 476194 bytes to __results__.html\n"}
-]
+﻿

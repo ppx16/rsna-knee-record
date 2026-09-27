@@ -86,14 +86,35 @@ def open_corpus():
 
 
 def read_labels():
-    """The same hybrid report labels our arms were trained on."""
-    p = _find(["labels.parquet", "hybrid_report_labels.csv", "report_labels_v2.csv"])
-    if p.endswith(".parquet"):
-        import pandas as pd
-        df = pd.read_parquet(p)
-    else:
-        import pandas as pd
-        df = pd.read_csv(p)
+    """The same hybrid report labels our arms were trained on.
+
+    ⚠️ Found by COLUMNS, not by filename.  The first version carried a list of candidate names and
+    died on `FileNotFoundError: none of ['labels.parquet', 'hybrid_report_labels.csv',
+    'report_labels_v2.csv']` -- the dataset actually ships `report_labels_v4hybrid.csv`.  A name list
+    will always be one rename away from breaking; the 12 label columns are the stable contract.
+    """
+    import pandas as pd
+    cands = []
+    for root, _dirs, files in os.walk("/kaggle/input"):
+        for f in files:
+            if f.endswith((".csv", ".parquet")):
+                cands.append(os.path.join(root, f))
+    best = None
+    for p in sorted(cands):
+        try:
+            df = pd.read_parquet(p) if p.endswith(".parquet") else pd.read_csv(p)
+        except Exception:                                              # noqa: BLE001
+            continue
+        hit = [t for t in LAB if t in df.columns]
+        if len(hit) > (len(best[1]) if best else 0):
+            best = (p, hit, df)
+    if best is None or len(best[1]) < 12:
+        raise SystemExit("no label file with all 12 findings; saw %s"
+                         % [(os.path.basename(p), n) for p, n, _ in
+                            [(c, 0, None) for c in cands]][:6])
+    p, hit, df = best
+    print("[a5lite] labels from %s (%d/%d findings present, %d rows)"
+          % (os.path.basename(p), len(hit), len(LAB), len(df)), flush=True)
     y = {}
     for _, r in df.iterrows():
         uid = str(r["StudyInstanceUID"])
