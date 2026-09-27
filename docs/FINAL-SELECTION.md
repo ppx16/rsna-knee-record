@@ -67,7 +67,10 @@ only local measurement was confounded (A127), and `0943r` is a bet whose directi
 **Alternatives, documented rather than hidden:**
 * `0943cf` + `0943r` — swaps the routing hedge for the calibrator bet; defensible, less supported.
 * `0943cf` + `0943h` — the milder routing dose. `h` vs `p` rests on A122 versus C57, and A122 is a
-  primary source while C57 was measured on the fitting set.
+  primary source while C57 was measured on the fitting set. ⚠️ **Now the more defensible alternative**:
+  `0943p` came back **0.941**, the lowest of the nine, while `0943h` sits at 0.942 — same hedge
+  direction, one notch less aggressive. See the dose-ladder section below for why that 0.002 does *not*
+  count as evidence against the hedge.
 * `0943f` + `0943c` — if you would rather not stack two changes in one arm: same two axes, no stacking.
 
 **If only one selection is allowed, or only one is scored: `0943cf`.**
@@ -76,7 +79,7 @@ only local measurement was confounded (A127), and `0943r` is a bet whose directi
 
 ## Pre-registered rules for the pending readouts
 
-**Four** submissions are in flight (`0943p`, `0943r`, `0943c`, `0943cf` — refs `56599159`, `56599162`,
+**Four** submissions were in flight (`0943p`, `0943r`, `0943c`, `0943cf` — refs `56599159`, `56599162`,
 `56599163`, `56599932`). **They do not rank anything** — but they can disqualify, and that call is made
 here rather than later:
 
@@ -93,7 +96,37 @@ here rather than later:
 | ref | arm | result | reading |
 |---|---|---|---|
 | `56599163` | `0943c` (our `cn0` member) | **COMPLETE, 0.942** | falls in the **0.941–0.945 ⇒ no information** band, so it neither promotes nor demotes the arm — **and it completed**, which is the row that matters: our member survived the hidden rerun on 1322 studies with a fifth view in the blend, 0 failures. ⚠️ **Not evidence the member helps.** 0.942 vs `0943`'s 0.943 is 0.001 against ±0.008 noise, and two pure-knob arms (`0943h`, `0943o`) also sit at 0.942 — so that value is not a fingerprint of the member. Equally it is **not** a regression: the pre-registered line was ≤ 0.940. |
-| `56599159` `56599162` `56599932` | `0943p` · `0943r` · `0943cf` | **PENDING** | — |
+| `56599159` | `0943p` (routing **fully flattened**) | **COMPLETE, 0.941** | **Not disqualified** — 0.941 is above the pre-registered ≤ 0.940 line, one quantum up. But it is the **single lowest of the nine**, and it is a **recommended** pair member, so it gets the dose-ladder analysis below rather than a one-line pass. |
+| `56599162` | `0943r` (`rad_cal_w` → 0) | **COMPLETE, 0.942** | In the no-information band; completes, so it stays selectable. Not part of the recommended pair. |
+| `56599932` | `0943cf` (member **+** fracture fix) | **PENDING** | — |
+
+### ⚠️ The one pattern in the readouts, and why it does **not** move the recommendation
+
+The four arms that move **one axis** — outer per-label routing sharpness — landed in this order:
+
+| arm | routing | public |
+|---|---|---|
+| `0943` | the published, **fitted** per-label map | **0.943** |
+| `0943h` | softened halfway | 0.942 |
+| `0943o` | default 0.65 → 0.60 | 0.942 |
+| `0943p` | **fully flattened** (the `parent` preset) | **0.941** |
+
+So the public board mildly prefers **keeping** the fitted routing over flattening it. **That is the
+prediction of the mechanism the hedge exists for, not evidence against it** — and reading it the other
+way round is the trap here. A122 is the frontier's *own* comment: those five per-label weights were set
+"on the strength of a public split that is a fraction of the test set", and are "the likeliest place to
+give back points privately". If the map is fitted to the public split, then flattening it **must** cost
+public score while being the thing that helps privately.
+
+⇒ The observed public cost is consistent with **both** "the fitted map is genuinely better" **and** "the
+map is overfitted" — so it **cannot discriminate between them**, and the hedge's rationale is untouched.
+
+⚠️ **And it cannot even be called a real ordering**: 0.941 vs 0.943 is **0.002 against ±0.008 noise**, so
+the ladder is suggestive of the predicted shape, nothing more. If you would rather not carry the single
+lowest-scoring arm, the pre-registered alternative is **`0943cf` + `0943h`** — the *same hedge direction*,
+one notch less aggressive, at 0.942. A111's curve (per-label tuning transfers *worse* than one shared
+weight below n≈870) points at the full flattening `0943p`; A122 fixes the direction but not the dose.
+**The recommendation is unchanged; the alternative is now more defensible than it was.**
 
 ⚠️ The standing rule this repository paid for: **never spend a slot to "see if it helps"** (A96).
 Each of the nine submitted arms was submitted either to confirm a change with prior evidence or to
