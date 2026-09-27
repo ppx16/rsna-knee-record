@@ -50,6 +50,28 @@ ARMS = {
                    title="RSNA knee a5lite r",
                    argv=("--head raptor --fold 0 --folds 5 --epochs 12 --bs 2 --res 336 "
                          "--k 12 --aug 1 --tag rfa")),
+    # ---- the slice-density ladder (built 2026-09-26, PUSH ONLY IF the augmented pair passes) ----
+    # WHY: the corpus stores 44 slices in five groups of 12/10/8/6/8, so `n_slice` was capped at 6 by
+    # the SMALLEST group (A152/209) and the frontier's 16-slice density was assumed to need the 48 GB
+    # cache.  But `a5_study` windows INSIDE each group, so a rung at n_slice=8 takes 8 DISTINCT slices
+    # from the 12/10/8/8 groups and 6+2 repeated from the coronal-no-fluid group -- i.e. only 1 of 5
+    # groups is degenerate, against 0 at n_slice=6.  That is a real density increase on the corpus we
+    # ALREADY have, and it costs ONE arm: the raptor control's input path never reads `n_slice`
+    # (make_input, head=="raptor"), so `rfa` is a valid control for every rung.
+    # What it decides: if the A5-vs-raptor gap grows with density, density is the lever and the 48 GB
+    # cache is worth building; if the gap is flat in density, the gap is the HEAD and the 48 GB build
+    # would buy nothing (209.3).
+    # MEASURED distinct/total slices per group (12/10/8/6/8), so the rungs are not interchangeable:
+    #   n_slice= 6 -> 6/6  6/6  6/6  6/6  6/6   <- zero padding: the honest ceiling of the corpus
+    #   n_slice= 8 -> 8/8  8/8  8/8  6/8  8/8   <- ONE padded group  => a real density rung
+    #   n_slice=10 -> 10/10 10/10 8/10 6/10 8/10
+    #   n_slice=12 -> 12/12 10/12 8/12 6/12 8/12 <- mostly padding => measures CHANNEL CAPACITY,
+    #                                               not density.  A gain here would NOT justify the
+    #                                               cache, so only 8 is built.
+    "a5n8": dict(dir="kernel-a5lite-n8", kid="ppxl16/rsna-knee-a5lite-n8",
+                 title="RSNA knee a5lite n8",
+                 argv=("--head a5 --fold 0 --folds 5 --epochs 12 --bs 2 --res 336 "
+                       "--n-slice 8 --aug 1 --tag a5n8")),
 }
 PRELUDE = ('import sys as _sys\n'
            'if not any(_a.startswith("--") for _a in _sys.argv[1:]):\n'

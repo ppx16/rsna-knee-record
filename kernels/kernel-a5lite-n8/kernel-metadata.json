@@ -1,0 +1,21 @@
+{
+  "id": "ppxl16/rsna-knee-a5lite-n8",
+  "title": "RSNA knee a5lite n8",
+  "code_file": "kernel_main.py",
+  "language": "python",
+  "kernel_type": "script",
+  "is_private": true,
+  "enable_gpu": true,
+  "enable_tpu": false,
+  "enable_internet": true,
+  "keywords": [],
+  "dataset_sources": [
+    "dreaddevelopment/knee-raptor-corpus",
+    "dreaddevelopment/knee-raptor-corpus-ext",
+    "flight0234/rsna-knee-hybrid-report-labels",
+    "ppxl16/rsna-knee-cv-folds"
+  ],
+  "kernel_sources": [],
+  "competition_sources": [],
+  "model_sources": []
+}
