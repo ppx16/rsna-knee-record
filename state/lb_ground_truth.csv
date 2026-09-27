@@ -35,3 +35,4 @@ date,ref,desc,score,status
 2026-09-27 05:42:49.770000,56599162,0943r rad_cal_w 0.00 v1 - the frontier's v38 move (A128),0.942,COMPLETE
 2026-09-27 05:42:56.117000,56599163,"0943c v3 - 0943 + our rescued cn0 CoAtNet as a 5th Raptor view, k_eval 24, norm none",0.942,COMPLETE
 2026-09-27 06:07:33.297000,56599932,0943cf v1 - our cn0 member (5th view) PLUS the fracture fix: the two changes with local measurements,0.943,COMPLETE
+2026-09-27 15:58:47.010000,56613303,"0943cflat v1 - cn0 member + C81 fracture fix + FLATTENED outer routing: one line from 0943cf, so the final pair hedges the routing axis alone",,PENDING

@@ -15494,6 +15494,42 @@ A106 关闭训练线时量的是：**我们的臂 0.8731 vs A5 的 0.9143**（18
 
 ---
 
+## 219. `0943cflat` 已提交（`56613303`）—— 而这次提交纠正了一条【记错的】规则（2026-09-27 15:58Z）
+
+### 219.1 结果
+
+**`56613303`，PENDING**，描述 "0943cflat v1 - cn0 member + C81 fracture fix + FLATTENED outer routing"。
+账本 **37 行 / 36 行有分**，最好仍 0.943。当天额度用满（5/5）。
+
+### 219.2 ⭐ 缺的那块：`-f submission.csv`
+
+`kaggle competitions submit -k <ref> -v <n>` **必须同时带 `-f submission.csv`**，
+否则 `CreateCodeSubmission` 返回**裸 400（无 body）**。
+⭐ 本仓自己早就记过正确写法 —— `scripts/director.py:352` 那一行**是带 `-f` 的**。我漏了。
+
+### 219.3 ⚠️⚠️ 而它推翻了一条已经写在文档里的【错规则】
+
+`scripts/now.py:140` 原本写着：
+
+> `400 … CreateCodeSubmission body=None` ⇒ **当天提交配额用尽**，不是凭据问题。
+
+**实测反证**：400 发生时 `submission-limits` 报 **`Remaining today: 1`**；
+补上 `-f submission.csv` 后**立刻成功**，随后才变成 `Remaining today: 0`。
+
+⇒ **配额用尽的判据是 `submission-limits` 报 `Remaining today: 0`，不是这个 400。** 已改 `now.py`。
+
+⭐ **这个错误如果没被纠正，代价是一个真实名额** —— 我们会因为"以为没额度了"而放弃一个当时**其实可用**的槽。
+⚠️ **它骗过我两次**：第一次我归因于"run 还没 COMPLETE"，第二次（run 已 COMPLETE）把这个解释证伪了。
+
+### 219.4 ⚠️ 守望脚本没有它看起来那么可靠
+
+`.testtmp/autosubmit_cflat.py` **照抄了不带 `-f` 的命令**，所以它自己在 COMPLETE 时 400 退出；
+**最终是手工带 `-f` 提交成功的**。
+⇒ **凡是"让脚本替我按最后一个按钮"的地方，都要先让那个脚本在【真实路径上成功过一次】再信任它。**
+一个从未成功过的自动化，和一个从未触发过的门一样，不构成保证。
+
+---
+
 ## 217. Phase 2 开场：先挖已经付过钱的 —— 而第一个就暴露了【门本身的偏差】（2026-09-27）
 
 ### 217.1 顺序纪律：先把免费的挖完，再花 TPU
