@@ -41,13 +41,15 @@ TRAIN = LITEDIR / "train_a5lite.py"
 # flag -- which is why every .py trainer in this repo carries an argv prelude (A49).  The guard means
 # an explicit command line still wins.  ONE ARM PER KERNEL DIRECTORY, exactly like the 0943 arms.
 ARMS = {
+    # tags changed for the augmented pair (A153): a5fa / rfa, so the first pair's OOF (a5f0 / rf0)
+    # stays on disk as the degraded-operating-point measurement it is.
     "a5": dict(dir="kernel-a5lite", kid="ppxl16/rsna-knee-a5lite", title="RSNA knee a5lite",
                argv=("--head a5 --fold 0 --folds 5 --epochs 12 --bs 2 --res 336 "
-                     "--n-slice 6 --tag a5f0")),
+                     "--n-slice 6 --aug 1 --tag a5fa")),
     "raptor": dict(dir="kernel-a5lite-r", kid="ppxl16/rsna-knee-a5lite-r",
                    title="RSNA knee a5lite r",
                    argv=("--head raptor --fold 0 --folds 5 --epochs 12 --bs 2 --res 336 "
-                         "--k 12 --tag rf0")),
+                         "--k 12 --aug 1 --tag rfa")),
 }
 PRELUDE = ('import sys as _sys\n'
            'if not any(_a.startswith("--") for _a in _sys.argv[1:]):\n'

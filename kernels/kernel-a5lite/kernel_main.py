@@ -173,18 +173,24 @@ def read_folds():
 
 
 # ---------------------------------------------------------------- the A5-lite input
-def a5_study(vol, n_slice, res):
+def a5_study(vol, n_slice, res, rng=None):
     """(D,H,W) uint8 -> (N_SLOT, n_slice, res, res) float32 in [0,1], plus a visibility mask.
 
-    Slices are taken at even spacing inside each corpus group.  Slot 5 (Axial without fluid) does not
-    exist in the corpus and is returned masked -- see the module docstring.
+    Slices are taken inside each corpus group.  With `rng` (training) the window inside the group is
+    shifted at random -- the SAME KIND of augmentation the raptor arm gets from random window
+    centres, so the pair stays symmetric.  Slot 5 (Axial without fluid) does not exist in the corpus
+    and is returned masked -- see the module docstring.
     """
     D, H, W = vol.shape
     out = np.zeros((N_SLOT_TYPES, n_slice, res, res), np.float32)
     vis = np.zeros(N_SLOT_TYPES, np.float32)
     off = 0
     for s, (_plane, _fs, count) in enumerate(SLOT_GROUPS):
-        idx = [off + int(round(t)) for t in np.linspace(0, count - 1, n_slice)]
+        if rng is not None and count > n_slice:
+            start = int(rng.integers(0, count - n_slice + 1))
+            idx = [off + start + i for i in range(n_slice)]
+        else:
+            idx = [off + int(round(t)) for t in np.linspace(0, count - 1, n_slice)]
         idx = [min(max(i, 0), D - 1) for i in idx]
         block = vol[idx]                                        # (n_slice, H, W) uint8
         if (H, W) != (res, res):
@@ -261,6 +267,10 @@ def main():
     ap.add_argument("--wd", type=float, default=0.02)
     ap.add_argument("--backbone", default="vit_small_patch16_dinov3.lvd1689m")
     ap.add_argument("--tag", default=None)
+    ap.add_argument("--aug", type=int, default=1,
+                    help="1 (default): both arms get a random sampling offset plus the real "
+                         "trainer's medical-safe intensity jitter. 0: the degraded setting of the "
+                         "first paired run (FACTS A153), kept so that comparison stays reproducible.")
     ap.add_argument("--limit", type=int, default=0)
     a = ap.parse_args()
     tag = a.tag or ("%s_f%d" % (a.head, a.fold))
@@ -295,21 +305,49 @@ def main():
         for i in range(0, len(seq), a.bs):
             yield seq[i:i + a.bs]
 
-    def make_input(uids):
+    def make_input(uids, rng=None):
+        """`rng` present => TRAINING => both arms get the same KIND of augmentation.
+
+        Why this exists (FACTS A153): the first paired run had NO augmentation on either arm, so the
+        control scored 0.7366 while the real trainer's version of the same head scores 0.8530.  The
+        architecture's +0.0575 was therefore measured at a degraded operating point, and this project
+        has twice measured such gains shrinking as the base strengthens (A109, A112).  So both arms
+        now get (i) a random sampling offset and (ii) the real trainer's "medical-safe" intensity
+        jitter -- NO flips, because laterality is signal.  Identical treatment, so the pair stays
+        architecture-only.
+        """
         if a.head == "a5":
-            studies = [a5_study(np.asarray(V[pos[u]]), a.n_slice, a.res) for u in uids]
-            return collate_a5(studies, a.res, a.n_slice)
+            studies = [a5_study(np.asarray(V[pos[u]]), a.n_slice, a.res, rng) for u in uids]
+            out = collate_a5(studies, a.res, a.n_slice)
+            if rng is not None:
+                out = (jitter(out[0], rng),) + out[1:]
+            return out
         wins = []
         for u in uids:
             vol = np.asarray(V[pos[u]]); D = vol.shape[0]
-            cs = np.linspace(1, D - 2, a.k).round().astype(int)
+            if rng is not None:
+                cs = np.sort(rng.choice(np.arange(1, D - 1), size=a.k, replace=False))
+            else:
+                cs = np.linspace(1, D - 2, a.k).round().astype(int)
             tri = np.stack([np.stack([vol[c - 1], vol[c], vol[c + 1]], 0) for c in cs], 0)
             t = torch.from_numpy(tri).float() / 255.0
             if (t.shape[-2], t.shape[-1]) != (a.res, a.res):
                 t = F.interpolate(t.flatten(0, 1), size=(a.res, a.res),
                                   mode="bilinear", align_corners=False).view(t.shape[0], 3, a.res, a.res)
             wins.append(t)
-        return torch.stack(wins, 0), None, None, len(uids), None
+        x = torch.stack(wins, 0)
+        if rng is not None:
+            x = jitter(x, rng)
+        return x, None, None, len(uids), None
+
+    def jitter(x, rng):
+        """The real trainer's light medical-safe aug: mild multiplicative + additive intensity jitter.
+
+        Applied identically to BOTH arms, so it cannot favour either one.
+        """
+        gain = torch.from_numpy(rng.uniform(0.9, 1.1, size=(x.shape[0],) + (1,) * (x.dim() - 1))).float()
+        bias = torch.from_numpy(rng.normal(0.0, 0.02, size=(x.shape[0],) + (1,) * (x.dim() - 1))).float()
+        return torch.clamp(x * gain + bias, 0.0, 1.0)
 
     def forward_logits(inp):
         if a.head == "a5":
@@ -334,7 +372,7 @@ def main():
             if not bool(m.any()):
                 continue
             opt.zero_grad(set_to_none=True)
-            logits = forward_logits(make_input(uids))
+            logits = forward_logits(make_input(uids, rng if a.aug else None))
             loss = lossf(logits[m], y[m].nan_to_num(0.0))
             loss.backward()
             torch.nn.utils.clip_grad_norm_(model.parameters(), 5.0)
@@ -359,8 +397,8 @@ def main():
 
 import sys as _sys
 if not any(_a.startswith("--") for _a in _sys.argv[1:]):
-    _sys.argv = ["train"] + "--head a5 --fold 0 --folds 5 --epochs 12 --bs 2 --res 336 --n-slice 6 --tag a5f0".split()
-    print("[prelude] no argv given -> using: --head a5 --fold 0 --folds 5 --epochs 12 --bs 2 --res 336 --n-slice 6 --tag a5f0", flush=True)
+    _sys.argv = ["train"] + "--head a5 --fold 0 --folds 5 --epochs 12 --bs 2 --res 336 --n-slice 6 --aug 1 --tag a5fa".split()
+    print("[prelude] no argv given -> using: --head a5 --fold 0 --folds 5 --epochs 12 --bs 2 --res 336 --n-slice 6 --aug 1 --tag a5fa", flush=True)
 
 
 # ---- the frontier's model, verbatim ----
