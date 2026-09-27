@@ -108,6 +108,33 @@ The submission notebook adopts **each member's own config** (`adopt_config_globa
 | the 22 fine-tuned checkpoints on disk | all below the frontier's own seeds (best available `r3362` 0.8663 vs their 0.868–0.870) ⇒ adding them would be a negative — `cvg0` already demonstrated that |
 | the published `rsna-knee-train-weights` | 5 × DINOv2-small@336 @ crop 130 mm, 20 epochs; their blend scored LB 0.842 on 09-06 |
 
+### 🔴 The DINOv3 pilot landed and **the kill condition fired** (§203)
+
+`kernel-tpu-d3f0` (DINOv3-small @336, k=12, 12 epochs, fold 0, 1.85 TPU-h) finished and converged
+normally — then scored **0.8530** against a pre-registered stop line of 0.88:
+
+| | macro-AUC (same labels, same studies) |
+|---|---|
+| A5 — the **frontier's** DINOv3 | **0.9089** |
+| our `cn0` — CoAtNet@384 | **0.8769** |
+| public20 — the **frontier's** DINOv2 seeds | 0.8697 |
+| **our `d3f0` — DINOv3-small@336** | **0.8530** |
+
+⇒ **Not merely below the line: below our own best arm by 0.024 and below the frontier's own seeds by 0.015.**
+gold-58 agrees (0.8572 vs cn0's 0.8779), so two metrics say the same thing. **No folds 1–4, and `d3p0`
+(small-plus) is not pushed either** — small did not match our DINOv2 arms, so capacity is not the story, and
+reaching `cn0` would need +0.024 against a family slope of +0.01–0.02.
+
+⭐ **The diagnosis is the deliverable: swapping in the backbone did not solve it.** The frontier's ~0.05 edge
+on the DINOv3 family is **not the backbone** — it is their architecture (cross-series attention-MIL and
+slots), their recipe, and probably much longer training. **The training line is now closed by two independent
+measurements** (A106's 0.0412 gap to A5; and this direct swap that went backwards).
+
+⇒ **The only live scoring question left is whether to integrate `cn0`** — the one member that beats the
+frontier's own seeds (0.8769 vs 0.8697), already published to Kaggle, with local support (+0.0019 / +0.0028 on
+a 0.917 base) and a compatible member schema — but also with the unmeasurable shrink-at-0.94 risk and this
+repo's history of changes that pass every gate and quietly degrade. **That is a user decision.**
+
 ⇒ **A better member whose weights we hold is now the only thing that converts this line into score — which
 makes the DINOv3 pilot the linchpin** (its checkpoint lands in the kernel's `/kaggle/working`).
 ⭐ And one cheap unblock, if you want it: **power the AutoDL box on for ~10 minutes** to pull `cn0`/`d64cn0`'s

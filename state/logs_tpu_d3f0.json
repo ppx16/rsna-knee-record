@@ -1,0 +1,86 @@
+﻿[{"stream_name":"stdout","time":63.721621992,"data":"[tpu] deps ok (timm+sklearn importable, BLAS threads pinned to 1)\n"}
+,{"stream_name":"stdout","time":925.237377594,"data":"[prelude] fold_file -\u003e /kaggle/input/datasets/ppxl16/rsna-knee-cv-folds/fold_file.json\n"}
+,{"stream_name":"stdout","time":1545.010586824,"data":"[prelude] labels /kaggle/input/datasets/flight0234/rsna-knee-hybrid-report-labels/report_labels_v4hybrid.csv -\u003e /kaggle/working/labels.parquet  shape=(4407, 25)  cols=['StudyInstanceUID', 'ACL', 'MCL', 'Medial Meniscus', 'Lateral Meniscus', 'Medial OA', 'Lateral OA', 'PF OA', 'Effusion', 'Synovitis', \"Baker's\", 'Contusion', 'Fracture', 'ACL__conf']\n"}
+,{"stream_name":"stderr","time":1549.948621485,"data":"/usr/local/lib/python3.12/site-packages/torch_xla/experimental/gru.py:113: SyntaxWarning: invalid escape sequence '\\_'\n"}
+,{"stream_name":"stderr","time":1549.948668935,"data":"  * **h_n**: tensor of shape :math:`(D * \\text{num\\_layers}, H_{out})` or\n"}
+,{"stream_name":"stderr","time":1551.578860861,"data":"/usr/local/lib/python3.12/site-packages/torch_xla/__init__.py:258: UserWarning: `tensorflow` can conflict with `torch-xla`. Prefer `tensorflow-cpu` when using PyTorch/XLA. To silence this warning, `pip uninstall -y tensorflow \u0026\u0026 pip install tensorflow-cpu`. If you are in a notebook environment such as Colab or Kaggle, restart your notebook runtime afterwards.\n"}
+,{"stream_name":"stderr","time":1551.578891651,"data":"  warnings.warn(\n"}
+,{"stream_name":"stderr","time":1553.740482584,"data":"/kaggle/src/script.py:459: DeprecationWarning: Use torch_xla.device instead\n"}
+,{"stream_name":"stderr","time":1553.740511634,"data":"  print(\"[tpu] xla_device=%s (single process, no xmp.spawn)\" % _xm.xla_device(),\n"}
+,{"stream_name":"stderr","time":1557.034917815,"data":"WARNING: Logging before InitGoogle() is written to STDERR\n"}
+,{"stream_name":"stderr","time":1557.034948405,"data":"E0000 00:00:1790456795.717494       7 common_lib.cc:648] Could not set metric server port: INVALID_ARGUMENT: Could not find SliceBuilder port 8471 in any of the 0 ports provided in `tpu_process_addresses`=\"local\"\n"}
+,{"stream_name":"stderr","time":1557.034954545,"data":"=== Source Location Trace: ===\n"}
+,{"stream_name":"stderr","time":1557.034959035,"data":"learning/45eac/tfrc/runtime/common_lib.cc:238\n"}
+,{"stream_name":"stdout","time":1566.827767045,"data":"[tpu] xla_device=xla:0 (single process, no xmp.spawn)\n"}
+,{"stream_name":"stdout","time":1566.827821115,"data":"device xla | res 336 | k 12/24 | bs 8 | tag d3f0 | roi=False(compartment)\n"}
+,{"stream_name":"stdout","time":1567.13454112,"data":"[cv] fold 0/5: train 3479 | OOF held-out 870 | fold_file fold_file.json\n"}
+,{"stream_name":"stdout","time":1569.277513383,"data":"train 3479 | gold-val 58 | oof 870\n"}
+,{"stream_name":"stdout","time":1572.521139133,"data":"[raptor] timm-pretrained backbone: vit_small_patch16_dinov3\n"}
+,{"stream_name":"stderr","time":1575.728513352,"data":"/kaggle/src/script.py:492: DeprecationWarning: Use torch_xla.sync instead\n"}
+,{"stream_name":"stderr","time":1575.728551112,"data":"  _xm.mark_step()\n"}
+,{"stream_name":"stderr","time":2632.874055385,"data":"/kaggle/src/script.py:492: DeprecationWarning: Use torch_xla.sync instead\n"}
+,{"stream_name":"stderr","time":2632.874107536,"data":"  _xm.mark_step()\n"}
+,{"stream_name":"stdout","time":2633.025083123,"data":"  [ckpt] best-so-far saved at ep0 (0.7164)\n"}
+,{"stream_name":"stdout","time":2633.136797932,"data":"ep0 loss 0.911 | GOLD macro-AUC 0.7164 (best 0.7164) | 1061s\n"}
+,{"stream_name":"stderr","time":3117.22945263,"data":"/kaggle/src/script.py:492: DeprecationWarning: Use torch_xla.sync instead\n"}
+,{"stream_name":"stderr","time":3117.22950095,"data":"  _xm.mark_step()\n"}
+,{"stream_name":"stdout","time":3117.457815531,"data":"  [ckpt] best-so-far saved at ep1 (0.8049)\n"}
+,{"stream_name":"stdout","time":3117.567500482,"data":"ep1 loss 0.856 | GOLD macro-AUC 0.8049 (best 0.8049) | 1545s\n"}
+,{"stream_name":"stderr","time":3468.92536768,"data":"/kaggle/src/script.py:492: DeprecationWarning: Use torch_xla.sync instead\n"}
+,{"stream_name":"stderr","time":3468.92542416,"data":"  _xm.mark_step()\n"}
+,{"stream_name":"stdout","time":3469.16274522,"data":"  [ckpt] best-so-far saved at ep2 (0.8124)\n"}
+,{"stream_name":"stdout","time":3469.258141889,"data":"ep2 loss 0.819 | GOLD macro-AUC 0.8124 (best 0.8124) | 1897s\n"}
+,{"stream_name":"stderr","time":3779.790756191,"data":"/kaggle/src/script.py:492: DeprecationWarning: Use torch_xla.sync instead\n"}
+,{"stream_name":"stderr","time":3779.790803761,"data":"  _xm.mark_step()\n"}
+,{"stream_name":"stdout","time":3780.01525242,"data":"  [ckpt] best-so-far saved at ep3 (0.8285)\n"}
+,{"stream_name":"stdout","time":3780.10765759,"data":"ep3 loss 0.793 | GOLD macro-AUC 0.8285 (best 0.8285) | 2208s\n"}
+,{"stream_name":"stderr","time":4082.763234268,"data":"/kaggle/src/script.py:492: DeprecationWarning: Use torch_xla.sync instead\n"}
+,{"stream_name":"stderr","time":4082.763282388,"data":"  _xm.mark_step()\n"}
+,{"stream_name":"stdout","time":4082.995822841,"data":"  [ckpt] best-so-far saved at ep4 (0.8403)\n"}
+,{"stream_name":"stdout","time":4083.086584884,"data":"ep4 loss 0.770 | GOLD macro-AUC 0.8403 (best 0.8403) | 2511s\n"}
+,{"stream_name":"stderr","time":4384.72346997,"data":"/kaggle/src/script.py:492: DeprecationWarning: Use torch_xla.sync instead\n"}
+,{"stream_name":"stderr","time":4384.72351768,"data":"  _xm.mark_step()\n"}
+,{"stream_name":"stdout","time":4384.93751935,"data":"  [ckpt] best-so-far saved at ep5 (0.8535)\n"}
+,{"stream_name":"stdout","time":4385.030186079,"data":"ep5 loss 0.747 | GOLD macro-AUC 0.8535 (best 0.8535) | 2812s\n"}
+,{"stream_name":"stderr","time":4672.424088202,"data":"/kaggle/src/script.py:492: DeprecationWarning: Use torch_xla.sync instead\n"}
+,{"stream_name":"stderr","time":4672.424138552,"data":"  _xm.mark_step()\n"}
+,{"stream_name":"stdout","time":4672.515370852,"data":"ep6 loss 0.727 | GOLD macro-AUC 0.8531 (best 0.8535) | 3100s\n"}
+,{"stream_name":"stderr","time":4972.657794715,"data":"/kaggle/src/script.py:492: DeprecationWarning: Use torch_xla.sync instead\n"}
+,{"stream_name":"stderr","time":4972.657846335,"data":"  _xm.mark_step()\n"}
+,{"stream_name":"stdout","time":4972.752771714,"data":"ep7 loss 0.706 | GOLD macro-AUC 0.8510 (best 0.8535) | 3400s\n"}
+,{"stream_name":"stderr","time":5261.98806735,"data":"/kaggle/src/script.py:492: DeprecationWarning: Use torch_xla.sync instead\n"}
+,{"stream_name":"stderr","time":5261.98812027,"data":"  _xm.mark_step()\n"}
+,{"stream_name":"stdout","time":5262.201344069,"data":"  [ckpt] best-so-far saved at ep8 (0.8572)\n"}
+,{"stream_name":"stdout","time":5262.270855209,"data":"ep8 loss 0.691 | GOLD macro-AUC 0.8572 (best 0.8572) | 3690s\n"}
+,{"stream_name":"stdout","time":5564.779101729,"data":"ep9 loss 0.677 | GOLD macro-AUC 0.8481 (best 0.8572) | 3992s\n"}
+,{"stream_name":"stderr","time":5565.189320367,"data":"/kaggle/src/script.py:492: DeprecationWarning: Use torch_xla.sync instead\n"}
+,{"stream_name":"stderr","time":5565.189360977,"data":"  _xm.mark_step()\n"}
+,{"stream_name":"stdout","time":5867.96792321,"data":"ep10 loss 0.669 | GOLD macro-AUC 0.8491 (best 0.8572) | 4295s\n"}
+,{"stream_name":"stderr","time":5868.377406488,"data":"/kaggle/src/script.py:492: DeprecationWarning: Use torch_xla.sync instead\n"}
+,{"stream_name":"stderr","time":5868.377444358,"data":"  _xm.mark_step()\n"}
+,{"stream_name":"stdout","time":6182.769444405,"data":"ep11 loss 0.665 | GOLD macro-AUC 0.8490 (best 0.8572) | 4610s\n"}
+,{"stream_name":"stdout","time":6186.958348808,"data":"\n"}
+,{"stream_name":"stdout","time":6186.958391128,"data":"DONE timm-pretrained | BEST GOLD macro-AUC 0.8572\n"}
+,{"stream_name":"stdout","time":6186.958396808,"data":"   ACL                0.885\n"}
+,{"stream_name":"stdout","time":6186.958400948,"data":"   MCL                0.878\n"}
+,{"stream_name":"stdout","time":6186.958405028,"data":"   Medial Meniscus    0.841\n"}
+,{"stream_name":"stdout","time":6186.958408828,"data":"   Lateral Meniscus   0.814\n"}
+,{"stream_name":"stdout","time":6186.958412658,"data":"   Medial OA          0.927\n"}
+,{"stream_name":"stdout","time":6186.958416468,"data":"   Lateral OA         0.766\n"}
+,{"stream_name":"stdout","time":6186.958420598,"data":"   PF OA              0.819\n"}
+,{"stream_name":"stdout","time":6186.958424438,"data":"   Effusion           0.930\n"}
+,{"stream_name":"stdout","time":6186.958428278,"data":"   Synovitis          0.710\n"}
+,{"stream_name":"stdout","time":6186.958432088,"data":"   Baker's            0.940\n"}
+,{"stream_name":"stdout","time":6186.958435908,"data":"   Contusion          0.924\n"}
+,{"stream_name":"stdout","time":6186.958439838,"data":"   Fracture           0.853\n"}
+,{"stream_name":"stdout","time":6187.090560388,"data":"saved raptor_ft_d3f0.pt / raptor_gold_d3f0.npz / raptor_ft_d3f0.json\n"}
+,{"stream_name":"stdout","time":6445.210050862,"data":"[cv] wrote raptor_oof_d3f0_fold0.npz (870 studies; truth = soft labels)\n"}
+,{"stream_name":"stdout","time":6509.774057569,"data":"[cv] wrote top-K epoch OOF ep5\n"}
+,{"stream_name":"stdout","time":6575.048237155,"data":"[cv] wrote top-K epoch OOF ep6\n"}
+,{"stream_name":"stdout","time":6575.049095195,"data":"[cv] wrote epoch-ensemble OOF over epochs [5, 6, 8]\n"}
+,{"stream_name":"stdout","time":6579.603021187,"data":"SWA over epochs [8, 5, 6] | gold 0.8559 (best-epoch 0.8572) no gain\n"}
+,{"stream_name":"stdout","time":6644.528428176,"data":"[cv] wrote SWA OOF\n"}
+,{"stream_name":"stdout","time":6644.586175946,"data":"TOPK epochs [8, 5, 6] | best 0.8572 | epoch-ensemble 0.8571 (no gain)\n"}
+,{"stream_name":"stderr","time":6658.749730372,"data":"[NbConvertApp] Converting notebook __script__.ipynb to html\n"}
+,{"stream_name":"stderr","time":6661.8539311,"data":"[NbConvertApp] Writing 478109 bytes to __results__.html\n"}
+]
