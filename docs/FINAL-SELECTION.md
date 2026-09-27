@@ -98,7 +98,30 @@ here rather than later:
 | `56599163` | `0943c` (our `cn0` member) | **COMPLETE, 0.942** | falls in the **0.941–0.945 ⇒ no information** band, so it neither promotes nor demotes the arm — **and it completed**, which is the row that matters: our member survived the hidden rerun on 1322 studies with a fifth view in the blend, 0 failures. ⚠️ **Not evidence the member helps.** 0.942 vs `0943`'s 0.943 is 0.001 against ±0.008 noise, and two pure-knob arms (`0943h`, `0943o`) also sit at 0.942 — so that value is not a fingerprint of the member. Equally it is **not** a regression: the pre-registered line was ≤ 0.940. |
 | `56599159` | `0943p` (routing **fully flattened**) | **COMPLETE, 0.941** | **Not disqualified** — 0.941 is above the pre-registered ≤ 0.940 line, one quantum up. But it is the **single lowest of the nine**, and it is a **recommended** pair member, so it gets the dose-ladder analysis below rather than a one-line pass. |
 | `56599162` | `0943r` (`rad_cal_w` → 0) | **COMPLETE, 0.942** | In the no-information band; completes, so it stays selectable. Not part of the recommended pair. |
-| `56599932` | `0943cf` (member **+** fracture fix) | **PENDING** | — |
+| `56599932` | `0943cf` (**recommended primary**) | **COMPLETE, 0.943** | ⭐ **Ties the top of the board**, and it completed — so the recommendation's primary is now the only candidate that is both **joint-highest** and carrying **two** locally measured changes. ⚠️ **But the board cannot see either of them**: C81 predicted the fracture fix at **+0.00099 macro**, which is *below* the board's resolution, and `0943cf` (0.943) vs `0943c` (0.942) — differing by the fracture fix alone — is 0.001. So 0.943 is the **absence of a visible regression**, not a confirmation. |
+
+### ⭐ All nine are in — and the board has now *demonstrated* it cannot rank them
+
+| | |
+|---|---|
+| spread across all nine arms | **0.941 → 0.943 = 0.002** |
+| public LB noise | **±0.008** |
+| what the nine arms span | four axes (Rad exclusion set · routing sharpness · calibrator weight · our member), plus a window-count arm |
+| ⭐ reading | **Nine arms, materially different changes, and the entire spread is a quarter of the noise band.** A96 said the board cannot rank these arms and can only disqualify one; that was an *assumption* when this doc was written. It is now **measured on all nine**, which is the cleanest confirmation of it we could have got. |
+
+⇒ **The choice is therefore still made on what each arm changes and what evidence that change has** —
+never on the displayed score. And nothing here changes the recommendation.
+
+⚠️ **The cleanest single-axis reading we have** is `0943p` vs `0943` (identical except routing):
+**−0.002 for full flattening**. It is the largest single-axis move on the board, it is **inside noise**,
+and — as the dose-ladder section below shows — it is **non-discriminating by construction**: the public
+split is the set that map was fitted on.
+
+⚠️ **The decision this leaves to you.** The recommendation `0943cf` + `0943p` pairs a joint-highest arm
+with the **single lowest**. That is deliberate (opposite sides of the one documented-as-fitted knob), and
+it is what the pre-registered rule says to keep. But it is also the one place where your judgment
+legitimately applies over the rule: if carrying the unique minimum is unwelcome, the pre-registered
+alternative **`0943cf` + `0943h`** holds the **same hedge direction** at a weaker dose and scores 0.942.
 
 ### ⚠️ The one pattern in the readouts, and why it does **not** move the recommendation
 

@@ -9,22 +9,29 @@
 |---|---|
 | Deadline | **2026-10-22 23:59 UTC** (~4 weeks) |
 | Best ledger score | ⭐ **0.943** — a **three-way tie**: `56568520` (`0943` speedy) · `56570144` (`0943f` fracture) · `56570151` (`0943s` sparse). Then `56568524` (`0943h`) and `56570148` (`0943o`) at **0.942**. ⚠️ Eight of nine now read back: `0943c` and `0943r` also **0.942**, and **`0943p` alone at `0.941`** — the lowest of the nine, and a **recommended** pair member. That does **not** disqualify it (the pre-registered line is ≤0.940) — see the dose-ladder analysis in [`docs/FINAL-SELECTION.md`](docs/FINAL-SELECTION.md): the public board mildly preferring the *fitted* routing is exactly what A122 predicts, so it cannot discriminate. Ledger **36 rows, 35 scored**. |
-| Public LB noise | **±0.008** — so **the board cannot rank these five arms** and no "which is better" conclusion is drawn from it (A96). All five sit inside the noise band. |
-| ⭐ What the readouts actually bought | **All five arms completed the hidden rerun on 1322 studies.** Not just the baseline: both non-default presets and the reduced-window arm too. The submission path had only ever been exercised on the 3 visible studies. **That de-risking is independent of the score.** |
+| Public LB noise | **±0.008** — so **the board cannot rank these arms** and no "which is better" conclusion is drawn from it (A96). ⭐ **Now measured, not assumed**: all nine arms are in, they span four different axes of change, and the **entire spread is 0.002** (0.941–0.943) — a quarter of the noise band. |
+| ⭐ What the readouts actually bought | **All nine arms completed the hidden rerun on 1322 studies** — not just the baseline: both non-default presets, the reduced-window arm, **and our `cn0` member twice**. The submission path had only ever been exercised on the 3 visible studies. **That de-risking is independent of the score.** |
 | GPU quota | **10.33 h / 30 h** used (**19.67 h left**), refreshes 2026-10-03. TPU **1.85 h / 20 h** (18.15 h left). ⚠️ The counter moves in **20-minute quanta** (A121), so it cannot resolve anything smaller. |
 | Cost model | **1 h wall clock = 1 GPU hour even on the 2×T4 shape.** Scoring reruns are **not** billed — re-confirmed over a 7-hour idle window (A121). |
 
 ## 🔴 The one action left — and it is not something the CLI can do
 
-**Kaggle has auto-ticked `56568520` (`0943` v2, 0.943) + `56570144` (`0943f`, 0.943).**
-The recommended pair is **`56570144` (`0943f`) + `56568524` (`0943h`)**.
+The recommended pair is **`56599932` (`0943cf`, 0.943) + `56599159` (`0943p`, 0.941)**.
+**Kaggle's auto-tick is not it** — it took `56568520` (`0943` v2) + `56570144` (`0943f`) (A123).
 
-⇒ **Untick `RSNA knee 0943 - Version 2`, tick `RSNA knee 0943h - Version 2`.** Full reasoning, and
-what leaving the default costs: [`docs/FINAL-SELECTION.md`](docs/FINAL-SELECTION.md).
+⇒ **Untick `RSNA knee 0943 - Version 2`, and tick `RSNA knee 0943cf` + `RSNA knee 0943p`.**
+Full reasoning, and what leaving the default costs:
+[`docs/FINAL-SELECTION.md`](docs/FINAL-SELECTION.md).
 
 ⚠️ `kaggle` 2.2.4 has **no select command** (verified) ⇒ this needs the browser. And the default is
-not predictable: three of our arms tie at 0.943 and auto-select took two of them, **not** the ones we
-would choose (A123). Deadline 2026-10-22 23:59Z.
+not predictable: four of our arms tie at 0.943 and auto-select took two of them, **not** the ones we
+would choose (A123). Deadline **2026-10-22 23:59Z**.
+
+⚠️ **This is the one decision where your judgment legitimately overrides the rule.** The pair is
+deliberate — opposite sides of the one knob documented as public-fitted (A122) — but `0943p` is the
+**single lowest of the nine (0.941)**, and the pre-registered alternative **`0943cf` + `0943h`** holds
+the **same hedge direction at a weaker dose**, scoring 0.942. Neither choice is supported or refuted by
+the board (the whole nine-arm spread is 0.002 against ±0.008 noise).
 
 ⭐ **The routing hedge is no longer an analogy.** The frontier notebook's own source comment says the
 per-label `coatnet_w` overrides were set "on the strength of a public split that is a fraction of the
@@ -32,22 +39,22 @@ test set… It may be real. It is also the likeliest place to give back points p
 the `parent` preset is for" (A122, §194.3). That covers the *direction*; the *dose* is still
 unresolvable — see the caveats in the selection doc.
 
-**The choice set is now NINE arms, and the decision is pre-registered** — see
-[`docs/FINAL-SELECTION.md`](docs/FINAL-SELECTION.md), which was written **before** the last readouts
-land so they get read against a rule rather than fitted to a feeling.
+**The choice set is NINE arms, all nine read back, and the decision was pre-registered** — see
+[`docs/FINAL-SELECTION.md`](docs/FINAL-SELECTION.md), written **before** the readouts landed so they get
+read against a rule rather than fitted to a feeling.
 
 | | |
 |---|---|
-| New since §196 | **`0943c`** = `0943` + **our rescued `cn0` as a fifth Raptor view** (built, smoke-tested, submitted `56599163`) and **`0943cf`** = the same **plus** the fracture fix — the two changes this repo actually has measurements for |
-| Recommendation | **`0943cf` + `0943p`** — the pair puts the published per-label routing against the flattened one, i.e. it hedges the single knob whose provenance is documented as public-fitted, and covers three of the four axes between them |
-| ⚠️ The board still cannot rank them | ±0.008 noise vs 0.001–0.003 effects; the readouts can only **disqualify** (a ≤0.940 return, or a failed run), and that rule is written down in the doc |
-| ⚠️ An arm that was never submitted cannot be selected | eight are submitted now; `0943cf` follows its smoke run |
+| New since §196 | **`0943c`** = `0943` + **our rescued `cn0` as a fifth Raptor view** (`56599163`, 0.942) and **`0943cf`** = the same **plus** the fracture fix (`56599932`, **0.943**) — the two changes this repo actually has measurements for |
+| Recommendation | **`0943cf` + `0943p`** — the published per-label routing against the flattened one, i.e. it hedges the single knob whose provenance is documented as public-fitted, and covers three of the four axes between them |
+| ⚠️ The board cannot rank them, and that is now **measured** | all nine in, four different axes, and the **entire spread is 0.002** against ±0.008 — the readouts can only **disqualify** (a ≤0.940 return, or a failed run), and that rule is written down in the doc |
+| ✅ Every arm is submitted | all nine went through a full hidden rerun on 1322 studies ⇒ **all nine are selectable** |
 
 ## Live right now
 
 | Thing | State |
 |---|---|
-| Submissions | **one PENDING**: `56599932` (`0943cf`). ⭐ **`56599163` (`0943c`) read back `0.942`** — our rescued `cn0` member's **first hidden rerun**, and it **completed clean** on 1322 studies. `56599159` (`0943p`) `0.941`, `56599162` (`0943r`) `0.942`. |
+| Submissions | ✅ **all nine read back; nothing pending.** Ledger **36 rows, 36 scored**, best **0.943**. ⭐ **`56599932` (`0943cf`) = `0.943`, tied for best** — the recommended primary, carrying the only two changes with local measurements, and it **completed** the hidden rerun. ⭐ Our rescued `cn0` member has now survived the hidden rerun **twice** (`0943c` 0.942, `0943cf` 0.943), 1322 studies each, 0 failures. ⚠️ `0943p` is alone at `0.941`. |
 | ⭐ The A-lite paired arms | **both QUEUED** on GPU: `a5fa` (the frontier's A5 architecture) and `rfa` (our head) — same script, fold, epochs, bs, res, and **the same augmentation on both**. This is the transfer check that gates the 48 GB cache (§210.3). |
 | The augmented readout | **pre-registered before the numbers landed**: `scripts/a5lite_pair.py`, threshold **+0.02**. It reproduces A153 exactly (0.7941 / 0.7366, Δ +0.0575, P=1.00) and **asserts the self-pair invariant** (0.0000, degenerate CI) before printing any delta. |
 | Density rung `a5lite-n8` | ⚠️ **built, deliberately NOT pushed** — both GPU slots are held by the queued pair. See the reopened-training section below. |

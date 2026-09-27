@@ -34,4 +34,4 @@ date,ref,desc,score,status
 2026-09-27 05:42:44.243000,56599159,"0943p parent routing v1 - flat outer 0.65 (the frontier's own insurance, A122)",0.941,COMPLETE
 2026-09-27 05:42:49.770000,56599162,0943r rad_cal_w 0.00 v1 - the frontier's v38 move (A128),0.942,COMPLETE
 2026-09-27 05:42:56.117000,56599163,"0943c v3 - 0943 + our rescued cn0 CoAtNet as a 5th Raptor view, k_eval 24, norm none",0.942,COMPLETE
-2026-09-27 06:07:33.297000,56599932,0943cf v1 - our cn0 member (5th view) PLUS the fracture fix: the two changes with local measurements,,PENDING
+2026-09-27 06:07:33.297000,56599932,0943cf v1 - our cn0 member (5th view) PLUS the fracture fix: the two changes with local measurements,0.943,COMPLETE
