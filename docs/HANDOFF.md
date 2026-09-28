@@ -15749,6 +15749,59 @@ Efficiency = AUC / (Benchmark − max AUC) + RuntimeSeconds / 32400
 
 **工具**：`python scripts/eff_rank.py --whatif 0.943`（换算率与情景表）、`scripts/eff_rank.py`（读榜与 `DateSubmitted`）。
 
+---
+
+## 223. 攻主榜：读到了前沿自己的版本台账，以及一条独立的成员门槛（2026-09-28）
+
+### 223.1 前沿的台账 —— 每个版本写一行"唯一预测性改动"
+
+`mattiaangeli/bend-the-knee-to-the-dinosaurs` 的 **notebook metadata 里带 `rsna_optimization`**，
+字段包括 `revision` · **`only_predictive_change`** · `raptor_arm_weights` · `inner_raptor_coat_weights` ·
+`official_source_score` · `parent_kernel_version` · `release_guard`。
+
+当前公开版 = **`v38-radcal-off-credit-trim`**，其 **`only_predictive_change` = "Rad 88-feature calibration blend 0.40 to 0.00"**
+⇒ **前沿当前的公开预测性改动就是 `rad_cal_w 0.40 → 0.00`** —— **而那正是我们已提交的 `0943r`（0.942）。**
+
+⭐⭐ **但同一个文件里，他的公开版【仍然带着我们已经修掉的那个 bug】**：
+`_RAD_EXCLUDE = ("Baker's", 'Fracture')` —— 即 C81（n=4185，macro **+0.00099**）证明该修的那处。
+⇒ **我们的 `0943f` / `0943cf` 相对前沿当前公开版是真实优势。**
+
+### 223.2 ⭐⭐⭐ 一条**独立的成员门槛**：solo ≥ ~0.90
+
+`fuadmuhammad/rsna-knee-fast-parent-0-957-v2` 记录了实测（**注意：标题里的 "0.957" 不是分数**，
+它自己写着 "Public score of this exact version: **pending**" —— **名字第二次骗人**，
+上一次是 `kolyaflexcu/…speedy947` 实为 0.942）：
+
+> **Injecting my own 2.5D members (ResNet34 / ConvNeXt / RadImageNet, holdout 0.85–0.87) at 15%: 0.936.**
+> **Below ~0.90 solo, a member costs more than its diversity buys.**
+
+⇒ **独立佐证了我们自己的门**（A158：自家 ConvNeXt/DINOv2 臂全无信号、两条有害），
+**并给出了阈值：成员必须 solo ≥ ~0.90 才值得加。**
+⇒ **我们的成员线之所以失败，是因为我们的臂在 0.85–0.88 —— 不在 0.90 以上。**
+
+**同源的三条旁证**：
+1. **0.60/0.10** 才是前沿自用的 Raptor 臂权重（0.55/0.15 那套停在 0.941）—— **我们已经在 0.60/0.10**；
+2. 它建议 **"keep a flat-0.60 version as your second final pick"** —— 与我们的对冲方向一致；
+3. ⚠️ **静默降级**：缺 `model_sources`/`kernel_sources` 时流水线**不崩、静默丢成员**，0.941 → **0.937**。
+   判据：日志里 **20 行 `fingerprint matches`、0 行 `dropped`**。⇒ 值得对**我们自己**的提交 run 核一遍。
+
+### 223.3 ⚠️ 一个数据完整性陷阱：`kernels_pull` 不锁定版本
+
+相隔几分钟两次 pull **同一个** notebook，一次得到 **141,800 B / `v38-radcal-off-credit-trim`**，
+另一次得到 **173,364 B / `v66-v65-parent-legacy-dino-002`**，而后者**现在无法复现**。
+⇒ **不要把 pull 下来的 notebook 当成稳定物证。** 要引用就先**落盘快照**并记录**大小 + 台账 revision**。
+
+### 223.4 ⇒ "提分"的具体一步（由此变得很明确）
+
+**成员的硬门槛是 solo ≥ ~0.90，而我们自己的训练上限约 0.877。**
+⇒ 唯一**有实证先例**的路子是 **"从已发表的强 checkpoint 出发微调"**：
+
+`indarkarhana/high-ranked-0-943-rsna-knee-d4-fine-tuned-v5` —— **微调公开的 MaxSpan v5 CoAtNet**（4 epoch、
+自己 336px/64 片/140mm 缓存、关掉 laterality normalization、在留出的弱标签集上选 checkpoint），
+自报 **单独 0.932 vs 父版 0.924**（**+0.008**），其余 D4 流水线不动。
+
+⇒ **它同时满足三件事**：**跨过 0.90 门槛** · **留在我们门里唯一通过的 CoAtNet 族** · **有别人跑通在先**。
+
 ### 221.3 ⭐⭐ 含义：这是本项目最大的一块可动空间
 
 | 赛道 | 我们现在 | 可争取的 |
