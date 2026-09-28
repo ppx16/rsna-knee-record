@@ -15914,3 +15914,60 @@ Efficiency = AUC / (Benchmark − max AUC) + RuntimeSeconds / 32400
 我在插入 §223 时把锚点选在了 §222 的末尾，结果 **§223 被插到了 `§221.3` 之前** ——
 **HANDOFF 的分节顺序出现了错位**。内容无损，但**按节号顺读会跳**。
 ⇒ 本条 §224 因此**追加在文件末尾**（正确的时序位置）。**今后新增 §N 一律追加到文件末尾。**
+
+---
+
+## 225. 趁微调在跑：查"我们是不是漏了什么" —— 答案是**没有漏**（2026-09-28）
+
+### 225.1 先查了一个会**静默丢分**的陷阱：我们的提交有没有被静默降级？
+
+`fuadmuhammad` 记录过：缺 `model_sources`/`kernel_sources` 时这条流水线**不崩、静默丢成员**，0.941 → **0.937**；
+判据是日志里 **20 行 `fingerprint matches`、0 行 `dropped`** 与 `costs one vote, not the run`。
+
+**查我们自己的两次出货运行（`0943cf` / `0943cflat`）**：
+
+| 项 | `0943cf` | `0943cflat` |
+|---|---|---|
+| `fingerprint matches` | **20** | **20** |
+| `costs one vote`（丢成员的报文特征） | **0** | **0** |
+| `dropped` 字面命中 | 1 | 1 |
+
+⚠️ 那唯一的 `dropped` 命中是**散文**（"a monolingual extractor silently drops whole slices of the training set"），
+**不是流水线事件** —— 一处差点被误读成"我们也在丢成员"的假阳性。
+⇒ ✅ **我们的提交【没有】被静默降级。** 那个 0.941→0.937 的陷阱对我们不成立。
+
+### 225.2 再查"漏没漏成员"：我们把前沿台账扫了一遍
+
+**扫 91 个已拉取的 notebook，31 个带 `rsna_optimization`**，共 6 个 revision。全部"唯一预测性改动"只有两条：
+
+| 改动 | revision | 我们有没有？ |
+|---|---|---|
+| **「Rad 88-feature calibration blend 0.40 to 0.00」** | `v38-radcal-off-credit-trim` | ✅ **有**（已作为 `0943r` 提交，0.942） |
+| **「remove inner Raptor/CoAt percentile rerank」** | `v29-remove-inner-rerank` / `v30-*` | ✅ **本来就没有** —— 契约串逐字 `public_raptor_private_residual_coat_v32_no_inner_rerank_v1`、`inner_rerank=False` |
+
+**并且直接对比了 source 清单**（`kernel-0943cf` vs Mattia 当前版 metadata）：
+
+| | 我们 | 他们 | **他们没有而我们有的** | **他们有而我们没有的** |
+|---|---|---|---|---|
+| `dataset_sources` | **15** | 12 | 3 个（d4-depthzone、global96、我们的 cn0） | **无** |
+| `kernel_sources` | 2 | 2 | — | **无** |
+| `model_sources` | 1 | 1 | — | **无** |
+
+⇒ ⭐ **我们没有漏任何已发表成员；我们是前沿当前公开版的超集。**
+
+### 225.3 顺带：Raptor 臂权重有三个互相冲突的公开版本
+
+`0.60/0.10/0.10/0.20`（我们 · Mattia `v38` · `fuadmuhammad` 独立分析）
+· `0.55/0.10/0.15/0.20`（0.941 recipe，`fuadmuhammad` 说它**停在 0.941**）
+· `0.65/0.10/0.05/0.20`（Mattia `v30-raptor-forward65`，其 `prediction_change` 写明
+"**five points from reverse duplicate to forward maxspan only**"）。
+
+⇒ **又是那类无法在本地排序的融合旋钮**（A93/A96）⇒ **不是可用的提分杠杆。**
+
+### 225.4 ⭐ 结论：与正在跑的那一枪一致
+
+**公开可见的、便宜的东西我们都已经拿了** —— 两条预测性改动在船上，source 是超集，出货没被静默降级。
+⇒ **剩下的差距只能是【成员质量】。** 这正是现在这次 **MaxSpan v5 微调**要解决的事。
+
+⚠️ 而 **`v66-v65-parent-legacy-dino-002` 出现在 22 个 notebook 里、台账为空** ⇒ **前沿仍在动，
+不要把公开版当静止物**（也与 A167 那个"`kernels_pull` 不锁版本"的观察互相印证）。
