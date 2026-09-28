@@ -149,18 +149,23 @@ def main(argv=None) -> int:
             print("  %-6s  delta %+.4f  CI [%+.4f, %+.4f]  P(>0)=%.2f  (arm %.4f vs %s %.4f)"
                   % (t, d, lo, hi, p, score[t], args.ref, score[args.ref]))
 
-        print("\n-- 210.3 decision rule (threshold %+.2f, fixed before the numbers) --" % THRESHOLD)
+        print("\n-- 210.3 threshold check (threshold %+.2f, fixed before the numbers) --" % THRESHOLD)
+        print("   NOTE this line compares whatever arms you passed.  It is the 210.3 transfer test")
+        print("   ONLY for the AUGMENTED pair (a5fa vs rfa); beside an unaugmented pair it means")
+        print("   nothing about the cache.  And passing it does NOT by itself justify the 48 GB")
+        print("   build: the MEMBER GATE must also show the arm adds given what the stack already")
+        print("   contains -- our four A-lite arms all scored weight 0 there (A163).")
         for t in tags:
             if t not in P:
                 continue
             d, lo, hi, p = paired_bootstrap_masked(Y, M, P[t], P[args.ref],
                                                    n_boot=args.boot, seed=0)
             if d >= THRESHOLD:
-                v = "PASS  -> the advantage transfers; the 48 GB faithful cache is justified"
+                v = "advantage survives at THIS operating point (necessary, not sufficient)"
             elif d <= -THRESHOLD:
                 v = "REVERSED -> the reference arm is better here; re-read before acting"
             else:
-                v = "COLLAPSE -> route A stops; the gap lives in 16-slice density/recipe, not the ckpt"
+                v = "COLLAPSED -> no advantage at this operating point"
             print("  %-6s %s" % (t, v))
     return 0
 

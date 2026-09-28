@@ -168,9 +168,24 @@ def main():
     try:
         import torch_xla
         import torch_xla.core.xla_model as xm
-        dev = xm.xla_device()
-        log('[3d] torch_xla %s ; device %s ; %d devices'
-            % (torch_xla.__version__, dev, xm.xrt_world_size()))
+        # ⚠️ v1 of this smoke died HERE, on a logging line: `xm.xrt_world_size()` does not exist in
+        # torch_xla 2.8.  The log shows the run had ALREADY reached `xm.xla_device()` successfully
+        # (a DeprecationWarning at that line), so the TPU was fine -- the smoke burned a whole queue
+        # cycle on an attribute error, not on Conv3d.  Do not let diagnostics be able to kill the
+        # experiment: resolve them defensively and let the model be the thing under test.
+        # Also `xm.xla_device()` is deprecated in 2.x in favour of `torch_xla.device()`.
+        dev = torch_xla.device() if hasattr(torch_xla, 'device') else xm.xla_device()
+        try:
+            import torch_xla.runtime as xr
+            nworld = xr.world_size()
+        except Exception:
+            nworld = getattr(xm, 'xrt_world_size', lambda: 'n/a')()
+        log('[3d] torch_xla %s ; device %s ; world_size %s'
+            % (getattr(torch_xla, '__version__', '?'), dev, nworld))
+        if not hasattr(xm, 'optimizer_step'):
+            raise SystemExit('!! xm.optimizer_step is missing -- XLA step semantics changed')
+    except SystemExit:
+        raise
     except Exception as e:
         raise SystemExit('!! torch_xla unavailable: %r' % (e,))
 
