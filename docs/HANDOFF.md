@@ -15854,3 +15854,63 @@ Efficiency = AUC / (Benchmark − max AUC) + RuntimeSeconds / 32400
 ⭐ **解法不需要花额度**：等榜单下次刷新，看 `DateSubmitted` 变成
 `09-27 06:07:33`（→`0943cf`，说明跟"最好分"）、`09-27 15:58:47`（→`0943cflat`，说明跟"最新"）
 还是**不动**（说明它锁定在某个更早的提交上）。**一次读数就能定这条规则。**
+
+---
+
+## 224. Phase 2 第一枪：微调公开的 MaxSpan v5（一个现成的 ≥0.90 起点）（2026-09-28）
+
+### 224.1 为什么是这个 checkpoint
+
+`dreaddevelopment/raptor-knee-maxspan` 的 `raptor_ft_coatnet_v5_full_swa.pt` **自带 metadata**：
+
+| 字段 | 值 |
+|---|---|
+| **`gold_auc`** | **0.9214** ← **高于 A167 那条 ~0.90 的成员门槛** |
+| `arch` | `coatnet_rmlp_2_rw_384.sw_in12k_ft_in1k` |
+| `res` | **384** |
+| `epoch` / `swa_over` | `[14, 12, 15]`（3 个 SWA 快照） |
+| `model` | 486 张量 = **478 张 `backbone.*` + 8 张 head** |
+
+⚠️ 那 8 张 head 的名字是 `clsW` / `clsb` / `norm.weight|bias` / `att.0|3.weight|bias` ——
+**与我们的 `RaptorClassifier` 逐字相同** ⇒ 这个 `model` 字典**就是**我们模型的 `state_dict`。
+
+**对比**：我们自训最好的 `cn0` 是 `gold_auc 0.8779`（同一口径，**差 0.0439**）。
+⇒ **这是一个现成的、≥0.90 的起点 —— 正好补上"我们自训上限只有 0.877"那个缺口。**
+
+**预登记判据**：微调后的 `gold_auc` **必须 > 0.9214**，否则不集成。
+
+### 224.2 ⚠️ 路上四个坑，其中两个会【静默】毁掉这次运行
+
+**① 静默空载（最贵的一个）**：`load_raptor` 在**顶层**找 `backbone.` 前缀，而公开 checkpoint
+把张量**包在 `model` 键下** ⇒ 推导出**空字典**，`load_state_dict(strict=False)` **欣然接受空字典**，
+于是**从 timm 权重从头训**，同时打出一行**看起来成功**的日志。
+⇒ **修法**：解包 `student`/`model`/`state_dict`，并**在 0 张量时 raise**（又一次"断言结果、不断言版式"）。
+
+**② ⚠️ `machine_shape` 盖过两个 enable 开关**：从 TPU 源内核继承的
+**`"machine_shape": "Tpu1VmV38"`**，让 `enable_tpu: false` + `enable_gpu: true`
+**依然被算作 TPU 会话** ⇒ push 返回 **`Maximum batch TPU session count of 1 reached` 且 `kernelId: 0`（什么都没建）**。
+⭐ **这条最危险的地方是它的可误读性** —— 它长得像"TPU 忙，等等看"，而我差点把**提分主线**
+堵在我们自己那个**低优先级 smoke** 后面。**修法**：GPU 模式下**删掉 `machine_shape`**。
+
+**③ 数据集创建返回空 body**：把自己转换过的 checkpoint 发布成数据集失败、**响应体为空**
+（CLI 报成 `JSONDecodeError`）—— 与 A162 那个 `CreateCodeSubmission` 400 **同一个空 body 特征**。
+⇒ **绕开**：**不发布新数据集**，改为**挂载已公开的父数据集**、在加载时解包。
+**没有发布步骤，父文件还能与原件比对哈希**，比我们自己的副本更可信。
+
+**④ TPU 并发上限 1，且无法取消 QUEUED 的内核**：`kernel-tpu-3dsmoke` 占着唯一槽位，CLI 没有取消手段
+⇒ 改跑 **GPU**（A-lite 对打已结束，两个槽位空出）。
+
+### 224.3 配置与状态
+
+`coatnet_rmlp_2_rw_384 @384` · **4 epoch** · `bs 2` · `--grad_ckpt` · `tag msft0` · fold 0 · **GPU**。
+⚠️ 训练器自注：CoAtNet@384 在 **bs 8 + grad_ckpt 要 23.7 GB** ⇒ **bs 2 是想塞进 16 GB T4 的一注**；
+**OOM 在这里是便宜的信息** —— 一次排队换一个明确结论。
+
+**已推、RUNNING**：`ppxl16/rsna-knee-tpu-msft` v1（`kernelId 136206325`）。
+**工具**：`scripts/build_msft_kernel.py`（`--device tpu|gpu`；`--check` 断言载荷含守卫/探针/开关/数据集）。
+
+### 224.4 ⚠️ 一处结构瑕疵（记下来，免得以后被误导）
+
+我在插入 §223 时把锚点选在了 §222 的末尾，结果 **§223 被插到了 `§221.3` 之前** ——
+**HANDOFF 的分节顺序出现了错位**。内容无损，但**按节号顺读会跳**。
+⇒ 本条 §224 因此**追加在文件末尾**（正确的时序位置）。**今后新增 §N 一律追加到文件末尾。**
