@@ -23,10 +23,26 @@ team gets a **distinct rank inside a block of equal scores**. Both bugs are now 
 |---|---|
 | ⚠️ Is the gap real? | **Mixed.** Teams above us have median **83** submissions vs **15** in our band, so part is public overfitting. ⚠️ **But `daimaru` reached 0.955 on 8 submissions** — that cannot be hill-climbing ⇒ **a real recipe exists.** |
 | ⚠️ What it is NOT | **Not a missing checkpoint.** `kernel-0943` already mounts essentially the entire published model zoo (maxspan, native384, native384dense, coat-resgated, d4-depthzone, global96, e11, e9, llm-labels, v52, radimagenet, pilkwang + DINOv2-small). |
-| ⭐⭐ **The actionable target is +0.001, not +0.016** | Our 0.943 is a **448-team block spanning ranks 219–666**, and **both medal cutoffs fall inside it** (silver = top 5% = rank ≤222, bronze = top 10% = rank ≤444). So at 0.943 **whether we medal at all is decided by an opaque tie-break, not by score**. The next score up (**0.944**) is only a **46-team block** at ranks 173–218 ⇒ **+0.001 escapes the tie-break entirely and lands in silver.** ⚠️ Cutoffs are the standard Kaggle rule and medals are awarded on the **private** LB, so this is indicative, not decisive. |
+| ⭐⭐ **The actionable target is +0.001, not +0.016** | ⚠️ **Live 2026-09-28**: our rank is **430**, and 0.943 is a **481-team block spanning ranks 230–710**. **Silver (top 5% = rank ≤224) sits in the 0.944 block (50 teams, ranks 180–229); bronze (top 10% = rank ≤448) falls INSIDE our block — 18 ranks below us.** ⇒ at 0.943 **whether we medal at all is decided by an opaque tie-break, not by score**, while **+0.001 (→0.944) escapes the block into silver.** ⚠️ Cutoffs are the standard Kaggle rule and medals are awarded on the **private** LB, so this is indicative, not decisive. |
 | ⭐ The unlock | Training was closed on **"our arm cannot beat A5"** (A106, true). That is **not** the question: an ensemble member needs to be **strong AND decorrelated**, and `cn0` (0.8769, *below* A5) proved it adds **+0.0028, CI [+0.0011, +0.0043]** on a parent-quality base. **Two different questions were conflated.** |
 | ⇒ The plan | **Phase 1 (no quota):** ✅ member sweep **done** — our existing stock is exhausted (only `cn0` adds). Still open: per-finding specialists; weekly frontier watch. **Phase 2:** train members in families the stack does *not* have (TPU, 1.28 h/fold) — **now the only path**. |
 | ⚠️ Not relaxed | **A96 stands** — 0.002 is still invisible on a *single* arm. But a **real +0.003** on the private split is exactly the size that decides this competition, and the +0.001 escape from the tie block is the concrete objective. |
+
+## 🚨🚨 And the headline of the 2026-09-28 全盘调查: we have been playing ONE track
+
+**There is a `$18,000` Efficiency Track (3 places) that rewards accuracy-per-second, and the same
+submission counts for BOTH tracks.** We are on its leaderboard at **efficiency rank 3343 / 4363**
+(vs main-LB rank 430 / 4479).
+
+| | |
+|---|---|
+| How it was missed | **The repo recorded it on 2026-09-13** (§72.6: *"$18,000 Efficiency Track… the same submission can win both tracks"*) and **flagged it unverified — then nobody mentioned it again for two weeks.** The whole project optimised the main track only. |
+| Independent confirmation | A public repo tracking this competition: *"$77,000 total, including a separate Efficiency Track ($18,000 over 3 places)… entry/merger deadline **2026-10-15**"*, and its own locked decision was **"target both the main and efficiency tracks."** |
+| ⭐ What it is | **Almost independent of score.** eff#1 = 0.958, eff#3 = 0.948, **eff#14 = 0.943 — the same score we hold** — while some 0.959 teams sit at eff#266/#655. ⇒ **a runtime contest, not an accuracy contest.** |
+| ⇒ Where the headroom is | main LB: rank **430**, worth **+0.001** (silver). **Efficiency: rank 3343, worth thousands of places — and it is free on the main track.** |
+| ⚠️ Not yet verified | the exact metric (§72.6's formula is second-hand and dimensionally odd), what runtime Kaggle measures, what the 2026-10-15 entry/merger deadline implies, and **our own runtime — never measured.** |
+| ⇒ Next | **measure our runtime**, then verify the formula. If runtime dominates, *"3 h → 20 min"* is worth far more than *"0.943 → 0.944"*. The material already exists: `0943s` (62/42 sparse windows, **main-LB neutral at 0.943**) and the whole "speedy raptors" lineage. |
+| ⚠️ Trap recorded | I first searched the efficiency board for **`ppxl16`** and found nothing — the board lists us as **`p pxl16`** (with a space). **A wrong search string nearly produced "we are not on the board".** |
 
 ## ✅ Phase 1, first result: our existing checkpoints are exhausted
 
@@ -73,7 +89,7 @@ negative at the deadline.
 | Best ledger score | ⭐ **0.943**, a **four-way tie**: `56568520` (`0943`) · `56570144` (`0943f`) · `56570151` (`0943s`) · **`56599932` (`0943cf`)**. Then `0943h`/`0943o`/`0943c`/`0943r` at **0.942** and **`0943p` alone at `0.941`**. ✅ **All nine in; ledger 36 rows, 36 scored.** |
 | Public LB noise | **±0.008** ⇒ the board cannot rank *these* arms (all nine span just **0.002**), but it **can** see the 0.016 to the top. ⭐ The `0943p` dose-ladder and why the board's preference there is non-discriminating: [`docs/FINAL-SELECTION.md`](docs/FINAL-SELECTION.md). |
 | ⭐ What the readouts bought | **All nine arms completed the hidden rerun on 1322 studies** — including **our `cn0` member twice** (`0943c` 0.942, `0943cf` 0.943), 0 failures, which **retires the largest unmeasurable risk on it** (§200). **That de-risking is independent of the score.** |
-| GPU quota | **10.33 h / 30 h** used (**19.67 h left**), refreshes 2026-10-03. TPU **1.85 h / 20 h** (18.15 h left). ⚠️ The counter moves in **20-minute quanta** (A121). ⇒ to the deadline ≈ **90–110 GPU-h + 78 TPU-h (≈60 folds) + ~125 submission slots**: **compute-rich, idea-poor.** |
+| GPU quota | **17.49 h / 30 h** used (**12.51 h left**), refreshes 2026-10-03. TPU **1.88 h / 20 h** (18.12 h left). ⚠️ The counter moves in **20-minute quanta** (A121). ⇒ to the deadline (3 more refreshes) ≈ **100 GPU-h + 78 TPU-h (≈60 folds) + ~120 submission slots**: **compute-rich, idea-poor.** |
 | Cost model | **1 h wall clock = 1 GPU hour even on the 2×T4 shape.** Scoring reruns are **not** billed — re-confirmed over a 7-hour idle window (A121). |
 
 ## 🔴 The one action left — and it is not something the CLI can do

@@ -1,6 +1,13 @@
 # NOW -- 当前状态速读（**本文件由 `python scripts\now.py` 生成，不要手改**）
 
-生成时间：**2026-09-24 07:00 UTC**（本地 UTC+8，请换算后再读 `state/cv_push*.log` 那种本地时间戳）
+> ## ⚠️ 本页已过时 —— **当前状态请看仓库根目录的 `STATUS.md`**
+>
+> `now.py` 仍在读 `scripts/cv_queue.py --status` 与 `state/director.log`，但**那套机制已在 §164 删除**，
+> 所以下面出现的队列是 **09-14** 的、事件日志来自一个**已不再运行**的组件。
+> **生成时间只证明这个文件是刚写的，不证明它的内容是当前的。**
+> 真正的最新状态：`STATUS.md`（一屏）→ `state/FACTS.md`（已确证/已否决）→ `docs/REVIEW-2026-09-27.md`（计划）。
+
+生成时间：**2026-09-28 04:13 UTC**（本地 UTC+8，请换算后再读 `state/cv_push*.log` 那种本地时间戳）
 
 > 读法：**这一页 → `state/EXPERIMENTS.md`（做过的实验台账）→ `state/FACTS.md`（已确证/已否决）→ 只在需要细节时翻 HANDOFF.md。**
 > ⭐ **开新实验前先去 EXPERIMENTS.md 查一行** —— 它存在的全部目的就是「不要重复做一个实验、浪费 GPU 额度」。
@@ -22,23 +29,22 @@ done       ppxl16/rsna-knee-cv-r336-fold1             CONFIRM r336 (fold 1): fol
 
 ## 最近事件（`state/director.log` 尾部，UTC 时间戳）
 ```
-[2026-09-22T08:53:17Z] API calls this pass: polled 0 of 25 watches (25 finished -> skipped)
-[2026-09-23T01:14:12Z] API calls this pass: polled 0 of 25 watches (25 finished -> skipped)
-[2026-09-23T01:16:05Z] API calls this pass: polled 0 of 25 watches (25 finished -> skipped)
-[2026-09-23T08:36:50Z] API calls this pass: polled 0 of 25 watches (25 finished -> skipped)
-[2026-09-23T10:16:05Z] API calls this pass: polled 0 of 25 watches (25 finished -> skipped)
-[2026-09-23T13:16:06Z] API calls this pass: polled 0 of 25 watches (25 finished -> skipped)
-[2026-09-24T03:58:26Z] API calls this pass: polled 0 of 25 watches (25 finished -> skipped)
-[2026-09-24T04:16:05Z] API calls this pass: polled 0 of 25 watches (25 finished -> skipped)
+[2026-09-24T10:16:05Z] API calls this pass: polled 0 of 25 watches (25 finished -> skipped)
+[2026-09-24T13:16:05Z] API calls this pass: polled 0 of 25 watches (25 finished -> skipped)
+[2026-09-24T16:16:06Z] API calls this pass: polled 0 of 25 watches (25 finished -> skipped)
+[2026-09-25T03:19:35Z] API calls this pass: polled 0 of 25 watches (25 finished -> skipped)
+[2026-09-25T04:16:05Z] API calls this pass: polled 0 of 25 watches (25 finished -> skipped)
+[2026-09-25T07:16:04Z] API calls this pass: polled 0 of 25 watches (25 finished -> skipped)
+[2026-09-25T11:25:36Z] API calls this pass: polled 0 of 25 watches (25 finished -> skipped)
+[2026-09-25T13:16:05Z] API calls this pass: polled 0 of 25 watches (25 finished -> skipped)
 ```
 
 ## 关键文件活动时间
 ```
-HANDOFF.md                     09-24 06:59  (693241 bytes)
-state/FACTS.md                 09-24 06:39  (93668 bytes)
-state/cv_targets.json          09-24 04:29  (12033 bytes)
-state/cv_queue.log             09-24 04:29  (54779 bytes)
-state/LB_ground_truth.csv      09-19 10:18  (2500 bytes)
+state/FACTS.md                 09-28 04:06  (307943 bytes)
+state/cv_targets.json          09-24 10:29  (12149 bytes)
+state/cv_queue.log             09-25 07:29  (74550 bytes)
+state/LB_ground_truth.csv      09-28 04:09  (3897 bytes)
 ```
 
 ## 开机固定动作（幂等）
@@ -69,7 +75,10 @@ python scripts\now.py                  # 刷新本文件
 
 排查 : `401 Unauthorized` ⇒ 环境变量；
        `Save the token to ~/.kaggle/access_token` ⇒ 那个文件（写路径）；
-       `400 … CreateCodeSubmission body=None` ⇒ 当天提交配额用尽，不是凭据问题。
+       `400 … CreateCodeSubmission body=None` ⇒ **先查是不是少了 `-f submission.csv`**。
+       ⚠️ 这条旧记录原本写的是「⇒ 当天提交配额用尽」，**那是错的**：2026-09-27 实测在
+       `Remaining today: 1` 时仍然 400，补上 `-f submission.csv` 立刻成功（`56613303`）。
+       ⇒ 配额用尽的判据是 `submission-limits` 报 `Remaining today: 0`，**不是**这个 400。
 ```
 
 ## ⚠️ 读导演输出时的两个坑（2026-09-14 都踩过）

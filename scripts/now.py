@@ -61,6 +61,20 @@ def main(argv=None) -> int:
     L = []
     L.append("# NOW -- 当前状态速读（**本文件由 `python scripts\\now.py` 生成，不要手改**）")
     L.append("")
+    # ⚠️ THIS BANNER EXISTS BECAUSE THE PAGE LOOKED CURRENT WHILE BEING OBSOLETE.  `now.py` still
+    # reads `cv_queue.py --status` and `state/director.log`, but that machinery was DELETED (§164),
+    # so a freshly regenerated file showed a queue from 09-14 and a log from a component that no
+    # longer runs.  A timestamp only proves the file was WRITTEN recently, not that its content is
+    # from the current era -- the same "the gate does not look at the thing it certifies" trap.
+    # Until now.py is pointed at live sources, say so at the top rather than letting the format
+    # imply freshness.
+    L.append("> ## ⚠️ 本页已过时 —— **当前状态请看仓库根目录的 `STATUS.md`**")
+    L.append(">")
+    L.append("> `now.py` 仍在读 `scripts/cv_queue.py --status` 与 `state/director.log`，但**那套机制已在 §164 删除**，")
+    L.append("> 所以下面出现的队列是 **09-14** 的、事件日志来自一个**已不再运行**的组件。")
+    L.append("> **生成时间只证明这个文件是刚写的，不证明它的内容是当前的。**")
+    L.append("> 真正的最新状态：`STATUS.md`（一屏）→ `state/FACTS.md`（已确证/已否决）→ `docs/REVIEW-2026-09-27.md`（计划）。")
+    L.append("")
     L.append("生成时间：**%s UTC**（本地 UTC+8，请换算后再读 `state/cv_push*.log` 那种本地时间戳）"
              % now.strftime("%Y-%m-%d %H:%M"))
     L.append("")
