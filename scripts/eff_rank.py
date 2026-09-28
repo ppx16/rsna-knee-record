@@ -115,6 +115,56 @@ def report(rows):
     return 0
 
 
+def score(auc, runtime_s, benchmark=0.5, max_auc=0.959):
+    """The published efficiency score (lower is better).  VERIFIED from the competition page
+    (2026-09-28, user-supplied screenshots of Overview -> Efficiency Prize Evaluation):
+
+        Efficiency = AUC / (Benchmark - max AUC) + RuntimeSeconds / 32400
+
+    `Benchmark` is the score of `sample_submission.csv`, and we MEASURED that file: every value is
+    0.5, one distinct value, so a constant prediction scores AUC = 0.5 exactly.  That makes the
+    denominator 0.5 - 0.959 = -0.459, i.e. NEGATIVE, so the first term is negative and grows in
+    magnitude with AUC -- minimising the score wants a HIGHER AUC and a SHORTER runtime, as
+    expected, and the exchange rate between them is what matters:
+
+        1 s of runtime  = 1/32400 score      = 1.417e-5 AUC  (divide by 0.459)
+        1 minute        = 0.00085 AUC
+        1 hour          = 0.0510 AUC
+
+    ⚠️ That exchange rate is the whole decision.  An earlier reading of this file claimed the track
+    was "a runtime contest, not an accuracy contest" -- inferred from rank-vs-score alone, and WRONG
+    in that form.  AUC enters linearly and cannot be bought back by speed alone, but the rate is
+    brutal in the other direction too: at 1 hour = 0.051 AUC, **three hours of runtime are worth
+    0.153 AUC -- nearly ten times the entire 0.016 gap between us and the leaderboard top.**
+    So both terms matter and they are commensurable; neither may be waved away.
+    """
+    d = benchmark - max_auc                     # negative
+    return auc / d + runtime_s / 32400.0
+
+
+def whatif(our_auc, max_auc=0.959, benchmark=0.5):
+    """The numbers that decide whether a speedup is worth engineering."""
+    d = abs(benchmark - max_auc)
+    per_hour_auc = 3600.0 / 32400.0 * d
+    print("efficiency score  = AUC/(Benchmark-maxAUC) + Runtime/32400")
+    print("Benchmark (sample_submission) = %.3f  [MEASURED: the file is a constant 0.5]" % benchmark)
+    print("max AUC (private, unknown; public is %.3f)" % max_auc)
+    print("=> the AUC term spans only %.4f of score across the ENTIRE AUC range 0..1"
+          % (1.0 / d))
+    print("=> exchange rate: 1 hour of runtime  ==  %.4f AUC" % per_hour_auc)
+    print("                  1 minute           ==  %.5f AUC" % (per_hour_auc / 60))
+    print()
+    print("%-28s %s" % ("our AUC / runtime", "efficiency score (lower is better)"))
+    for auc in (our_auc, our_auc + 0.001, 0.959):
+        for rt in (600, 1800, 3600, 10800, 21600):
+            print("   AUC %.3f  runtime %5.1f h   ->   %+.4f" % (auc, rt / 3600.0,
+                                                                 score(auc, rt, benchmark, max_auc)))
+    print()
+    print("⚠️ our own runtime is STILL UNMEASURED -- the metric is computed on Kaggle's hidden")
+    print("   rerun (1322 studies) and the log we can download only covers the 3 visible studies.")
+    print("   ⇒ treat the runtime column as a scenario, not a reading.")
+
+
 def selftest():
     rows = [{"rank": 1, "team": "A", "score": 0.958, "date": "x"},
             {"rank": 14, "team": "Stephen Schott", "score": 0.943, "date": "x"},
@@ -135,9 +185,14 @@ def main(argv=None) -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--csv", default="")
     ap.add_argument("--selftest", action="store_true")
+    ap.add_argument("--whatif", type=float, default=None, metavar="OUR_AUC",
+                    help="print the efficiency score for a grid of runtimes at this AUC")
     a = ap.parse_args(argv)
     if a.selftest:
         return selftest()
+    if a.whatif is not None:
+        whatif(a.whatif)
+        return 0
     path = pathlib.Path(a.csv) if a.csv else fetch()
     print("board csv: %s" % path)
     return report(load(path))
