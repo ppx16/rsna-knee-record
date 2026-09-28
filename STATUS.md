@@ -90,7 +90,7 @@ negative at the deadline.
 | Best ledger score | ⭐ **0.943**, a **four-way tie**: `56568520` (`0943`) · `56570144` (`0943f`) · `56570151` (`0943s`) · **`56599932` (`0943cf`)**. Then `0943h`/`0943o`/`0943c`/`0943r` at **0.942** and **`0943p` alone at `0.941`**. ✅ **All nine in; ledger 36 rows, 36 scored.** |
 | Public LB noise | **±0.008** ⇒ the board cannot rank *these* arms (all nine span just **0.002**), but it **can** see the 0.016 to the top. ⭐ The `0943p` dose-ladder and why the board's preference there is non-discriminating: [`docs/FINAL-SELECTION.md`](docs/FINAL-SELECTION.md). |
 | ⭐ What the readouts bought | **All nine arms completed the hidden rerun on 1322 studies** — including **our `cn0` member twice** (`0943c` 0.942, `0943cf` 0.943), 0 failures, which **retires the largest unmeasurable risk on it** (§200). **That de-risking is independent of the score.** |
-| GPU quota | **17.49 h / 30 h** used (**12.51 h left**), refreshes 2026-10-03. TPU **1.88 h / 20 h** (18.12 h left). ⚠️ The counter moves in **20-minute quanta** (A121). ⇒ to the deadline (3 more refreshes) ≈ **100 GPU-h + 78 TPU-h (≈60 folds) + ~120 submission slots**: **compute-rich, idea-poor.** |
+| GPU quota | **21.85 h / 30 h** used (**8.15 h left**), refreshes 2026-10-03. TPU **1.88 h / 20 h** (18.12 h left). ⚠️ The counter moves in **20-minute quanta** (A121). ⇒ to the deadline (3 more refreshes) ≈ **100 GPU-h + 78 TPU-h (≈60 folds) + ~120 submission slots**: **compute-rich, idea-poor.** |
 | Cost model | **1 h wall clock = 1 GPU hour even on the 2×T4 shape.** Scoring reruns are **not** billed — re-confirmed over a 7-hour idle window (A121). |
 
 ## 🔴 The one action left — and it is not something the CLI can do

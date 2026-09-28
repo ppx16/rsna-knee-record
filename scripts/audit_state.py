@@ -215,7 +215,13 @@ def check_quota(f, live):
             if actual is None:
                 continue
             if abs(claimed - actual) > 0.34:      # the counter moves in 20-min quanta (A121)
-                f.bad("%s GPU quota" % name, "claims %.2f h, live %.2f h" % (claimed, actual))
+                # ⚠️ Downgraded from STALE to WARN on purpose.  The quota in the docs is EXPECTED to
+                # age as work runs, so this fired after every job and would have trained us to ignore
+                # the checker.  Quota drift does not drive a wrong decision (we always re-read the
+                # live counter when planning); the ceiling and the rank DID, and those stay STALE.
+                f.warn("%s GPU quota" % name,
+                       "claims %.2f h, live %.2f h (expected to age as work runs -- refresh the doc)"
+                       % (claimed, actual))
             else:
                 f.ok("%s GPU quota" % name, "%.2f h ~ live %.2f h" % (claimed, actual))
     for m in re.finditer(r"\*\*([\d.]+) h / 30 h\*\*", read(STATUS)):
