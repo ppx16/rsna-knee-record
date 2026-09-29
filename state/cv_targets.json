@@ -1,5 +1,12 @@
 [
   {
+    "ref": "ppxl16/rsna-knee-tpu-3dsmoke",
+    "dir": "kernel-tpu-3dsmoke",
+    "note": "3D Conv3d TPU smoke, RE-PUSH. v1 got a real TPU (device xla:0, torch_xla 2.8.0) and died at ~75 s on a format-string bug: 5 placeholders but 6 args, because the literal '1' in 'input (1,%d,%d,%d)' was also passed as an argument. Fixed. Uses TPU quota, not the scarce GPU.",
+    "priority": -1,
+    "attempts": 1
+  },
+  {
     "ref": "ppxl16/rsna-knee-ens-v2src-radcal00-parent",
     "dir": "kernel-exp/v2src-radcal00-parent",
     "note": "2x2 CORNER 4 (HANDOFF 100.1): flat 0.60 routing AND rad_cal_w 0.00. ~20 min of a slot, then submitted in the same 00:00 UTC window as radcal00.",

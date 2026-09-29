@@ -77,12 +77,31 @@ EXPECT = {
         ("recipe untouched", "nb", '"rad_cal_w": 0.40', ("eq", 1)),
         ("routing untouched", "nb", 'os.environ.get("RSNA_PRESET", "probe22")', ("eq", 1)),
     ],
+    "kernel-tpu-3dsmoke": [
+        # The run died at ~75 s on `TypeError: not all arguments converted during string
+        # formatting`: 5 placeholders, 6 args, because the literal `1` in `input (1,%d,%d,%d)` was
+        # ALSO passed as an argument.  Assert the fixed tuple is present and the broken one is gone.
+        ("format-args fixed", "py", "nparam / 1e6, a.depth, a.hw, a.hw", ("eq", 1)),
+        ("6-arg tuple gone", "py", "nparam / 1e6, 1, a.depth", ("absent",)),
+        # ⚠️ The metadata assertion exists because a kernel NAMED tpu-msft was pushed with
+        # enable_tpu FALSE and ran on a T4 for 10.7 h, silently spending GPU quota.  Source text
+        # alone cannot see that; the flags and the name had disagreed with nothing checking.
+        ("runs on TPU", "meta", '"enable_tpu": true', ("eq", 1)),
+        ("does not claim GPU", "meta", '"enable_gpu": false', ("eq", 1)),
+    ],
 }
 
 
 def source_text(d: pathlib.Path, kind: str):
     if kind == "py":
-        f = d / "knee-mri-training-the-twelve-finding-model.py"
+        # Script kernels use either name; try both rather than reporting "source not found".
+        for name in ("knee-mri-training-the-twelve-finding-model.py", "kernel_main.py"):
+            f = d / name
+            if f.exists():
+                return f.read_text(encoding="utf-8")
+        return None
+    if kind == "meta":
+        f = d / "kernel-metadata.json"
         return f.read_text(encoding="utf-8") if f.exists() else None
     hits = glob.glob(str(d / "*.ipynb"))
     if not hits:

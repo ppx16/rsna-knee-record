@@ -206,8 +206,14 @@ def main():
 
     model = Vol3D(12, a.width).to(dev)
     nparam = sum(p.numel() for p in model.parameters())
+    # ⚠️ The tuple must hold exactly 5 values: the "1" in "input (1,...)" is a LITERAL in the
+    # format string, not a placeholder. It used to be passed as a 6th argument too, so this line
+    # raised `TypeError: not all arguments converted during string formatting` -- and because it is
+    # the FIRST thing logged after the model is built, the entire 3D TPU run died here at ~75 s,
+    # after torch_xla had already come up cleanly (device xla:0). A one-character bug was gating
+    # the whole 3D line.
     log('[3d] model: Conv3d stack width=%d, %.2fM params, input (1,%d,%d,%d)'
-        % (a.width, nparam / 1e6, 1, a.depth, a.hw, a.hw))
+        % (a.width, nparam / 1e6, a.depth, a.hw, a.hw))
     opt = torch.optim.AdamW(model.parameters(), lr=a.lr)
     lossf = nn.BCEWithLogitsLoss()
 
