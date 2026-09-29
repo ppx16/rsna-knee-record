@@ -1,0 +1,7 @@
+Add a reconnect-surviving kernel watcher
+
+The first 3dsmoke poll died BEFORE its first status call: api.authenticate() itself
+makes a network call (_authenticate_with_access_token -> _introspect_token) and a
+transient SSLEOFError there looks identical to a broken poll. scripts/watch_kernel.py
+retries the CONNECT as well as the poll and never lets one bad TLS handshake end the
+watch. Re-pushed kernel is QUEUED behind the TPU concurrency cap of 1.
