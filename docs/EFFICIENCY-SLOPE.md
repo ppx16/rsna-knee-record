@@ -37,6 +37,22 @@ the 20 fingerprint re-verifications. So `dinov2` is reported as a range.
 **⇒ Two of the eight stages are ~43–57 min of the 1322-study run.** The other six have **no** large-N
 point anywhere in the repo (§5), which is why the total is still an extrapolation.
 
+### 2.1 A new hard point from the slope probe's first (failed) run
+
+The v1 run died after the dinov2 stage, but it did log its data-staging sub-stage at both sizes, and
+that is a clean two-point measurement:
+
+| data staging (`test g1: COMPLETE …`, **inside** the dinov2 phase) | studies | seconds |
+|---|---|---|
+| `0943cf` | 3 | 8.1 s |
+| `rsna-knee-slope` v1 | **200** | **132.1 s** |
+
+⇒ **0.629 s/study + 6.2 s fixed = 14.0 min at 1322 studies.** ⚠️ This sits *inside* the `dinov2` phase
+(which spans 2.8–79.6 s at N=3), so it **refines** dinov2's slope rather than adding a stage — and it
+independently confirms dinov2's slope is at least 0.63 s/study, which is the opposite of the −0.016 the
+pooled fit produced. It also means dinov2's `24–38 min` bound is real and mostly *staging*, not
+fingerprinting: staging alone is 14 of those minutes.
+
 ## 3. ⭐ Why the 3-study arm ranking was noise, now explained
 
 The fits say the per-study share of each stage **at N = 3** is only:
