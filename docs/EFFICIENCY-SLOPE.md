@@ -172,6 +172,48 @@ once**, and `compile()`s every patched cell before writing:
 Verified before pushing: the only two `rsna_initialize()` call sites are cell[17] (test cohort, early)
 and cell[32] (OOF cohort, later) — so the repoint wins and nothing clobbers it afterwards.
 
+### 5.2 ⚠️ WHERE IT STOPPED, AND WHY THE COHORT REPOINT IS STRUCTURALLY BLOCKED
+
+Run v1 failed in `main()`'s frontier validator; that was patchable (patch 5) and v2 **verified three of
+the five patches working in the live log**:
+
+```
+[  415.7s] slope probe: frontier validated against the OOF cohort (200 studies)      <- patch 5
+[  419.9s] slope probe: OOF active -> reading pixels from .../train_series ...        <- patch 3
+dinov2 COMPLETE at 416.0s for N=200 (vs 76.4s at N=3)                                 <- the measurement
+```
+
+and then v2 died one stage later:
+
+```
+RuntimeError: A5 test/sample UID mismatch
+```
+
+found in cell[37]:
+
+```python
+sub_df = pd.read_csv(COMP / 'sample_submission.csv', dtype={'StudyInstanceUID': str})
+ser_csv = pd.read_csv(COMP / 'test_series.csv', dtype={...})
+if set(sub_df.StudyInstanceUID) != set(_RSNA_TEST_IDS):
+    raise RuntimeError('A5 test/sample UID mismatch')
+```
+
+⚠️ **This is not a truncation artifact — the A5 stage requires the cohort to be the competition's own
+`sample_submission.csv`.** The two obvious hypotheses are both dead: `--limit 0` (use the whole fold)
+would not help, and the A5 pixels would still be grouped from `test_series.csv`, which has no rows for
+training studies. Patching past it means repointing *three* further things inside that one stage
+(`sample_submission.csv`, `test_series.csv`, and the `studies` list), and the remaining stages validate
+against the test set the same way — so the six missing slopes would require rebuilding the pipeline's
+whole cohort handling, which is what the purpose-built `kernel-a5oof` did for **one** stage.
+
+**Decision: stop here.** Two of eight stages are measured, the estimate is bounded, and the remaining
+six have a clearly identified target (below). Spending more GPU would refine a total that does not
+change the action. GPU cost so far: **two runs, ~20 min**.
+
+⭐ **The target is already identified without those slopes.** The six unmeasured stages total ~169 s at
+N=3, of which the **three CoAt members are 145.5 s — 75 %**. Whatever their exact slope, the CoAt family
+is where the per-study runtime lives, and that is what any runtime work should attack.
+
 ## 6. What this changes
 
 **Runtime is 2–4 h, so `RuntimeSeconds/32400` ≈ 0.22–0.44 against an AUC term of ≈ −2.06.** Trimming 30 %
