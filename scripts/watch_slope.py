@@ -75,10 +75,25 @@ def status_once() -> str:
 
 
 def main() -> int:
+    # ⚠️ `global` must be declared BEFORE any use, and `argparse`'s `default=REF` below IS a use -- the
+    # first version put the declaration after the parser and died with
+    #     SyntaxError: name 'REF' is used prior to global declaration
+    global REF, DEST
     ap = argparse.ArgumentParser()
     ap.add_argument("--minutes", type=int, default=70)
     ap.add_argument("--poll", type=int, default=90)
+    ap.add_argument("--ref", default=REF,
+                    help="kernel ref to watch; default is the slope probe, but the same auth/retry "
+                         "logic is wanted for every arm we push (e.g. ppxl16/rsna-knee-0943s-2coat)")
+    ap.add_argument("--dest", default="",
+                    help="download dir; defaults to downloads/<last path component of ref>")
     a = ap.parse_args()
+
+    REF = a.ref
+    if a.dest:
+        DEST = ROOT / a.dest
+    else:
+        DEST = ROOT / "downloads" / REF.split("/")[-1]
 
     deadline = time.time() + a.minutes * 60
     last = None
@@ -113,7 +128,10 @@ def main() -> int:
               % (DEST, [p.name for p in DEST.iterdir()][:20]), flush=True)
         return 1
     src = max(logs, key=lambda p: p.stat().st_size)
-    dst = ROOT / "state" / "logs_slope.json"
+    # ⚠️ Name the log after the REF, not a fixed `logs_slope.json`. The first version hardcoded the slope
+    # probe's filename, so watching any other arm silently OVERWROTE the log that holds the dinov2 N=200
+    # measurement. (The data also survives under downloads/, but clobbering state/ is not acceptable.)
+    dst = ROOT / "state" / ("logs_%s.json" % REF.split("/")[-1])
     shutil.copyfile(src, dst)
     print("[watch_slope] log -> %s (%d bytes)" % (dst, dst.stat().st_size), flush=True)
 
