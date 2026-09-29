@@ -1,7 +1,19 @@
-Add a reconnect-surviving kernel watcher
+Record the MSFT verdict and the Kaggle-auth landmine in the efficiency plan
 
-The first 3dsmoke poll died BEFORE its first status call: api.authenticate() itself
-makes a network call (_authenticate_with_access_token -> _introspect_token) and a
-transient SSLEOFError there looks identical to a broken poll. scripts/watch_kernel.py
-retries the CONNECT as well as the poll and never lets one bad TLS handshake end the
-watch. Re-pushed kernel is QUEUED behind the TPU concurrency cap of 1.
+Blockers updated: kernel-tpu-msft finished (cancelled at the 12 h cap, partial,
+3 of 4 epochs) and FAILED its pre-registered bar -- best_gold_auc 0.8968 vs the
+required >0.9214 -- and it was below the parent from epoch 0 (0.8795), so it
+damaged the warm start rather than under-training. It also never used a TPU:
+metadata said enable_gpu true / enable_tpu false, so it ran on a T4 for 10.7 h.
+
+The auth note is replaced with the full diagnosis, because it bites every script
+in the repo:
+  1. ~/.kaggle/kaggle.json is STALE -- auth succeeds, the first real call 401s.
+  2. ~/.kaggle/access_token is the working credential, and that path makes a
+     network call (_introspect_token) on every authenticate().
+  3. kaggle/__init__.py runs api.authenticate() at IMPORT time, so
+     "from kaggle.api.kaggle_api_extended import KaggleApi" can raise SSLError
+     from the import itself, outside a try that only wraps the API object.
+So: do not delete access_token (tried -- it drops us to the stale kaggle.json and
+401s); put the import INSIDE the retry loop; the failures are intermittent, so
+retrying is correct and no config change is worth making.

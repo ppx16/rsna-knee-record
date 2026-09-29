@@ -85,8 +85,21 @@ rule empirically.
 
 ## Blockers
 
-* `kernel-tpu-msft` has held the GPU for ~10 h (the 5-fold fine-tune looks like ~7 h of work, so it is
-  plausibly near the end of its 12 h session). Kaggle gives no log until a kernel finishes, so
-  "no output" is not evidence of being stuck.
-* ⚠️ `D:\kaggle\venv-kaggle`'s kaggle auth is **broken** (`_authenticate_with_access_token` →
-  `ConnectionResetError`); use **`D:\python\python.exe`**, whose auth works, for all Kaggle API calls.
+* ✅ **RESOLVED:** `kernel-tpu-msft` finished (cancelled at the 12 h cap, `"partial": true`, 3 of 4
+  epochs) and **failed its pre-registered bar**: `best_gold_auc` **0.8968** vs the required > **0.9214**.
+  It was below the parent from epoch 0 (0.8795), i.e. it **damaged** the warm start rather than
+  under-training — rejected on mechanism. ⚠️ It also **never used a TPU**: its metadata said
+  `enable_gpu: true, enable_tpu: false`, so it ran on a T4 for **10.7 h** and spent ~⅓ of the weekly
+  GPU quota. See `RESULT-2026-09-28-msft.md`.
+* ⚠️ **The Kaggle auth is a landmine, now diagnosed.** Three facts combine badly:
+  1. `~/.kaggle/kaggle.json` is **STALE** — authenticating with it *succeeds*, but the first real API
+     call returns **401 Unauthorized** (`kaggle.json.bak-20260914` sits beside it).
+  2. The credential that actually works is **`~/.kaggle/access_token`**, and that path makes a
+     **network call** (`_introspect_token`) on every authentication.
+  3. ⚠️ **`kaggle/__init__.py` runs `api.authenticate()` at IMPORT time**, so
+     `from kaggle.api.kaggle_api_extended import KaggleApi` can raise `SSLError`/`SSLEOFError` *from
+     the import itself* — outside any `try` that only wraps the API object.
+  ⇒ **(a)** Do **not** "fix" this by deleting `access_token`: that was tried and it drops us to the
+  stale `kaggle.json`, i.e. 401s. **(b)** Always put the **import inside the retry loop**, not just the
+  call. **(c)** The failures are intermittent (one attempt failed, the next succeeded), so retrying is
+  the correct response and there is no config change worth making. `scripts/watch_kernel.py` does (b).
