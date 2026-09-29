@@ -67,6 +67,43 @@ MARKERS = [
 ]
 
 
+def phase_records(path: pathlib.Path):
+    """The notebook's `[phase] {...}` JSON records: the only per-stage boundaries in the log.
+
+    The `[  Xs] label` stamps stop at ~111 s on a 337 s run -- the two stages that actually loop over
+    studies (Raptor and the CoAt family, ~185 s of the total) print no timestamped progress at all. So
+    the stage decomposition has to come from these records, which carry `elapsed_seconds` plus
+    stage-specific keys (and a bulky `gpus` array we drop).
+    """
+    text = io.open(path, encoding="utf-8-sig", errors="replace").read()
+    idx = text.find('[{"stream_name"')
+    if idx < 0:
+        idx = text.find("[{")
+    if idx < 0:
+        return []
+    try:
+        recs = json.loads(text[idx:])
+    except Exception:
+        return []
+    out = []
+    for r in recs:
+        if not isinstance(r, dict):
+            continue
+        for ln in (r.get("data") or "").splitlines():
+            ln = ln.strip()
+            if not ln.startswith("[phase]"):
+                continue
+            try:
+                obj = json.loads(ln[len("[phase]"):].strip())
+            except Exception:
+                continue
+            if not isinstance(obj, dict):
+                continue
+            keep = {k: v for k, v in obj.items() if k != "gpus"}
+            out.append((float(obj.get("elapsed_seconds") or 0.0), keep))
+    return out
+
+
 def parse(path: pathlib.Path):
     # ⚠️ Tolerant on purpose, and the tolerance is not hypothetical: 5 of the 10 logs in state/ are NOT
     # parseable JSON, because they were captured from a CLI call whose *stderr was merged into stdout*,
@@ -141,12 +178,74 @@ def main() -> int:
     ap.add_argument("--verbose", action="store_true")
     ap.add_argument("--configs", action="store_true",
                     help="print each arm's [config] line -- which side of the routing hedge it is on")
+    ap.add_argument("--phases", default="", metavar="ARM",
+                    help="print one arm's [phase] records in time order, with their keys")
+    ap.add_argument("--phase-table", action="store_true",
+                    help="per-arm x per-stage durations from the [phase] records (the real breakdown)")
     a = ap.parse_args()
 
     logs = sorted(STATE.glob("logs_0943*.json"))
     logs = [p for p in logs if p.name != "logs_0943_probe.json"]
     if not logs:
         print("no state/logs_0943*.json found")
+        return 1
+
+    if a.phase_table:
+        # stage -> {arm: seconds}, built from START/COMPLETE pairs.
+        table: dict[str, dict[str, float]] = {}
+        order: list[str] = []
+        arms: list[str] = []
+        for p in logs:
+            arm = p.stem.replace("logs_", "")
+            ph = phase_records(p)
+            if not ph:
+                continue
+            arms.append(arm)
+            start: dict[str, float] = {}
+            for el, obj in ph:
+                st = obj.get("stage")
+                if not st:
+                    continue
+                if st not in order:
+                    order.append(st)
+                if obj.get("status") == "START":
+                    start[st] = el
+                elif obj.get("status") == "COMPLETE" and st in start:
+                    table.setdefault(st, {})[arm] = el - start[st]
+        print("stage              " + "".join("%9s" % a_ for a_ in arms))
+        print("-" * (19 + 9 * len(arms)))
+        tot: dict[str, float] = {a_: 0.0 for a_ in arms}
+        for st in order:
+            row = table.get(st, {})
+            print("%-18s " % st + "".join(
+                "%9s" % ("%.1f" % row[a_] if a_ in row else "-") for a_ in arms))
+            for a_ in arms:
+                tot[a_] += row.get(a_, 0.0)
+        print("-" * (19 + 9 * len(arms)))
+        print("%-18s " % "SUM(phases)" + "".join("%9.1f" % tot[a_] for a_ in arms))
+        print("\n⚠️ These are 3-STUDY runs. A stage that is mostly checkpoint loading does NOT scale")
+        print("   with the study count; the CoAt family runs as three separate child processes, each")
+        print("   loading its own weights, so a floor of tens of seconds per stage may be fixed cost.")
+        print("   Comparing arms that differ in ONE per-study knob (raptor_k_eval 62 vs 94) is the only")
+        print("   way to size the per-study component from logs we already have.")
+        return 0
+
+    if a.phases:
+        # Search ALL state/logs_*.json, not just the 0943 arms: the OOF logs (a5oof, e2oof) run the
+        # same stage over MANY studies, so they are the only existing chance to see a per-study slope.
+        cands = sorted(STATE.glob("logs_*.json"))
+        for p in cands:
+            if p.stem != "logs_" + a.phases.replace("logs_", "").replace(".json", ""):
+                continue
+            ph = phase_records(p)
+            print("%s  %d phase record(s)" % (p.name, len(ph)))
+            prev = 0.0
+            for el, obj in ph:
+                keys = {k: v for k, v in obj.items() if k not in ("elapsed_seconds",)}
+                print("  %8.1f  (+%6.1f)  %s" % (el, el - prev, json.dumps(keys, ensure_ascii=False)[:190]))
+                prev = el
+            return 0
+        print("no log for arm %r" % a.phases)
         return 1
 
     if a.arm:

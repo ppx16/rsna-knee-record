@@ -97,9 +97,7 @@ Only **`0943p`** (`preset=parent`, `flat 0.65`) is the other side, and `0943h` i
    fingerprints that cannot change between runs, trim publish). Free, zero AUC risk, and it is 0.0031
    efficiency — worth ~30 % of the entire visible-run runtime.
 
-## 5. Two tool bugs fixed here (both were silently eating output)
-
-* `scripts/eff_rank.py` died with `UnicodeEncodeError: 'gbk' codec can't encode character '\u21d2'`
+## 5. Two tool bugs fixed here (both were silently eating output)* `scripts/eff_rank.py` died with `UnicodeEncodeError: 'gbk' codec can't encode character '\u21d2'`
   **after** printing the standings and **before** printing its closing recommendation — i.e. it hid the
   only actionable line. Fixed by reconfiguring stdout/stderr to UTF-8. **Third instance of this same
   class of bug in this workspace** (the others: the ARC starter's `slim_framework.py` and
@@ -108,3 +106,13 @@ Only **`0943p`** (`preset=parent`, `flat 0.65`) is the other side, and `0943h` i
   call whose stderr was merged into stdout, so they begin with a kaggle version warning. `json.load`
   fails at line 1 column 1 and those arms vanish from any comparison. `arm_timing.py` now locates the
   `[{"stream_name"` payload instead of assuming the file starts with it.
+
+## ⚠️ 6. §3's arm RANKING IS NOISE — superseded
+
+The 3-study wall-clock ranking in §3 above should not be used to pick a tick. The `[phase]` records give
+per-stage slopes, and they show the per-study share of a stage **at N = 3 is only 5.6–11.8 %** — the run
+is measuring checkpoint loads and process spawns, not the pipeline. Measured slopes, the resulting
+**2.2–3.9 h** estimate for the 1322-study rerun, and the selection recommendation that follows
+(**`0943s` + `0943p`**) are in [`EFFICIENCY-SLOPE.md`](EFFICIENCY-SLOPE.md). §2 (the board tracks a
+*selected* submission) and §3's *config* finding (`0943`/`0943cf` share a routing-hedge side, `0943p` is
+the other) are unaffected and still correct.
