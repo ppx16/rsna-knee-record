@@ -44,6 +44,20 @@ import re
 import subprocess
 import sys
 
+# ⚠️ REQUIRED, not cosmetic. This script prints "⇒" (U+21D2) in its closing recommendation, and a
+# Windows console defaults stdout to the LOCALE codec (GBK/cp936 on a Chinese Windows), so the run
+# died with
+#     UnicodeEncodeError: 'gbk' codec can't encode character '\u21d2'
+# AFTER printing the standings and BEFORE printing what to do about them -- i.e. it silently ate the
+# only actionable line. Third instance of this same class of bug in this workspace; the other two
+# were in the ARC starter's slim_framework.py and build_notebook.py (both fixed with encoding="utf-8"
+# on the file read/write side). Pipe the output anywhere and it is fine; it only breaks on a console.
+for _stream in (sys.stdout, sys.stderr):
+    try:
+        _stream.reconfigure(encoding="utf-8", errors="replace")
+    except Exception:
+        pass
+
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 PUBLISHER = "ryanholbrook/rsna-knee-abnormalities-efficiency-lb"
 CACHE = ROOT / "downloads" / "research" / "lb"
