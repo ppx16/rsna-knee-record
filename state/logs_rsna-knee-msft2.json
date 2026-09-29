@@ -1,0 +1,27 @@
+[{"stream_name":"stdout","time":19.889332077,"data":"[tpu] deps ok (timm+sklearn importable, BLAS threads pinned to 1)\n"}
+,{"stream_name":"stdout","time":707.769808924,"data":"[prelude] fold_file -\u003e /kaggle/input/rsna-knee-cv-folds/fold_file.json\n"}
+,{"stream_name":"stdout","time":1378.045042716,"data":"[prelude] labels /kaggle/input/rsna-knee-hybrid-report-labels/report_labels_v4hybrid.csv -\u003e /kaggle/working/labels.parquet  shape=(4407, 25)  cols=['StudyInstanceUID', 'ACL', 'MCL', 'Medial Meniscus', 'Lateral Meniscus', 'Medial OA', 'Lateral OA', 'PF OA', 'Effusion', 'Synovitis', \"Baker's\", 'Contusion', 'Fracture', 'ACL__conf']\n"}
+,{"stream_name":"stdout","time":1770.191919204,"data":"[prelude] warm start -\u003e /kaggle/input/raptor-knee-maxspan/raptor_ft_coatnet_v5_full_swa.pt\n"}
+,{"stream_name":"stdout","time":1770.625147516,"data":"[tpu] no XLA (ModuleNotFoundError(\"No module named 'torch_xla'\")) -\u003e dev=cuda\n"}
+,{"stream_name":"stdout","time":1770.625306407,"data":"device cuda | res 384 | k 12/24 | bs 2 | tag msft0 | roi=False(compartment)\n"}
+,{"stream_name":"stdout","time":2169.241503837,"data":"[cv] fold 0/5: train 3479 | OOF held-out 870 | fold_file fold_file.json\n"}
+,{"stream_name":"stdout","time":2170.427449474,"data":"train 3479 | gold-val 58 | oof 870\n"}
+,{"stream_name":"stdout","time":2178.163488324,"data":"[raptor] unwrapped checkpoint key 'model'\n"}
+,{"stream_name":"stdout","time":2178.226019466,"data":"[raptor] loaded backbone from raptor_ft_coatnet_v5_full_swa.pt (ssl epoch ?) | loaded 478 tensors, missing 0, unexpected 0\n"}
+,{"stream_name":"stdout","time":2178.226192742,"data":"[raptor] head tensors carried: 8 ['att.0.bias', 'att.0.weight', 'att.3.bias', 'att.3.weight', 'clsW', 'clsb', 'norm.bias', 'norm.weight']\n"}
+,{"stream_name":"stdout","time":2178.231520775,"data":"[raptor] gradient checkpointing ON\n"}
+,{"stream_name":"stdout","time":2178.357926932,"data":"[msft2] HEAD loaded: 8/8 tensors, names and shapes verified\n"}
+,{"stream_name":"stderr","time":2178.36132686,"data":"Traceback (most recent call last):\n"}
+,{"stream_name":"stderr","time":2178.361377921,"data":"  File \"/kaggle/src/script.py\", line 843, in \u003cmodule\u003e\n"}
+,{"stream_name":"stderr","time":2178.361732412,"data":"    main()\n"}
+,{"stream_name":"stderr","time":2178.361903256,"data":"  File \"/kaggle/src/script.py\", line 650, in main\n"}
+,{"stream_name":"stderr","time":2178.362253976,"data":"    _zs, _zaucs, _zP, _zY = evaluate()\n"}
+,{"stream_name":"stderr","time":2178.362905543,"data":"                            ^^^^^^^^\n"}
+,{"stream_name":"stderr","time":2178.363040957,"data":"UnboundLocalError: cannot access local variable 'evaluate' where it is not associated with a value\n"}
+,{"stream_name":"stderr","time":2183.554496533,"data":"/usr/local/lib/python3.12/dist-packages/mistune.py:435: SyntaxWarning: invalid escape sequence '\\|'\n"}
+,{"stream_name":"stderr","time":2183.554542702,"data":"  cells[i][c] = re.sub('\\\\\\\\\\|', '|', cell)\n"}
+,{"stream_name":"stderr","time":2183.82694341,"data":"/usr/local/lib/python3.12/dist-packages/nbconvert/filters/filter_links.py:36: SyntaxWarning: invalid escape sequence '\\_'\n"}
+,{"stream_name":"stderr","time":2183.826971966,"data":"  text = re.sub(r'_', '\\_', text) # Escape underscores in display text\n"}
+,{"stream_name":"stderr","time":2184.777296393,"data":"[NbConvertApp] Converting notebook __script__.ipynb to html\n"}
+,{"stream_name":"stderr","time":2186.271866958,"data":"[NbConvertApp] Writing 495745 bytes to __results__.html\n"}
+]

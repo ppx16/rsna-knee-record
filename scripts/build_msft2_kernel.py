@@ -130,7 +130,6 @@ def patch(text: str) -> str:
     # string makes the builder try to interpret them (the first version died on exactly that).
     bar = "%.4f" % PARENT_BAR
     gate = (
-        "    lossf = nn.BCEWithLogitsLoss(pos_weight=pw)\n"
         "\n"
         "    # ---- msft2 patch: THE GATE THAT WAS MISSING ---------------------------------------\n"
         "    # Evaluate the freshly loaded model BEFORE any gradient step.  The 2026-09-28 run had no\n"
@@ -151,7 +150,20 @@ def patch(text: str) -> str:
         "        raise SystemExit('[msft2] refusing to train on a warm start that scored %.4f vs bar "
         + bar + " ; pass --allow_bad_warmstart to override' % _zs)\n"
     )
-    text = replace_once(text, "    lossf = nn.BCEWithLogitsLoss(pos_weight=pw)\n", gate, "zero-shot-gate")
+    # ⚠️ ANCHOR MUST BE THE **END** OF evaluate(), NOT `lossf = ...`. The first version anchored on
+    # `lossf = nn.BCEWithLogitsLoss(pos_weight=pw)`, which sits BEFORE `def evaluate():` -- so the gate
+    # referenced a name whose `def` had not executed yet and died with
+    #     UnboundLocalError: cannot access local variable 'evaluate' where it is not associated with a value
+    # AFTER the head patch had already proven itself in the log. Read the order, do not assume it.
+    text = replace_once(
+        text,
+        "        return float(np.mean(list(aucs.values()))), aucs, P, Y\n",
+        "        return float(np.mean(list(aucs.values()))), aucs, P, Y\n"
+        "\n"
+        "    # ---- msft2 patch: THE GATE THAT WAS MISSING (inserted AFTER evaluate is defined) ----\n"
+        + gate,
+        "zero-shot-gate",
+    )
 
     # ── 4. the flags ────────────────────────────────────────────────────────────────
     text = replace_once(
@@ -171,7 +183,13 @@ def patch(text: str) -> str:
     text = replace_once(
         text,
         "            '--grad_ckpt', '--ckpt', _WARM,\n",
-        "            '--grad_ckpt', '--ckpt', _WARM, '--zero_shot_only',\n",
+        "            '--grad_ckpt', '--ckpt', _WARM, '--zero_shot_only',\n"
+        "            # ---- msft2: shrink ONLY the training set, which the gate never touches ----------\n"
+        "            # The single use of `--limit` is `train_ids = train_ids[:a.limit]`, so the gold set\n"
+        "            # and k_eval are untouched and the gate stays comparable to the parent's 0.9214.\n"
+        "            # NOT `--smoke`: that also forces k_eval=6, which changes the metric and would\n"
+        "            # invalidate the comparison.\n"
+        "            '--limit', '64',\n",
         "prelude-argv",
     )
     return text
@@ -182,12 +200,12 @@ def main() -> int:
     ap.add_argument("--check", action="store_true")
     ap.add_argument("--build", action="store_true")
     ap.add_argument("--push", action="store_true")
-    ap.add_argument("--device", default="gpu", choices=["tpu", "gpu"],
-                    help="'gpu' is the RIGHT choice for the zero-shot gate: it is one forward pass over "
-                         "the gold set, so the 3.7 h/epoch cost that made GPU wrong for TRAINING does not "
-                         "apply. It also avoids the account's TPU cap of 1, which a queued TPU kernel "
-                         "holds -- pushing a TPU kernel while one is queued fails outright with "
-                         "'Maximum batch TPU session count of 1 reached' and creates nothing.")
+    ap.add_argument("--device", default="gpu", choices=["tpu", "gpu", "cpu"],
+                    help="'cpu' needs NO quota at all. The gate is one forward pass over the gold set, "
+                         "so it does not need an accelerator -- and when the weekly GPU quota is spent "
+                         "AND the account's single TPU slot is held by a queued kernel, CPU is the only "
+                         "way to get the answer. The script already falls back: "
+                         "`dev = 'cuda' if torch.cuda.is_available() else 'cpu'`.")
     a = ap.parse_args()
 
     src = SRC / CODE
