@@ -141,6 +141,7 @@ read against a rule rather than fitted to a feeling.
 | `0943c` integration | **proven to run**: `raptor_raw.npz` came back **(5, 3, 12)** — five arms, not four — with 0 failed studies and 0 neutral fills, and our view correlates most strongly (0.792) with the one sharing its geometry. Cost measured: Raptor stage **28.9 s → 33.2 s (+15%)** after moving it to the lighter GPU (A143). |
 | `0943p` / `0943r` runs | **both `COMPLETE`, both passed the acceptance test** (20/20 fingerprints, fail-closed gate PASS, valid `submission.csv`, 0 tracebacks). `0943p`'s log even shows `outer CoAtNet weight per finding: flat 0.65` — the flattening demonstrably took effect. |
 | Kept for later | the pilot's log also revealed that the `[config]` line prints `coatnet_w` but **not** `rad_cal_w` — so for `0943r` the log cannot certify its own change; the proof is the artifact + the code path instead (A134) |
+| ⭐ **Efficiency slope probe** | **`ppxl16/rsna-knee-slope` pushed 2026-09-29 and RUNNING** (no queue). It runs the *submission* pipeline over **200 TRAINING studies** via the OOF cohort repoint, to get the per-study slope for the six stages that have no second study count on disk. Builder `scripts/build_slope_kernel.py` (4 anchored patches, all cells `compile()`-gated), collector `scripts/watch_slope.py` → `state/logs_slope.json`. Only `a5` has a trustworthy slope so far: **0.849 s/study = 19.0 min at 1322**. See [`docs/EFFICIENCY-SLOPE.md`](docs/EFFICIENCY-SLOPE.md). |
 
 ## Closed — do not reopen without new evidence
 

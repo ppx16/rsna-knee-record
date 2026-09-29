@@ -36,6 +36,8 @@ def main() -> int:
                     help="dump one code cell in full by index (ignores pattern)")
     ap.add_argument("--list", action="store_true",
                     help="list every code cell with index, size and first line")
+    ap.add_argument("--lines", default="",
+                    help="with --cell, print only this 1-based inclusive range, e.g. 715:800")
     args = ap.parse_args()
 
     path = Path(args.notebook)
@@ -61,9 +63,14 @@ def main() -> int:
                   file=sys.stderr)
             return 1
         lines = cell_source(cells[args.cell]).split("\n")
-        print(f"===== cell[{args.cell}] full source, {len(lines)} lines =====")
-        for k, ln in enumerate(lines):
-            print(f"{k + 1:4d}| {ln}")
+        lo, hi = 1, len(lines)
+        if args.lines:
+            a_, _, b_ = args.lines.partition(":")
+            lo = int(a_) if a_ else 1
+            hi = int(b_) if b_ else len(lines)
+        print(f"===== cell[{args.cell}] lines {lo}..{hi} of {len(lines)} =====")
+        for k in range(lo - 1, min(hi, len(lines))):
+            print(f"{k + 1:4d}| {lines[k]}")
         return 0
 
     rx = re.compile(args.pattern)

@@ -116,6 +116,31 @@ one self-contained block, not a new harness.
 T4, and read the `[phase]` records.** Estimated ~15–35 min of GPU (from §4). It yields the total slope
 directly, plus the six missing per-stage slopes — which is what says *which* stage to attack.
 
+### 5.1 STATUS: built and RUNNING
+
+`scripts/build_slope_kernel.py` builds `kernels/kernel-slope/` from `kernel-0943cf`'s notebook and
+**pushed it as `ppxl16/rsna-knee-slope` on 2026-09-29**; it went straight to `RUNNING` (no queue).
+`scripts/watch_slope.py` waits for it, pulls the log to `state/logs_slope.json`, and re-runs the census.
+
+The builder applies four patches, each by exact-anchor replacement that asserts it matched **exactly
+once**, and `compile()`s every patched cell before writing:
+
+1. **`walk()` study filter** — adds `_RSNA_OOF_ONLY` and skips studies outside it. Without it the header
+   pass reads every series in the split (a measured **8.7 h** for a full `train_series` pass).
+2. **The cohort repoint** — the OOF block is extracted **verbatim** from `kernel-e2oof`'s cell[32] rather
+   than retyped, and wrapped in `if _oof_limit:` / `else:` so the parent's `test.csv` path is untouched.
+3. ⚠️ **The image source** — **the patch neither upstream notebook has**, because neither needed it:
+   `kernel-0943cf` cell[37] hard-codes `SERIES_ROOT = COMP / 'test_series'` and **forbids** the train
+   fallback, while `kernel-e2oof` is truncated (23 code cells) and never reaches cell[37]. Pointing the
+   cohort at training studies while the pixels still came from `test_series` would have measured 200
+   training IDs against 3 test studies' images — the silent-degradation failure `kernel-e2oof`'s own
+   comment warns about. Now keyed on the cohort set, never on a missing directory.
+4. **The env** — `RSNA_OOF_FOLD`/`RSNA_OOF_LIMIT` set in the RUN CONFIG cell, since Kaggle gives no
+   env at push time.
+
+Verified before pushing: the only two `rsna_initialize()` call sites are cell[17] (test cohort, early)
+and cell[32] (OOF cohort, later) — so the repoint wins and nothing clobbers it afterwards.
+
 ## 6. What this changes
 
 **Runtime is 2–4 h, so `RuntimeSeconds/32400` ≈ 0.22–0.44 against an AUC term of ≈ −2.06.** Trimming 30 %
