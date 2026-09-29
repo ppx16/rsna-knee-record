@@ -16,21 +16,28 @@ training studies**. So each stage has usable (N, seconds) points already on disk
 at 111 s**, because the two stages that actually loop over studies (Raptor, and the three CoAt members)
 print no timestamped progress at all. The `[phase]` records are the only per-stage boundaries.
 
-## 2 Measured
+## 2. Measured
 
-| stage | N=3 | N=48 | N=4407 | slope | fixed | **@1322** |
-|---|---|---|---|---|---|---|
-| `a5` | 20.1 s | 61.2 s | 3758.6 s | **0.849 s/study** | 19.0 s | **19.0 min** |
-| `dinov2` | 76.4 s | 140.6 s | — | 1.427 s/study | 72.1 s | **32.6 min** |
+| stage | points | slope | fixed | **@1322** | confidence |
+|---|---|---|---|---|---|
+| `a5` | N=3 (×10 logs), N=48, N=4407 | **0.849 s/study** | ~17 s | **19.0 min** | **solid** |
+| `dinov2` | N=3 (×10 logs), N=48 | 1.05–1.73 s/study | ~30–70 s | **24–38 min** | **weak — bound only** |
 
-`a5` rests on **three** points from three runs; its two pairwise slopes (0.913 and 0.848) agree within
-7 %, so it is solid. `dinov2` rests on **two** points and the N=48 point comes from a different entry
-(`e2oof`) which may skip the 20 fingerprint re-verifications, so its fixed term is less trustworthy —
-treat it as suggestive.
+`a5` is solid: the N=4407 point dominates the fit, and its two pairwise slopes (0.913 and 0.848) agree
+within 7 %.
 
-**⇒ Two of the eight stages alone are ~52 min of the 1322-study run.**
+⚠️ **`dinov2` is a BOUND, not a measurement, and my first pass over-claimed it.** `scripts/phase_census.py`
+pooled all 16 `dinov2` points and returned a **slope of −0.016 s/study**, which is nonsense — because the
+ten N=3 replicates span **50.6 s to 93.3 s**, pure machine variance that is larger than the entire N=48
+signal. Fitting a slope across replicates of the same N treats noise as if it were a study-count effect.
+A two-point fit is no better: taking the min, mean or median of the N=3 replicates moves the slope from
+1.05 to 1.73 s/study. And the N=48 point comes from `e2oof`, a **different entry point** that may skip
+the 20 fingerprint re-verifications. So `dinov2` is reported as a range.
 
-## 3 ⭐ Why the 3-study arm ranking was noise, now explained
+**⇒ Two of the eight stages are ~43–57 min of the 1322-study run.** The other six have **no** large-N
+point anywhere in the repo (§5), which is why the total is still an extrapolation.
+
+## 3. ⭐ Why the 3-study arm ranking was noise, now explained
 
 The fits say the per-study share of each stage **at N = 3** is only:
 
@@ -49,22 +56,67 @@ ordering is indistinguishable from machine variance, and I should not have impli
 does establish is the *config* fact, which is unaffected: `0943` and `0943cf` are on the same side of the
 routing hedge as each other, and `0943p` is the other side.
 
-## 4 Bounding the total
+## 4. Bounding the total
 
 The six unmeasured per-study stages (`radimagenet`, `public_raptor`, `residual_coat`, `global96_coat`,
-`d4`, plus publish) total **193.6 s at N=3**. Scaling each by the two measured slope-per-N=3-second
-ratios (0.0187 from `dinov2`, 0.0422 from `a5`) bounds them at 3.6–8.2 s/study, i.e. **80–180 min** at
-N=1322. Adding the measured 52 min:
+`d4`, plus publish) total ~169 s at N=3 (median across the ten arms). Scaling each by the measured
+slope-per-N=3-second ratio (0.0422, from `a5`) gives ~7.2 s/study, i.e. **~158 min** at N=1322. Using
+`dinov2`'s ratio instead (0.0207–0.0254) gives ~95 min. Adding the measured **43–57 min**:
 
-> **Estimated 1322-study runtime ≈ 2.2 – 3.9 hours** (the plan's prior range was 20 min – 18 h).
+> **Estimated 1322-study runtime ≈ 2.3 – 3.6 hours** (the plan's prior range was 20 min – 18 h).
 
 ⚠️ This is an **extrapolation through a proxy ratio**, and the three CoAt members are separate child
-processes whose scaling may differ. It narrows the range; it does not replace the measurement. The
-decisive run is a single kernel at moderate N (~200) with `RSNA_COMP_ROOT` pointed at a synthetic root
-built from training studies — which the OOF logs prove is possible, since `e2oof` already built
-`48 studies, 227 slot-series` out of training studies.
+processes whose scaling may differ from `a5`'s. It narrows the range — by roughly 4× — but it does not
+replace the measurement. §5 is how that measurement gets made.
 
-## 5 What this changes
+## 5. What the census found, and why the remaining slopes need a run
+
+`scripts/phase_census.py` scans every log under `state/ downloads/ outputs/ work/ scratch/` for `[phase]`
+records, infers each log's study count from its own prose, and fits a slope per stage. Result:
+
+* **`a5`** — 14 points at three distinct N (3, 48, 4407) ⇒ fittable, and it is the one solid number here.
+* **`dinov2`** — 16 points, **two** distinct N ⇒ only a bound (§2).
+* **the other six stages** (`radimagenet`, `public_raptor`, `residual_coat`, `global96_coat`, `d4`,
+  publish) — **only N=3**, ten replicates each. No second N exists anywhere on disk.
+
+⚠️ **The census also caught a trap worth naming**, because it nearly produced a confident wrong answer:
+pooling the ten N=3 `dinov2` replicates *with* the N=48 point yields a slope of **−0.016 s/study**, i.e.
+"this stage gets faster per study" — pure artifact. Replicates of one N measure **variance**; they carry
+no slope information, and here the variance (50.6–93.3 s) was larger than the signal a second N would
+provide. `phase_census.py` therefore requires **at least two distinct N** before printing a fit at all,
+and then compares the within-N spread against the fitted effect across the N range, printing
+**UNRELIABLE** when the noise wins. On the current data it reports exactly that:
+
+```
+stage                pts     N#    s/study   fixed_s   @1322_s   noise_s  verdict
+a5                    14      3     0.8492      16.4      1139      13.5  ok
+dinov2                16      3    -0.0157      69.2        49     140.4  UNRELIABLE
+```
+
+**⇒ The six remaining slopes cannot be recovered from existing data; they need one new run.**
+
+⭐ **And the mechanism already exists — it does not require building a synthetic root.**
+`kernels/kernel-e2oof/` carries a patch (cell 32) that repoints the *cohort*, not the files:
+
+```python
+_fold_df = pd.read_csv(_fold_csv, dtype={'StudyInstanceUID': str})
+_want = _fold_df[_fold_df['fold'] == _oof_fold].StudyInstanceUID.tolist()
+if _oof_limit: _want = _want[:_oof_limit]
+globals()['_RSNA_OOF_ONLY'] = set(_want)
+# ⚠️ THE COHORT GLOBAL MUST BE REPOINTED, and this is not optional.
+# `build_cache` takes its study list from `_RSNA_TEST_IDS` ...
+```
+
+It reads the fold assignment from the published `v52_oof.csv`, selects N training studies, and rewrites
+`_RSNA_TEST_IDS` so the *whole* pipeline treats them as the test cohort. The **submission** notebook and
+`kernel-e2oof` share the same filename (`rsna-knee-restructured-version-3.ipynb`), so this is a port of
+one self-contained block, not a new harness.
+
+⇒ **The decisive run: port that block into the submission notebook with `_oof_limit ≈ 200`, push it to a
+T4, and read the `[phase]` records.** Estimated ~15–35 min of GPU (from §4). It yields the total slope
+directly, plus the six missing per-stage slopes — which is what says *which* stage to attack.
+
+## 6. What this changes
 
 **Runtime is 2–4 h, so `RuntimeSeconds/32400` ≈ 0.22–0.44 against an AUC term of ≈ −2.06.** Trimming 30 %
 of 3 h = 3240 s = **0.10 efficiency**, and among the **308 teams tied with us at 0.943** runtime is the
