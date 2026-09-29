@@ -183,6 +183,33 @@ def main() -> int:
     )
     set_source(cells[2], c2)
 
+    # ── patch 5: the frontier validator's reference cohort ──────────────────────────
+    # The parent validates the frontier submission against the REAL test.csv. That is right for a
+    # submission and wrong for an OOF run: the OOF block wrote _pipeline_stage.csv for the TRAINING
+    # cohort, so the check fails on row count (200 vs 3 visible studies) with
+    #     ValueError: public frontier: row count or StudyInstanceUID uniqueness failed
+    # which is what killed the first push of this kernel -- and, by the same mechanism, the e2oof
+    # kernel before it, whose log also stops right after the dinov2 stage. The check is KEPT, not
+    # deleted: its job is to catch a frontier submission that does not match the cohort it claims,
+    # and that job is still worth doing -- it just needs the right cohort.
+    c33 = cell_source(cells[33])
+    # ⚠️ NO trailing "\n" on either side: this line is the LAST line of cell[33], so it carries no
+    # newline, and the first version of this patch failed its own exactly-once assertion (found 0) for
+    # that reason alone. Asserting is what turned a silently-unpatched notebook into a loud error.
+    old_validate = (
+        "    _v37_validate_submission('_pipeline_stage.csv', pd.read_csv(ROOT / 'test.csv'), 'public frontier')"
+    )
+    new_validate = (
+        "    # ---- slope-probe patch: validate against the cohort this run actually predicted ------\n"
+        "    _pf_ref = pd.read_csv(ROOT / 'test.csv')\n"
+        "    if globals().get('_RSNA_OOF_ONLY'):\n"
+        "        _pf_ref = pd.DataFrame({'StudyInstanceUID': sorted(_RSNA_OOF_ONLY)})\n"
+        "        log('slope probe: frontier validated against the OOF cohort (%d studies)' % len(_pf_ref))\n"
+        "    _v37_validate_submission('_pipeline_stage.csv', _pf_ref, 'public frontier')"
+    )
+    c33 = replace_once(c33, old_validate, new_validate, "frontier-validate")
+    set_source(cells[33], c33)
+
     # ── compile gate: a patched cell that does not parse must never reach Kaggle ────
     bad = 0
     for i, c in enumerate(cells):
