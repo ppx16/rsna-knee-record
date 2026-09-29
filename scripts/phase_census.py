@@ -98,6 +98,33 @@ def read_log(path: pathlib.Path):
     return phases, n, body
 
 
+def pairwise(points):
+    """Slope from the two extreme study counts, using the MEAN of the replicates at the low end.
+
+    This is the estimator that actually fits the data we have, and the pooled least-squares fit is not.
+    Every stage has ~10 replicates at N=3 -- genuine runs, but all at ONE study count -- plus (for a few
+    stages) a single run at a much larger N. Pooling them lets the N=3 spread, which is machine variance
+    of 50-93 s, masquerade as a study-count effect; that is how `dinov2` came back as -0.016 s/study
+    ("gets faster per study"). Replicates estimate VARIANCE. The slope needs two DISTINCT N, so use the
+    low-N mean and the high-N value and report how much the answer moves across the low-N range.
+    """
+    by: dict[int, list[float]] = {}
+    for n, y in points:
+        by.setdefault(int(n), []).append(float(y))
+    ns = sorted(by)
+    if len(ns) < 2:
+        return None
+    n_lo, n_hi = ns[0], ns[-1]
+    lo_vals, hi_vals = by[n_lo], by[n_hi]
+    out = {}
+    for tag, y_lo in (("min", min(lo_vals)), ("mean", sum(lo_vals) / len(lo_vals)),
+                      ("max", max(lo_vals))):
+        y_hi = sum(hi_vals) / len(hi_vals)
+        s = (y_hi - y_lo) / (n_hi - n_lo)
+        out[tag] = (s, y_lo - s * n_lo)
+    return n_lo, n_hi, len(lo_vals), out
+
+
 def fit(points):
     """Least squares y = f + s*x. Returns (slope, fixed) or None."""
     pts = [(float(x), float(y)) for x, y in points]
@@ -117,6 +144,9 @@ def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--roots", nargs="*", default=["state", "downloads", "outputs", "work", "scratch"])
     ap.add_argument("--fits", action="store_true")
+    ap.add_argument("--pairwise", action="store_true",
+                    help="two-point slope from the low-N mean vs the high-N value (the estimator that "
+                         "matches this data; see pairwise())")
     a = ap.parse_args()
 
     files = []
@@ -157,7 +187,30 @@ def main() -> int:
         print("no [phase] records found under: %s" % ", ".join(a.roots))
         return 1
 
+    # ⚠️ DROP SUB-SECOND "COMPLETIONS": they are SKIPPED stages, not measurements, and one of them
+    # poisons the estimator. `a5oof_full` logs `dinov2 COMPLETE` at 0.2 s because that run had the
+    # DINOv2 features precomputed, so dinov2 was a no-op there -- and since it is the LARGEST study
+    # count on record (4407), a two-point slope against it reported dinov2 as 0.6-1.1 min at N=1322
+    # instead of ~39 min. Absolute threshold on purpose: a relative one (say 1% of the stage max) would
+    # also discard `a5`'s genuine 20.1 s point. No real stage here loads its weights in under a second.
+    skipped = []
+    for st in list(census):
+        kept = []
+        for n, dur, src in census[st]:
+            if dur < 1.0:
+                skipped.append((st, n, dur, src))
+            else:
+                kept.append((n, dur, src))
+        if kept:
+            census[st] = kept
+        else:
+            del census[st]
+
     print("%d log(s) with phase records, %d stage-completion(s)" % (nlogs, nphases))
+    if skipped:
+        print("⚠️ dropped %d sub-second completion(s) as SKIPPED stages, e.g. %s"
+              % (len(skipped),
+                 ", ".join("%s@N=%s(%.2fs)" % (s[0], s[1], s[2]) for s in skipped[:4])))
     if unknown:
         print("⚠️ %d log(s) with NO inferable study count (excluded from fits): %s"
               % (len(unknown), ", ".join(p.name for p in unknown[:6])))
@@ -167,6 +220,30 @@ def main() -> int:
     for st in sorted(census):
         for n, dur, src in sorted(census[st]):
             print("%-18s %8s %10.1f  %s" % (st, n if n >= 0 else "?", dur, src))
+
+    if a.pairwise:
+        print()
+        print("%-18s %14s %10s %9s %9s  %s"
+              % ("stage", "N lo->hi(rep)", "s/study", "low_s", "high_s", "@1322 (range) min"))
+        print("-" * 88)
+        for st in sorted(census):
+            pts = [(n, d) for n, d, _s in census[st] if n >= 0]
+            got = pairwise(pts)
+            if not got:
+                continue
+            n_lo, n_hi, nrep, out = got
+            sl = out["mean"][0]
+            fixed = out["mean"][1]
+            lo1322 = (min(o[1] + o[0] * 1322 for o in out.values())) / 60.0
+            hi1322 = (max(o[1] + o[0] * 1322 for o in out.values())) / 60.0
+            print("%-18s %14s %10.4f %9.1f %9.1f  %.1f - %.1f"
+                  % (st, "%d->%d(%d)" % (n_lo, n_hi, nrep), sl, fixed,
+                     out["mean"][1] + sl * n_hi, lo1322, hi1322))
+        print()
+        print("⚠️ `low_s`/`high_s` are the fitted stage cost at the two measured study counts, not the")
+        print("   fixed term. The @1322 range spans the low-N replicate spread (min..max), so it is the")
+        print("   honest uncertainty on the extrapolation.")
+        return 0
 
     if a.fits:
         print()

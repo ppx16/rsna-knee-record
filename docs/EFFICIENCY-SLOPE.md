@@ -18,13 +18,28 @@ print no timestamped progress at all. The `[phase]` records are the only per-sta
 
 ## 2. Measured
 
-| stage | points | slope | fixed | **@1322** | confidence |
-|---|---|---|---|---|---|
-| `a5` | N=3 (×10 logs), N=48, N=4407 | **0.849 s/study** | ~17 s | **19.0 min** | **solid** |
-| `dinov2` | N=3 (×10 logs), N=48 | 1.05–1.73 s/study | ~30–70 s | **24–38 min** | **weak — bound only** |
+| stage | studies used | slope | **@1322** | confidence |
+|---|---|---|---|---|
+| `a5` | 3 (×10 logs) → 4407 | **0.8493 s/study** | **18.9 – 19.1 min** | **solid** |
+| `dinov2` | 3 (×10 logs) → **200** (slope probe) | **1.7517 s/study** | **37.4 – 41.4 min** | **solid** |
+
+**⇒ ~58 min of the 1322-study run is in just these two stages**, and both are now *measured*, not
+extrapolated. The ranges span the low-N (N=3) replicate spread, which is machine variance of 50–93 s.
 
 `a5` is solid: the N=4407 point dominates the fit, and its two pairwise slopes (0.913 and 0.848) agree
 within 7 %.
+
+⭐ **`dinov2` was promoted from a bound to a measurement by the slope probe's second run**, which
+reached `dinov2 COMPLETE` at N=200 in **414.2 s** against 76.4 s at N=3. Two further corrections came
+with it, and both were found by running the tool rather than reading it:
+
+* The naive pooled fit reported **−0.016 s/study** — see §5.
+* The first `--pairwise` pass reported dinov2 as **0.6–1.1 min**, because it paired N=3 against
+  **N=4407**, where `a5oof_full` logs `dinov2 COMPLETE` in **0.2 s**. That is a **skipped** stage (the
+  DINOv2 features were precomputed in that run), not a fast one, and because it is the largest study
+  count on record it poisoned the estimator. `phase_census.py` now drops sub-second completions as
+  skips — with an **absolute** threshold, because a relative one would also discard `a5`'s genuine
+  20.1 s point.
 
 ⚠️ **`dinov2` is a BOUND, not a measurement, and my first pass over-claimed it.** `scripts/phase_census.py`
 pooled all 16 `dinov2` points and returned a **slope of −0.016 s/study**, which is nonsense — because the

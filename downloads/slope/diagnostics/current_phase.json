@@ -1,7 +1,7 @@
 {
-  "elapsed_seconds": 426.072142124176,
-  "error": "public frontier: row count or StudyInstanceUID uniqueness failed",
-  "error_type": "ValueError",
+  "elapsed_seconds": 419.9246973991394,
+  "error": "A5 test/sample UID mismatch",
+  "error_type": "RuntimeError",
   "gpus": [
     {
       "allocated_bytes": 9568256,
@@ -14,9 +14,9 @@
       "reserved_bytes": 23068672
     }
   ],
-  "max_rss_kib": 5911148,
-  "memory.current": "26548666368",
+  "max_rss_kib": 5977832,
+  "memory.current": "26526855168",
   "memory.max": "32212254720",
-  "stage": "dinov2",
+  "stage": "a5",
   "status": "FAILED"
 }
