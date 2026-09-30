@@ -186,6 +186,66 @@ def patch(text: str, mode: str = "gate") -> str:
         '                    help="train even when the zero-shot gate fails (default: refuse)")\n',
         "flags",
     )
+    # ── 4b. XLA-safe activation checkpointing ───────────────────────────────────────
+    # ⚠️ THE BUG THAT KILLED THE 2026-09-30 TPU RUN (kernel v3). The log shows the run getting all
+    # the way through setup -- xla_device=xla:0, backbone 478/478, HEAD 8/8 verified -- and then
+    # dying on the FIRST forward pass with
+    #
+    #     AttributeError: module 'torch' has no attribute 'xla'
+    #       .../torch/utils/checkpoint.py:93 in _get_device_module -> getattr(torch, device)
+    #       .../torch/utils/checkpoint.py:494 in _checkpoint_without_reentrant_generator
+    #
+    # `set_grad_checkpointing(True)` on the timm backbone routes through
+    # `torch.utils.checkpoint.checkpoint`, and torch's NON-REENTRANT path asks for the device module
+    # of the tensor's device -- `getattr(torch, "xla")` -- which torch_xla never registers.
+    #
+    # ⚠️ AND --grad_ckpt CANNOT SIMPLY BE DROPPED: the script's own docstring measures the CoAtNet at
+    # 384 with checkpointing at ~23.7 GB (bs 8), i.e. checkpointing is what makes it fit at all.
+    #
+    # So the fix is to route checkpointing through an XLA-capable implementation. Preference order:
+    #   1. `torch_xla.utils.checkpoint` (ships with torch_xla, XLA-aware) -- drop kwargs it does not
+    #      accept, including `use_reentrant`, which is a torch-utils-only parameter;
+    #   2. otherwise force the REENTRANT path, which is `CheckpointFunction.apply` and never calls
+    #      `_get_device_module`.
+    # The shim also patches `timm.models._manipulate.checkpoint` when that module bound the symbol
+    # directly, since `checkpoint_seq` may call the bound name rather than the attribute.
+    text = replace_once(
+        text,
+        "# ==== end TPU port env ====\n",
+        "# ==== XLA-safe activation checkpointing (msft2 patch) ====\n"
+        "try:\n"
+        "    import torch as _t_chk  # noqa: F401\n"
+        "    import torch.utils.checkpoint as _ckpt_mod\n"
+        "    _ckpt_how = None\n"
+        "    try:\n"
+        "        from torch_xla.utils.checkpoint import checkpoint as _xla_ckpt\n"
+        "\n"
+        "        def _ckpt_safe(fn, *a, **kw):\n"
+        "            for _k in ('use_reentrant', 'determinism_check', 'debug', 'context_fn'):\n"
+        "                kw.pop(_k, None)\n"
+        "            return _xla_ckpt(fn, *a, **kw)\n"
+        "        _ckpt_how = 'torch_xla.utils.checkpoint'\n"
+        "    except Exception as _e1:\n"
+        "        _orig_ckpt = _ckpt_mod.checkpoint\n"
+        "\n"
+        "        def _ckpt_safe(fn, *a, **kw):\n"
+        "            kw['use_reentrant'] = True\n"
+        "            return _orig_ckpt(fn, *a, **kw)\n"
+        "        _ckpt_how = 'forced use_reentrant=True (no torch_xla.utils.checkpoint: %s)' % repr(_e1)[:60]\n"
+        "    _ckpt_mod.checkpoint = _ckpt_safe\n"
+        "    try:\n"
+        "        import timm.models._manipulate as _tm\n"
+        "        if hasattr(_tm, 'checkpoint'):\n"
+        "            _tm.checkpoint = _ckpt_safe\n"
+        "    except Exception:\n"
+        "        pass\n"
+        "    print('[tpu] activation checkpointing -> %s' % _ckpt_how, flush=True)\n"
+        "except Exception as _e:\n"
+        "    print('[tpu] checkpoint shim FAILED: %s' % repr(_e)[:140], flush=True)\n"
+        "# ==== end XLA-safe activation checkpointing ====\n"
+        "# ==== end TPU port env ====\n",
+        "xla-checkpoint-shim",
+    )
     # ── 5. the prelude's argv: gate vs fine-tune ────────────────────────────────────
     # The script builds its own sys.argv in a prelude, so flags have to go in there, not on a command
     # line Kaggle never gives us.

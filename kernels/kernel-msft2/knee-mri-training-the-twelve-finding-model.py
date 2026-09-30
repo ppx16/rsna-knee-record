@@ -20,6 +20,37 @@ for _imp_p, _pkg_p in (("timm", "timm"), ("sklearn", "scikit-learn")):
                   check=True)
         __import__(_imp_p)
 print("[tpu] deps ok (timm+sklearn importable, BLAS threads pinned to 1)", flush=True)
+# ==== XLA-safe activation checkpointing (msft2 patch) ====
+try:
+    import torch as _t_chk  # noqa: F401
+    import torch.utils.checkpoint as _ckpt_mod
+    _ckpt_how = None
+    try:
+        from torch_xla.utils.checkpoint import checkpoint as _xla_ckpt
+
+        def _ckpt_safe(fn, *a, **kw):
+            for _k in ('use_reentrant', 'determinism_check', 'debug', 'context_fn'):
+                kw.pop(_k, None)
+            return _xla_ckpt(fn, *a, **kw)
+        _ckpt_how = 'torch_xla.utils.checkpoint'
+    except Exception as _e1:
+        _orig_ckpt = _ckpt_mod.checkpoint
+
+        def _ckpt_safe(fn, *a, **kw):
+            kw['use_reentrant'] = True
+            return _orig_ckpt(fn, *a, **kw)
+        _ckpt_how = 'forced use_reentrant=True (no torch_xla.utils.checkpoint: %s)' % repr(_e1)[:60]
+    _ckpt_mod.checkpoint = _ckpt_safe
+    try:
+        import timm.models._manipulate as _tm
+        if hasattr(_tm, 'checkpoint'):
+            _tm.checkpoint = _ckpt_safe
+    except Exception:
+        pass
+    print('[tpu] activation checkpointing -> %s' % _ckpt_how, flush=True)
+except Exception as _e:
+    print('[tpu] checkpoint shim FAILED: %s' % repr(_e)[:140], flush=True)
+# ==== end XLA-safe activation checkpointing ====
 # ==== end TPU port env ====
 
 # ==== prelude added by this project (the author script below is verbatim) ====
