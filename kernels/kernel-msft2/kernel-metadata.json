@@ -17,5 +17,5 @@
   "competition_sources": [
     "rsna-knee-abnormality-detection"
   ],
-  "enable_tpu": false
+  "enable_tpu": true
 }

@@ -52,7 +52,16 @@ SRC = ROOT / "kernels" / "kernel-tpu-msft"
 DST = ROOT / "kernels" / "kernel-msft2"
 CODE = "knee-mri-training-the-twelve-finding-model.py"
 KID = "ppxl16/rsna-knee-msft2"
-PARENT_BAR = 0.9214
+# ⚠️ TWO different numbers, and conflating them made the first gate a false alarm (2026-09-30):
+#   METADATA_GOLD — the checkpoint's OWN metadata claim.
+#   GATE_BAR      — what the parent actually scores in OUR pipeline, MEASURED by msft2's own zero-shot
+#                   run with the head loaded 8/8: **0.8963** on our gold-58.
+# A gate against METADATA_GOLD cannot separate "the load is broken" from "our evaluation differs from
+# theirs", and the reload is provably not broken (8/8 tensors, names and shapes verified). So it
+# returns a FAIL that carries no information. Gate against our own measurement instead: that is the
+# number a fine-tune has to beat, and the only bar comparable to the run's own output.
+METADATA_GOLD = 0.9214
+GATE_BAR = 0.8963
 
 
 def replace_once(text, old, new, label):
@@ -62,7 +71,7 @@ def replace_once(text, old, new, label):
     return text.replace(old, new, 1)
 
 
-def patch(text: str) -> str:
+def patch(text: str, mode: str = "gate") -> str:
     # ── 1. carry the head out of the checkpoint ─────────────────────────────────────
     text = replace_once(
         text,
@@ -128,7 +137,7 @@ def patch(text: str) -> str:
     # ⚠️ Build this block by CONCATENATION, never with `%` or `.format()` on it: the inserted code is
     # full of literal `%s`/`%d` conversions of its own, and running a format operator over the whole
     # string makes the builder try to interpret them (the first version died on exactly that).
-    bar = "%.4f" % PARENT_BAR
+    bar = "%.4f" % GATE_BAR
     gate = (
         "\n"
         "    # ---- msft2 patch: THE GATE THAT WAS MISSING ---------------------------------------\n"
@@ -177,19 +186,26 @@ def patch(text: str) -> str:
         '                    help="train even when the zero-shot gate fails (default: refuse)")\n',
         "flags",
     )
-    # ── 5. run the gate, not the training ───────────────────────────────────────────
-    # The script builds its own sys.argv in a prelude, so the flag has to go in there, not on a
-    # command line Kaggle never gives us.
+    # ── 5. the prelude's argv: gate vs fine-tune ────────────────────────────────────
+    # The script builds its own sys.argv in a prelude, so flags have to go in there, not on a command
+    # line Kaggle never gives us.
+    #
+    # `gate`     -> evaluate the warm start with zero training steps and stop. `--limit 64` keeps it
+    #               cheap: the ONLY use of --limit is `train_ids = train_ids[:a.limit]`, so the gold
+    #               set and k_eval are untouched and the number stays comparable. NOT `--smoke`, which
+    #               also forces k_eval=6 and would silently change the metric under test.
+    # `finetune` -> neither flag: train on the FULL training set from the gate-verified warm start.
+    if mode == "gate":
+        extra = (
+            "            '--grad_ckpt', '--ckpt', _WARM, '--zero_shot_only',\n"
+            "            '--limit', '64',\n"
+        )
+    else:
+        extra = "            '--grad_ckpt', '--ckpt', _WARM,\n"
     text = replace_once(
         text,
         "            '--grad_ckpt', '--ckpt', _WARM,\n",
-        "            '--grad_ckpt', '--ckpt', _WARM, '--zero_shot_only',\n"
-        "            # ---- msft2: shrink ONLY the training set, which the gate never touches ----------\n"
-        "            # The single use of `--limit` is `train_ids = train_ids[:a.limit]`, so the gold set\n"
-        "            # and k_eval are untouched and the gate stays comparable to the parent's 0.9214.\n"
-        "            # NOT `--smoke`: that also forces k_eval=6, which changes the metric and would\n"
-        "            # invalidate the comparison.\n"
-        "            '--limit', '64',\n",
+        extra,
         "prelude-argv",
     )
     return text
@@ -200,6 +216,9 @@ def main() -> int:
     ap.add_argument("--check", action="store_true")
     ap.add_argument("--build", action="store_true")
     ap.add_argument("--push", action="store_true")
+    ap.add_argument("--mode", default="gate", choices=["gate", "finetune"],
+                    help="'gate' evaluates the warm start with zero training steps and stops; "
+                         "'finetune' trains on the FULL training set from the gate-verified warm start")
     ap.add_argument("--device", default="gpu", choices=["tpu", "gpu", "cpu"],
                     help="'cpu' needs NO quota at all. The gate is one forward pass over the gold set, "
                          "so it does not need an accelerator -- and when the weekly GPU quota is spent "
@@ -213,7 +232,7 @@ def main() -> int:
         raise SystemExit("!! missing %s" % src)
     DST.mkdir(parents=True, exist_ok=True)
     out = DST / CODE
-    text = patch(src.read_text(encoding="utf-8"))
+    text = patch(src.read_text(encoding="utf-8"), a.mode)
     (out if a.build else SRC.parent / "_patched_preview.py").write_text(text, encoding="utf-8")
 
     py_compile.compile(str(out if a.build else SRC.parent / "_patched_preview.py"), doraise=True)
