@@ -1,0 +1,79 @@
+{
+  "dataset": "t88take/rsna-knee-t88-weights",
+  "purpose": "チームマージ用に重みを統合データセット化する（steering/20260930_memo_weight_datasets.md 参照）。1実験=1ディレクトリ、重みの実体は1つずつしか置かない",
+  "created_at": "2026-09-30",
+  "layout": "{exp名}/fold{0..4}.pt（各1.7GBの内訳は360MB×5）。config/backboneはここには置かない（別データセット t88take/rsna-knee-code 側）",
+  "exps": [
+    {
+      "exp": "exp085",
+      "manifest": "exp085/manifest.json",
+      "added_in_dataset_version": 1,
+      "LB_single_model": 0.947,
+      "gold58_macro_auc": 0.9062,
+      "keitou2_macro_auc": 0.8686,
+      "note": "初回投入。現行最良単体（steering/20260930_memo_weight_datasets.md §2.5）"
+    }
+  ],
+  "not_yet_included": {
+    "exp068": "旧データセット ens10-068-070 に残存。exp085で提出が1本通ってから追加予定",
+    "exp070": "旧データセット ens10-068-070 に残存。同上",
+    "exp082": "旧データセット ens15-082 に残存。同上"
+  },
+  "usage_note": "コードは別データセット t88take/rsna-knee-code から取得すること（infer.py 差し替え頻度が重みより高いため分離している）。README.md 参照"
+}
+plate_family_weak-iida-recal"
+  },
+  "source_dir": "output/exp085/weights/B1_nogold_rank0.5d0.2_fullslice_facebook-dinov2-base_d1536_template_family_iida-recal",
+  "note_last_variant": "同ディレクトリ内に `..._iida-recal_last`（最終epoch重み）も存在するが、規約により本データセットには入れない（best epochのみ）。best_epochを使う提出が実際に出た場合のみ追加する",
+  "weights": [
+    {
+      "fold": 0,
+      "sha256": "04f281d0b2a0dec39fb1a88170432acdf203f905b5445f412e5718fd1ce61271",
+      "bytes": 360627039,
+      "best_epoch": 11,
+      "best_val_auc_weak": 0.9101479344457198
+    },
+    {
+      "fold": 1,
+      "sha256": "884fac8fd3d48900ebeb01720c1517690007fa8d44da06f04ae6682bf6b2fefa",
+      "bytes": 360627039,
+      "best_epoch": 9,
+      "best_val_auc_weak": 0.909639091384511
+    },
+    {
+      "fold": 2,
+      "sha256": "27355e6225c0c0f54b32d5af199e164b830ca39f6bfcedd2c4a9a3b772e5cd94",
+      "bytes": 360627039,
+      "best_epoch": 9,
+      "best_val_auc_weak": 0.9147323527724848
+    },
+    {
+      "fold": 3,
+      "sha256": "61501cc002936236185ed6415ffb92b568f7c016a0364c0babc94f6808461bec",
+      "bytes": 360627039,
+      "best_epoch": 11,
+      "best_val_auc_weak": 0.9130460080841859
+    },
+    {
+      "fold": 4,
+      "sha256": "d50917677283d79b67d4922396adb38e4f85208d6e5d1d675b62d89039d4d87c",
+      "bytes": 360627039,
+      "best_epoch": 9,
+      "best_val_auc_weak": 0.9081355121205936
+    }
+  ],
+  "scores": {
+    "LB_single_model": 0.947,
+    "gold58_macro_auc": 0.9062,
+    "keitou2_macro_auc": 0.8686,
+    "note": "LBは単体構成（3脚アンサンブルではない。カーネルログで [exp085] fold0〜fold4のみロードを確認済み、steering/TODOの2026-09-28訂正を参照）。gold58/系統2はsteering/20260928_exp087_slot_dropout_iida.mdのexp085基準行と一致"
+  },
+  "identity_check": {
+    "compared_against": "submit/assets_exp085/weights/exp085/fold{0..4}.pt",
+    "method": "sha256",
+    "result": "全5foldで完全一致（2026-09-30に確認）",
+    "conclusion": "submit/assets_exp085 は LB 0.947 を出した実体と同一。安全に配布できる"
+  },
+  "added_in_dataset_version": 1,
+  "added_at": "2026-09-30"
+}
