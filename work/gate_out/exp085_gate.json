@@ -1,0 +1,78 @@
+{
+ "cfg": {
+  "fold": "0",
+  "best_epoch": "11",
+  "best_val_auc": "0.9101479344457198",
+  "cv_strategy": "template_family",
+  "weak_label_version": "iida-recal",
+  "slot_prior": "False",
+  "condition": "B1_nogold_rank0.5d0.2_fullslice_facebook-dinov2-base_d1536",
+  "slice_select": "band_groups",
+  "n_slice_cached": "12",
+  "n_group": "4",
+  "group_pick": "per_study",
+  "slot_independent_group": "False",
+  "eval_group_agg": "mean",
+  "slice_sampling": "center",
+  "n_views": "1",
+  "eval_views": "1",
+  "lse_tau": "1.0",
+  "aug": "True",
+  "crop_mm": "130.0",
+  "backbone_name": "facebook/dinov2-base",
+  "slice_neighbor_channels": "False",
+  "slice_feature_dim": "1536",
+  "slice_attention_dim": "256",
+  "slice_forward_chunk": "64",
+  "pretrained_backbone": "True",
+  "slice_attention_queries": "1",
+  "target_specific_slice_attention": "True",
+  "slice_mean_residual": "False",
+  "slice_pool_dropout": "0.0",
+  "slice_dropout": "0.25",
+  "slice_depth_range": "(0.2, 0.8)",
+  "freeze_backbone_through": "0",
+  "activation_checkpoint": "True",
+  "img": "224",
+  "seed": "2026",
+  "use_gold_labels": "False",
+  "gold_weight_used": "None",
+  "rank_lambda": "0.5",
+  "rank_min_diff": "0.2",
+  "train_window_sampling": "overlap",
+  "silence_recalibrate": "False",
+  "silence_value": "None"
+ },
+ "results": [
+  {
+   "crop": 336,
+   "order": "A",
+   "macro_auc": 0.7929288232888766
+  },
+  {
+   "crop": 336,
+   "order": "B",
+   "macro_auc": 0.6826616487762217
+  },
+  {
+   "crop": 336,
+   "order": "C",
+   "macro_auc": 0.6641631772801985
+  },
+  {
+   "crop": 262,
+   "order": "A",
+   "macro_auc": 0.7997067314227092
+  },
+  {
+   "crop": 262,
+   "order": "B",
+   "macro_auc": 0.6775555071727396
+  },
+  {
+   "crop": 262,
+   "order": "C",
+   "macro_auc": 0.6641968546221114
+  }
+ ]
+}
