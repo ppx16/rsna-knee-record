@@ -11,8 +11,7 @@
   "keywords": [],
   "dataset_sources": [
     "dreaddevelopment/knee-raptor-corpus",
-    "dreaddevelopment/knee-raptor-corpus-ext",
-    "t88take/rsna-knee-t88-weights"
+    "dreaddevelopment/knee-raptor-corpus-ext"
   ],
   "kernel_sources": [],
   "competition_sources": [
