@@ -1,4 +1,4 @@
-# RSNA Knee Abnormality Detection — STATUS (2026-10-02 06:30Z)
+# RSNA Knee Abnormality Detection — STATUS (2026-10-02 08:05Z)
 
 **One screen. Rewritten from scratch; the previous version was dated 2026-09-27 and had drifted.**
 Deep detail lives in `FACTS.md` (A-numbers) and `docs/`; the recent session records are
@@ -82,7 +82,7 @@ would be produced — which is what A163 demands.
 |---|---|---|
 | `kawaharataishi/rsna-knee-coatnet-distilled-checkpoints` (543 MB, 09-29) | ❌ **403** | the D4/CoAtNet distilled family — the most on-family candidate |
 | `tbongc/rsna-knee-raptor-v8geo/v10geo` (271 MB each) | ❌ 403 | Raptor variants, same family as msft2 → **low decorrelation value anyway** |
-| `apoorvadixit/rsna-knee-weights-v4cx` (5 × 199 MB) | ✅ | **ConvNeXt-small** — a *different architecture*, so the best decorrelation candidate on the list |
+| `apoorvadixit/rsna-knee-weights-v4cx` (5 × 199 MB) | ✅ | **ConvNeXt-small** — a *different architecture*, so the best decorrelation candidate on the list. ⭐ **CHOSEN — `v4cx0` is running now as `ppxl16/rsna-knee-msft2-cx` (QUEUED, TPU).** |
 | `soyaoki/rsna-knee-my-models` (20 files, 89 MB each) | ✅ | a 5-fold set with `_epoch5`/`_epoch10` variants |
 | `lixin73/rsna-knee-train-checkpoints` (82 MB) | ✅ | unchecked |
 
@@ -112,10 +112,20 @@ read before then.** A second fine-tune can be *run* today; it cannot be *used* t
 
 ## Next actions, in order
 
-1. ⭐ **Publish `raptor_ft_msft0.pt` + `_swa.pt` as a `ppxl16` dataset** — before anything depends on
-   them (the exp085 lesson, paid for once already).
-2. ⭐ **Build the arm that adds the msft2 member** to the `0943` stack.
-3. ⭐ **2026-10-03, when the GPU quota returns**: push and submit, then read the board. ~19 days left.
-4. **Optionally, on the remaining TPU today**: fine-tune a **ConvNeXt-small** (`apoorvadixit/…v4cx`) as
-   a **second, decorrelated** member — the one candidate whose architecture differs from everything in
-   the stack.
+1. ✅ **DONE — `ppxl16/rsna-knee-msft2-ckpt` published** (private, 8 files, `EXIT=0`). The exp085
+   failure mode — depending on a dataset we do not control — is now closed for this asset.
+   `publish_msft2_dataset.py` / `work/LOG-2026-10-02-dataset-and-cx.md`.
+2. 🔄 **IN FLIGHT — `ppxl16/rsna-knee-msft2-cx` is QUEUED on TPU** (fine-tunes ConvNeXt-small
+   `v4cx0` for 4 epochs at res 384, tag `cx0`). ⚠️ **Its log prints a zero-shot gold58 macro-AUC
+   before training; if that is near chance (< ~0.75) the checkpoint did not load and the run must be
+   killed, not left to burn the window.** `head tensors carried: 0` is expected and fine.
+   Fallback if killed: `msft2-r2`, i.e. continue from our own `raptor_ft_msft0_swa.pt` (hist is
+   monotone and unsaturated ⇒ ~0.910+ plausible).
+3. ⭐ **BUILD THE ARM — cannot start yet, and correctly so.** Host is
+   `kernels/kernel-0943s-2coat` (`rsna-knee-restructured-version-3.ipynb`), which is
+   `enable_gpu: true` / `NvidiaTeslaT4`. **GPU is 0.00 h until 2026-10-03**, so writing the msft2
+   blend now means writing **untestable** code into a 301 KB notebook. Start this on 10-03.
+4. ⭐ **2026-10-03, when the GPU quota returns**: push the arm and submit, then read the board.
+   ~19 days left.
+5. **The ConvNeXt TPU run is the only productive compute available this round** — which is exactly
+   why it, and not the arm, was started.

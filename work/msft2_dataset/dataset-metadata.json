@@ -1,0 +1,10 @@
+{
+  "title": "RSNA Knee msft2 fine-tuned checkpoints",
+  "id": "ppxl16/rsna-knee-msft2-ckpt",
+  "licenses": [
+    {
+      "name": "CC0-1.0"
+    }
+  ],
+  "description": "Fine-tuned checkpoints from ppxl16/rsna-knee-msft2 v4 (TPU, 4/4 epochs, partial=false). Warm start: raptor_ft_coatnet_v5_full_swa.pt with its 8 head tensors CARRIED, verified at zero training (zero-shot gold58 macro-AUC 0.8961 against our own measured reload bar of 0.8963). Gold58 macro-AUC by epoch: ep0 0.8903, ep1 0.8946, ep2 0.9007, ep3 0.9048; SWA over epochs [3,2,1] = 0.9069, which clears the A167 member gate (solo >= 0.90). Published here because a submission must mount assets from a dataset we control -- the exp085 line died when its weights dataset was withdrawn."
+}
