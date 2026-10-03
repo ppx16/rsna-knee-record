@@ -1,0 +1,8 @@
+{
+  "img_size": 384,
+  "cache_slices": 20,
+  "jpeg_quality": 90,
+  "crop": true,
+  "studies": 4407,
+  "shards": 32
+}

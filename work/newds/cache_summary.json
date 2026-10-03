@@ -1,0 +1,41 @@
+{
+  "studies": 4407,
+  "successful": 4407,
+  "failed": 0,
+  "slices": 597979,
+  "windows": 556395,
+  "bytes": 160458325331,
+  "resolution": 518,
+  "crop_mm": 140.0,
+  "retained_range": [
+    0.06,
+    0.94
+  ],
+  "slots": [
+    [
+      "Sagittal",
+      1,
+      18
+    ],
+    [
+      "Sagittal",
+      0,
+      14
+    ],
+    [
+      "Coronal",
+      1,
+      12
+    ],
+    [
+      "Coronal",
+      0,
+      8
+    ],
+    [
+      "Axial",
+      -1,
+      12
+    ]
+  ]
+}
