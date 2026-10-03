@@ -171,11 +171,11 @@ from pathlib import Path as _EffPath
 _EFF_W = float(RUN.get("effb0mil_w", 0.0) or 0.0)
 _EFF_DIR = _EffPath("/kaggle/working/_effb0mil")
 _EFF_N_SLOT, _EFF_N_SLICE, _EFF_IMG = 4, 16, 224
-# NOTE: there is deliberately NO hard-coded slot-name constant here any more.  v2 carried
-# `_EFF_SLOT_NAMES = ["SAG_FS","COR_FS","AX_FS","SAG_T1"]` and the corpus pin compared the
-# RESOLVED labels against it -- a STALE v1 constant that made the pin fail while printing values
-# that all agreed with the published audit.  Every expected value now comes from the published
-# ground truth (`_EFF_META_SLOTS`, in the cell) or from the library itself.
+# NOTE: there is deliberately NO hard-coded slot-name constant here any more.  v2 carried one
+# (a four-name list whose fourth entry was the stale `SAG_T1`) and the corpus pin compared the
+# RESOLVED labels against it -- so the pin could never pass, while printing values that all agreed
+# with the published audit.  Every expected value now comes from the published ground truth
+# (`_EFF_META_SLOTS`, defined in the resolution block) or from the library itself.
 _EFF_OK = False
 _effb0mil_ok = False
 _effb0mil_test_rank = None
@@ -297,9 +297,13 @@ else:
         # canonical name is looked up directly, the result is cross-checked against the library's
         # own SLOT_PLANE/SLOT_FS, and a failure prints every slot name this notebook has.
         #
-        # v1 instead indexed the library's positional names -- a direct `SLOTS.index(...)` on a
-        # name that exists in the cache's vocabulary and not in ours -- and died with
-        # `ValueError: 'SAG_FS' is not in list` BEFORE the convention gate ever ran.
+        # v1 indexed the library's positional names -- a direct lookup on a name that exists in
+        # the cache's vocabulary and not in ours -- and died with `ValueError: 'SAG_FS' is not in
+        # list` BEFORE the convention gate ever ran.  v2 then pinned the resolved labels against a
+        # STALE copy of the cache's vocabulary (which still said `SAG_T1` for slot 3) instead of
+        # against the notebook's own labels, so that pin could never pass: a spelling equality
+        # between two different vocabularies is not an invariant.  What is checked now is the
+        # GEOMETRY, which is what actually decides which series is read.
         _EFF_META_SLOTS = ["SAG_FS", "COR_FS", "AX_FS", "SAG_NOFS"]   # cache order, ground truth
         _EFF_SPELLINGS = {"SAG_FS": ("SAG_FS", "SAG_FLUID_FS"),
                           "COR_FS": ("COR_FS", "COR_FLUID_FS"),
@@ -327,18 +331,25 @@ else:
             raise RuntimeError(f"slot resolution is not injective: {_EFF_SLOT_IDX} "
                                f"from {_EFF_META_SLOTS} over {_eff_names}")
         _EFF_SLOT_LABELS = [_eff_names[i] for i in _EFF_SLOT_IDX]
-        # cross-check against the library's OWN geometry, so a wrong spelling cannot slip
-        # through as a silently wrong series
+        # (plane, fat_suppressed) for each resolved slot, from the tuple's own fields.  This is
+        # THE real invariant: a spelling is a label, the geometry is what decides which series is
+        # read.  Computed once here and reused by both this cross-check and the corpus pin.
+        _EFF_GOT_GEOM = []
         for _k, _canon in enumerate(_EFF_META_SLOTS):
             _spec = SLOTS[_EFF_SLOT_IDX[_k]]
             _lead = str(_spec[0]).upper().split("_")[0]
             _pl = _EFF_PLANE_NUM.get(_lead, _EFF_PLANE_NUM.get(str(_spec[1])))
             _fs = 1 if len(_spec) > 3 and bool(_spec[3]) else 0
-            if (_pl, _fs) != (_efflib.SLOT_PLANE[_k], _efflib.SLOT_FS[_k]):
+            _EFF_GOT_GEOM.append((_pl, _fs))
+        _EFF_WANT_GEOM = [(int(_efflib.SLOT_PLANE[k]), int(_efflib.SLOT_FS[k]))
+                          for k in range(len(_EFF_META_SLOTS))]
+        for _k, _canon in enumerate(_EFF_META_SLOTS):
+            if _EFF_GOT_GEOM[_k] != _EFF_WANT_GEOM[_k]:
                 raise RuntimeError(
-                    f"slot {_k} ('{_canon}' -> this notebook's '{_spec[0]}') is plane={_pl} "
-                    f"fat_suppressed={_fs}, but the library's SLOT_PLANE/SLOT_FS say "
-                    f"({_efflib.SLOT_PLANE[_k]}, {_efflib.SLOT_FS[_k]})")
+                    f"slot {_k} ('{_canon}' -> this notebook's "
+                    f"'{_EFF_SLOT_LABELS[_k]}') is plane={_EFF_GOT_GEOM[_k][0]} "
+                    f"fat_suppressed={_EFF_GOT_GEOM[_k][1]}, but the library's "
+                    f"SLOT_PLANE/SLOT_FS say {_EFF_WANT_GEOM[_k]}")
         for _k, _canon in enumerate(_EFF_META_SLOTS):
             print(f"[effb0]   cache[{_k}] {_canon:9s} <-> lib '{_efflib.SLOT_NAMES[_k]}' "
                   f"<-> this notebook's '{_EFF_SLOT_LABELS[_k]}'  (plane "
@@ -398,8 +409,6 @@ else:
         # extra or missing KEY is visible instead of merely unequal.
         _EFF_EXPECT_RULES = sorted(RULES_LEGACY.items())
         _EFF_EXPECT_BAND = (0.12, 0.88)
-        _EFF_EXPECT_SLOTS = [_EFF_SPELLINGS[c][1] if _EFF_SPELLINGS[c][1] in _eff_names
-                             else _EFF_SPELLINGS[c][0] for c in _EFF_META_SLOTS]
         _EFF_PIN_TESTS = [
             ("RULES (key/value pairs, sorted)",
              sorted(dict(RULES).items()), _EFF_EXPECT_RULES),
@@ -407,7 +416,7 @@ else:
             ("IMG (int)", int(IMG), _EFF_IMG),
             ("CROP_MM (float, 1e-9)", float(CROP_MM), 130.0),
             ("SLICE_BAND (tuple)", tuple(float(x) for x in SLICE_BAND), _EFF_EXPECT_BAND),
-            ("resolved slot labels (cache order)", _EFF_SLOT_LABELS, _EFF_EXPECT_SLOTS),
+            ("slot geometry (plane, fat_suppressed)", list(_EFF_GOT_GEOM), list(_EFF_WANT_GEOM)),
             ("resolved slot indices are unique", len(set(_EFF_SLOT_IDX)), _EFF_N_SLOT),
         ]
 
@@ -903,10 +912,15 @@ contract (`dominant_axis` ordering, `corner_x` laterality, `slot_fallback`, `dec
 `s_cache_e13_224.npy` byte for byte — identity or axis mirror, per study, and every study must be
 entirely one or the other. Anything else abandons the leg.
 
+The frozen-corpus pin then **checks** that contract, one comparison at a time, naming the expected
+value of each — including the slot **geometry** `(plane, fat-suppressed)` against the library's own
+`SLOT_PLANE`/`SLOT_FS`, which is the invariant that actually decides which series gets read. A
+spelling equality between the cache's vocabulary and ours is not a check and is not used as one.
+
 **Fail-safe.** If any of it fails — dataset not mounted, checkpoint missing, slot vocabulary
-unresolvable, gate not passed, inference error, UID mismatch — the leg is abandoned loudly and
-`_pipeline_stage.csv` keeps exactly `kernel-0943cfm`'s bytes, so `submission.csv` is the 0943cfm
-behaviour.
+unresolvable, corpus pin mismatch, gate not passed, inference error, UID mismatch — the leg is
+abandoned loudly and `_pipeline_stage.csv` keeps exactly `kernel-0943cfm`'s bytes, so
+`submission.csv` is the 0943cfm behaviour.
 '''
 
 
@@ -964,21 +978,26 @@ def check(nb, meta):
     # asserted, and a resolution failure must list the available slots.  v1 died with
     # `ValueError: 'SAG_FS' is not in list` before the gate ever ran, so this is asserted by NAME.
     assert "_efflib.SLOT_NAMES" in text, "the library's slot vocabulary is not consulted"
-    # v3: the corpus pin must REPORT EACH COMPARISON with its expected value, and must not
-    # compare against any stale hard-coded slot list.  v2's pin printed only the actual side and
-    # failed against `_EFF_SLOT_NAMES` (a v1 leftover naming slot 3 `SAG_T1`).
-    assert "_EFF_SLOT_NAMES" not in text, \
-        "the stale v1 slot-name constant is still referenced by the pin"
+    # v3: the corpus pin must REPORT EACH COMPARISON with its expected value, and must check the
+    # SLOT GEOMETRY (plane, fat-suppressed) rather than a spelling equality between two
+    # vocabularies.  v2's pin compared the notebook's labels against a stale copy of the CACHE's
+    # vocabulary and could therefore never pass.
+    assert "_EFF_SLOT_NAMES =" not in text, \
+        "the stale v1 slot-name constant is still assigned in the cell"
     assert "_EFF_PIN_TESTS" in text, "the pin does not enumerate its comparisons"
     assert "expected {_want!r} | got {_got!r}" in text, \
         "the pin does not print the expected value of each comparison"
     assert "frozen-corpus pin failed on " in text, \
         "the pin failure does not name the failing comparison"
+    assert '("slot geometry (plane, fat_suppressed)"' in text, \
+        "the pin does not check the slot geometry, which is the real invariant"
+    assert "_EFF_GOT_GEOM" in text and "_EFF_WANT_GEOM" in text, \
+        "the geometry invariant is not computed from the tuples and the library"
     assert 'sorted(dict(RULES).items())' in text, \
         "RULES is compared as a dict rather than by sorted key/value pairs"
     assert "tuple(float(x) for x in SLICE_BAND)" in text, \
         "SLICE_BAND is not normalised to a tuple of floats"
-    assert "_efflib.SLOT_PLANE[_k], _efflib.SLOT_FS[_k]" in text, \
+    assert "_efflib.SLOT_PLANE[" in text and "_efflib.SLOT_FS[" in text, \
         "the slot resolution does not use the library's own plane/fs contract"
     # (the `"SAG_FS")` form, not the bare name: the comment above records the v1 bug verbatim)
     assert 'SLOTS.index("SAG_FS")' not in text, "the v1 hard-coded SAG_FS lookup survived"
@@ -991,7 +1010,7 @@ def check(nb, meta):
         "the resolution failure does not list the available slot names"
     assert "refusing to resolve against a stale order" in text, \
         "a moved published vocabulary would not be refused"
-    assert 'candidate {_ci}' in text, "the resolved assignment is not printed"
+    assert 'assignment {_ci}' in text, "the resolved assignment is not printed"
     # the gate is now a CHECK, not a search: exactly one assignment is offered to it
     assert "_EFF_CANDIDATES = [(_EFF_META_SLOTS[3], list(_EFF_SLOT_IDX))]" in text, \
         "the gate is still searching instead of checking the resolved assignment"
@@ -1044,6 +1063,8 @@ VALIDATION_SECTION = """
 | the measurement table, dry-run on the real arrays | reproduces the write-up exactly: macro 0.84962 -> 0.85587 at w=0.10, delta +0.00625, all 12 labels positive, LatMen 0.80143 -> 0.81451 |
 | the convention gate's identity / mirror classifier, dry-run on synthetic volumes | identity, mirror on axis 2, mirror on axis 1 all classified correctly; a one-pixel non-mirror difference classified UNEXPLAINED |
 | the v2 slot vocabulary resolver, executed verbatim against the real `SLOTS_RECOVERED` and the real `effb0mil_lib.py` attributes | resolves `cache[0..3] SAG_FS/COR_FS/AX_FS/SAG_NOFS` → `SAG_FLUID_FS/COR_FLUID_FS/AX_FLUID_FS/SAG_FLUID_NOFS` (indices 0,1,2,3); the failure path names the missing slot AND lists every available one |
+| the v3 corpus pin, executed verbatim, scenario 1 (the real frozen-corpus values) | all 7 comparisons PASS, each printed with its expected and actual value |
+| the v3 corpus pin, scenario 2 (slice band left at 0943cfm's `(0.2, 0.8)`) | raises `frozen-corpus pin failed on SLICE_BAND (tuple): expected (0.12, 0.88) got (0.2, 0.8)` plus the rule key set and the available slot names — the failing comparison is named and both sides are printed |
 
 ### NOT validated here — this is the honest gap
 
@@ -1080,6 +1101,16 @@ VALIDATION_SECTION = """
    `s_cache_e13_224_meta.npz`. `flip` is the only column the meta does not carry; the notebook
    supplies `flip = 0` on the test side and lets the gate's identity/mirror comparison on real
    rebuilt TRAIN studies be what proves that is right.
+7. **v2's corpus pin was wrong twice over, and both are fixed in v3.** (a) It compared the
+   RESOLVED notebook labels against a stale copy of the *cache's* vocabulary (whose slot 3 still
+   said `SAG_T1`), a spelling equality between two different vocabularies that can never hold; the
+   pin now checks the SLOT GEOMETRY — `(plane, fat_suppressed)` from each slot tuple against the
+   library's `SLOT_PLANE`/`SLOT_FS` — which is the real invariant. (b) It printed only the actual
+   side, so a failure was undiagnosable from the log; each of the 7 comparisons is now printed
+   PASS/FAIL with `expected ... | got ...`, and the raise names only the failing ones plus the rule
+   key set and the available slot names. Normalisation: `sorted(dict(RULES).items())` for the rule
+   set (so an extra/missing KEY is visible), `tuple(float(x) for x in SLICE_BAND)` for the band,
+   `float` for the crop, `int` for the scalars.
 """
 
 

@@ -1,7 +1,7 @@
 # BUILD REPORT — `kernel-0943cfm2eff`
 Source: `kernels/kernel-0943cfm` (never modified). Kernel id `ppxl16/rsna-knee-0943cfm2eff`, title `RSNA knee 0943cfm2eff`.
 - cells: **51 -> 54** (+3)
-- total source chars: **251204 -> 298107** (+46903)
+- total source chars: **251204 -> 301908** (+50704)
 - inserted at index 49: 1 markdown + 2 code cells
 
 ## Per-cell source-length diff
@@ -57,8 +57,8 @@ Source: `kernels/kernel-0943cfm` (never modified). Kernel id `ppxl16/rsna-knee-0
 | 46 |  | 47 | 47 | +0 |  |
 | 47 |  | 2023 | 2023 | +0 |  |
 | 48 |  | 85 | 85 | +0 |  |
-| 49 | markdown | — | 3015 | new | **NEW** stage-5 cell |
-| 50 | code | — | 33922 | new | **NEW** stage-5 cell |
+| 49 | markdown | — | 3428 | new | **NEW** stage-5 cell |
+| 50 | code | — | 37310 | new | **NEW** stage-5 cell |
 | 51 | code | — | 8977 | new | **NEW** stage-5 cell |
 | 52 | | 1933 | 1933 | +0 | shifted by +3 (identical) |
 | 53 | | 432 | 432 | +0 | shifted by +3 (identical) |
@@ -128,6 +128,8 @@ Source: `kernels/kernel-0943cfm` (never modified). Kernel id `ppxl16/rsna-knee-0
 | the measurement table, dry-run on the real arrays | reproduces the write-up exactly: macro 0.84962 -> 0.85587 at w=0.10, delta +0.00625, all 12 labels positive, LatMen 0.80143 -> 0.81451 |
 | the convention gate's identity / mirror classifier, dry-run on synthetic volumes | identity, mirror on axis 2, mirror on axis 1 all classified correctly; a one-pixel non-mirror difference classified UNEXPLAINED |
 | the v2 slot vocabulary resolver, executed verbatim against the real `SLOTS_RECOVERED` and the real `effb0mil_lib.py` attributes | resolves `cache[0..3] SAG_FS/COR_FS/AX_FS/SAG_NOFS` → `SAG_FLUID_FS/COR_FLUID_FS/AX_FLUID_FS/SAG_FLUID_NOFS` (indices 0,1,2,3); the failure path names the missing slot AND lists every available one |
+| the v3 corpus pin, executed verbatim, scenario 1 (the real frozen-corpus values) | all 7 comparisons PASS, each printed with its expected and actual value |
+| the v3 corpus pin, scenario 2 (slice band left at 0943cfm's `(0.2, 0.8)`) | raises `frozen-corpus pin failed on SLICE_BAND (tuple): expected (0.12, 0.88) got (0.2, 0.8)` plus the rule key set and the available slot names — the failing comparison is named and both sides are printed |
 
 ### NOT validated here — this is the honest gap
 
@@ -164,3 +166,13 @@ Source: `kernels/kernel-0943cfm` (never modified). Kernel id `ppxl16/rsna-knee-0
    `s_cache_e13_224_meta.npz`. `flip` is the only column the meta does not carry; the notebook
    supplies `flip = 0` on the test side and lets the gate's identity/mirror comparison on real
    rebuilt TRAIN studies be what proves that is right.
+7. **v2's corpus pin was wrong twice over, and both are fixed in v3.** (a) It compared the
+   RESOLVED notebook labels against a stale copy of the *cache's* vocabulary (whose slot 3 still
+   said `SAG_T1`), a spelling equality between two different vocabularies that can never hold; the
+   pin now checks the SLOT GEOMETRY — `(plane, fat_suppressed)` from each slot tuple against the
+   library's `SLOT_PLANE`/`SLOT_FS` — which is the real invariant. (b) It printed only the actual
+   side, so a failure was undiagnosable from the log; each of the 7 comparisons is now printed
+   PASS/FAIL with `expected ... | got ...`, and the raise names only the failing ones plus the rule
+   key set and the available slot names. Normalisation: `sorted(dict(RULES).items())` for the rule
+   set (so an extra/missing KEY is visible), `tuple(float(x) for x in SLICE_BAND)` for the band,
+   `float` for the crop, `int` for the scalars.
