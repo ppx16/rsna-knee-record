@@ -94,6 +94,15 @@ sys.argv = ['train',
             '--arch', 'convnext_small.in12k_ft_in1k',
             '--res', '384', '--epochs', '4', '--bs', '2', '--k', '12', '--k_eval', '24',
             '--grad_ckpt', '--ckpt', _WARM,
+            # The v4cx checkpoint's head is a DIFFERENT architecture (pos_proj / freqs /
+            # pool.att / head over a 5376-wide hidden layer) and NONE of its 11 head tensors
+            # match RaptorClassifier, so v1 of this kernel exited at the head guard -- correctly,
+            # since a silent head swap is precisely the 2026-09-28 bug. This flag turns
+            # discarding the head into an explicit, logged decision: the backbone (342/342
+            # tensors, missing 0, unexpected 0) is what we came for and the head trains from
+            # scratch, and the zero-shot gate is skipped because a from-scratch head scores
+            # ~chance by construction.
+            '--allow_bad_warmstart',
             '--seed', '42', '--tag', 'cx0', '--folds', '5', '--fold', '0',
             '--fold_file', _FOLD_FILE, '--workers', '0']
 # ==== end prelude; author script follows verbatim ====
@@ -630,6 +639,10 @@ def main():
             print(f"[raptor] grad_ckpt unsupported for {a.arch}: {e}", flush=True)
     model = RaptorClassifier(bb, F_dim=F_dim).to(dev)
     # ---- msft2 patch: load the head, and CHECK it rather than trusting strict=False --------
+    # `_FOREIGN_HEAD` records that we deliberately threw the warm-start head away. It matters
+    # downstream: with a from-scratch head the zero-shot score is ~chance BY CONSTRUCTION, so it
+    # must not be read as evidence about the backbone.
+    _FOREIGN_HEAD = False
     if _HEAD_STATE:
         _msd = model.state_dict()
         _absent = sorted(k for k in _HEAD_STATE if k not in _msd)
@@ -637,12 +650,24 @@ def main():
                      for k in _HEAD_STATE
                      if k in _msd and tuple(_HEAD_STATE[k].shape) != tuple(_msd[k].shape)}
         if _absent or _badshape:
-            raise SystemExit('[msft2] head is INCOMPATIBLE with this architecture: '
-                             'absent=%s shape_mismatch=%s (arch=%s F_dim=%s)'
-                             % (_absent, _badshape, a.arch, F_dim))
-        model.load_state_dict(_HEAD_STATE, strict=False)
-        print('[msft2] HEAD loaded: %d/%d tensors, names and shapes verified'
-              % (len(_HEAD_STATE), len(_HEAD_STATE)), flush=True)
+            # A FOREIGN head is EXPECTED when warm-starting from a different architecture: the
+            # backbone is what we came for. But it must never happen SILENTLY -- the 2026-09-28
+            # run trained a random head while printing a success-shaped line, and its epoch-0
+            # score of 0.8795 was then misread as a damaged warm start. So: refuse by default,
+            # and when overridden, name exactly what is being thrown away.
+            if not a.allow_bad_warmstart:
+                raise SystemExit('[msft2] head is INCOMPATIBLE with this architecture: '
+                                 'absent=%s shape_mismatch=%s (arch=%s F_dim=%s) ; pass '
+                                 '--allow_bad_warmstart to train the head FROM SCRATCH'
+                                 % (_absent, _badshape, a.arch, F_dim))
+            _FOREIGN_HEAD = True
+            print('[msft2] --allow_bad_warmstart: DISCARDING %d foreign head tensor(s) %s and '
+                  'training the head FROM SCRATCH. The backbone loaded cleanly (see above).'
+                  % (len(_HEAD_STATE), sorted(_HEAD_STATE)), flush=True)
+        else:
+            model.load_state_dict(_HEAD_STATE, strict=False)
+            print('[msft2] HEAD loaded: %d/%d tensors, names and shapes verified'
+                  % (len(_HEAD_STATE), len(_HEAD_STATE)), flush=True)
     else:
         print('[msft2] WARNING: no head tensors available -> the head is RANDOM, which is '
               'exactly the condition that invalidated the 2026-09-28 comparison', flush=True)
@@ -700,12 +725,22 @@ def main():
     print('[zeroshot] per-label %s'
           % json.dumps({k: round(v, 4) for k, v in _zaucs.items()}), flush=True)
     _ok = _zs >= 0.8963 - 0.002
-    print('[zeroshot] VERDICT: %s (parent bar 0.8963, got %.4f)'
-          % ('PASS' if _ok else 'FAIL', _zs), flush=True)
+    if _FOREIGN_HEAD:
+        # Do NOT let this gate fire here. With a from-scratch head the number is ~chance by
+        # construction, so failing on it would be reading noise as a verdict -- and passing
+        # --allow_bad_warmstart to silence it would destroy the flag's meaning. Record the
+        # number, state plainly that it carries no information, and let the per-epoch curve be
+        # the evidence instead.
+        print('[zeroshot] VERDICT: N/A -- head was FOREIGN and is being trained from scratch, '
+              'so %.4f measures an untrained head, NOT the backbone. Ignore it; judge by the '
+              'per-epoch curve.' % _zs, flush=True)
+    else:
+        print('[zeroshot] VERDICT: %s (parent bar 0.8963, got %.4f)'
+              % ('PASS' if _ok else 'FAIL', _zs), flush=True)
     if a.zero_shot_only:
         print('[zeroshot] --zero_shot_only: stopping before any training', flush=True)
         return
-    if not _ok and not a.allow_bad_warmstart:
+    if not _ok and not a.allow_bad_warmstart and not _FOREIGN_HEAD:
         raise SystemExit('[msft2] refusing to train on a warm start that scored %.4f vs bar 0.8963 ; pass --allow_bad_warmstart to override' % _zs)
 
     best = 0.0; best_state = None; best_P = None; t0 = time.time(); hist = []

@@ -74,6 +74,15 @@ sys.argv = ['train',
             '--arch', '{ARCH}',
             '--res', '384', '--epochs', '4', '--bs', '2', '--k', '12', '--k_eval', '24',
             '--grad_ckpt', '--ckpt', _WARM,
+            # The v4cx checkpoint's head is a DIFFERENT architecture (pos_proj / freqs /
+            # pool.att / head over a 5376-wide hidden layer) and NONE of its 11 head tensors
+            # match RaptorClassifier, so v1 of this kernel exited at the head guard -- correctly,
+            # since a silent head swap is precisely the 2026-09-28 bug. This flag turns
+            # discarding the head into an explicit, logged decision: the backbone (342/342
+            # tensors, missing 0, unexpected 0) is what we came for and the head trains from
+            # scratch, and the zero-shot gate is skipped because a from-scratch head scores
+            # ~chance by construction.
+            '--allow_bad_warmstart',
             '--seed', '42', '--tag', '{TAG}', '--folds', '5', '--fold', '0',
             '--fold_file', _FOLD_FILE, '--workers', '0']"""
 
