@@ -112,6 +112,26 @@ leg ran at all. The first version of that script would have **falsely rejected a
 corroboration. The log was the evidence; the hash was the confirmation. Relying on the hash alone would
 have meant relying on an unsound test.
 
+### The verifier needed three fixes before it could be trusted — all found by one test
+
+`scripts/verify_effb0_arm.py` decides whether an EffB0 arm may be submitted. It produced a **wrong
+verdict three times**, and each one was a silent-wrong-answer bug of exactly the class this project
+keeps paying for:
+
+| # | bug | what it did |
+|---|---|---|
+| 1 | judged on `_pipeline_stage.csv` identity alone | would **reject a working leg** — the file holds *ranks*, and a 3-visible-study run has only 6 orderings per label |
+| 2 | `None` (a **failed download**) compared as if it were a value | reported *** LEG LIVE *** for a kernel compared **against itself** |
+| 3 | stored the returned `Path` instead of its hash | compared two different temp paths, so **every** file read "DIFFERS" — again *** LEG LIVE *** for self-vs-self |
+
+**All three were caught by one test: run the tool against a kernel compared with itself.** That branch
+should be expected to say INCONCLUSIVE, and twice it said the opposite. It is now part of the tool's
+own verification, and a fetch failure returns exit 1 with the words *"do NOT read this as 'no change'"*.
+
+⚠️ Transport failures are frequent here (the documented intermittent `SSLEOFError`), which is precisely
+why "could not fetch" must never collapse into "no change" or "changed".
+
+
 ## ⚠️ Honest weakness — do not bury this
 
 MCL is **weaker than the Fracture case**: the CI only just excludes zero, only 3/5 folds agree, and it

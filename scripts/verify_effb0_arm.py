@@ -160,41 +160,59 @@ def main() -> int:
         row = {}
         for tag, ref in (("arm", a.ref), ("parent", a.parent)):
             p = fetch_output(ref, fn, d / tag)
+            # ⚠️ must reduce to the HASH here. Storing the returned Path instead makes the
+            # comparison `arm != parent` compare two different temp paths, so every file reads as
+            # "DIFFERS" and the tool cheerfully reports LEG LIVE for a kernel compared to itself.
+            # (Caught by the self-vs-self branch -- which is why that branch is worth running.)
             row[tag] = sha(p)[:16] if p else None
         shas[fn] = row
+        both = row["arm"] is not None and row["parent"] is not None
+        state = ("DIFFERS" if (both and row["arm"] != row["parent"])
+                 else "same" if both
+                 else "UNKNOWN (fetch failed on %s)"
+                      % ("both" if row["arm"] is None and row["parent"] is None
+                         else "arm" if row["arm"] is None else "parent"))
         print("  %-28s arm=%-18s parent=%-18s %s"
-              % (fn, row["arm"] or "absent", row["parent"] or "absent",
-                 "" if row["arm"] == row["parent"] else "  <-- DIFFERS"))
+              % (fn, row["arm"] or "FETCH-FAILED", row["parent"] or "FETCH-FAILED", state))
 
-    stage_same = shas["_pipeline_stage.csv"]["arm"] == shas["_pipeline_stage.csv"]["parent"]
-    # ⚠️ The stage file holds RANKS. On a 3-visible-study public run there are only 6 possible
-    # orderings per label, so a genuinely applied change can leave it byte-identical by chance.
-    # This is real: `0943cfm` (+MCL) and `0943cf` differ in the Rad and CoAt receipts -- the exact
-    # places `_RAD_EXCLUDE` acts -- yet produce the SAME 3-study ranks. So stage-file identity is
-    # CORROBORATING evidence only, never the verdict on its own. The receipts are the primary
-    # signal that a change reached the graph, because they carry per-stage hashes and counts.
-    receipts_differ = any(shas[fn]["arm"] != shas[fn]["parent"]
-                          for fn in ("v558_rad_receipt.json", "_coat_arm_receipt.json"))
+    def rel(fn):
+        r = shas.get(fn) or {}
+        if r.get("arm") is None or r.get("parent") is None:
+            return "unknown"
+        return "same" if r["arm"] == r["parent"] else "differs"
 
+    stage, rad, coat = rel("_pipeline_stage.csv"), rel("v558_rad_receipt.json"), rel("_coat_arm_receipt.json")
+    # ⚠️ A FETCH FAILURE IS NOT EVIDENCE OF A DIFFERENCE. An earlier version compared the sha
+    # strings directly, so `None != "abc..."` read as "the receipts differ" and the script
+    # reported *** LEG LIVE *** for a kernel compared against ITSELF. Third silent-wrong-answer
+    # bug in this file's short life; a transport error must produce UNKNOWN, never a verdict.
+    receipts = {"differs": (rad == "differs" or coat == "differs"),
+                "unknown": (rad == "unknown" or coat == "unknown")}
     print()
+
     if leg_failed or gate == "REJECTED":
         print("VERDICT: *** LEG DID NOT APPLY *** -- the log says so explicitly"
-              + (" and the stage file agrees." if stage_same else
-                 " (though the stage file differs -- investigate)."))
+              + (" and the stage file agrees." if stage == "same" else
+                 " (stage=%s, receipts rad=%s coat=%s -- investigate)." % (stage, rad, coat)))
         print("         DO NOT SUBMIT this arm.")
         return 0
-    if not stage_same or receipts_differ:
+    if receipts["differs"] or stage == "differs":
         print("VERDICT: *** LEG LIVE *** -- the graph changed"
-              + (" (receipts differ)" if receipts_differ else "")
-              + ("" if stage_same else " and the final ranks differ")
+              + (" (receipts differ: rad=%s coat=%s)" % (rad, coat) if receipts["differs"] else "")
+              + (" and the final ranks differ" if stage == "differs" else "")
               + ". Submit candidate.")
-        if stage_same:
+        if stage == "same":
             print("         NOTE: final 3-study ranks coincide -- expected on a 3-study run; the "
                   "hidden 1322-study rerun is what scores.")
         return 0
-    print("VERDICT: *** INCONCLUSIVE *** -- the log shows no leg activity, the stage file matches,")
-    print("         and BOTH receipts match too. That combination is consistent with the leg never")
-    print("         running. Treat as a duplicate unless the log shows [effb0] lines.")
+    if receipts["unknown"] or stage == "unknown":
+        print("VERDICT: *** INCONCLUSIVE *** -- a fetch failed (stage=%s rad=%s coat=%s), so there is"
+              % (stage, rad, coat))
+        print("         NO evidence either way. Re-run; do NOT read this as 'no change'.")
+        return 1
+    print("VERDICT: *** INCONCLUSIVE *** -- log shows no leg activity, and the stage file AND both")
+    print("         receipts match the parent. Consistent with the leg never running. Treat as a")
+    print("         duplicate unless the log shows [effb0] lines.")
     return 0
 
 
