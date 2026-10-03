@@ -160,15 +160,23 @@ Third-party measured warning ([thread 744230](https://www.kaggle.com/competition
 2026-10-01): bf16 silently used on T4/P100 cost **one member 0.851 → 0.710 = 0.14 AUC**. A regression
 that size inside a 20-member rank average would be **nearly invisible**.
 
-**Status: found, NOT tested, not submitted.** Our records treat "T4 = bf16" as a given baseline fact
-(`HANDOFF` §9367/§9383/§10327 all *assume* it) and the cell comment says the AMP setting was
-deliberately left alone because it was "unvalidated" — i.e. **it has never been A/B'd for accuracy.**
-But the only evidence for changing it is a third-party regression on a *different* model, and the public
-board (±0.008) cannot measure the result. **So this is flagged for a decision, not submitted blind**
-(the A96 rule: never spend a slot to find out whether an idea works). It would need a *local* read
-first — the arms' own printed per-stage diagnostics — before it earns a submission.
+**Status: CLOSED 2026-10-04 — do not change it.** The decisive check is provenance: `AMP_PREF =
+'bf16'` is **byte-identical in the frontier source notebook**
+(`downloads/research/fresh0924/maverickss26_rsna_knee_restructured_version_3/…`) and in our
+`kernel-0943` and `kernel-0943cfm`. So it is **not our deviation — it is the configuration that
+reaches 0.943**, and the trailing comment (`retained, including T4 execution; no unvalidated AMP
+change`) shows this was an informed, deliberate choice rather than an oversight.
 
-**Not in any closed item**: it is a precision setting, not a fusion weight, route, member or backbone.
+Weighed up: the only evidence *for* changing it is a third-party PSA about a **different model**
+(0.851 → 0.710 on one member); the evidence *against* is that the artifact sitting at the public
+ceiling runs bf16 on T4 deliberately; and the public board (±0.008) cannot measure the outcome
+either way. **Switching would be exactly the "unvalidated AMP change" that comment warns against** —
+deviating from a validated configuration on the strength of an anecdote about something else. Our
+records also treat "T4 = bf16" as an assumed baseline throughout (`HANDOFF` §9367/§9383/§10327), so
+nothing downstream is silently inconsistent with it.
+
+⚠️ It was worth checking precisely because it is **not in any closed item** — a precision setting,
+not a fusion weight, route, member or backbone. It is now closed **on evidence**, not by a rule.
 
 ### 5b. Rank reduction — checked, and we appear to match the reference
 
