@@ -194,6 +194,14 @@ read before then.** A second fine-tune can be *run* today; it cannot be *used* t
 >   dose unanimous under BOTH soft and binary conventions**. ⛔ But "helps most where we are weakest"
 >   is **FALSIFIED** (weakest-3 +0.00414 vs strongest-3 +0.00544; Fracture +0.0013; Baker's negative).
 >   `docs/FIND-2026-10-04-effb0-honest-test.md`.
+> * ⭐ **MEDAL BAND, measured from a third-party leaderboard scrape** (`docs/FIND-2026-10-04-medal-band-density.md`):
+>   the bronze line is **0.943 with 794 teams in that single 0.001-wide bin** (16.4 % of the board), and
+>   **the line has been FLAT at 0.943 since 2026-09-25** while the field grows (`bronze_rank` 455→482).
+>   ⇒ the medal is decided **inside a dense band**, so **this corrects my "below resolution so pointless"
+>   framing**: it was right about *measurement* and wrong about *ranking*. A sign-stable +0.001 has real
+>   expected rank value even though the board cannot see it — which **strengthens the MCL bet**.
+>   ⚠️ The panel's `our_*` fields are the *collector's* account (0.948), not ours; the band is public
+>   while the medal is private, so it is a proxy for density, not for ordering.
 > * ✅ **Provenance AUDIT (`docs/AUDIT-2026-10-04-provenance.md`)**: `kernel-0943` is a **byte-identical**
 >   fork of the frontier source (**0 of 51 cells differ**); `0943cf` = +cn0 view +fracture fix;
 >   `0943cfm` = +MCL. No accidental deviations anywhere.

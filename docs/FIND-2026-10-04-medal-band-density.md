@@ -57,6 +57,36 @@ audit. "Small but sign-stable" is exactly the bet this band rewards — and unde
    deeper and the value of small real gains goes **up**, but so does the value of the tie-break's
    opacity — we cannot influence it (no `select` API; the tick is a browser action).
 
+## The line has PLATEAUED — the band deepens while the score does not move
+
+```
+2026-08-17  bronze_score 0.914
+2026-08-24               0.924
+2026-08-27               0.936
+2026-09-08               0.938
+2026-09-11               0.940
+2026-09-12               0.941
+2026-09-25               0.943   <- and it has not moved since
+2026-09-26               0.943
+2026-09-29               0.943
+2026-10-02               0.943
+```
+
+The line climbed steeply for six weeks and then **stopped dead at 0.943** — the same plateau the
+public artifact scan found independently (558 teams at exactly 0.943; the full leaderboard's median
+0.920, p75 0.941, and **no team above 0.944 publishing code**). Meanwhile `bronze_rank` keeps rising
+(455 → 482) as the field grows.
+
+⇒ **The line is flat at our own score and the band is getting deeper.** Two consequences for the
+remaining 18 days:
+
+1. **0.943 should still be at or near the bronze line on 2026-10-22** — it has held for a week across
+   four scrapes and the mechanism behind it (the public recipe is exhausted) is the same one the
+   artifact scan measured.
+2. **The deeper the band, the more a small private gain is worth** — and the less the public board's
+   ±0.008 can tell us about it. This is the situation where a sign-stable +0.001 is a good bet and a
+   coin-flip +0.005 is not.
+
 ## What this changes, concretely
 * **Do not dismiss a small, sign-stable improvement as "below the noise".** That reasoning was applied
   to EffB0 and it was applied too broadly. Judge such a change on **expected sign and stability**, not
