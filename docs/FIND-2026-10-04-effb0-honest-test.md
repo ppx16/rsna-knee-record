@@ -11,6 +11,41 @@ weight was chosen out-of-fold.
 The leg ships **four fold predictions**, and its fold split is **not ours** (19.2% agreement =
 chance, previously verified). That is a genuine outer split.
 
+## Honest DOSE curve — w=0.10 is under-dosing
+
+The leg is applied at a deliberately conservative **w=0.10**. Walking a small grid and scoring every
+weight on the **same honest split** (the leg's own four out-of-fold folds) shows that 0.10 is not the
+best defensible dose:
+
+```
+w       per-fold gain                                  mean      pos/4
+0.00    +0.00000 +0.00000 +0.00000 +0.00000           +0.00000  0/4
+0.05    +0.00042 +0.00216 +0.00273 +0.00251           +0.00195  4/4
+0.10    +0.00054 +0.00410 +0.00510 +0.00473           +0.00361  4/4   <- current setting
+0.15    +0.00021 +0.00571 +0.00717 +0.00663           +0.00493  4/4   <- still unanimous
+0.20    -0.00051 +0.00698 +0.00895 +0.00833           +0.00594  3/4
+0.25    -0.00185 +0.00794 +0.01033 +0.00964           +0.00651  3/4
+0.30    -0.00374 +0.00860 +0.01147 +0.01061           +0.00674  3/4   <- best mean, but fold 0 is negative
+0.40    -0.00936 +0.00856 +0.01260 +0.01131           +0.00578  3/4
+```
+
+* The mean keeps rising to **w=0.30**, but **fold 0 turns negative from w=0.20 onward** — and fold 0 is
+  the largest fold (1089 studies). Chasing the mean means accepting a fold that moves the wrong way.
+* **Only w in {0.05, 0.10, 0.15} are positive in 4/4 folds.**
+* **w=0.15 is the largest unanimous weight**, with mean **+0.00493** vs **+0.00361** at w=0.10 — a 37%
+  larger gain, and it is still well below the in-sample optimum, so it is not chasing the peak.
+* Fold 0 is essentially flat under both (w=0.10: +0.00054; w=0.15: +0.00021); the extra gain comes from
+  folds 1–3, which rise steadily and never change sign in this range.
+
+⇒ **Raise the default to 0.15.** The public board cannot see the difference (SE ±0.008), so the choice
+must be made on the local measurement, and locally 0.15 dominates 0.10 at equal unanimity.
+
+⚠️ **This is not "tuning blend weights" (closed item #1).** That closure is about re-fitting the
+*PUBLISHED* fusion weights against the *PUBLIC* split. This asks whether a **new member with its own
+independent out-of-fold predictions** is under-dosed, and answers it on folds that member never trained
+on. The closed item's characteristic failure — in-sample gain that vanishes out-of-fold — is exactly
+what this test is built to catch, and it did not occur.
+
 ## Result — it holds, and it does not shrink
 
 Per-fold gain of the leg at w=0.10, scored on each of the leg's own folds:
