@@ -1,0 +1,16 @@
+,A_scratch,B_resnet50
+ACL,0.584,0.615
+MCL,0.494,0.721
+Medial Meniscus,0.6,0.638
+Lateral Meniscus,0.583,0.755
+Medial OA,0.508,0.676
+Lateral OA,0.664,0.749
+PF OA,0.506,0.766
+Effusion,0.717,0.817
+Synovitis,0.47,0.689
+Baker's,0.553,0.897
+Contusion,0.448,0.698
+Fracture,0.609,0.771
+MACRO,0.561,0.733
+IC95_lo,0.495,0.683
+IC95_hi,0.626,0.776

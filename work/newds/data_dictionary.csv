@@ -1,0 +1,58 @@
+column,type,description,value_origin
+schema_version,string,Schema version of this flat panel.,collection metadata
+competition_slug,string,Stable Kaggle competition URL slug.,source
+competition_title,string,Competition title at collection time.,source
+competition_url,string,Public Kaggle competition URL.,derived from competition_slug
+scraped_utc,datetime,UTC timestamp for this competition-board observation.,source
+mechanics_scraped_utc,datetime,UTC timestamp for mechanics and public-knowledge fields.,source
+public_knowledge_scraped_utc,datetime,"UTC timestamp for notebook, discussion, and shared-artifact observations.",source
+source_generated_utc,datetime,UTC generation timestamp of the nested source snapshot.,source
+source_json_sha256,string,SHA-256 of source_competitions.json used for the build.,derived
+entered,boolean,Whether the collecting account had entered the competition.,source
+deadline_utc,datetime,Competition deadline in UTC.,source
+medals_allowed,boolean,Whether Meta Kaggle CanQualifyTiers was true.,source
+metric_name,string,Competition metric or judging rubric name.,source
+metric_direction,string,Optimization direction or judged/not-applicable status.,source
+metric_range,string,Published metric range when measured.,source
+metric_details_json,string,Compact JSON preserving all measured metric details and weights.,source
+submission_format,string,Measured submission contract or format summary.,source
+notebooks_only,boolean,Whether submission must be produced by a Kaggle notebook.,source
+internet_policy,string,Measured notebook/evaluation network policy.,source
+gpu_runtime_cap_hours,number,Measured GPU notebook runtime cap in hours.,source
+cpu_runtime_cap_hours,number,Measured CPU notebook runtime cap in hours.,source
+daily_submission_limit,integer,Measured daily submission or agent limit.,source
+max_team_size,integer,Measured maximum team size.,source
+identity_verification,boolean,Measured identity/KYC requirement; empty means not exposed.,source
+live_api_team_count,integer,Team count returned by the live competition-list API.,source
+meta_kaggle_team_count,integer,Team count returned by Meta Kaggle when separately exposed.,source
+public_leaderboard_rows,integer,Rows in the full public leaderboard response.,source
+our_rank,integer,Collecting account's public rank; empty means no measured rank.,source
+our_score,number,Collecting account's public score or rating.,source
+our_score_tie_count,integer,Teams at exactly our measured displayed score.,source
+top1_team,string,Team displayed at public rank 1.,source
+top1_score,number,Score displayed at public rank 1.,source
+top2_team,string,Team displayed at public rank 2.,source
+top2_score,number,Score displayed at public rank 2.,source
+top3_team,string,Team displayed at public rank 3.,source
+top3_score,number,Score displayed at public rank 3.,source
+gold_rank,integer,Rank-derived gold cutoff used by this collection.,source calculation
+gold_score,number,Measured score at the rank-derived gold cutoff.,source
+gold_tie_count,integer,Teams exactly tied at the gold cutoff score.,source
+silver_rank,integer,Rank-derived silver cutoff used by this collection.,source calculation
+silver_score,number,Measured score at the rank-derived silver cutoff.,source
+silver_tie_count,integer,Teams exactly tied at the silver cutoff score.,source
+bronze_rank,integer,Rank-derived bronze cutoff used by this collection.,source calculation
+bronze_score,number,Measured score at the rank-derived bronze cutoff.,source
+bronze_tie_count,integer,Teams exactly tied at the bronze cutoff score.,source
+bronze_tie_fraction,number,Bronze tie count divided by public leaderboard rows.,derived
+bronze_score_gap,number,"For maximize metrics, bronze_score minus our_score; empty if unavailable.",derived
+bronze_rank_gap,integer,our_rank minus bronze_rank; positive values are outside the line.,derived
+medal_line_basis,string,Exact method used to choose rank-derived medal cutoffs.,source
+bronze_score_change_from_prior_scrape,number,Current bronze score minus prior measured bronze score.,derived
+public_rows_change_from_prior_scrape,integer,Current public row count minus the prior measured count.,derived
+days_to_deadline,number,Fractional days from scraped_utc to deadline_utc.,derived
+top_notebook_refs_json,string,Compact JSON list of queried high-vote public notebooks and votes.,source
+active_discussions_json,string,Compact JSON list of queried active competition discussions.,source
+shared_artifacts_json,string,Compact JSON list of measured shared artifacts or explicit unknowns.,source
+resource_policy_json,string,"Compact JSON preserving measured compute, data and internet policy.",source
+source_ids,string,Semicolon-separated keys into provenance.csv.,derived
