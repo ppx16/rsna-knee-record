@@ -171,7 +171,11 @@ from pathlib import Path as _EffPath
 _EFF_W = float(RUN.get("effb0mil_w", 0.0) or 0.0)
 _EFF_DIR = _EffPath("/kaggle/working/_effb0mil")
 _EFF_N_SLOT, _EFF_N_SLICE, _EFF_IMG = 4, 16, 224
-_EFF_SLOT_NAMES = ["SAG_FS", "COR_FS", "AX_FS", "SAG_T1"]
+# NOTE: there is deliberately NO hard-coded slot-name constant here any more.  v2 carried
+# `_EFF_SLOT_NAMES = ["SAG_FS","COR_FS","AX_FS","SAG_T1"]` and the corpus pin compared the
+# RESOLVED labels against it -- a STALE v1 constant that made the pin fail while printing values
+# that all agreed with the published audit.  Every expected value now comes from the published
+# ground truth (`_EFF_META_SLOTS`, in the cell) or from the library itself.
 _EFF_OK = False
 _effb0mil_ok = False
 _effb0mil_test_rank = None
@@ -383,18 +387,58 @@ else:
 
         _EFF_SLOT_IDX, _EFF_SLOT_LABELS = _eff_idx()
 
-        _EFF_PIN = (RULES == RULES_LEGACY and CACHE_SLICES == 16 and IMG == 224
-                    and abs(CROP_MM - 130.0) < 1e-9 and tuple(SLICE_BAND) == (0.12, 0.88)
-                    and len(set(_EFF_SLOT_IDX)) == _EFF_N_SLOT
-                    and _EFF_SLOT_LABELS[:3] == _EFF_SLOT_NAMES[:3])
-        if not _EFF_PIN:
-            raise RuntimeError(f"frozen-corpus pin failed: {RULES} {CACHE_SLICES} {IMG} "
-                               f"{CROP_MM} {SLICE_BAND} {_EFF_SLOT_LABELS} {_EFF_SLOT_IDX}")
-        print(f"[effb0] pinned: rules={RULES} slices={CACHE_SLICES} img={IMG} "
-              f"crop={CROP_MM:g}mm band={SLICE_BAND}", flush=True)
+        # Every expected value comes from the PUBLISHED ground truth, and the check reports each
+        # comparison separately WITH ITS EXPECTED VALUE.  v2's pin printed only the actual side,
+        # so a mismatch was undiagnosable from the log: it compared the resolved labels against a
+        # stale v1 constant (`["SAG_FS","COR_FS","AX_FS","SAG_T1"]`) and failed on slot 3 while
+        # every printed value agreed with `s0b_audit.json`.  That is the defect this replaces.
+        # Normalisation, so like is compared with like: `tuple(...)` on the slice band (the audit
+        # stores a JSON list, the notebook a tuple), `float(...)` on the crop, `int(...)` and
+        # `bool(...)` on the scalar pins, and `sorted(...)` key/value pairs on the rule set so an
+        # extra or missing KEY is visible instead of merely unequal.
+        _EFF_EXPECT_RULES = sorted(RULES_LEGACY.items())
+        _EFF_EXPECT_BAND = (0.12, 0.88)
+        _EFF_EXPECT_SLOTS = [_EFF_SPELLINGS[c][1] if _EFF_SPELLINGS[c][1] in _eff_names
+                             else _EFF_SPELLINGS[c][0] for c in _EFF_META_SLOTS]
+        _EFF_PIN_TESTS = [
+            ("RULES (key/value pairs, sorted)",
+             sorted(dict(RULES).items()), _EFF_EXPECT_RULES),
+            ("CACHE_SLICES (int)", int(CACHE_SLICES), _EFF_N_SLICE),
+            ("IMG (int)", int(IMG), _EFF_IMG),
+            ("CROP_MM (float, 1e-9)", float(CROP_MM), 130.0),
+            ("SLICE_BAND (tuple)", tuple(float(x) for x in SLICE_BAND), _EFF_EXPECT_BAND),
+            ("resolved slot labels (cache order)", _EFF_SLOT_LABELS, _EFF_EXPECT_SLOTS),
+            ("resolved slot indices are unique", len(set(_EFF_SLOT_IDX)), _EFF_N_SLOT),
+        ]
+
+        def _eff_same(got, want, tol=None):
+            if tol is not None:
+                try:
+                    return abs(float(got) - float(want)) < tol
+                except (TypeError, ValueError):
+                    return False
+            return got == want
+
+        _EFF_PIN_FAIL = []
+        for _tname, _got, _want in _EFF_PIN_TESTS:
+            _tol = 1e-9 if _tname.startswith("CROP_MM") else None
+            _pass = _eff_same(_got, _want, _tol)
+            print(f"[effb0]   pin {'PASS' if _pass else 'FAIL'} | {_tname:36s} | "
+                  f"expected {_want!r} | got {_got!r}", flush=True)
+            if not _pass:
+                _EFF_PIN_FAIL.append((_tname, _want, _got))
+        if _EFF_PIN_FAIL:
+            raise RuntimeError(
+                "frozen-corpus pin failed on "
+                + "; ".join(f"{n}: expected {w!r} got {g!r}" for n, w, g in _EFF_PIN_FAIL)
+                + f" | RULES keys got {sorted(dict(RULES).keys())} "
+                  f"expected {sorted(RULES_LEGACY.keys())}"
+                + f" | available slot names {_eff_names}")
+        print(f"[effb0] pinned: rules={dict(RULES)} slices={int(CACHE_SLICES)} "
+              f"img={int(IMG)} crop={float(CROP_MM):g}mm band={tuple(SLICE_BAND)}", flush=True)
         for _ci, (_nm, _cidx) in enumerate(_EFF_CANDIDATES):
-            print(f"[effb0]   candidate {_ci}: library slot order "
-                  f"{_efflib.SLOT_NAMES} <- this notebook's "
+            print(f"[effb0]   assignment {_ci}: library slot order "
+                  f"{list(_efflib.SLOT_NAMES)} <- this notebook's "
                   f"{[SLOTS[i][0] for i in _cidx]}", flush=True)
 
         from sklearn.metrics import roc_auc_score as _eff_auc
@@ -920,6 +964,20 @@ def check(nb, meta):
     # asserted, and a resolution failure must list the available slots.  v1 died with
     # `ValueError: 'SAG_FS' is not in list` before the gate ever ran, so this is asserted by NAME.
     assert "_efflib.SLOT_NAMES" in text, "the library's slot vocabulary is not consulted"
+    # v3: the corpus pin must REPORT EACH COMPARISON with its expected value, and must not
+    # compare against any stale hard-coded slot list.  v2's pin printed only the actual side and
+    # failed against `_EFF_SLOT_NAMES` (a v1 leftover naming slot 3 `SAG_T1`).
+    assert "_EFF_SLOT_NAMES" not in text, \
+        "the stale v1 slot-name constant is still referenced by the pin"
+    assert "_EFF_PIN_TESTS" in text, "the pin does not enumerate its comparisons"
+    assert "expected {_want!r} | got {_got!r}" in text, \
+        "the pin does not print the expected value of each comparison"
+    assert "frozen-corpus pin failed on " in text, \
+        "the pin failure does not name the failing comparison"
+    assert 'sorted(dict(RULES).items())' in text, \
+        "RULES is compared as a dict rather than by sorted key/value pairs"
+    assert "tuple(float(x) for x in SLICE_BAND)" in text, \
+        "SLICE_BAND is not normalised to a tuple of floats"
     assert "_efflib.SLOT_PLANE[_k], _efflib.SLOT_FS[_k]" in text, \
         "the slot resolution does not use the library's own plane/fs contract"
     # (the `"SAG_FS")` form, not the bare name: the comment above records the v1 bug verbatim)
