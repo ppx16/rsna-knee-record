@@ -268,114 +268,125 @@ else:
         N_SLOT = _EFF_N_SLOT
 
         # ---------------------------------------------------------------------------------
-        # 2b. RESOLVE THE LIBRARY'S SLOT VOCABULARY  (v1 died here)
+        # 2b. THE LIBRARY'S SLOT VOCABULARY  (v1 died here, before the gate)
         # ---------------------------------------------------------------------------------
-        # `effb0mil_lib.py` names its four slots `SLOT_NAMES = ['sag_fluid','cor_fluid',
-        # 'ax_fluid','sag_t1']` with `SLOT_PLANE = [0,1,2,0]` (sag/cor/ax) and
-        # `SLOT_FS = [1,1,1,0]` (fat-suppressed for the first three, NOT for the fourth).  Those
-        # are the names of the READER's columns -- i.e. of the cache-build kernel's own `SLOTS`.
-        # Ours are different: `SLOTS_RECOVERED` carries `SAG_FLUID_FS` / `COR_FLUID_FS` /
-        # `AX_FLUID_FS` / `SAG_FLUID_NOFS` / `COR_T1` / `SAG_T1`.
+        # The mapping is PURELY POSITIONAL, and it is now taken from the published ground truth
+        # rather than derived.  `sl16_fix.csv` is not needed for it either:
+        # `s_cache_e13_224_meta.npz` (same dataset as the cache) carries
+        # `slots = ['SAG_FS' 'COR_FS' 'AX_FS' 'SAG_NOFS']` -- THE CACHE'S OWN VOCABULARY, IN CACHE
+        # ORDER -- and `slot_mask (4407, 4)`, which is exactly the per-study `m_*` availability
+        # `effb0mil_lib` merges at its line 45.  `s0b_audit.json` gives the fill
+        # 0.9349 / 0.9560 / 0.9857 / 0.9653, and the library names the same four positionally:
         #
-        # v1 of this leg did a hard-coded `SLOTS.index(...)` on a name that exists in the
-        # library's vocabulary but not in ours, and died with `ValueError: 'SAG_FS' is not in
-        # in list` BEFORE the convention gate ever ran.  The fix is not a new name guess: it is
-        # to resolve every one of the library's four slots, assert the result, and print the
-        # whole slot table so an unknown vocabulary is visible in ONE run.
+        #     cache[0] SAG_FS    <-> lib sag_fluid   plane 0, fat-suppressed
+        #     cache[1] COR_FS    <-> lib cor_fluid   plane 1, fat-suppressed
+        #     cache[2] AX_FS     <-> lib ax_fluid    plane 2, fat-suppressed
+        #     cache[3] SAG_NOFS  <-> lib sag_t1      plane 0, NOT fat-suppressed
         #
-        # The mapping is decided by (plane, fat-suppressed) -- the library's own SLOT_PLANE and
-        # SLOT_FS -- and only the fourth slot is ambiguous: the library calls it `sag_t1`, this
-        # notebook has BOTH `SAG_T1` (true T1) and `SAG_FLUID_NOFS` (PD/T2, not suppressed), and
-        # the build kernel's own audit json calls its fourth slot `SAG_NOFS`.  So the fourth slot
-        # is DISCRIMINATED by the convention gate, never guessed.
+        # So there is NO separate lookup to satisfy: present the four slots in the cache's order
+        # and the library is happy.  Slot 3 is `SAG_NOFS`, definitively -- 0.9653 in the audit is
+        # the SAG_NOFS row, and the `sag_t1` at 26.7% in the 336 dataset's index is a DIFFERENT
+        # acquisition under a colliding name.  This is NOT a guess and NOT a gate search: the
+        # assignment below is fixed, and the convention gate is only a CHECK on it.
+        #
+        # Ours spells these SAG_FLUID_FS / COR_FLUID_FS / AX_FLUID_FS / SAG_FLUID_NOFS, so each
+        # canonical name is looked up directly, the result is cross-checked against the library's
+        # own SLOT_PLANE/SLOT_FS, and a failure prints every slot name this notebook has.
+        #
+        # v1 instead indexed the library's positional names -- a direct `SLOTS.index(...)` on a
+        # name that exists in the cache's vocabulary and not in ours -- and died with
+        # `ValueError: 'SAG_FS' is not in list` BEFORE the convention gate ever ran.
+        _EFF_META_SLOTS = ["SAG_FS", "COR_FS", "AX_FS", "SAG_NOFS"]   # cache order, ground truth
+        _EFF_SPELLINGS = {"SAG_FS": ("SAG_FS", "SAG_FLUID_FS"),
+                          "COR_FS": ("COR_FS", "COR_FLUID_FS"),
+                          "AX_FS": ("AX_FS", "AX_FLUID_FS"),
+                          "SAG_NOFS": ("SAG_NOFS", "SAG_FLUID_NOFS")}
         _EFF_PLANE_NUM = {"Sagittal": 0, "Coronal": 1, "Axial": 2, "SAG": 0, "COR": 1, "AX": 2}
-
-        def _eff_plane_no(spec):
-            """The plane as the library numbers it: from the builder's own name or the tuple."""
-            _lead = str(spec[0]).upper().split("_")[0]
-            if _lead in _EFF_PLANE_NUM:
-                return _EFF_PLANE_NUM[_lead]
-            return _EFF_PLANE_NUM.get(str(spec[1]))
-
-        def _eff_fs_flag(spec):
-            """1 = fat-suppressed.  `SLOT_FS` is only 0/1, so the fact that every recovered
-            slot is written as a 4-tuple with an explicit fat-suppression flag is usable."""
-            return 1 if len(spec) > 3 and bool(spec[3]) else 0
-
-        _EFF_REQUIRED = []
-        for _k, _req_name in enumerate(_efflib.SLOT_NAMES):
-            _want_p, _want_fs = _efflib.SLOT_PLANE[_k], _efflib.SLOT_FS[_k]
-            _EFF_REQUIRED.append((_req_name, _want_p, _want_fs))
-
-        _eff_available = [(i, s[0], _eff_plane_no(s), _eff_fs_flag(s)) for i, s in enumerate(SLOTS)]
-        print("[effb0] slot vocabulary resolution", flush=True)
-        print(f"[effb0]   library requires (name, plane, fat_suppressed): {_EFF_REQUIRED}", flush=True)
-        print(f"[effb0]   this notebook's SLOTS: "
-              f"{[(n, p, f) for _, n, p, f in _eff_available]}", flush=True)
-
-        _EFF_OPTIONS = []
-        for _req_name, _want_p, _want_fs in _EFF_REQUIRED:
-            _opts = [i for i, _n, _p, _f in _eff_available if _p == _want_p and _f == _want_fs]
-            if not _opts:
+        _eff_names = [str(s[0]) for s in SLOTS]
+        print("[effb0] slot vocabulary resolution (cache order, from the cache's own metadata)",
+              flush=True)
+        print(f"[effb0]   cache vocabulary : {_EFF_META_SLOTS}", flush=True)
+        print(f"[effb0]   library names    : {list(_efflib.SLOT_NAMES)}", flush=True)
+        print(f"[effb0]   library geometry : SLOT_PLANE={list(_efflib.SLOT_PLANE)} "
+              f"SLOT_FS={list(_efflib.SLOT_FS)}", flush=True)
+        print(f"[effb0]   this notebook    : {_eff_names}", flush=True)
+        _EFF_SLOT_IDX = []
+        for _canon in _EFF_META_SLOTS:
+            _hit = next((_eff_names.index(_sp) for _sp in _EFF_SPELLINGS[_canon]
+                         if _sp in _eff_names), None)
+            if _hit is None:
                 raise RuntimeError(
-                    f"slot '{_req_name}' (plane={_want_p}, fat_suppressed={_want_fs}) has NO "
-                    f"counterpart in this notebook's SLOTS. Available: "
-                    f"{[(n, p, f) for _, n, p, f in _eff_available]}")
-            _EFF_OPTIONS.append([(i, SLOTS[i][0]) for i in _opts])
-        for _req_name, _opts in zip(_efflib.SLOT_NAMES, _EFF_OPTIONS):
-            print(f"[effb0]   -> {_req_name:10s} candidates: "
-                  f"{[n for _, n in _opts]}", flush=True)
+                    f"cache slot '{_canon}' has no counterpart in this notebook's SLOTS "
+                    f"(tried {list(_EFF_SPELLINGS[_canon])}). Available: {_eff_names}")
+            _EFF_SLOT_IDX.append(_hit)
+        if len(set(_EFF_SLOT_IDX)) != _EFF_N_SLOT:
+            raise RuntimeError(f"slot resolution is not injective: {_EFF_SLOT_IDX} "
+                               f"from {_EFF_META_SLOTS} over {_eff_names}")
+        _EFF_SLOT_LABELS = [_eff_names[i] for i in _EFF_SLOT_IDX]
+        # cross-check against the library's OWN geometry, so a wrong spelling cannot slip
+        # through as a silently wrong series
+        for _k, _canon in enumerate(_EFF_META_SLOTS):
+            _spec = SLOTS[_EFF_SLOT_IDX[_k]]
+            _lead = str(_spec[0]).upper().split("_")[0]
+            _pl = _EFF_PLANE_NUM.get(_lead, _EFF_PLANE_NUM.get(str(_spec[1])))
+            _fs = 1 if len(_spec) > 3 and bool(_spec[3]) else 0
+            if (_pl, _fs) != (_efflib.SLOT_PLANE[_k], _efflib.SLOT_FS[_k]):
+                raise RuntimeError(
+                    f"slot {_k} ('{_canon}' -> this notebook's '{_spec[0]}') is plane={_pl} "
+                    f"fat_suppressed={_fs}, but the library's SLOT_PLANE/SLOT_FS say "
+                    f"({_efflib.SLOT_PLANE[_k]}, {_efflib.SLOT_FS[_k]})")
+        for _k, _canon in enumerate(_EFF_META_SLOTS):
+            print(f"[effb0]   cache[{_k}] {_canon:9s} <-> lib '{_efflib.SLOT_NAMES[_k]}' "
+                  f"<-> this notebook's '{_EFF_SLOT_LABELS[_k]}'  (plane "
+                  f"{_efflib.SLOT_PLANE[_k]}, fat_suppressed {_efflib.SLOT_FS[_k]})", flush=True)
 
-        import itertools as _eff_itertools
-        _EFF_CONFIGS = []
-        for _combo in _eff_itertools.product(*[o for o in _EFF_OPTIONS]):
-            _idx = [i for i, _ in _combo]
-            if len(set(_idx)) != len(_idx):
-                continue                       # two library slots cannot be the same series
-            _EFF_CONFIGS.append(([n for _, n in _combo], list(_idx)))
-        if not _EFF_CONFIGS:
-            raise RuntimeError(
-                "no injective assignment of the library's four slots onto this notebook's "
-                f"SLOTS; available {[(n, p, f) for _, n, p, f in _eff_available]}")
-
-        # Reported because it is the reason the names must not be trusted: the published
-        # `s_cache_e13_224_meta.npz` names its slot 3 `sag_t1`, while `sag_t1` in the 336
-        # dataset's index is only 26.7% filled and this cache's slot 3 is 96.5% filled -- those
-        # two files do not describe the same series under the same name.  The gate, not the
-        # name, is the authority.
+        # The meta npz ALSO carries `slot_mask (4407, 4)`, the per-study availability.  It is not
+        # needed -- our own builder recomputes the mask from the same headers -- but reading the
+        # published slot names is what makes the mapping ground truth rather than a guess, so a
+        # vocabulary that MOVED is refused rather than silently mis-slotted.
         _EFF_META_P = _EFF_LIBP.parent / "s_cache_e13_224_meta.npz"
-        if _EFF_META_P.is_file():
+        if not _EFF_META_P.is_file():
+            try:
+                _EFF_META_P = _eff_find("s_cache_e13_224_meta.npz")
+            except Exception:
+                _EFF_META_P = None
+        if _EFF_META_P is not None and _EFF_META_P.is_file():
             try:
                 with _eff_np.load(str(_EFF_META_P), allow_pickle=True) as _mz:
-                    _names_meta = [str(x) for x in _mz["slots"]]
-                print(f"[effb0]   (the cache's own metadata calls its slots {_names_meta}; "
-                      f"those names are NOT our slot names and are not used to resolve)",
+                    _pub_slots = [str(x) for x in _mz["slots"]]
+                    _pub_mask = (_mz["slot_mask"] if "slot_mask" in _mz.files else None)
+                print(f"[effb0]   published meta: slots={_pub_slots} "
+                      f"slot_mask="
+                      f"{None if _pub_mask is None else tuple(_pub_mask.shape)} fill="
+                      f"{None if _pub_mask is None else [round(float(x), 4) for x in _pub_mask.mean(0)]}",
                       flush=True)
+                if _pub_slots != _EFF_META_SLOTS:
+                    raise RuntimeError(
+                        f"the cache's published slot vocabulary moved: {_pub_slots} != "
+                        f"{_EFF_META_SLOTS}; refusing to resolve against a stale order")
+            except RuntimeError:
+                raise
             except Exception as _mz_exc:
-                print(f"[effb0]   metadata slot names unreadable ({_mz_exc})", flush=True)
+                print(f"[effb0]   metadata unreadable ({_mz_exc}); keeping the documented "
+                      f"vocabulary {_EFF_META_SLOTS}", flush=True)
+        else:
+            print(f"[effb0]   metadata npz not found; keeping the documented vocabulary "
+                  f"{_EFF_META_SLOTS}", flush=True)
 
-        # Order the configurations, so that the run log asks the most likely question first.
-        # The build kernel's own vocabulary calls its fourth slot `SAG_NOFS`, the uploaded cache
-        # metadata calls it `sag_t1`, and this notebook has BOTH `SAG_FLUID_NOFS` (PD/T2, not
-        # suppressed) and `SAG_T1`.  `SAG_FLUID_NOFS` is asked first because it is the
-        # builder-vocabulary name; `SAG_T1` second.  The GATE decides, not this order.
-        _EFF_PREF = ["SAG_FLUID_NOFS", "SAG_T1", "SAG_NOFS"]
-        _EFF_CONFIGS.sort(key=lambda c: next((c[0].index(nm) for nm in _EFF_PREF
-                                              if nm in c[0]), 99))
-        _EFF_CANDIDATES = [(c[0][3], c[1]) for c in _EFF_CONFIGS]
-        if len(_EFF_CANDIDATES) > 4:
-            # Bound the cost: the gate rebuilds raw DICOM for every candidate it tries.
-            _EFF_CANDIDATES = _EFF_CANDIDATES[:4]
+        # ONE assignment: the cache's order.  The convention gate below is then a CHECK on it
+        # (the parent's instruction), not a search for it.
+        _EFF_CANDIDATES = [(_EFF_META_SLOTS[3], list(_EFF_SLOT_IDX))]
 
         def _eff_idx():
             c = _EFF_CANDIDATES[0]
             return list(c[1]), [SLOTS[i][0] for i in c[1]]
 
         _EFF_SLOT_IDX, _EFF_SLOT_LABELS = _eff_idx()
+
         _EFF_PIN = (RULES == RULES_LEGACY and CACHE_SLICES == 16 and IMG == 224
                     and abs(CROP_MM - 130.0) < 1e-9 and tuple(SLICE_BAND) == (0.12, 0.88)
-                    and _EFF_SLOT_LABELS[:3] == _EFF_SLOT_NAMES[:3]
-                    and len(set(_EFF_SLOT_IDX)) == _EFF_N_SLOT)
+                    and len(set(_EFF_SLOT_IDX)) == _EFF_N_SLOT
+                    and _EFF_SLOT_LABELS[:3] == _EFF_SLOT_NAMES[:3])
         if not _EFF_PIN:
             raise RuntimeError(f"frozen-corpus pin failed: {RULES} {CACHE_SLICES} {IMG} "
                                f"{CROP_MM} {SLICE_BAND} {_EFF_SLOT_LABELS} {_EFF_SLOT_IDX}")
@@ -450,8 +461,8 @@ else:
             return out
 
         def _eff_gate_candidate(slot_idx, slot_labels, pick, hdr, plane, lat, sides, frozen):
-            """One full rebuild + comparison for ONE slot-3 hypothesis.  Returns
-            (ok, report_dict_or_None, table_rows)."""
+            """One full rebuild + comparison for the resolved slot assignment.  Returns
+            (ok, report_dict, table_rows)."""
             _reb = _eff_rebuild(pick, hdr, plane, lat, "effb0-gate", slot_idx)
             _rows, _mirror, _checked, _unexplained, _studies = [], 0, 0, 0, 0
             for _st in pick:
@@ -549,7 +560,7 @@ else:
             _gate_t0 = _eff_time.time()
             for _nm, _idx in _EFF_CANDIDATES:
                 _labels = [SLOTS[i][0] for i in _idx]
-                print(f"[effb0] CONVENTION GATE - hypothesis slot3={_nm} "
+                print(f"[effb0] CONVENTION GATE - checking the resolved assignment "
                       f"(slots {_labels}); rebuilding {len(_pick)} TRAIN studies from raw DICOM "
                       f"and comparing to the frozen cache", flush=True)
                 _ok, _rep, _rows = _eff_gate_candidate(_idx, _labels, _pick, _hdr, _plane,
@@ -559,7 +570,7 @@ else:
                 for _r in _rows:
                     print(f"[effb0]   {str(_r[0]):44s} {str(_r[1]):10s} {str(_r[2]):>5s} "
                           f"{str(_r[3]):>6s} {str(_r[4]):>5s} {str(_r[5]):>3s}", flush=True)
-                print(f"[effb0]   hypothesis slot3={_nm}: {_rep['studies']} studies, "
+                print(f"[effb0]   assignment slot3={_nm}: {_rep['studies']} studies, "
                       f"{_rep['comparisons']} slot-axis comparisons, "
                       f"{_rep['identity']} identical, {_rep['mirrored']} mirror-only, "
                       f"{_rep['unexplained']} UNEXPLAINED, "
@@ -625,8 +636,8 @@ else:
         # the gate decides WHICH series fills slot 3; pin it for the test build
         _EFF_SLOT_IDX = list(_EFF_CANDIDATES[0][1])
         _EFF_SLOT_LABELS = [SLOTS[i][0] for i in _EFF_SLOT_IDX]
-        print(f"[effb0] convention gate CHOSE slots {_EFF_SLOT_LABELS} "
-              f"(from hypotheses {[c[0] for c in _EFF_CANDIDATES]})", flush=True)
+        print(f"[effb0] convention gate CONFIRMED slots {_EFF_SLOT_LABELS} "
+              f"(assignments offered: {[c[0] for c in _EFF_CANDIDATES]})", flush=True)
         _EFF_TS, _EFF_TM = _effb0mil_build_test_cache()
 
         # ---------------------------------------------------------------------------------
@@ -822,21 +833,36 @@ array it can be read on locally is the public OOF, which is the same array the +
 `docs/FIND-2026-10-03-public-artifact-scan.md` was measured on. That makes the table this stage
 prints an **in-sample instrument**: printed for the record, **not** used to pick the weight.
 
-**The risk, and what is done about it.** The frozen train cache carries a per-row `flip` remap
-inside `effb0mil_lib.py`, and `sl16_fix.csv` was never published — so the remap's contents are
-unknown. The test cache is therefore built by *this notebook's own* cache builder under the
-frozen corpus contract (`dominant_axis` ordering, `corner_x` laterality, `slot_fallback`,
-`decode_fill=zero`, 130 mm, band 0.12–0.88, 16 slices, 224 px, slot axis
-`[SAG_FS, COR_FS, AX_FS, SAG_T1]`). Because the only difference the library's `flip` variable
-can express is a per-row **mirror**, a test cache built by the same builder cannot sit in a
-different convention from the model — unless the cache was built by a rule this notebook does
-not have, and that is exactly what the **convention gate** tests: it rebuilds real training
-studies from raw DICOM and compares them to the published `s_cache_e13_224.npy`, byte for byte,
-identity or axis mirror. A non-mirror mismatch abandons the leg.
+**The risk, and what is done about it.** Two things have to match the frozen cache: the
+**slot vocabulary** and the **pixel convention**.
 
-**Fail-safe.** If any of it fails — dataset not mounted, checkpoint missing, gate not passed,
-inference error, UID mismatch — the leg is abandoned loudly and `_pipeline_stage.csv` keeps
-exactly `kernel-0943cfm`'s bytes, so `submission.csv` is the 0943cfm behaviour.
+*Slot vocabulary.* `effb0mil_lib.py` names its four slots `['sag_fluid','cor_fluid','ax_fluid',
+'sag_t1']` with `SLOT_PLANE = [0,1,2,0]` and `SLOT_FS = [1,1,1,0]`. Those are the **cache-build
+kernel's** names for the same four slots, in the same order, and the cache's own metadata
+(`s_cache_e13_224_meta.npz`) states that order outright:
+`slots = ['SAG_FS' 'COR_FS' 'AX_FS' 'SAG_NOFS']`. The mapping is positional:
+`SAG_FS`↔`sag_fluid`, `COR_FS`↔`cor_fluid`, `AX_FS`↔`ax_fluid`, **`SAG_NOFS`↔`sag_t1`** (0.9653
+fill in `s0b_audit.json`; the 26.7%-filled `sag_t1` in the 336 px dataset's index is a different
+acquisition under a colliding name). Our `SLOTS_RECOVERED` spells them `SAG_FLUID_FS` /
+`COR_FLUID_FS` / `AX_FLUID_FS` / `SAG_FLUID_NOFS`; the cell looks each canonical name up, prints
+the resolution, cross-checks it against the library's own `SLOT_PLANE`/`SLOT_FS`, and refuses a
+cache whose published vocabulary has moved. v1 indexed the library's positional names directly and
+died with `ValueError: 'SAG_FS' is not in list` before the gate ever ran.
+
+*Pixel convention.* The frozen train cache also carries a per-row `flip` remap inside
+`effb0mil_lib.py`, and `sl16_fix.csv` — the file it comes from — was never published. That is not
+a blocker: `flip` can only express a per-row **mirror**, the cache was built by code byte-identical
+to this notebook's own builder, so the test side supplies `flip = 0` and the **convention gate**
+proves it. The gate rebuilds real training studies from raw DICOM under the same pinned corpus
+contract (`dominant_axis` ordering, `corner_x` laterality, `slot_fallback`, `decode_fill=zero`,
+130 mm, band 0.12–0.88, 16 slices, 224 px) and compares them to the published
+`s_cache_e13_224.npy` byte for byte — identity or axis mirror, per study, and every study must be
+entirely one or the other. Anything else abandons the leg.
+
+**Fail-safe.** If any of it fails — dataset not mounted, checkpoint missing, slot vocabulary
+unresolvable, gate not passed, inference error, UID mismatch — the leg is abandoned loudly and
+`_pipeline_stage.csv` keeps exactly `kernel-0943cfm`'s bytes, so `submission.csv` is the 0943cfm
+behaviour.
 '''
 
 
@@ -898,11 +924,19 @@ def check(nb, meta):
         "the slot resolution does not use the library's own plane/fs contract"
     # (the `"SAG_FS")` form, not the bare name: the comment above records the v1 bug verbatim)
     assert 'SLOTS.index("SAG_FS")' not in text, "the v1 hard-coded SAG_FS lookup survived"
+    assert '["SAG_FS", "COR_FS", "AX_FS", "SAG_NOFS"]' in text, \
+        "the cache's own slot vocabulary (from the meta npz) is not the basis of the resolution"
+    assert '"SAG_NOFS": ("SAG_NOFS", "SAG_FLUID_NOFS")' in text, \
+        "the SAG_NOFS spelling fallback is missing"
     assert "slot vocabulary resolution" in text, "the resolution is not printed"
     assert "counterpart in this notebook's SLOTS" in text, \
         "the resolution failure does not list the available slot names"
-    assert "candidate" in text and "itertools.product" in text, \
-        "the candidate configurations are not enumerated"
+    assert "refusing to resolve against a stale order" in text, \
+        "a moved published vocabulary would not be refused"
+    assert 'candidate {_ci}' in text, "the resolved assignment is not printed"
+    # the gate is now a CHECK, not a search: exactly one assignment is offered to it
+    assert "_EFF_CANDIDATES = [(_EFF_META_SLOTS[3], list(_EFF_SLOT_IDX))]" in text, \
+        "the gate is still searching instead of checking the resolved assignment"
     assert "leaves the leg" not in text
     assert "RUN['effb0mil_w']=0 - leg disabled" in text, "weight 0 does not short-circuit the leg"
     assert "LEG DROPPED" in text, "an out-of-range weight is not handled fail-safe"
@@ -951,6 +985,7 @@ VALIDATION_SECTION = """
 | only cell 2 differs from the source; cells 49–50 moved byte-identical | asserted in the builder |
 | the measurement table, dry-run on the real arrays | reproduces the write-up exactly: macro 0.84962 -> 0.85587 at w=0.10, delta +0.00625, all 12 labels positive, LatMen 0.80143 -> 0.81451 |
 | the convention gate's identity / mirror classifier, dry-run on synthetic volumes | identity, mirror on axis 2, mirror on axis 1 all classified correctly; a one-pixel non-mirror difference classified UNEXPLAINED |
+| the v2 slot vocabulary resolver, executed verbatim against the real `SLOTS_RECOVERED` and the real `effb0mil_lib.py` attributes | resolves `cache[0..3] SAG_FS/COR_FS/AX_FS/SAG_NOFS` → `SAG_FLUID_FS/COR_FLUID_FS/AX_FLUID_FS/SAG_FLUID_NOFS` (indices 0,1,2,3); the failure path names the missing slot AND lists every available one |
 
 ### NOT validated here — this is the honest gap
 
@@ -972,18 +1007,21 @@ VALIDATION_SECTION = """
 4. **The leg cannot be scored on gold-58 at all**: effb0mil's published folds cover 4349/4407
    studies and 0 of the 58 fully-labelled ones. The printed table is therefore in-sample on the
    public OOF, which is why the default weight is 0.10 and not the 0.20–0.30 the curve peaks at.
-5. **The frozen cache's slot 3 is ambiguous in the public artifacts**: the uploaded metadata names
-   it `sag_t1`, while the build kernel's own audit json names its four slots
-   `SAG_FS/COR_FS/AX_FS/SAG_NOFS`, and `effb0mil_lib.py`'s `SLOT_FS = [1,1,1,0]` says only "not
-   fat-suppressed". This notebook's `SLOTS_RECOVERED` contains BOTH `SAG_NOFS` and `SAG_T1` as two
-   distinct acquisitions, so the wrong choice would silently build every test slot-3 from the wrong
-   series. It is **discriminated by the gate**, not guessed: `SAG_T1` is tried first (the uploaded
-   metadata and `SLOTS` in the cache-build kernel both name it that way), `SAG_NOFS` second.
-6. **The provenance of the published 224 px cache is not fully explained.** Its audit json reports
-   four slots and a `SAG_NOFS` fill of 96.5%, but the metadata's `sag_t1` mask is only 26.7% filled
-   — which suggests the uploaded `sag_t1` is not literally the `SAG_NOFS` slot of that audit. The
-   gate resolves this empirically; a reader should not assume the slot names in the two files refer
-   to the same series.
+5. **The library's slot vocabulary is NOT ours, and v1 died on it.** `effb0mil_lib.py` names its
+   four slots `['sag_fluid','cor_fluid','ax_fluid','sag_t1']` with `SLOT_PLANE=[0,1,2,0]` and
+   `SLOT_FS=[1,1,1,0]`; the cache's own metadata states the same four, in cache order, as
+   `slots = ['SAG_FS' 'COR_FS' 'AX_FS' 'SAG_NOFS']`. Our `SLOTS_RECOVERED` spells them
+   `SAG_FLUID_FS` / `COR_FLUID_FS` / `AX_FLUID_FS` / `SAG_FLUID_NOFS`. The v1 cell indexed the
+   library's positional names directly and died with `ValueError: 'SAG_FS' is not in list`
+   **before the convention gate ever ran**. v2 resolves all four by name in the cache's order,
+   prints the resolution, cross-checks it against `SLOT_PLANE`/`SLOT_FS`, and refuses a cache whose
+   published vocabulary has moved. **Slot 3 is `SAG_NOFS`** (0.9653 fill in `s0b_audit.json`), i.e.
+   our `SAG_FLUID_NOFS` — *not* `SAG_T1` and not `COR_T1`.
+6. **`sl16_fix.csv` is not required and was never needed.** The per-study availability the library
+   merges at its line 45 is `slot_mask (4407, 4)`, which is published inside
+   `s_cache_e13_224_meta.npz`. `flip` is the only column the meta does not carry; the notebook
+   supplies `flip = 0` on the test side and lets the gate's identity/mirror comparison on real
+   rebuilt TRAIN studies be what proves that is right.
 """
 
 

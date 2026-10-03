@@ -1,7 +1,7 @@
 # BUILD REPORT — `kernel-0943cfm2eff`
 Source: `kernels/kernel-0943cfm` (never modified). Kernel id `ppxl16/rsna-knee-0943cfm2eff`, title `RSNA knee 0943cfm2eff`.
 - cells: **51 -> 54** (+3)
-- total source chars: **251204 -> 295885** (+44681)
+- total source chars: **251204 -> 298107** (+46903)
 - inserted at index 49: 1 markdown + 2 code cells
 
 ## Per-cell source-length diff
@@ -57,8 +57,8 @@ Source: `kernels/kernel-0943cfm` (never modified). Kernel id `ppxl16/rsna-knee-0
 | 46 |  | 47 | 47 | +0 |  |
 | 47 |  | 2023 | 2023 | +0 |  |
 | 48 |  | 85 | 85 | +0 |  |
-| 49 | markdown | — | 1953 | new | **NEW** stage-5 cell |
-| 50 | code | — | 32762 | new | **NEW** stage-5 cell |
+| 49 | markdown | — | 3015 | new | **NEW** stage-5 cell |
+| 50 | code | — | 33922 | new | **NEW** stage-5 cell |
 | 51 | code | — | 8977 | new | **NEW** stage-5 cell |
 | 52 | | 1933 | 1933 | +0 | shifted by +3 (identical) |
 | 53 | | 432 | 432 | +0 | shifted by +3 (identical) |
@@ -127,6 +127,7 @@ Source: `kernels/kernel-0943cfm` (never modified). Kernel id `ppxl16/rsna-knee-0
 | only cell 2 differs from the source; cells 49–50 moved byte-identical | asserted in the builder |
 | the measurement table, dry-run on the real arrays | reproduces the write-up exactly: macro 0.84962 -> 0.85587 at w=0.10, delta +0.00625, all 12 labels positive, LatMen 0.80143 -> 0.81451 |
 | the convention gate's identity / mirror classifier, dry-run on synthetic volumes | identity, mirror on axis 2, mirror on axis 1 all classified correctly; a one-pixel non-mirror difference classified UNEXPLAINED |
+| the v2 slot vocabulary resolver, executed verbatim against the real `SLOTS_RECOVERED` and the real `effb0mil_lib.py` attributes | resolves `cache[0..3] SAG_FS/COR_FS/AX_FS/SAG_NOFS` → `SAG_FLUID_FS/COR_FLUID_FS/AX_FLUID_FS/SAG_FLUID_NOFS` (indices 0,1,2,3); the failure path names the missing slot AND lists every available one |
 
 ### NOT validated here — this is the honest gap
 
@@ -148,15 +149,18 @@ Source: `kernels/kernel-0943cfm` (never modified). Kernel id `ppxl16/rsna-knee-0
 4. **The leg cannot be scored on gold-58 at all**: effb0mil's published folds cover 4349/4407
    studies and 0 of the 58 fully-labelled ones. The printed table is therefore in-sample on the
    public OOF, which is why the default weight is 0.10 and not the 0.20–0.30 the curve peaks at.
-5. **The frozen cache's slot 3 is ambiguous in the public artifacts**: the uploaded metadata names
-   it `sag_t1`, while the build kernel's own audit json names its four slots
-   `SAG_FS/COR_FS/AX_FS/SAG_NOFS`, and `effb0mil_lib.py`'s `SLOT_FS = [1,1,1,0]` says only "not
-   fat-suppressed". This notebook's `SLOTS_RECOVERED` contains BOTH `SAG_NOFS` and `SAG_T1` as two
-   distinct acquisitions, so the wrong choice would silently build every test slot-3 from the wrong
-   series. It is **discriminated by the gate**, not guessed: `SAG_T1` is tried first (the uploaded
-   metadata and `SLOTS` in the cache-build kernel both name it that way), `SAG_NOFS` second.
-6. **The provenance of the published 224 px cache is not fully explained.** Its audit json reports
-   four slots and a `SAG_NOFS` fill of 96.5%, but the metadata's `sag_t1` mask is only 26.7% filled
-   — which suggests the uploaded `sag_t1` is not literally the `SAG_NOFS` slot of that audit. The
-   gate resolves this empirically; a reader should not assume the slot names in the two files refer
-   to the same series.
+5. **The library's slot vocabulary is NOT ours, and v1 died on it.** `effb0mil_lib.py` names its
+   four slots `['sag_fluid','cor_fluid','ax_fluid','sag_t1']` with `SLOT_PLANE=[0,1,2,0]` and
+   `SLOT_FS=[1,1,1,0]`; the cache's own metadata states the same four, in cache order, as
+   `slots = ['SAG_FS' 'COR_FS' 'AX_FS' 'SAG_NOFS']`. Our `SLOTS_RECOVERED` spells them
+   `SAG_FLUID_FS` / `COR_FLUID_FS` / `AX_FLUID_FS` / `SAG_FLUID_NOFS`. The v1 cell indexed the
+   library's positional names directly and died with `ValueError: 'SAG_FS' is not in list`
+   **before the convention gate ever ran**. v2 resolves all four by name in the cache's order,
+   prints the resolution, cross-checks it against `SLOT_PLANE`/`SLOT_FS`, and refuses a cache whose
+   published vocabulary has moved. **Slot 3 is `SAG_NOFS`** (0.9653 fill in `s0b_audit.json`), i.e.
+   our `SAG_FLUID_NOFS` — *not* `SAG_T1` and not `COR_T1`.
+6. **`sl16_fix.csv` is not required and was never needed.** The per-study availability the library
+   merges at its line 45 is `slot_mask (4407, 4)`, which is published inside
+   `s_cache_e13_224_meta.npz`. `flip` is the only column the meta does not carry; the notebook
+   supplies `flip = 0` on the test side and lets the gate's identity/mirror comparison on real
+   rebuilt TRAIN studies be what proves that is right.

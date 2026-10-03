@@ -42,12 +42,13 @@ The kernel that builds this cache is public and its **cache-building code is byt
 cells 19–26 of our own `kernel-0943cfm`**: `ngoanphamvan/rsna-knee-s0b-sl16`. That identity is
 what makes a faithful test cache possible at all.
 
-⚠️ One residual puzzle, recorded rather than explained: that kernel as published declares **three**
-slots and `CACHE_SLICES = 8`, while the cache it produced has **four** slots and 16 slices, and
-its audit json names the four `SAG_FS/COR_FS/AX_FS/SAG_NOFS` while the uploaded metadata names
-them `sag_fluid/cor_fluid/ax_fluid/sag_t1`. The two names cannot both denote the same series with
-the same fill rate (`SAG_NOFS` 96.5% in the audit vs `sag_t1` mask 26.7% in the metadata). The
-notebook's gate resolves this empirically — see §3.
+⚠️ One residual puzzle, now **resolved** rather than merely recorded: the build kernel as published
+declares **three** slots and `CACHE_SLICES = 8`, while the cache it produced has **four** slots and
+16 slices. The four are `SAG_FS` / `COR_FS` / `AX_FS` / `SAG_NOFS` — stated by the cache's own
+`slots` array, and named `sag_fluid` / `cor_fluid` / `ax_fluid` / `sag_t1` only in the *reader's*
+vocabulary (`effb0mil_lib.SLOT_NAMES`). The 26.7%-filled `sag_t1` in the 336 px dataset's index is
+a different acquisition under a colliding name; the cache's slot 3 is `SAG_NOFS` at 0.9653 fill.
+See §3a for the full mapping and for the v1 failure it caused.
 
 ## 2. The measured curve is real, and it was measured on the 4349-study OOF, not on gold-58
 
@@ -121,23 +122,80 @@ so that it never needs them:
    study would mean the frozen cache was built by a rule we do not have). Any UNEXPLAINED
    comparison, any majority-mirror corpus, any MIXED study → the leg is abandoned and
    `_pipeline_stage.csv` keeps `kernel-0943cfm`'s bytes.
-4. **The one genuinely ambiguous input is discriminated, not guessed.** Slot 3 of the frozen
-   cache is named both `sag_t1` and `SAG_NOFS` in the public artifacts, and our
-   `SLOTS_RECOVERED` contains *both* as distinct acquisitions. The gate tries `SAG_T1` first and
-   `SAG_NOFS` second, and keeps whichever hypothesis reproduces the frozen cache. Getting this
-   wrong silently would build every test slot-3 from the wrong series.
+4. ~~**The one genuinely ambiguous input is discriminated, not guessed.**~~ **RESOLVED — see §3a;
+   it was never ambiguous.** Slot 3 is `SAG_NOFS`, and the mapping is purely positional.
 
-Fail-safe everywhere else too: dataset not mounted, checkpoint/library missing, cache build
-error, inference error, UID mismatch, and even an out-of-range weight all end in
-`_effb0mil_ok = False` plus a loud `rsna_event('effb0mil_*')`, never in a half-built blend.
+Fail-safe everywhere else too: dataset not mounted, checkpoint/library missing, **slot vocabulary
+unresolvable**, cache build error, inference error, UID mismatch, and even an out-of-range weight
+all end in `_effb0mil_ok = False` plus a loud `rsna_event('effb0mil_*')`, never in a half-built
+blend.
+
+## 3a. ⚠️ v1 died on a SLOT VOCABULARY mismatch — recorded because it is the same class of failure
+
+v1's first run passed everything expensive — library import, the 14.1 GB cache mount, all four
+checkpoints — and then died with
+
+```
+[effb0] LEG FAILED - continuing with kernel-0943cfm behaviour EXACTLY: ValueError: 'SAG_FS' is not in list
+```
+
+**before the convention gate ever ran.** Cause: the leg did
+
+```python
+SLOTS.index("SAG_FS")        # v1: WRONG
+```
+
+`effb0mil_lib.py` names its four slots `SLOT_NAMES = ['sag_fluid','cor_fluid','ax_fluid','sag_t1']`
+with `SLOT_PLANE = [0,1,2,0]` and `SLOT_FS = [1,1,1,0]`. Those are the **cache-build kernel's**
+names for the same four slots — the vocabulary is the *cache's*, not ours. Our `SLOTS_RECOVERED`
+spells them `SAG_FLUID_FS` / `COR_FLUID_FS` / `AX_FLUID_FS` / `SAG_FLUID_NOFS` / `COR_T1` /
+`SAG_T1`, so `SAG_FS` genuinely is not in the list.
+
+**The mapping is purely positional, and the cache's own metadata states it.** From
+`ngoanphamvan/sl16s0b-cache-variant` → `track_s_sl16/s_cache_e13_224_meta.npz`:
+
+```
+slots      (4,)             ['SAG_FS' 'COR_FS' 'AX_FS' 'SAG_NOFS']   <- cache order
+slot_mask  (4407, 4) uint8  per-study availability
+crop_mm 130.0   img 224   slices 16
+rules      {"order":"dominant_axis","lat":"corner_x","slot_fallback":true,"decode_fill":"zero"}
+```
+
+and `s0b_audit.json`: `slice_band=[0.12,0.88]`, `shape=[4407,4,16,224,224]`,
+`slot_fill = SAG_FS 0.9349, COR_FS 0.9560, AX_FS 0.9857, SAG_NOFS 0.9653`. Therefore:
+
+| cache index | cache vocabulary | library vocabulary | library `SLOT_PLANE`/`SLOT_FS` | our spelling |
+|---|---|---|---|---|
+| 0 | `SAG_FS` | `sag_fluid` | plane 0, fat-sat | `SAG_FLUID_FS` |
+| 1 | `COR_FS` | `cor_fluid` | plane 1, fat-sat | `COR_FLUID_FS` |
+| 2 | `AX_FS` | `ax_fluid` | plane 2, fat-sat | `AX_FLUID_FS` |
+| 3 | **`SAG_NOFS`** | `sag_t1` | plane 0, **no** fat-sat | `SAG_FLUID_NOFS` |
+
+**Slot 3 is `SAG_NOFS`** — 0.9653 is the `SAG_NOFS` row — and the 26.7%-filled `sag_t1` in the
+336 px dataset's index is a *different acquisition under a colliding name*. `COR_T1` is excluded
+by plane.
+
+Two consequences:
+
+* **`sl16_fix.csv` is not required.** The per-study availability the library merges at its line 45
+  is `m_<slot>` for the four `SLOT_NAMES`, i.e. exactly `slot_mask (4407, 4)` in the meta npz —
+  which *is* published. The only column the meta does not carry is `flip`; the notebook supplies
+  `flip = 0` test-side and lets the gate's identity/mirror comparison be the proof.
+* **A name-based mapping was the wrong shape.** v2 resolves the four canonical names in cache
+  order, prints the resolution, cross-checks it against the library's own `SLOT_PLANE`/`SLOT_FS`,
+  refuses a cache whose published vocabulary has moved, and lists every available slot name on
+  failure. The convention gate is now a **check** on one fixed assignment, not a search.
+
+⚠️ My earlier 2026-10-04 note calling slot 3 "ambiguous" was **wrong**: the ambiguity was an
+artifact of comparing the 336 px dataset's `sag_t1` column against this cache's audit. The meta npz
+ships with the cache and states the vocabulary outright.
 
 ## 4. What could not be determined here
 
 * **The test cache was not checked against `s_cache_e13_224.npy` on the dev box.** That needs the
   14.1 GB cache *plus* the raw competition DICOMs. The check exists in the notebook as the gate
   and runs before anything is used.
-* **The contents of `sl16_fix.csv`.** Unknown and unobtainable.
-* **The identity of slot 3** (see §3.4).
+* **The contents of `sl16_fix.csv`.** Unknown and unobtainable — but no longer needed (see §3a).
 * Whether the leg's +0.0063 on soft labels survives on the hidden test. Given the macro is over
   12 columns on 3 test studies, and our own precedent, the honest expectation stays
   **0.943 flat with a chance of 0.944**, and the downside at w=0.10 is small.
