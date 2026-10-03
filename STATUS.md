@@ -22,10 +22,37 @@ what this file has been treating as open:
 unjudgeable here**, while our target is +0.001. Confirmed too: `exclude-fracture` — the one
 externally-claimed "+0.001" — was **already submitted (`56166772`) and read 0.941, same as canonical.**
 
-⚠️ **Caveat, and the one genuinely open question:** the ledger is dated **2026-09-15** and its last
-entry is the **0.941** era. Our **0.943** arrived later via the `kernel-0943*` line (09-24…09-29), and
-**the ledger does not yet explain what bought that +0.002.** Until that is understood, we do not know
-which levers the 0.943 line actually re-opened.
+⚠️ **RESOLVED 2026-10-03 — what bought the +0.002, and it is not a lever we still hold.**
+`state/FACTS.md` **C79** records that the public frontier wrote down its own 0.942→0.943 changes, and
+**we forked that finished artifact**. The three changes are:
+
+1. a **third CoAt reader, `Global96`** — same 96-slice stack as D4 but a **different head** (full-width
+   gated head vs D4's Rank8 finding-to-slot attention). Their words: *"共享几何、不同读者，这才是
+   集成真正用得上的多样性"*;
+2. the **reduction**: from *rank-each-then-average-the-ranks* to **average-the-probabilities-then-rank**
+   (the former throws away confidence);
+3. the outer CoAtNet default **0.60 → 0.65**.
+
+Plus the Raptor window count **62 → 94** (with the speed engineering that made it affordable), and
+**C81**'s removal of `'Fracture'` from `_RAD_EXCLUDE` — a decision that had been made on **gold-58**
+and was **wrong**: re-measured on 4185 studies it is Fracture AUC 0.9187 → **0.9305**, reproduced
+independently by five label sources, with **gold-58 the only dissenter at −0.0097**.
+
+⇒ **All of it is already inside our kernels** (`kernel-0943f` is the fracture fork; A118 records
+`3×0.943 + 2×0.942` across the five arms). **We are not below the public recipe — we are on it.**
+
+⇒ **And the frontier itself annotated this whole change as "排行榜只动了 0.001"** — a three-part
+structural edit plus 32 extra windows moved the public LB by 0.001. Combined with **LB SE ≈ 0.008**,
+that is the clearest possible statement that **our +0.001 target is below this instrument's
+resolution**, and that a null LB result cannot distinguish "no gain" from "gain we cannot see".
+
+⚠️ **One recorded barrier is now stale and should not be quoted:** **D17** says CoAtNet cannot be
+trained on `torch_xla` (it died in `timm/layers/pos_embed_rel.py` → `torch_xla/csrc/helpers.cpp`
+broadcast check). **Our own msft2 v4 falsified that** — it trained
+`coatnet_rmlp_2_rw_384.in12k` on TPU for 4/4 epochs to `partial: false` once the XLA activation-
+checkpoint shim was in place. So "convnext is only a substitute" is no longer the reason to avoid
+CoAtNet on TPU. (This does **not** revive the msft2 member: that is still closed by **D7** on
+ensemble-value grounds, and by **D5** on the sub-0.90 rule — a different and better reason.)
 
 ## Where we stand
 
