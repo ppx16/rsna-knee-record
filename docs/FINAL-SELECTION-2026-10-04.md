@@ -66,10 +66,40 @@ code**. So the selection is made on **what each arm changes and what evidence th
 on the displayed score. The one thing the board *can* do is catch a regression: anything **≤ 0.940**
 should be dropped even though the nominal gap is inside the noise.
 
-## Steps
+## Steps — with the ref→description mapping VERIFIED against the live API
+
+⚠️ **Do not pick by score. FOUR arms show 0.943 and three of them are not the recommendation.** The
+description text is the only discriminator, and it is what the Submissions page displays.
+
+Every row below was read back from `api.competition_submissions(...)` on 2026-10-04 — the refs and
+descriptions are the live values, not transcribed from a note. (`ref` is an **int** on the API object,
+which is why a naive string-keyed lookup silently returned nothing.)
+
+| tick? | ref | public | description shown on the page |
+|---|---|---|---|
+| ✅ **TICK (primary)** | `56599932` | 0.943 | `0943cf v1 - our cn0 member (5th view) PLUS the fracture fix: the two changes with local meas…` |
+| ✅ **TICK (second slot, pick ONE)** | `56599159` | 0.941 | `0943p parent routing v1 - flat outer 0.65 (the frontier's own insurance, A122)` |
+| ✅ **…or this one instead** | `56568524` | 0.942 | `0943h halfway routing v2 - internet off, 20/20 fingerprints` |
+| ❌ do NOT tick | `56568520` | 0.943 | `0943 speedy k94 v2 - internet off, 20/20 DINOv2 fingerprints, outer 0.65` ← the auto-ticked default |
+| ❌ do NOT tick | `56570144` | 0.943 | `0943f fracture fork v1 - internet off, 20/20 fingerprints` |
+| ❌ do NOT tick | `56570151` | 0.943 | `0943s sparse 62/42 v1 - internet off, 20/20 fingerprints` — **efficiency lever, see below** |
+| ⏳ pending | `56791368` | — | `0943cfm - 0943cf + MCL added to _RAD_EXCLUDE; +0.000904 macro on n=3802/210pos, 35/35 sign-s…` |
 
 1. Open the competition's **Submissions** page.
-2. **Untick `RSNA knee 0943 - Version 2`** (the auto-ticked default).
-3. Tick **`56599932`** (primary) and **one** of `56599159` / `56568524`.
-4. Re-check after any new arm lands: the tick state is not readable from the API, so this is the only
-   place it exists.
+2. **Untick the default** — its description begins `0943 speedy k94 v2 …` (ref `56568520`).
+3. Tick the row whose description begins **`0943cf v1 - our cn0 member (5th view) PLUS the fracture fix`**.
+4. Tick **one** of: description begins **`0943p parent routing v1 - flat outer 0.65`** (0.941, the
+   pre-registered hedge) **or** **`0943h halfway routing v2`** (0.942, same direction, weaker dose).
+5. If `56791368` (`0943cfm … MCL …`) has scored **≥ 0.942** by then, it is a legitimate third candidate
+   for the primary slot — it carries two measured changes like `0943cf` does, plus MCL. If it scored
+   **≤ 0.940**, drop it (the board can catch a regression even though it cannot rank 0.941–0.945).
+6. **Re-check before the deadline**: the tick state is not readable through the API (no `selected`
+   field on `ApiSubmission`; the CLI has no `select` verb; legacy `/api/v1` returns 401 to API-key
+   auth — all three verified), so this page is the only place that state exists.
+
+⚠️ **Optional, costs nothing, and only you can weigh it**: `56570151` (`0943s sparse 62/42`) also scored
+**0.943**, i.e. the same AUC as the primary with a shorter runtime, and this competition scores
+`Efficiency = AUC/(0.5 − maxAUC) + RuntimeSeconds/32400` with an independent **$18,000 / 3-place
+efficiency track** that the *same* submission feeds (`docs/EFFICIENCY-PLAN.md`). You have said the
+efficiency board is not a goal, so this is recorded and not recommended — but ticking `0943s` in place
+of a 0.943 arm would be free on the accuracy axis.
