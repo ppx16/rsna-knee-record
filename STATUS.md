@@ -176,6 +176,19 @@ read before then.** A second fine-tune can be *run* today; it cannot be *used* t
 
 ## Next actions, in order
 
+> **2026-10-04 delta — current sheet is `docs/FINAL-SELECTION-2026-10-04.md`.**
+> * ✅ **`AMP_PREF='bf16'` CLOSED on provenance** — byte-identical in the frontier source that reaches
+>   0.943, so switching would deviate from a validated config on a foreign anecdote
+>   (`docs/FIND-2026-10-03-public-artifact-scan.md` §5a).
+> * ⭐ **The EffB0-MIL leg SURVIVED an honest out-of-fold test**: +0.00403 at w=0.10 across the leg's own
+>   four folds, **4/4 positive**, CI [+0.00285, +0.00491], and the OOF estimate **exceeds** the in-sample
+>   one — the weight was not split-fitted (`docs/FIND-2026-10-04-effb0-honest-test.md`).
+> * 🔄 **`0943cfm2eff` v2 RUNNING** — the v1 failure was mapping slots by *spelling* instead of
+>   *position*, so `SLOTS.index("SAG_FS")` raised before the convention gate ever ran.
+> * 🔄 **`0943cfm` = `56791368` (+MCL) submission PENDING.**
+> ⚠️ **Before selecting `0943cfm2eff`, diff its `_pipeline_stage.csv` against `0943cfm`'s.** Byte-identical
+> ⇒ the leg did not apply ⇒ the kernel is a **duplicate** and must not be selected. That is how v1 was caught.
+
 0. ⭐⭐ **THE ONLY ACTUAL DECISION LEFT: the two final submission slots — and it is a BROWSER job.**
    `docs/FINAL-SELECTION.md` is the pre-registered decision (written before the last four readouts
    landed, then read against its own table). Its recommendation is **`0943cf` + `0943p`**:
