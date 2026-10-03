@@ -177,28 +177,23 @@ read before then.** A second fine-tune can be *run* today; it cannot be *used* t
 ## Next actions, in order
 
 > **2026-10-04 delta — current sheet is `docs/FINAL-SELECTION-2026-10-04.md`.**
-> * 🔄 **`0943cfm2eff` v3 RUNNING** (w=**0.15** + a per-term pin). v1 died mapping slots by *spelling*
->   not *position*; v2 died on its own pin, whose last term
->   `_EFF_SLOT_LABELS[:3] == _EFF_SLOT_NAMES[:3]` compares **our** label spellings against the
->   **cache's** — two vocabularies, so **False on every run**. v3's pin checks the library's
->   `(plane, fat_suppressed)` geometry and prints PASS/FAIL per term. Verified by pulling the pushed
->   notebook (`kaggle kernels pull`), not by assumption.
-> * 🔄 **`0943cfm` = `56791368` (+MCL) submission PENDING (~11 h).** No error flags; code reruns queue.
-> * ⭐ **EffB0 honest OOF**: +0.00403 at w=0.10, 4/4 folds, CI [+0.00285,+0.00491]; **the OOF estimate
->   EXCEEDS the in-sample one**, so the weight was not split-fitted. Dose curve: **w=0.15 is the
->   largest dose unanimous under both SOFT and BINARY conventions** (+0.00493 / +0.00871).
+> * ⛔ **EffB0-MIL LINE CLOSED 2026-10-04 (user decision).** v3 COMPLETE: the per-term pin fixed
+>   (**7/7 PASS**), dose **0.150** confirmed, and the safety net fired cleanly (`_EffOutOfTime` →
+>   `_pipeline_stage.csv` = exactly `0943cfm`'s bytes ⇒ **duplicate, not submitted**). **The real
+>   blocker was never the budget: the rebuild produced `0 slot-series` for all four TRAIN studies, so
+>   the gate would REJECT even with unlimited budget.** Closed on four reasons — falsified rationale,
+>   effect below the board's resolution, cost, and nothing new left to learn. Full text:
+>   `docs/RESULT-2026-10-04-effb0-v3.md` (closure section).
+> * 🔄 **`0943cfm2eff` v3 was the last EffB0 run** — nothing further will be pushed for this line.
+> * 🔄 **`0943cfm` = `56791368` (+MCL) submission PENDING (~13 h).** No error flags; code reruns queue.
+> * ✅ **Reusable from the closed line**: `scripts/verify_effb0_arm.py` (acceptance test, battle-tested),
+>   `scripts/harden_effb0_budget.py` (built, verified, never pushed), and the honest-dose method
+>   (`work/eff_min.py`, `eff_dose.py`, `eff_dose_parents.py`, `eff_convention.py`).
+> * ⭐ **EffB0 findings that stand regardless**: honest OOF +0.00403 at w=0.10, **4/4 folds**, CI
+>   [+0.00285,+0.00491], and **the OOF estimate EXCEEDS the in-sample one**; **w=0.15 is the largest
+>   dose unanimous under BOTH soft and binary conventions**. ⛔ But "helps most where we are weakest"
+>   is **FALSIFIED** (weakest-3 +0.00414 vs strongest-3 +0.00544; Fracture +0.0013; Baker's negative).
 >   `docs/FIND-2026-10-04-effb0-honest-test.md`.
-> * ⛔ **But the leg's headline rationale is FALSIFIED**: "it helps most where we are weakest" is
->   **not supported** — weakest-3 labels mean Δ +0.00414 vs strongest-3 +0.00544, our weakest label
->   (Fracture, 0.6946) gains only **+0.0013**, Lateral OA **+0.00013**, **Baker's is negative**. The
->   effect is real in aggregate but **broad and unspecific**. Submit it on the aggregate, not the story.
-> * ⚠️ **PREDICTION (`docs/PREDICT-2026-10-04-effb0-budget.md`)**: the test-cache build sits **outside**
->   the leg's budget guard, and 540 s is at/below the C82-derived estimate (~216–756 s for ~1322
->   studies), so v3 should abandon at the fold-0 check — **safe** (falls back to 0943cfm's bytes).
-> * ✅ **v4 hardening BUILT locally, NOT pushed**: `effb0mil_budget_s` 540 → **1800** (cell 2) and a
->   **pre-flight `_eff_check_budget` before the test-cache build** (cell 50) so an overrun can never
->   reach the fail-CLOSED `rsna_deadline` (which would abort the kernel and yield **no** submission).
->   `scripts/harden_effb0_budget.py`. Push only after v3 is terminal.
 > * ✅ **Provenance AUDIT (`docs/AUDIT-2026-10-04-provenance.md`)**: `kernel-0943` is a **byte-identical**
 >   fork of the frontier source (**0 of 51 cells differ**); `0943cf` = +cn0 view +fracture fix;
 >   `0943cfm` = +MCL. No accidental deviations anywhere.

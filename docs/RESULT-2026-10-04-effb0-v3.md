@@ -86,3 +86,36 @@ budget.**
 `_pipeline_stage.csv` is **exactly `kernel-0943cfm`'s output** ⇒ this arm is a **duplicate** and must
 **not** be submitted. (Confirms the acceptance rule: the log is the arbiter, the receipts/stage hashes
 corroborate.)
+
+---
+
+# ⛔ CLOSED 2026-10-04 — the EffB0-MIL line is abandoned, on the user's decision
+
+**Do not re-open this without reading all four reasons.** Written in the style of
+`state/EXPERIMENTS.md` §D so a future reader can dismiss it knowingly rather than rediscover it.
+
+| # | reason |
+|---|---|
+| 1 | **Its headline rationale is falsified.** The case for this leg was that it is a meniscus / weak-label specialist — the one thing `HANDOFF.md` §97.3 recorded as an open gap ("Lateral Meniscus is the largest shortfall in the macro average and no tested knob moves it"). Re-measured per label, that is **not supported**: weakest-3 parent labels gain **+0.00414** vs strongest-3 **+0.00544**; our weakest label Fracture (0.6946) gains **+0.0013**; Lateral OA **+0.00013**; **Baker's is negative**. The effect is real in aggregate but **broad and unspecific**. (`docs/FIND-2026-10-04-effb0-honest-test.md`) |
+| 2 | **The effect is below the instrument.** Best honest estimate **+0.0049** at w=0.15 (soft), +0.0087 (binary), 4/4 folds. The public board's SE is **±0.008**, and nine 0943-family arms spanned only 0.941→0.943. **We could never confirm it landed**, so it could never be safely preferred over the arm it duplicates. |
+| 3 | **Cost so far is three 4-hour runs plus a full local analysis, and the remaining question is not about the budget.** v3 proved the rebuild produces **`0 slot-series` for every one of the four TRAIN studies** ⇒ `evaluable=False` ⇒ the gate **would reject even with unlimited budget**. So the v4 budget hardening (`scripts/harden_effb0_budget.py`, built and compile-verified, never pushed) **cannot land this leg**. The open question is in the builder's series selection, and answering it needs the 14 GB cache or the raw DICOMs — i.e. another GPU cycle per hypothesis. |
+| 4 | **What was learned is already banked.** The pin/vocabulary defects, the receipt-vs-stage-hash acceptance rule, the UTF-16 log trap, and the honest-dose methodology are all recorded and reusable. Continuing buys no new information of that kind. |
+
+## What this closure does NOT throw away
+* **`scripts/verify_effb0_arm.py`** — the acceptance test, battle-tested (three silent-wrong-answer bugs
+  found and fixed by the self-vs-self case). Reusable for ANY future arm.
+* **`scripts/harden_effb0_budget.py`** — built, verified, never pushed. If the EffB0 line is ever
+  revived, push it with v3's pin.
+* **The honest-dose method** (`work/eff_min.py`, `work/eff_dose.py`, `work/eff_dose_parents.py`,
+  `work/eff_convention.py`) — how to price a member on an outer split instead of in-sample. This is the
+  transferable result, not the leg.
+* **The EffB0 checkpoints and OOF remain public** (`tbongc/rsna-knee-effb0mil-sl16-tv7w`), so a future
+  session can re-price it in minutes without any of the build work.
+
+## ⚠️ The honest lesson
+Three runs, three different failures, each caught by the leg's own defensive code — and the last one
+showed the blocker was never the budget. The through-line is that **each round I found the failure
+plausible enough to justify one more try**, and the case for the leg rested on a rationale I had not
+re-tested. **The rationale should have been checked before v1, not after v3.** That check cost minutes;
+the three runs cost ~5 GPU-hours.
+
