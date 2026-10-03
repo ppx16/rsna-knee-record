@@ -5,6 +5,28 @@ Deep detail lives in `FACTS.md` (A-numbers) and `docs/`; the recent session reco
 `docs/RESULT-2026-10-02-msft2-finetune.md`, `docs/RESULT-2026-10-01-exp085-gate.md`,
 `docs/FIND-2026-10-01-exp085.md`, `docs/FIND-2026-10-01-rsna-sweep.md`.
 
+## ⛔ READ THIS FIRST — 2026-10-02: the msft2 / ConvNeXt plan was pursuing CLOSED directions
+
+`state/EXPERIMENTS.md` §D is a ledger of every lever already **tested and closed**. It closes most of
+what this file has been treating as open:
+
+| closed | what it kills |
+|---|---|
+| **D7** | **"把我们的 raptor 成员塞进集成" is CLOSED.** The *author themselves* measured "adding a different-architecture backbone" = **+0.001** (C14), and we independently A/B'd it (`add-widedense-arm`) = **0.941 flat**. **⇒ the msft2 member is D7.** |
+| **D5 / D6 / D17** | self-trained encoders with **solo <0.90 are net harmful**; the TPU route closed after predict crashed natively; TPU-trained coatnet closed. **⇒ the ConvNeXt arm is D5/D17.** |
+| **D14** | "add a 5th view to the Raptor arm" — **two independent attempts, both 0.941 flat.** |
+| **D1 / D3 / D13** | fusion-weight / routing / calibration tuning, incl. the community's "one weight" claim: **five readings all 0.941**; mattiaangeli's own metadata says *"sub-resolution blend tweaks should be treated as noise"*. |
+| **D11 / D12** | turning the routing or calibration switches OFF is **negative** (monotone 0.941 / 0.940 / 0.939 / 0.938 four-corner). |
+
+**And the instrument cannot resolve the target.** Public-LB **SE ≈ 0.008** ⇒ **differences ≤0.003 are
+unjudgeable here**, while our target is +0.001. Confirmed too: `exclude-fracture` — the one
+externally-claimed "+0.001" — was **already submitted (`56166772`) and read 0.941, same as canonical.**
+
+⚠️ **Caveat, and the one genuinely open question:** the ledger is dated **2026-09-15** and its last
+entry is the **0.941** era. Our **0.943** arrived later via the `kernel-0943*` line (09-24…09-29), and
+**the ledger does not yet explain what bought that +0.002.** Until that is understood, we do not know
+which levers the 0.943 line actually re-opened.
+
 ## Where we stand
 
 | | |
@@ -39,9 +61,24 @@ A167 established that **nothing this project can train from scratch passes it** 
 fine-tuning a published strong checkpoint was the only route — **this is the first artifact of ours that
 passes.** Calibration: exp085's author reports `gold58 0.9062`; our SWA reaches **0.9069**.
 
-⚠️ **Checkpoints are still KERNEL OUTPUT, not a dataset we own** (`raptor_ft_msft0.pt`,
-`raptor_ft_msft0_swa.pt`, 293 MB each). **Publish them under `ppxl16` before anything depends on them** —
-the exp085 dataset was withdrawn mid-session and that is exactly how a working line dies.
+✅ **DONE — the checkpoints are now a dataset we own**: `ppxl16/rsna-knee-msft2-ckpt` (private, 8 files),
+published 2026-10-02. The exp085 failure mode (a public weights dataset withdrawn mid-session, then
+silently dropped by `kernels_push` while it reported success) no longer applies to this asset.
+
+⚠️⚠️ **BUT the premise that this is "paid-for headroom" is contradicted by our own recorded evidence.**
+`docs/HANDOFF.md` §13.2 (2026-09-11, from others' LB-measured results) says:
+
+> **加自训模型没用。** 0.910 的模型按 0.10/0.15 权重加进 0.936 的公开底 → 变化 0.000；
+> **0.874 的模型加进去反而 0.936 → 0.935（更差）**。基于 Gold58 预测的 +0.004 实际交出了 −0.004。
+
+> **58 例 gold 集不能当裁判。** 它的 bootstrap 95% CI 比要追的效果还宽…… **不要用 Gold58 调权重。**
+
+**msft2 is 0.9069 — inside the band that was already measured at 0.000.** It is also a CoAtNet, i.e. the
+same *family* as the CoAt readers already in the stack, and §13.2 says the ensemble lives on
+**divergence, not quality** (the weakest member, solo 0.843, contributed +0.009; another of the
+*strongest* DINO folds contributed −0.0007). So **the honest expectation for msft2 is ≈0.000, possibly
+slightly negative** — and the "0.943 → 0.944 is untested" framing below must be read with that in mind.
+The arm is therefore built to **measure divergence first** and defaults to weight 0.0.
 
 ## ⚠️ Where the headroom is, and where it is NOT
 
