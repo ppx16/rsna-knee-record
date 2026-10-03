@@ -186,8 +186,17 @@ read before then.** A second fine-tune can be *run* today; it cannot be *used* t
 > * 🔄 **`0943cfm2eff` v2 RUNNING** — the v1 failure was mapping slots by *spelling* instead of
 >   *position*, so `SLOTS.index("SAG_FS")` raised before the convention gate ever ran.
 > * 🔄 **`0943cfm` = `56791368` (+MCL) submission PENDING.**
-> ⚠️ **Before selecting `0943cfm2eff`, diff its `_pipeline_stage.csv` against `0943cfm`'s.** Byte-identical
-> ⇒ the leg did not apply ⇒ the kernel is a **duplicate** and must not be selected. That is how v1 was caught.
+> ⚠️ **Acceptance test for `0943cfm2eff` is now a script: `scripts/verify_effb0_arm.py`.**
+> It fetches the log (decoding **UTF-16**, which `kaggle kernels logs … *> file` writes under PS 5.1
+> and which made a successful run look empty), parses the gate verdict, and compares the arm against
+> its parent.
+> ⛔ **CORRECTION 2026-10-04 — do NOT judge by `_pipeline_stage.csv` alone.** That file holds **ranks**,
+> and the public run covers only **3 visible studies** (6 possible orderings per label), so a genuinely
+> applied change can leave it byte-identical. **Verified against a known-applied change**: `0943cfm`
+> (+MCL) and `0943cf` have the *same* 3-study stage file and `submission.csv`, while their
+> `v558_rad_receipt.json` and `_coat_arm_receipt.json` **differ** — so MCL did apply, and
+> **`56791368` is NOT a duplicate**. The **receipts are the primary signal**; the log arbitrates; the
+> stage hash is corroboration only. An earlier version of this rule would have rejected a working arm.
 
 0. ⭐⭐ **THE ONLY ACTUAL DECISION LEFT: the two final submission slots — and it is a BROWSER job.**
    `docs/FINAL-SELECTION.md` is the pre-registered decision (written before the last four readouts
