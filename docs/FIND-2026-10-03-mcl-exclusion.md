@@ -82,6 +82,36 @@ Kernel version 1 successfully pushed.
 ppxl16/rsna-knee-0943cfm has status "KernelWorkerStatus.RUNNING"
 ```
 
+## ⚠️ 2026-10-04 CORRECTION — the "identical stage file" test is NOT a duplicate test
+
+While automating the EffB0 acceptance check I ran that same comparison on a **known-applied** change and
+it came back "identical":
+
+| file | `0943cf` (no MCL) | `0943cfm` (+MCL) | |
+|---|---|---|---|
+| `submission.csv` | `a3a6bc5832b1` | `a3a6bc5832b1` | **same** |
+| `_pipeline_stage.csv` | `a3a6bc5832b1` | `a3a6bc5832b1` | **same** |
+| `v558_rad_receipt.json` | `70a38f2a6cd3` | `69f920bd10b8` | **DIFFERS** |
+| `_coat_arm_receipt.json` | `5b175a8d8689` | `ec4675bc5ce9` | **DIFFERS** |
+
+**The MCL change IS applied** — the Rad receipt and the CoAt-arm receipt differ, and those are exactly
+where `_RAD_EXCLUDE` acts. The final ranks coincide only because the public run covers **3 visible
+studies** and `_pipeline_stage.csv` holds **ranks**: with 3 studies there are 6 possible orderings per
+label, so a genuinely applied change can leave it byte-identical by chance.
+
+⇒ **`0943cfm` / `56791368` is NOT a duplicate of `0943cf`.** It is a legitimate, distinct submission.
+
+⇒ **Methodology correction, now encoded in `scripts/verify_effb0_arm.py`:** a byte-identical
+`_pipeline_stage.csv` is **corroborating evidence only, never a verdict**. The primary signal that a
+change reached the graph is the **per-stage receipts** (`v558_rad_receipt.json`,
+`_coat_arm_receipt.json`), which carry per-stage hashes and counts; the **log** arbitrates whether the
+leg ran at all. The first version of that script would have **falsely rejected a working leg**.
+
+⚠️ **The EffB0 v1 conclusion still stands** — but note *why*: it rested on the **explicit log line**
+`[effb0] LEG FAILED … ValueError: 'SAG_FS' is not in list`, with the matching stage file as
+corroboration. The log was the evidence; the hash was the confirmation. Relying on the hash alone would
+have meant relying on an unsound test.
+
 ## ⚠️ Honest weakness — do not bury this
 
 MCL is **weaker than the Fracture case**: the CI only just excludes zero, only 3/5 folds agree, and it
