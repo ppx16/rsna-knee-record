@@ -121,6 +121,65 @@ The metric is now validated against known answers: `perfect (y as p) = 1.00000`,
 0.49870`. An intermediate version returned **1.00001** (an AUC above 1) because the running
 histogram was replaced by the global one — self-announcing, and fixed.
 
+## ⚠️ Two robustness checks — one passes, one CONTRADICTS the leg's stated rationale
+
+`work/eff_convention.py`. Both questions exist because the headline claim had only been measured one way.
+
+### (a) SOFT vs BINARY — the effect survives both conventions
+
+```
+w       SOFT                   BINARY (y>=0.5)
+0.10    +0.00361 (4/4 +)       +0.00612 (4/4 +)
+0.15    +0.00493 (4/4 +)       +0.00871 (4/4 +)
+0.20    +0.00594 (3/4 +)       +0.01105 (4/4 +)
+```
+
+Positive and unanimous under **both**, so the effect is not an artefact of the soft convention — worth
+checking, because C84 records the two conventions disagreeing in *magnitude* on the same change
+(+0.0068 soft vs +0.0129 binary).
+
+⚠️ **But the unanimity boundary is convention-dependent**: soft is 4/4 only up to w=0.15, binary is 4/4
+even at w=0.20. So "w=0.15 is the largest unanimous dose" is a **soft-convention** statement. w=0.15
+stays the right pick because it is unanimous under **both** — a stronger reason for it than the dose
+curve alone gave.
+
+### (b) ⛔ "It helps most where we are weakest" is NOT SUPPORTED
+
+Per-label AUC at w=0.15 on the covered set (soft):
+
+```
+label                 parent     blend     delta
+Medial Meniscus      0.80965   0.82369  +0.01403
+Lateral Meniscus     0.75098   0.76193  +0.01095
+PF OA                0.76332   0.77272  +0.00940
+ACL                  0.79049   0.79967  +0.00918
+MCL                  0.77802   0.78307  +0.00506
+Contusion            0.77099   0.77277  +0.00178
+Effusion             0.83634   0.83810  +0.00175
+Fracture             0.69458   0.69592  +0.00134   <-- our weakest parent label
+Synovitis            0.79079   0.79132  +0.00053
+Medial OA            0.80033   0.80086  +0.00053
+Lateral OA           0.75603   0.75617  +0.00013
+Baker's              0.79604   0.79534  -0.00071
+
+weakest-3 parent labels   mean delta +0.00414
+strongest-3 parent labels mean delta +0.00544
+positive 11/12
+```
+
+**The gain is slightly LARGER on the labels we are already strong at.** Our weakest label, Fracture
+(0.6946), gains **+0.0013**; Lateral OA barely moves (**+0.00013**); **Baker's goes negative**.
+
+⇒ **The leg's headline rationale — that it is a meniscus / weak-label specialist, which is why the
+§97.3 "no tested knob works on Lateral Meniscus" gap made it worth pursuing — does not survive.**
+The effect is real and positive in aggregate (which is why it is still worth submitting), but it is
+**broad and unspecific, not targeted at the weak labels**.
+
+⚠️ Part of the earlier "+0.0131 on LatMen" figure is a **parent difference**: the adoption measured
+LatMen at 0.8014 on the subagent's parent/metric; on mine it is 0.7510, and **Medial** Meniscus — not
+Lateral — gains most. The absolute levels in this repo remain **not mutually comparable** (see the
+metric note above), which is precisely why the rationale had to be re-checked rather than inherited.
+
 ## ⚠️ Unresolved tooling defect (do not re-run the full sweep blindly)
 `work/eff_honest.py` **hangs** inside the in-sample weight loop, even after fixing a real infinite
 loop in `_col_auc` (`j` starting at `i` instead of `i+1`, so a NaN in the sorted ranks made
