@@ -40,6 +40,29 @@ w       per-fold gain                                  mean      pos/4
 ⇒ **Raise the default to 0.15.** The public board cannot see the difference (SE ±0.008), so the choice
 must be made on the local measurement, and locally 0.15 dominates 0.10 at equal unanimity.
 
+### Robustness of that dose across parents (`work/eff_dose_parents.py`)
+
+A single parent is a single instrument, so the same honest grid was re-run against every parent variant
+in `downloads/oof/`:
+
+```
+                       w=0.10            w=0.15            w=0.20
+equal_prob (stage-1)   +0.00361 4/4      +0.00493 4/4      3/4
+mean-of-4-arms         +0.00356 4/4      +0.00488 4/4      3/4
+rankmean-of-4-arms     +0.00360 4/4      +0.00494 4/4      3/4
+mean-logitpool-arms    +0.00359 4/4      +0.00494 4/4      3/4
+```
+
+**w=0.15 is the largest dose that is unanimous (4/4) under every parent, and w=0.20 is 3/4 under every
+parent.** So the choice is not an artefact of one aggregation.
+
+⚠️ **But do not overstate it.** All four parents are built from the **same public20 arms** and are
+strongly correlated — these are **not four independent instruments**, only four aggregations of one.
+The test rules out "the conclusion depends on how the parent was aggregated"; it does **not** provide
+four-fold independent replication. ⚠️ Also note `oof_equal_prob.npy` and `oof_selected.npy` are
+**byte-identical** (same sha256) — an earlier version of this test used both and would have silently
+reported them as two agreeing parents.
+
 ⚠️ **This is not "tuning blend weights" (closed item #1).** That closure is about re-fitting the
 *PUBLISHED* fusion weights against the *PUBLIC* split. This asks whether a **new member with its own
 independent out-of-fold predictions** is under-dosed, and answers it on folds that member never trained
