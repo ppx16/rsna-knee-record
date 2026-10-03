@@ -1,7 +1,7 @@
 # BUILD REPORT — `kernel-0943cfm2eff`
 Source: `kernels/kernel-0943cfm` (never modified). Kernel id `ppxl16/rsna-knee-0943cfm2eff`, title `RSNA knee 0943cfm2eff`.
 - cells: **51 -> 54** (+3)
-- total source chars: **251204 -> 289590** (+38386)
+- total source chars: **251204 -> 295885** (+44681)
 - inserted at index 49: 1 markdown + 2 code cells
 
 ## Per-cell source-length diff
@@ -58,7 +58,7 @@ Source: `kernels/kernel-0943cfm` (never modified). Kernel id `ppxl16/rsna-knee-0
 | 47 |  | 2023 | 2023 | +0 |  |
 | 48 |  | 85 | 85 | +0 |  |
 | 49 | markdown | — | 1953 | new | **NEW** stage-5 cell |
-| 50 | code | — | 26467 | new | **NEW** stage-5 cell |
+| 50 | code | — | 32762 | new | **NEW** stage-5 cell |
 | 51 | code | — | 8977 | new | **NEW** stage-5 cell |
 | 52 | | 1933 | 1933 | +0 | shifted by +3 (identical) |
 | 53 | | 432 | 432 | +0 | shifted by +3 (identical) |
