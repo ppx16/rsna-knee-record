@@ -119,3 +119,65 @@ soft targets routinely shrink on hard labels, and our own **closed item #8 (sele
   banned (negative TTA — matches closed #7)**, 12-way separate attention pooling as the biggest
   architectural win, soft labels + confidence-weighted masked BCE (`w = 2|p−0.5|`), quantile rank
   averaging, target-plane routing. **Nothing there exceeds our recipe.**
+
+---
+
+## 5. The forum sweep: no new strategy, and the frontier is FROZEN
+
+All **147** forum topics read, every comment dated ≥ 2026-09-25. **No new, non-closed, evidenced idea.**
+Post-9/25 topics are 8 team-up ads, 4 rules/licensing, 5 help/hardware, one bf16 PSA, one meme.
+
+⭐ **The frontier is frozen, so our fork IS current.** mattiaangeli's "Bend the Knee to the Dinosaurs"
+is at **v38 and last ran 2026-09-14** (verified via `ListKernelVersions`, kernelId 133147282); its only
+described addition is the CoAtNet reader we already have. dreaddevelopment's Raptor corpora all stop at
+2026-08-23. **There is nothing newer to import.**
+
+⭐ **And this reframes the target — headroom is model quality, not blend arithmetic.** Measured today:
+#1 = 0.961, ranks 1–19 all ≥ 0.957; every public-stack notebook reads **0.943**, *including the ones
+named "0946"*; `RSNA Knee Fast Parent 0.957 v2` is **0.939** on the LB (its 0.957 was a *local
+diagnostic*). So ~19 teams sit 0.014–0.018 above the public ceiling on **private models**. Combined with
+§1–§2 above, this is independent corroboration that **the EffB0-MIL leg (a different model family) is
+the right shape of move and further blend arithmetic is not.**
+
+⚠️ Two zero-cost checks it surfaced, both recorded below.
+
+### 5a. ⚠️ `AMP_PREF = 'bf16'` runs the A5 stage in bf16 **on a T4, which has no native bf16**
+
+`kernels/kernel-0943cfm` cell 40:
+
+```
+AMP_PREF = 'bf16'  # BTKD precision retained, including T4 execution; no unvalidated AMP change.
+if AMP_PREF == 'bf16':  return (torch.bfloat16, True)      # unconditional -- cc is never consulted
+if AMP_PREF == 'fp16':  ...  return (torch.bfloat16 if cc >= (8, 0) else torch.float16, True)
+```
+
+The `fp16` branch is compute-capability aware; the `bf16` branch is **not** — it returns bfloat16
+whatever the device. **T4 is cc 7.5 and has no native bf16.** Note this is *not* whole-pipeline
+exposure: cells 43 (RadImageNet) and 45 (Raptor) pin `dtype=torch.float16` explicitly, so **only the
+A5 pooling stage (cell 40) is affected** — and A5 carries ~45 % of the transformer side.
+
+Third-party measured warning ([thread 744230](https://www.kaggle.com/competitions/rsna-knee-abnormality-detection/discussion/744230),
+2026-10-01): bf16 silently used on T4/P100 cost **one member 0.851 → 0.710 = 0.14 AUC**. A regression
+that size inside a 20-member rank average would be **nearly invisible**.
+
+**Status: found, NOT tested, not submitted.** Our records treat "T4 = bf16" as a given baseline fact
+(`HANDOFF` §9367/§9383/§10327 all *assume* it) and the cell comment says the AMP setting was
+deliberately left alone because it was "unvalidated" — i.e. **it has never been A/B'd for accuracy.**
+But the only evidence for changing it is a third-party regression on a *different* model, and the public
+board (±0.008) cannot measure the result. **So this is flagged for a decision, not submitted blind**
+(the A96 rule: never spend a slot to find out whether an idea works). It would need a *local* read
+first — the arms' own printed per-stage diagnostics — before it earns a submission.
+
+**Not in any closed item**: it is a precision setting, not a fusion weight, route, member or backbone.
+
+### 5b. Rank reduction — checked, and we appear to match the reference
+
+The reference is said to feed Raptor's `_raptor.csv` **already rank-normalized to [0,1] straight into the
+outer blend**, rather than re-ranking to [1/N,1]; a rank-affine renormalisation inside a rank-average is
+**not** blend-invariant, so a mismatch would mean running a different reduction.
+
+Our code: cell 16 `rsna_rankpct` = `rank(method='average', pct=True)` → **[0,1]**; cells 32/40 likewise;
+and `_ke_tr = _ke_ours[...].rank(method='average', pct=True)` while `_ke_cr = _ke_theirs[...].copy()`
+(taken as-is, no re-rank). **⇒ consistent with the reference's [0,1] convention.** Not a discrepancy,
+and it is in any case the closed "blend arithmetic" axis.
+

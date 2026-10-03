@@ -1,0 +1,38 @@
+{
+ "variant": {
+  "name": "sl16",
+  "crop_mm": 130.0,
+  "rules": "legacy",
+  "slices": 16
+ },
+ "rules": {
+  "order": "dominant_axis",
+  "lat": "corner_x",
+  "slot_fallback": true,
+  "decode_fill": "zero"
+ },
+ "slice_band": [
+  0.12,
+  0.88
+ ],
+ "shape": [
+  4407,
+  4,
+  16,
+  224,
+  224
+ ],
+ "slot_fill": {
+  "SAG_FS": 0.9348763227462769,
+  "COR_FS": 0.9559791088104248,
+  "AX_FS": 0.9857045412063599,
+  "SAG_NOFS": 0.9652824997901917
+ },
+ "files": {
+  "ResNet50.pt": 94345733,
+  "s1_frozen_oof.csv": 875639,
+  "s1_train_arrays.npz": 1985862,
+  "s_cache_e13_224.npy": 14152040576,
+  "s_cache_e13_224_meta.npz": 1148046
+ }
+}
