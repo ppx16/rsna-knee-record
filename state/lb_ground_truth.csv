@@ -36,3 +36,4 @@ date,ref,desc,score,status
 2026-09-27 05:42:56.117000,56599163,"0943c v3 - 0943 + our rescued cn0 CoAtNet as a 5th Raptor view, k_eval 24, norm none",0.942,COMPLETE
 2026-09-27 06:07:33.297000,56599932,0943cf v1 - our cn0 member (5th view) PLUS the fracture fix: the two changes with local measurements,0.943,COMPLETE
 2026-09-27 15:58:47.010000,56613303,"0943cflat v1 - cn0 member + C81 fracture fix + FLATTENED outer routing: one line from 0943cf, so the final pair hedges the routing axis alone",0.941,COMPLETE
+2026-09-29 09:02:41.460000,56669951,"0943s-2coat v1 - 0943s (sparse) minus the Global96 CoAt member; ~50 min less runtime on the hidden rerun, break-even AUC cost 0.034 (docs/EFFICIENCY-SLOPE.md)",0.942,COMPLETE

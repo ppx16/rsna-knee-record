@@ -176,20 +176,65 @@ read before then.** A second fine-tune can be *run* today; it cannot be *used* t
 
 ## Next actions, in order
 
+0. ⭐⭐ **THE ONLY ACTUAL DECISION LEFT: the two final submission slots — and it is a BROWSER job.**
+   `docs/FINAL-SELECTION.md` is the pre-registered decision (written before the last four readouts
+   landed, then read against its own table). Its recommendation is **`0943cf` + `0943p`**:
+   * **primary `0943cf` = ref `56599932`** (public 0.943) — the only arm carrying **two** locally
+     measured changes (`cn0` as a 5th Raptor view *and* the C81 fracture fix), and the only member
+     this repo has ever measured **above** the frontier's own DINOv2 seed members (0.8769 vs
+     0.8676–0.8697, A130);
+   * **second `0943p` = ref `56599159`** (public 0.941) — outer routing **fully flattened**, i.e. the
+     frontier's *own* written remedy for the per-label map it describes as tuned on "a public split
+     that is a fraction of the test set" and as "the likeliest place to give back points privately".
+     Pre-registered alternative at the same hedge direction, one notch weaker: **`0943h` = `56568524`**
+     (0.942).
+   ⚠️ **This supersedes A118's `0943f` + `0943h`.** ⚠️ **The auto-ticked default is NOT this pair**
+   (Kaggle auto-selects `0943` + `0943f`, A123) — so it must be changed by hand.
+   ⚠️ **No CLI/API route exists**: `kaggle` has no `select` command, and `ApiSubmission` exposes no
+   `selected` field (re-verified 2026-10-03, kaggle 2.1.2). Only the browser can do this.
+   ⚠️ The doc explicitly leaves one thing to human judgment: the recommended pair deliberately carries
+   the **single lowest-scoring** arm, because the public board *cannot* rank these arms — nine arms
+   spanning four axes came back across a total spread of **0.941→0.943 = 0.002** against **±0.008
+   noise**. If carrying the minimum is unwelcome, take `0943cf` + `0943h`.
+
+0b. ✅ **`ppxl16/rsna-knee-msft2-cx` DELETED from the TPU queue** (2026-10-03). It was still `QUEUED`,
+   so **nothing was destroyed**, and the single TPU slot (D18: concurrency = 1, a *queued* session
+   already occupies it) is now free. Two independent reasons: the ConvNeXt member is closed on
+   ensemble-value grounds (**D5** sub-0.90 rule, **D7** measured-flat), and TPU had only **1.88 h of
+   20 h** left while the run needs ~2.6 h — so it could not have finished anyway.
+
+0c. ⚠️ **`state/lb_ground_truth.csv` was STALE and has been regenerated** (2026-10-03, now 38 rows).
+   It was missing `56669951` = **`0943s-2coat`**, public **0.942**. That arm is a clean single-axis
+   A/B: `0943s` (sparse, **with** Global96) 0.943 → **minus Global96** 0.942, i.e. **Global96 measures
+   at ≈ −0.001** — the same sign as C79's account, but well inside ±0.008, so it does not resolve.
+   Its own description shows it is an **efficiency** play (≈50 min less hidden-rerun runtime against a
+   break-even AUC cost of 0.034), not a score play.
+
 1. ✅ **DONE — `ppxl16/rsna-knee-msft2-ckpt` published** (private, 8 files, `EXIT=0`). The exp085
-   failure mode — depending on a dataset we do not control — is now closed for this asset.
-   `publish_msft2_dataset.py` / `work/LOG-2026-10-02-dataset-and-cx.md`.
-2. 🔄 **IN FLIGHT — `ppxl16/rsna-knee-msft2-cx` is QUEUED on TPU** (fine-tunes ConvNeXt-small
-   `v4cx0` for 4 epochs at res 384, tag `cx0`). ⚠️ **Its log prints a zero-shot gold58 macro-AUC
-   before training; if that is near chance (< ~0.75) the checkpoint did not load and the run must be
-   killed, not left to burn the window.** `head tensors carried: 0` is expected and fine.
-   Fallback if killed: `msft2-r2`, i.e. continue from our own `raptor_ft_msft0_swa.pt` (hist is
-   monotone and unsaturated ⇒ ~0.910+ plausible).
-3. ⭐ **BUILD THE ARM — cannot start yet, and correctly so.** Host is
-   `kernels/kernel-0943s-2coat` (`rsna-knee-restructured-version-3.ipynb`), which is
-   `enable_gpu: true` / `NvidiaTeslaT4`. **GPU is 0.00 h until 2026-10-03**, so writing the msft2
-   blend now means writing **untestable** code into a 301 KB notebook. Start this on 10-03.
-4. ⭐ **2026-10-03, when the GPU quota returns**: push the arm and submit, then read the board.
-   ~19 days left.
-5. **The ConvNeXt TPU run is the only productive compute available this round** — which is exactly
-   why it, and not the arm, was started.
+   failure mode — depending on a dataset we do not control — is closed for this asset.
+2. ⛔ **msft2 / ConvNeXt as ensemble members: CLOSED.** See the D-table at the top.
+3. ⭐ **2026-10-03, GPU quota refreshed** — but there is **no member left to push.** GPU budget noted
+   in `FINAL-SELECTION.md` was 21.85 h / 30 h at time of writing; selecting spends none.
+4. **The only unmeasured axis left is corpus density**, and by the project's own pre-registered banding
+   its best measurement (+0.0068 soft OOF, C84) lands in *"only worth upgrading the instrument, not
+   building a new member"*. The layer-selection rule needed to build a denser corpus is **fitted and
+   validated 34/35** (C82), so it is an engineering job on CPU, not a compute bet.
+
+<details>
+<summary>Superseded 2026-10-02 plan (kept only so the reversal is auditable)</summary>
+
+1. ✅ `ppxl16/rsna-knee-msft2-ckpt` published (8 files, `EXIT=0`) — still true and still valuable.
+2. ~~🔄 `ppxl16/rsna-knee-msft2-cx` IN FLIGHT on TPU~~ — **deleted, see 0b.** It was pursuing **D7**
+   (our-member ensemble value measured flat) and **D5** (sub-0.90 members are net harmful). Its v1 had
+   already died at the head guard; v2 was relaunched before the D-table was read.
+3. ~~Build the msft2 arm into `kernel-0943s-2coat`~~ — **cancelled.** The arm was D7-closed before it
+   was built; the subagent was stopped and left nothing behind (the 0.943 notebook is untouched,
+   mtime 09-29).
+4. ~~Push the arm and submit on 10-03~~ — **cancelled**, per the same D7/D5 closure.
+
+⚠️ **Why the reversal happened:** this file's premise was "the msft2 member is the whole of the
+remaining headroom that is already paid for". That premise came from reading **A167/A163** (a member
+gate and a decorrelation rule) without reading **`state/EXPERIMENTS.md` §D**, which had already
+*measured* the answer. The lesson recorded for next time: **before designing an experiment, read
+§D of the ledger — it is the list of experiments already run.**
+</details>
