@@ -31,9 +31,21 @@ HONEST WEAKNESS (do not bury it)
     (board SE ~= 0.008) — the submission is a guard, not a measurement.
 
 Usage:  python scripts/build_mcl_arm.py [--push]
+        python scripts/build_mcl_arm.py --src kernel-0943cfmsft2 \
+            --dst kernel-0943cfmsft2m --id ppxl16/rsna-knee-0943cfmsft2m \
+            --title "RSNA knee 0943cfmsft2m" [--push]
+
+WHY THE ARGUMENTS EXIST (2026-10-04)
+    `0943cfmsft2` (cn0 + fracture fix + our msft2 member) is the one arm with a MEASURED gain
+    (rank 708 to 487, in-block percentile 38.89% to 13.66%). MCL is the last change this repo has a
+    large-n local measurement for and is not on that arm yet, so the natural next arm is all three
+    stacked. Generalising this builder rather than copying it means the ONE-TOKEN edit and its four
+    assertions stay identical across every arm built from them.
+    Defaults are unchanged, so the original `0943cf -> 0943cfm` invocation still works.
 """
 from __future__ import annotations
 
+import argparse
 import json
 import pathlib
 import shutil
@@ -56,8 +68,16 @@ NEW = '_RAD_EXCLUDE = ("Baker\'s", "MCL")'
 
 
 def main() -> int:
-    src = ROOT / "kernels" / SRC_NAME
-    dst = ROOT / "kernels" / DST_NAME
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--src", default=SRC_NAME)
+    ap.add_argument("--dst", default=DST_NAME)
+    ap.add_argument("--id", dest="kid", default=KID)
+    ap.add_argument("--title", default=TITLE)
+    ap.add_argument("--push", action="store_true")
+    a = ap.parse_args()
+
+    src = ROOT / "kernels" / a.src
+    dst = ROOT / "kernels" / a.dst
     if not src.is_dir():
         print("!! source arm missing: %s" % src)
         return 2
@@ -67,7 +87,6 @@ def main() -> int:
         return 2
     nb_path = nbs[0]
 
-    dst.mkdir(parents=True, exist_ok=True)
     nb = json.loads(nb_path.read_text(encoding="utf-8", errors="replace"))
     n_cells_before = len(nb["cells"])
 
@@ -78,7 +97,8 @@ def main() -> int:
             hits += txt.count(OLD)
             c["source"] = [txt.replace(OLD, NEW)]
     if hits != 1:
-        print("!! _RAD_EXCLUDE matched %d times (need exactly 1) -- refusing to guess" % hits)
+        print("!! _RAD_EXCLUDE matched %d times in %s (need exactly 1) -- refusing to guess"
+              % (hits, a.src))
         return 3
 
     # ---- assertions on the artefact we are about to push --------------------------------
@@ -88,23 +108,26 @@ def main() -> int:
     assert 'Fracture' not in whole.split("_RAD_EXCLUDE")[1][:60], \
         "Fracture reappeared in the exclusion set"
     assert len(nb["cells"]) == n_cells_before, "cell count changed"
+    print("src=%s -> dst=%s" % (a.src, a.dst))
     print("cells: %d (unchanged)   _RAD_EXCLUDE matched %d time(s)" % (len(nb["cells"]), hits))
     print("new line: %s" % NEW)
 
+    dst.mkdir(parents=True, exist_ok=True)
     (dst / nb_path.name).write_text(
         json.dumps(nb, ensure_ascii=False, indent=1), encoding="utf-8")
 
     meta = json.loads((src / "kernel-metadata.json").read_text(encoding="utf-8"))
-    meta["id"] = KID
-    meta["title"] = TITLE
+    meta["id"] = a.kid
+    meta["title"] = a.title
     (dst / "kernel-metadata.json").write_text(
         json.dumps(meta, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print("wrote %s" % dst)
-    print("  code_file=%s  gpu=%s  internet=%s  kernel_type=%s"
+    print("  code_file=%s  gpu=%s  internet=%s  kernel_type=%s  datasets=%d"
           % (meta.get("code_file"), meta.get("enable_gpu"),
-             meta.get("enable_internet"), meta.get("kernel_type")))
+             meta.get("enable_internet"), meta.get("kernel_type"),
+             len(meta.get("dataset_sources") or [])))
 
-    if "--push" not in sys.argv:
+    if not a.push:
         print("\nnot pushed (pass --push).")
         return 0
     from kaggle.api.kaggle_api_extended import KaggleApi
@@ -112,7 +135,7 @@ def main() -> int:
     api.authenticate()
     try:
         api.kernels_push(str(dst))
-        print("pushed -> %s" % KID)
+        print("pushed -> %s" % a.kid)
     except Exception as e:
         print("push failed: %s: %s" % (type(e).__name__, str(e)[:500]))
         return 1
