@@ -196,6 +196,61 @@ README.txt 逐字：
 
 ---
 
+# ⭐ 用这份参考做对拍的结果（2026-10-04）
+
+这是本仓**第一次**有一份独立、逐文件 SHA 校验过的公开配方可以拿来对照。
+工具：`work/crosscheck_vs_reference.py` · `work/decode_rad_cal.py` · `work/compare_calibration_numbers.py`
+
+## 1. 常量对拍
+
+| 项 | 参考（`rsna-baseline` v15，已验证 0.941） | 我们 | |
+|---|---|---|---|
+| Raptor 概率权重 | `[0.6, 0.1, 0.1, 0.2]` | v5 .60 / v10 .10 / v5-rev .10 / v8 .20 | ✅ 一致 |
+| hybrid public : residual | `0.6 : 0.4` | `coat_private_alpha = 0.40` | ✅ 一致 |
+| 逐标签外层权重 | ACL .75 · **MCL .6** · MedMen .8 · LatMen 1.0 · **MedOA .6** · LatOA .75 · **PF OA .6** · **Effusion .6** · **Synovitis .6** · **Baker's .6** · **Contusion .6** · Fracture .75 | 五个覆盖值**完全相同**；其余七个是**我们的默认 0.65** | ⚠️ 见下 |
+| 标定表 | *"12-output, 88-input; **seven gated targets**"* | 见 §2 | ✅ |
+| 成员数 | 20 DINOv2-small + 5 DINOv3-small + 5 ref Rad heads + 5 E13 Rad heads + 3 Raptor + 3 residual-CoAt epochs | 同 + 我们自训的 `cn0`/`msft2` | ✅ 结构相同 |
+
+⚠️ **外层默认 0.65 vs 0.60 不是漂移**：C79 记着前沿那次 0.942→0.943 的三处改动之一就是
+**"outer CoAtNet default 0.60 → 0.65"**，而这份参考复刻的是 **0.941 谱系**。⇒ **我们是更新的那条，不是走偏了。**
+我们 notebook 的注释自己就写着 `# The default rose 0.60 -> 0.65 in this release; the five overrides are
+unchanged from the 0.941 routing.` —— **与参考逐字吻合。**
+
+## 2. ⭐ 本仓一条"来源不明"的记录，用数关闭了
+
+本仓对 `_RAD_CAL` 的记载是：*"一个**来源不明**的嵌入式 base64/zlib 产物…… **Do not touch it**"*。
+
+它其实**就在 notebook 里、可解码**（`_RAD_CAL_PAYLOAD` 是 base64+zlib）。解出来：
+
+```
+keys : ['mean','scale','coef','intercept','gate','protocol_columns','groups']   ← 与参考 calibration.json 键集完全相同
+coef : 12 × 88        ← 正是 "12-output, 88-input"
+gate : 7 个 = ACL · Medial OA · Lateral OA · PF OA · Effusion · Baker's · Contusion
+```
+
+**⇒ 然后逐系数比对 1275 个标量：**
+
+```
+scalars: ours=1275  ref=1275  common=1275
+EXACT-equal scalars: 1275
+differing scalars  : 0
+max |difference|   : 0.000e+00
+```
+
+**⇒ 我们那张表就是公开参考的标定表，一个系数都不差。**
+
+**这条的意义有两条：**
+1. **"来源不明"结束** —— 它不是来路不明的东西，它是公开配方冻结的配方件。仓库写的 *"Do not touch it"* **结论不变，但理由升级**：从"不知道是什么"变成"知道它是前沿冻结的、且我们这份与它逐位相同"。
+2. **它同时证明我们这一路没有被动过手脚** —— 标定系数若被谁改过，macro AUC 会静默偏移，而**任何门都看不出来**。
+
+## 3. 对拍没有发现的
+
+**在参考记载的全部常量上，没有一处无法解释的偏离。** 我们不在公开配方之下，也不在它旁边 —— **我们就在它上面，
+多了两个自训视角（`cn0`、`msft2`）。** 这与本轮第三次普查的结论一致。
+
+
+---
+
 # ⛔ 更正：上面那条"换底座"的假设**是错的，我们早就在用 DINOv3**
 
 **2026-10-04，动手做这个实验时第一件事就把它否掉了。**

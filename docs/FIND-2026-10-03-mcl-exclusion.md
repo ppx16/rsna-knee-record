@@ -101,6 +101,44 @@ label, so a genuinely applied change can leave it byte-identical by chance.
 
 ⇒ **`0943cfm` / `56791368` is NOT a duplicate of `0943cf`.** It is a legitimate, distinct submission.
 
+### ⛔ 2026-10-04, LATER — HALF OF THE PARAGRAPH ABOVE IS NOT EVIDENCE
+
+The `_coat_arm_receipt.json` line is **worthless as proof**, and this was measured, not argued.
+Building `0943cfmsft2m` (= `0943cfmsft2` + the same MCL edit) reproduced the situation exactly, so the
+two receipts could be compared **field by field** instead of by hash:
+
+```
+differing fields: 5
+  elapsed_seconds                 parent=37.914571869  this=38.659928555
+  shards.0.elapsed_seconds        parent=20.402114793  this=20.979861184
+  shards.0.model_load_seconds     parent= 8.186844007  this= 7.885939870
+  shards.1.elapsed_seconds        parent=20.492848853  this=20.853853650
+  shards.1.model_load_seconds     parent= 7.819132346  this= 7.773421090
+CONTENT fields differing: NONE
+```
+
+**⇒ `_coat_arm_receipt.json` hashes differently between ANY two runs of the SAME arm** —
+it embeds wall-clock and model-load timings. So "the CoAt-arm receipt differs" carries **zero
+information about whether a change applied**, and the sentence above that cites it as evidence is
+wrong.
+
+⚠️ **What survives:** the `v558_rad_receipt.json` half. MCL acts on the **Rad** stage, so that is the
+receipt that could carry the signal. **But it was never field-diffed**, and by the rule below it must
+be before it can be trusted. So the honest status of "MCL is applied" is:
+**strongly suggested** (the code path is a plain set-membership test and the constant is in the cell
+that ran), **not proven by receipts**.
+
+## ⛔ STANDING RULE (2026-10-04): hash differences are not content differences
+
+> **Never treat two receipts hashing differently as evidence that a change applied.**
+> Diff the FIELDS first. Any receipt carrying `elapsed_seconds` / `model_load_seconds` is
+> **guaranteed** to hash differently between two runs of the same arm.
+
+This is the same family of error as A80 ("the stage hash is corroboration only") and as the
+`SSLEOFError`/`-match ERROR` mistake and the stale `balanced arm groups` log string:
+**the judgement was anchored on a proxy that does not track the thing it is supposed to track.**
+The proxy here is a *hash of a record that includes a stopwatch*.
+
 ⇒ **Methodology correction, now encoded in `scripts/verify_effb0_arm.py`:** a byte-identical
 `_pipeline_stage.csv` is **corroborating evidence only, never a verdict**. The primary signal that a
 change reached the graph is the **per-stage receipts** (`v558_rad_receipt.json`,
