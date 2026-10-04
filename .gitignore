@@ -120,3 +120,36 @@ _coat_env/
 **/kernel-exp/**/*.ipynb
 # local one-off pull directories, gathered here on 2026-09-26
 scratch/
+
+# ============ 2026-10-04: third-party downloads from the "who is above us" survey ============
+# !! CAUGHT BY A DRY RUN, not by luck.  `git add -A` would have staged 64 files under work/above/:
+# other people's NOTEBOOKS (bend-the-knee-to-dinov3-ensembled.ipynb, rsna-versia-5.ipynb,
+# rsna-baseline-v15.ipynb, ...), other people's PIPELINE CODE (pipeline/blend.py,
+# pipeline/public_raptor.py, reproduce/build.py, ...), their READMEs/manifests/recipe.json, and a
+# 54 MB opencv wheel.  The rule already stated elsewhere in this project applies: their *findings*
+# are recorded in our own words in docs/FIND-2026-10-04-what-is-above-us.md, but their ARTIFACTS
+# are not ours to republish.
+#
+# Note WHY the existing rules did not catch these: *.zip/*.pt/*.bin are ignored, but *.ipynb,
+# *.py and *.json are exactly the extensions this repo deliberately KEEPS.  A rule that excludes
+# payload does not exclude third-party SOURCE.
+#
+# Nothing here has archival value -- every tree is re-downloadable in one command
+# (`kaggle kernels pull <ref>` / `kaggle datasets download <ref>`) and the refs are recorded.
+work/above/
+work/cnx/
+work/meniscus/
+work/pub_new/
+
+# Bulk scrapes of third-party usernames (356 teams above us and their members).  Public data, but
+# bulk re-publication of other people's identities is the same call this repo already made about
+# the leaderboard email addresses.  The aggregate numbers live in the FIND doc; the scripts that
+# regenerate these files are kept.
+work/above_us.json
+work/above_us_public.json
+work/top_teams_public.json
+
+# Vendored dependency tree inside our own M448 run capture (398 MB). The numbers are in
+# docs/PREREG-2026-10-03-m448-arm.md; the receipts stay.
+work/cf448-out/**/_coat_env/
+

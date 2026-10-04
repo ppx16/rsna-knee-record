@@ -1,9 +1,90 @@
-# RSNA Knee Abnormality Detection — STATUS (2026-10-02 08:05Z)
+# RSNA Knee Abnormality Detection — STATUS
+
+## ⭐⭐ 2026-10-04 DELTA — READ THIS BEFORE ANYTHING BELOW
+
+**This section supersedes several statements further down, which are now known to be WRONG.
+The biggest one: `msft2` is NOT closed and its measured value is NOT zero.**
+
+### 1. The public board has a sub-resolution instrument we were not using: the RANK
+
+`0.943` is displayed for **953 teams**, yet they occupy **contiguous distinct ranks 357..1309**.
+⇒ **Kaggle ranks on precision finer than the 3 displayed decimals.** Consequences:
+
+* **the target is NOT "+0.001 to reach 0.944"** — it is to move up ~21 % of the block width, i.e. **≈ +0.0002**;
+* the repo's premise **A96 ("the board cannot rank these arms, only disqualify") is true for the
+  displayed SCORE and false for the RANK**.
+* ⚠️ **The rank is confounded by field drift** — always record a snapshot BEFORE and AFTER a submission
+  and compare the **in-block percentile** `(rank-lo)/(hi-lo)`, never the absolute rank.
+  Measured drift with no improving arm: **−31 ranks in 16 h ≈ −2/day**.
+
+Full text: `docs/FIND-2026-10-04-rank-resolution.md`.
+
+### 2. ⭐ `msft2` was built, submitted, and **measurably improved us** — killing §13.2's expectation
+
+| arm | ref | result |
+|---|---|---|
+| `0943cfmsft2` = `0943cf` + our msft2 CoAtNet SWA as a **6th Raptor view** (w=0.20, share 14.3 %) | **`56814081`** | public **0.943** — **but rank 708 → 487** |
+
+| | before 04:13Z | after 12:44Z |
+|---|---|---|
+| our rank | 708 | **487** |
+| `0.943` block | 344..1280 (937) | 357..1309 (953) |
+| bronze line (top 10 %) | 506 | 510 |
+| **in-block percentile** | **38.89 %** | **13.66 %** |
+
+**⇒ +221 ranks while the field grew 0.8 %; the date confound was excluded
+(`pearson(rank, submission_time) = −0.13`, dates scattered at both ends).**
+**⇒ rank 487 < line 510: we are currently INSIDE the bronze, by 23 places.**
+
+⚠️ **This falsifies, in this case, HANDOFF §13.2's "a 0.910 member at 10–15 % weight → 0.000".**
+msft2 is 0.9069 at a 14.3 % share and it moved us. That "0.000" was a **single noisy LB reading**,
+and both I and this file treated it as a conclusion. **My own pre-submission expectation of "≈0" was
+wrong.** Full text: `docs/RESULT-2026-10-04-msft2-arm-rank-move.md`.
+
+### 3. Two other arms landed, both flat — and one of them closes a long-open question
+
+* **`56798408` `0943cf448`** = `0943cf` + the author's PUBLIC one-fold M448 ConvNeXt fallback at w=0.10
+  → **0.942**, in-block percentile 39.5 % → 38.9 % ⇒ **no measurable change.**
+  ⚠️ The author's **trainer is not public** ⇒ folds 1–4 cannot be reproduced ⇒ **that line is dead.**
+  `docs/PREREG-2026-10-03-m448-arm.md`.
+* **`56791368` `0943cfm`** (+MCL) → **0.942**, and the pre-registered rule fired (≥0.942 ⇒ legitimate
+  primary candidate). The amendment it triggered changes the **second slot** to
+  **`56613303` `0943cflat`**. `docs/FINAL-SELECTION-2026-10-04.md` (amendment at the end).
+
+### 4. What the 356 teams above us actually use — third exhaustive sweep
+
+`docs/FIND-2026-10-04-what-is-above-us.md`. Headline: **the top 27 publish nothing for this
+competition**; 188/464 of the usernames above us publish *something*, but only ~21 publish knee work,
+and those are the same public-lineage authors whose ceiling is 0.943. **Top submission counts 26–298
+vs our 41.** The one complete public recipe found was **a faithful replica of the pipeline we are
+already on** — including the answer to a question this repo had left open:
+**our `_RAD_CAL`'s "unknown provenance" is the public recipe's frozen 12-output calibration table.**
+
+⚠️ **We are NOT missing DINOv3** — `mattiaangeli/knee-mri-fold-weights` (our `a5_w` member) is
+**byte-identical** to the bundle's `dinov3/m_f0.pt`, backbone `vit_small_patch16_dinov3.lvd1689m`.
+An earlier note in this session claiming "we use DINOv2, they use DINOv3" was **wrong**.
+
+### 5. Open right now
+
+| | |
+|---|---|
+| **The two final slots** | still a **browser-only** action. `0943cfmsft2` (`56814081`) is now the only arm with a **measured** gain. |
+| **`ppxl16/rsna-knee-msft2-cx`** (ConvNeXt fold-0 fine-tune) | **QUEUED on TPU.** Pre-registered kill rule: **SWA gold < 0.88 ⇒ stop, do not run folds 1–4.** `docs/PREREG-2026-10-04-convnext-member.md` |
+| **Drift** | ≈ **−2 ranks/day**; our margin is **23**. ⇒ **without further improvement we fall out before the 2026-10-22 deadline.** |
+| Strategy | `docs/STRATEGY-2026-10-04-how-far-can-finetuning-go.md` — same-corpus fine-tuning is **measured** to have decayed ~11× (cn0 +0.0028 on a 0.917 base → msft2 +0.00025 on a 0.943 stack). Stop rule proposed there. |
+
+---
+
+# (historical) STATUS — 2026-10-02 08:05Z
 
 **One screen. Rewritten from scratch; the previous version was dated 2026-09-27 and had drifted.**
 Deep detail lives in `FACTS.md` (A-numbers) and `docs/`; the recent session records are
 `docs/RESULT-2026-10-02-msft2-finetune.md`, `docs/RESULT-2026-10-01-exp085-gate.md`,
 `docs/FIND-2026-10-01-exp085.md`, `docs/FIND-2026-10-01-rsna-sweep.md`.
+
+⚠️ **Everything from here down is the 2026-10-02 view and is retained only so the reversal is
+auditable. In particular: the "msft2 is D7-closed" and "expectation ≈0.000" statements below
+were REFUTED on 2026-10-04 (see the DELTA at the top).**
 
 ## ⛔ READ THIS FIRST — 2026-10-02: the msft2 / ConvNeXt plan was pursuing CLOSED directions
 
@@ -185,7 +266,17 @@ read before then.** A second fine-tune can be *run* today; it cannot be *used* t
 >   effect below the board's resolution, cost, and nothing new left to learn. Full text:
 >   `docs/RESULT-2026-10-04-effb0-v3.md` (closure section).
 > * 🔄 **`0943cfm2eff` v3 was the last EffB0 run** — nothing further will be pushed for this line.
-> * 🔄 **`0943cfm` = `56791368` (+MCL) submission PENDING (~13 h).** No error flags; code reruns queue.
+> * ✅ **`0943cfm` = `56791368` (+MCL) LANDED: COMPLETE, public 0.942.** The pre-registered rule fired
+>   (§"Steps" step 5 of `docs/FINAL-SELECTION-2026-10-04.md`: ≥0.942 ⇒ legitimate primary candidate).
+>   ⭐ **The amendment it triggered is in that doc** — the second slot changes from `0943p` to
+>   **`0943cflat` = `56613303`**, an arm the current sheet had dropped from its candidate table even
+>   though **A161** had already recorded that it *weakly dominates* `0943p` (same flattening, plus the
+>   +0.0028 member and +0.00099 fracture fix). The "concentrated bet" objection that stopped A161 from
+>   acting **does not survive being written out**: over the better-of-two aggregator, pairing
+>   (`0943cfm`, `0943cflat`) is **pointwise ≥** (`0943cf`, `0943p`) whenever the member/fracture effect
+>   and the MCL effect are ≥ 0. **This is now the recommendation; the click is still browser-only.**
+>   ⚠️ New: **`submission-limits` is not a verb in kaggle 2.1.2 *or* 2.2.2** (`2.2.2` has
+>   `team-submissions` instead), so A135/A162's quota reading is **no longer obtainable from the CLI**.
 > * ✅ **Reusable from the closed line**: `scripts/verify_effb0_arm.py` (acceptance test, battle-tested),
 >   `scripts/harden_effb0_budget.py` (built, verified, never pushed), and the honest-dose method
 >   (`work/eff_min.py`, `eff_dose.py`, `eff_dose_parents.py`, `eff_convention.py`).
