@@ -1,5 +1,65 @@
 # RSNA Knee Abnormality Detection — STATUS
 
+## ⭐ 2026-10-05 DELTA — the live state, and one suspicion checked and killed
+
+### 1. Where we actually stand (snapshot 2026-10-05T07:59:16Z, persisted)
+
+| | |
+|---|---|
+| teams on the board | **5192** |
+| our rank / score | **518** / **0.943** |
+| bronze line (top 10 %) | **519** |
+| **margin** | **+1** — we are *one place* inside the bronze |
+| `0.943` block | ranks **376..1389** (n=1014) |
+| **in-block percentile** | **14.02 %** |
+| top of board | **0.963** (2 teams), then 0.961, 0.960 |
+
+Raw: `state/lb_snapshot_2026-10-05T075916Z.json`; appended to `state/rank_track.jsonl`.
+Reproduce with `work/lb_snapshot.py` (it downloads the board, finds `ppxl16`, and persists both files).
+
+**⚠️ The margin is not a buffer — it is a coin-flip.** The trajectory across 19 h:
+
+| at | margin |
+|---|---|
+| 2026-10-04 12:44Z | **+23** (rank 487, line 510) |
+| 2026-10-05 07:22Z | **+0** (rank 518, line 518) |
+| 2026-10-05 07:59Z | **+1** (rank 518, line 519) |
+
+⇒ **Without a further real gain we fall out of the bronze well before 2026-10-22.** ⚠️ The drift figure
+quoted at the end of the 2026-10-04 DELTA ("≈ −2/day") was a **unit slip** and is corrected in place:
+the true rate is ≈ **−40 ranks/day**. This does not change any conclusion, but it changes every
+*deadline* estimate built on it.
+
+### 2. One pending arm, and the rule it fires
+
+`56845973` `0943cfmsft2m-men` (the author's public0033 DINov2-Base meniscus specialist at 90:10 on
+Medial+Lateral Meniscus only) was submitted 07:22Z and is **still PENDING** — code reruns queue ~13 h.
+`docs/PREREG-2026-10-05-meniscus-arm.md` fixes the reading in advance:
+
+* in-block percentile **better than 14.07 %** ⇒ real gain, promote to final candidate;
+* **flat or worse** ⇒ the "specialist" axis is dead too, and since the public-artifact, new-member and
+  stacking axes are already falsified, **this round has no axis left and we should move to wrap-up.**
+
+### 3. The Raptor crop was suspected mismatched, and it is NOT — checked, falsified
+
+`CROP_MM = 130.0` is the first hit a grep finds, and `raptor-knee-native384`'s description says **140 mm**.
+That would have been a silent mis-framing of every Raptor view. It is a **false alarm**: the notebook has
+**per-block** preprocessing globals, and the Raptor block assigns `CROP_MM = 140.0` itself. No `ARMS`
+entry carries a crop override, so all views correctly inherit 140 mm. Full text, plus the three dataset
+descriptions that now independently pin our geometry: `docs/FIND-2026-10-05-raptor-geometry-confirmed.md`.
+
+⇒ **Rule left behind: `CROP_MM`/`IMG`/`SLOTS` are not globals here — answer "what geometry do we use?"
+per family, from the code path, never from a grep.** Same disease as `FIND-2026-10-04-stale-log-string.md`.
+
+### 4. Evidence AGAINST the "add more backbones" intuition
+
+`dreaddevelopment/raptor-knee-arms` = ConvNeXtV2-Base@336 + CoAtNet@384 + EfficientNetV2-L@480, same
+2.5D window scheme and same head. Rank-mean blend = **0.915** public; **the CoAtNet arm alone = 0.914**.
+⇒ the author added two architectures and an extra input resolution and bought **+0.001**, from a family
+that sits ~0.028 *below* our current 0.943. **That axis is not the lever.**
+
+---
+
 ## ⭐⭐ 2026-10-04 DELTA — READ THIS BEFORE ANYTHING BELOW
 
 **This section supersedes several statements further down, which are now known to be WRONG.
@@ -15,7 +75,11 @@ The biggest one: `msft2` is NOT closed and its measured value is NOT zero.**
   displayed SCORE and false for the RANK**.
 * ⚠️ **The rank is confounded by field drift** — always record a snapshot BEFORE and AFTER a submission
   and compare the **in-block percentile** `(rank-lo)/(hi-lo)`, never the absolute rank.
-  Measured drift with no improving arm: **−31 ranks in 16 h ≈ −2/day**.
+  Measured drift with no improving arm: **−31 ranks in 16 h**.
+  ⚠️ **CORRECTED 2026-10-05 — the "≈ −2/day" that used to end this line was a unit slip**
+  (31/16 = 1.94 per **hour**, not per day). Two measurements now agree:
+  −31 ranks in 16 h ≈ −47/day, and the 2026-10-04→10-05 margin collapse (+23 → 0 in 16.3 h) ≈ **−34/day**.
+  **Working figure ≈ −40 ranks/day ≈ −1.7 ranks/hour.**
 
 Full text: `docs/FIND-2026-10-04-rank-resolution.md`.
 
@@ -70,7 +134,7 @@ An earlier note in this session claiming "we use DINOv2, they use DINOv3" was **
 |---|---|
 | **The two final slots** | still a **browser-only** action. `0943cfmsft2` (`56814081`) is now the only arm with a **measured** gain. |
 | **`ppxl16/rsna-knee-msft2-cx`** (ConvNeXt fold-0 fine-tune) | **QUEUED on TPU.** Pre-registered kill rule: **SWA gold < 0.88 ⇒ stop, do not run folds 1–4.** `docs/PREREG-2026-10-04-convnext-member.md` |
-| **Drift** | ≈ **−2 ranks/day**; our margin is **23**. ⇒ **without further improvement we fall out before the 2026-10-22 deadline.** |
+| **Drift** | ≈ **−40 ranks/day** (−34 to −47 measured twice, 2026-10-05). ⚠️ Earlier text here said "−2/day" — that was a **unit slip**, corrected. **The margin is now +1 (see the 2026-10-05 DELTA at the top), so we are one place from falling out.** |
 | Strategy | `docs/STRATEGY-2026-10-04-how-far-can-finetuning-go.md` — same-corpus fine-tuning is **measured** to have decayed ~11× (cn0 +0.0028 on a 0.917 base → msft2 +0.00025 on a 0.943 stack). Stop rule proposed there. |
 
 ---
