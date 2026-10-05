@@ -180,6 +180,32 @@ one measured gain **and** the one documented public-fit hedge.
 legacy `/api/v1` returns 401 (re-verified on 2.1.2 *and* the 2.2.2 wheel).
 ⚠️ **If `56845973` (meniscus) reads a real gain — in-block better than 14.07 % — this changes again.**
 
+### 10. The rules were fetched, and one unstated assumption behind the whole selection is now verified
+
+Every selection sheet said "two submissions may be selected" and described a tick UI — **none of them
+established WHICH submissions are eligible to be ticked.** `56613303` (`0943cflat`, the recommended
+second slot) was submitted **2026-09-27**; if the pool were "the most recent N" the recommendation would
+be worthless and we would find out at the deadline. Put to the rules text (saved in `work/comp_pages/`):
+
+> *"You may select up to two (2) Final Submissions for judging."* … *"A 'Final Submission' is the
+> Submission **selected by the user** … used for final placement."*
+
+**Zero hits for any pool restriction** (`most recent` / `last two` / `last 2` / `previous submission` /
+`only the` / `within the last`). ⇒ **selection is from the full history; the recommendation stands.**
+
+Four other facts the rules settled, all previously assumed or wrong:
+
+| fact | value |
+|---|---|
+| Metric | `(1/12) Σ AUCᵢ` — macro ROC-AUC over the twelve targets ✓ |
+| Run-time cap | **CPU ≤ 9 h, GPU ≤ 9 h**; internet **disabled**; file must be `submission.csv` |
+| Entry Deadline | **2026-10-15** — must have accepted the rules to compete (satisfied) |
+| Winners' Requirement Deadline | **2026-11-05** — training code, video and method description, **if** we place in a prize position |
+
+⚠️ **The run-time cap is 9 h, so the "21600 s = 6 h" figure I had been quoting was wrong for BOTH
+readings** — it is neither the 30 h weekly allowance nor this competition's session cap.
+`docs/FIND-2026-10-05-rules-verified.md`.
+
 ---
 
 ## ⭐⭐ 2026-10-04 DELTA — READ THIS BEFORE ANYTHING BELOW
