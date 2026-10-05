@@ -1,0 +1,170 @@
+0.00s - make the debugger miss breakpoints. Please pass -Xfrozen_modules=off
+0.00s - to python to disable frozen modules.
+0.00s - Note: Debugging will proceed. Set PYDEVD_DISABLE_FILE_VALIDATION=1 to disable this validation.
+0.00s - Debugger warning: It seems that frozen modules are being used, which may
+0.00s - make the debugger miss breakpoints. Please pass -Xfrozen_modules=off
+0.00s - to python to disable frozen modules.
+0.00s - Note: Debugging will proceed. Set PYDEVD_DISABLE_FILE_VALIDATION=1 to disable this validation.
+[config] preset=parent a5_w=0.52 rad_alpha=0.55 k_eval=94
+[config] outer CoAtNet weight per finding: flat 0.65
+[eda] 4,407 training studies, 24,371 training series, 15 test series
+[eda] 58 studies carry all twelve labels; the rest are supervised only by what a text model read out of the report
+Coverage of the six slots the models expect, over training studies:
+               slot  studies with it  share
+   Sagittal fat-sat             4150  0.942
+Sagittal no fat-sat             4266  0.968
+    Coronal fat-sat             4248  0.964
+ Coronal no fat-sat             3406  0.773
+      Axial fat-sat             4407  1.000
+   Axial no fat-sat              857  0.194
+
+A slot no study fills is a column of zeros fed to the encoder; a study that fills none of them can only be given a constant, and under ROC-AUC a block of identical constants earns half credit against everything it ties with. That is the cheapest score leak in this whole pipeline.
+Most correlated pairs:
+  Medial OA          + Baker's            +0.48
+  Medial Meniscus    + Medial OA          +0.42
+  Lateral Meniscus   + Lateral OA         +0.42
+  Lateral Meniscus   + Medial OA          +0.41
+  Lateral OA         + Baker's            +0.40
+
+The three osteoarthritis compartments move together, which is why the calibrator downstream groups them. Findings that co-occur are also findings an ensemble tends to get right or wrong together — worth remembering before reading any per-finding weight as skill.
+0 studies have no report at all (0.0%) — those can only be supervised by the images.
+The counts overlap because clinical vocabulary is shared across languages; they are a rough shape, not a classifier. The point is that a monolingual extractor silently drops whole slices of the training set, and a dropped study is not a wrong label — it is no label.
+A 140 mm crop spans 398 to 896 pixels across these series — a 2.3x range. Cropping a fixed number of pixels instead would hand the model a different anatomical field of view per scanner, which is the kind of artefact a model will happily learn to read as signal.
+Field strengths present: 1.5T x144, 3.0T x90, 1.2T x2
+The single most common scanner model covers 23% of the sample.
+
+The training path in this notebook groups folds by md5(report text), which deduplicates identical reports but does nothing about the scanner. Manufacturer + model + matrix size + pixel spacing is a serviceable site key and costs nothing to compute from headers you are already reading. Grouping on it is what makes an offline number mean something.
+Median series length 30 slices; 0.0% are shorter than twelve.
+Where a series is shorter than its slot, the sampler repeats slices, so several of the 62 windows are duplicates and the attention pooling sees the same evidence more than once. Where a series is much longer, the sampler is skipping anatomy — and a meniscus tear visible on two slices can fall between samples entirely. That is the mechanism behind the max and top-2 window pooling used for the focal findings upstream.
+cuda:0 probe PASS (compute 7.5)
+cuda:1 probe PASS (compute 7.5)
+devices: ['cuda:0', 'cuda:1']
+[startup] imports+GPU preflight: 16.52s
+[    0.1s] input root: /kaggle/input/competitions/rsna-knee-abnormality-detection
+[startup] competition-root preflight: 0.07s
+[    0.2s] memory: 29.4 GB available, 13.2 GB to the cache; sizing for 4407 train + 1322 test studies -> 1 group(s) of 3 = 3 slices per slot
+[    0.2s] cache layout: 1 groups x 3 slices = 3 per slot
+[phase] {"a5_without_matching_acquisition": 0, "elapsed_seconds": 2.543992042541504, "gpus": [{"allocated_bytes": 0, "id": 0, "reserved_bytes": 0}, {"allocated_bytes": 0, "id": 1, "reserved_bytes": 0}], "max_rss_kib": 1070220, "memory.current": "1645514752", "memory.max": "32212254720", "missing_fluid_flags": 0, "stage": "input_metadata", "status": "COMPLETE"}
+[phase] {"elapsed_seconds": 3.3947629928588867, "gpus": [{"allocated_bytes": 0, "id": 0, "reserved_bytes": 0}, {"allocated_bytes": 0, "id": 1, "reserved_bytes": 0}], "max_rss_kib": 1070220, "memory.current": "1661788160", "memory.max": "32212254720", "stage": "dinov2", "status": "START"}
+[    3.5s] weights package: 20 member(s) from /kaggle/input/datasets/pilkwang/rsna-knee-weights; 2 device(s)
+[    3.6s] test header pass: 15 series
+[    3.6s] decode group 1/1: 336px x 12 slices, crop 130.0 mm -> 20 member(s)
+[    3.6s] test laterality: 1 from the tag, 2 from geometry, 0 unresolved; tag and geometry disagree on 0 (0.0% of the tagged)
+[    3.6s] test g1: 3 studies, 12 slot-series, 0.02 GiB pixels
+[    9.4s] test g1: COMPLETE 12/12; reused ordering for 0 series
+[   56.4s] backbone: 12 blocks, last 6 trainable (10.7M params), feature dim 768
+[   59.8s] e5427d6c21: fingerprint matches within 2.8e-06
+[   63.1s] ea3fbf6edf: fingerprint matches within 3.8e-06
+[   66.3s] 013dc75703: fingerprint matches within 3.3e-06
+[   69.5s] 8baecb9d1b: fingerprint matches within 2.4e-06
+[   72.7s] 44128e3ff3: fingerprint matches within 4.3e-06
+[   76.0s] ed427aa10a: fingerprint matches within 4.6e-06
+[   79.3s] 3d1f4c48fc: fingerprint matches within 1.3e-06
+[   82.3s] 8476b29285: fingerprint matches within 4.4e-06
+[   85.5s] 7f8321affc: fingerprint matches within 2.9e-06
+[   88.8s] b7c37cc80e: fingerprint matches within 1.1e-06
+[   92.0s] d47313baef: fingerprint matches within 2.1e-06
+[   95.9s] 5f8ba4c5ea: fingerprint matches within 3.3e-06
+[   99.7s] 2f7e785e82: fingerprint matches within 1.1e-06
+[  103.1s] 44bc3c6f14: fingerprint matches within 3.8e-06
+[  106.6s] 84079fe8cb: fingerprint matches within 1.2e-06
+[  109.8s] 2dce50ebd9: fingerprint matches within 3.8e-06
+[  113.1s] 91f171fe6f: fingerprint matches within 2.6e-06
+[  116.4s] 72081758ce: fingerprint matches within 2.9e-06
+[  119.5s] 1e553ba481: fingerprint matches within 1.7e-06
+[  122.6s] f335c812fe: fingerprint matches within 2.9e-06
+[  126.2s] shared first 6 DINOv2 blocks for 20 members; original views computed once per 2 device(s)
+[  126.2s]   banked e5427d6c21 fold 2 (10 window(s); 1 member(s)
+[  126.2s]   banked d47313baef fold 2 (10 window(s); 2 member(s)
+[  126.2s]   banked ea3fbf6edf fold 2 (10 window(s); 3 member(s)
+[  126.2s]   banked 5f8ba4c5ea fold 2 (10 window(s); 4 member(s)
+[  126.2s]   banked 013dc75703 fold 4 (10 window(s); 5 member(s)
+[  126.2s]   banked 2f7e785e82 fold 4 (10 window(s); 6 member(s)
+[  126.2s]   banked 8baecb9d1b fold 4 (10 window(s); 7 member(s)
+[  126.2s]   banked 44bc3c6f14 fold 0 (10 window(s); 8 member(s)
+[  126.2s]   banked 44128e3ff3 fold 0 (10 window(s); 9 member(s)
+[  126.2s]   banked 84079fe8cb fold 3 (10 window(s); 10 member(s)
+[  126.2s]   banked ed427aa10a fold 0 (10 window(s); 11 member(s)
+[  126.2s]   banked 2dce50ebd9 fold 0 (10 window(s); 12 member(s)
+[  126.2s]   banked 3d1f4c48fc fold 4 (10 window(s); 13 member(s)
+[  126.2s]   banked 91f171fe6f fold 1 (10 window(s); 14 member(s)
+[  126.2s]   banked 8476b29285 fold 1 (10 window(s); 15 member(s)
+[  126.2s]   banked 72081758ce fold 3 (10 window(s); 16 member(s)
+[  126.2s]   banked 7f8321affc fold 3 (10 window(s); 17 member(s)
+[  126.2s]   banked 1e553ba481 fold 1 (10 window(s); 18 member(s)
+[  126.2s]   banked b7c37cc80e fold 3 (10 window(s); 19 member(s)
+[  126.2s]   banked f335c812fe fold 1 (10 window(s); 20 member(s)
+[  126.5s] DINOv2 fail-closed gate PASS: 20/20 fingerprints and members
+[  126.5s] submission.csv = exact no-jitter public-frontier rank mean of 20 member(s); (3, 13)
+[  126.5s] done
+[phase] {"elapsed_seconds": 126.77777004241943, "gpus": [{"allocated_bytes": 9568256, "id": 0, "reserved_bytes": 23068672}, {"allocated_bytes": 9568256, "id": 1, "reserved_bytes": 150994944}], "max_rss_kib": 3534296, "memory.current": "6692003840", "memory.max": "32212254720", "stage": "dinov2", "status": "COMPLETE"}
+[phase] {"elapsed_seconds": 126.86457180976868, "gpus": [{"allocated_bytes": 9568256, "id": 0, "reserved_bytes": 23068672}, {"allocated_bytes": 9568256, "id": 1, "reserved_bytes": 150994944}], "max_rss_kib": 3534296, "memory.current": "6692192256", "memory.max": "32212254720", "stage": "a5", "status": "START"}
+series root: /kaggle/input/competitions/rsna-knee-abnormality-detection/test_series
+3 test studies, 3 with series metadata
+A5 strict-loaded m_f0.pt; all encoder and head tensors present
+A5 strict-loaded m_f1.pt; all encoder and head tensors present
+A5 strict-loaded m_f2.pt; all encoder and head tensors present
+A5 strict-loaded m_f3.pt; all encoder and head tensors present
+A5 strict-loaded m_f4.pt; all encoder and head tensors present
+device cuda | amp bfloat16 (on=True) | workers 4 | chunk 48 | micro 8
+  3/3  0.1m  eta 0.0m
+
+inference done in 0.1 min
+[phase] {"absent": 0, "applicable": 3, "elapsed_seconds": 155.1721158027649, "gpus": [{"allocated_bytes": 9568256, "id": 0, "reserved_bytes": 23068672}, {"allocated_bytes": 9568256, "id": 1, "reserved_bytes": 23068672}], "max_rss_kib": 4266680, "memory.current": "8001245184", "memory.max": "32212254720", "stage": "a5", "status": "COMPLETE"}
+[phase] {"elapsed_seconds": 155.36427545547485, "gpus": [{"allocated_bytes": 9568256, "id": 0, "reserved_bytes": 23068672}, {"allocated_bytes": 9568256, "id": 1, "reserved_bytes": 23068672}], "max_rss_kib": 4266680, "memory.current": "8001536000", "memory.max": "32212254720", "stage": "radimagenet", "status": "START"}
+[  162.4s] rad commonlaterality: 1 from the tag, 2 from geometry, 0 unresolved; tag and geometry disagree on 0 (0.0% of the tagged)
+[  167.7s] rad_e10: 3 studies, 8 slot-series, 0.00 GiB pixels
+[  168.9s] rad_e10: COMPLETE 8/8; reused ordering for 0 series
+[  169.0s] rad_e13: 3 studies, 11 slot-series, 0.00 GiB pixels
+[  169.7s] rad_e13: COMPLETE 11/11; reused ordering for 8 series
+[  169.7s] rad_legacy_second: 3 studies, 7 slot-series, 0.00 GiB pixels
+[  170.2s] rad_legacy_second: COMPLETE 7/7; reused ordering for 5 series
+[Rad-dual5] BTKD reference Rad/calibrator complete; unused alternate-head branch removed
+[phase] {"elapsed_seconds": 170.68024253845215, "gpus": [{"allocated_bytes": 9568256, "id": 0, "reserved_bytes": 23068672}, {"allocated_bytes": 9568256, "id": 1, "reserved_bytes": 23068672}], "max_rss_kib": 4569892, "memory.current": "8807403520", "memory.max": "32212254720", "stage": "radimagenet", "status": "COMPLETE"}
+[phase] {"elapsed_seconds": 170.8982434272766, "gpus": [{"allocated_bytes": 9568256, "id": 0, "reserved_bytes": 23068672}, {"allocated_bytes": 9568256, "id": 1, "reserved_bytes": 23068672}], "max_rss_kib": 4569892, "memory.current": "8807301120", "memory.max": "32212254720", "stage": "public_raptor", "status": "START"}
+[raptor-fast] 3 studies; balanced arm groups cuda:0=[0,2], cuda:1=[1,3]
+[raptor-fast] wrote /kaggle/working/_raptor.csv; elapsed 66.2s
+[phase] {"elapsed_seconds": 237.1076102256775, "gpus": [{"allocated_bytes": 19136512, "id": 0, "reserved_bytes": 62914560}, {"allocated_bytes": 9568256, "id": 1, "reserved_bytes": 23068672}], "max_rss_kib": 7462828, "memory.current": "11973287936", "memory.max": "32212254720", "stage": "public_raptor", "status": "COMPLETE"}
+[phase] {"elapsed_seconds": 240.28292179107666, "gpus": [{"allocated_bytes": 19136512, "id": 0, "reserved_bytes": 62914560}, {"allocated_bytes": 9568256, "id": 1, "reserved_bytes": 23068672}], "max_rss_kib": 7462828, "memory.current": "11839492096", "memory.max": "32212254720", "stage": "residual_coat", "status": "START"}
+[phase] {"elapsed_seconds": 307.9813323020935, "gpus": [{"allocated_bytes": 19136512, "id": 0, "reserved_bytes": 62914560}, {"allocated_bytes": 9568256, "id": 1, "reserved_bytes": 23068672}], "max_rss_kib": 7462828, "memory.current": "13124272128", "memory.max": "32212254720", "ok": true, "stage": "residual_coat", "status": "COMPLETE"}
+[phase] {"elapsed_seconds": 307.98801612854004, "gpus": [{"allocated_bytes": 19136512, "id": 0, "reserved_bytes": 62914560}, {"allocated_bytes": 9568256, "id": 1, "reserved_bytes": 23068672}], "max_rss_kib": 7462828, "memory.current": "13124182016", "memory.max": "32212254720", "stage": "global96_coat", "status": "START"}
+[phase] {"elapsed_seconds": 368.4921782016754, "gpus": [{"allocated_bytes": 19136512, "id": 0, "reserved_bytes": 62914560}, {"allocated_bytes": 9568256, "id": 1, "reserved_bytes": 23068672}], "max_rss_kib": 7462828, "memory.current": "14061907968", "memory.max": "32212254720", "ok": true, "stage": "global96_coat", "status": "COMPLETE"}
+[phase] {"elapsed_seconds": 368.49958658218384, "gpus": [{"allocated_bytes": 19136512, "id": 0, "reserved_bytes": 62914560}, {"allocated_bytes": 9568256, "id": 1, "reserved_bytes": 23068672}], "max_rss_kib": 7462828, "memory.current": "14061834240", "memory.max": "32212254720", "stage": "d4", "status": "START"}
+[phase] {"elapsed_seconds": 412.8747878074646, "gpus": [{"allocated_bytes": 19136512, "id": 0, "reserved_bytes": 62914560}, {"allocated_bytes": 9568256, "id": 1, "reserved_bytes": 23068672}], "max_rss_kib": 7462828, "memory.current": "14408679424", "memory.max": "32212254720", "ok": true, "stage": "d4", "status": "COMPLETE"}
+[coat-arm] family reduction: rank_of_member_probability_mean
+[coat-arm] CoAt family members: resgated_top3, global96_top3, d4_swa3
+[coat-arm] equal-rank CoAt family; BTKD32 no-inner-rerank; 3 studies
+                  outer CoAtNet w  arm agreement  largest tie block
+finding                                                            
+ACL                         0.650          1.000                  1
+MCL                         0.650          0.918                  1
+Medial Meniscus             0.650         -0.500                  1
+Lateral Meniscus            0.650          1.000                  1
+Medial OA                   0.650         -0.918                  1
+Lateral OA                  0.650          0.500                  1
+PF OA                       0.650          1.000                  1
+Effusion                    0.650          0.500                  1
+Synovitis                   0.650          0.500                  1
+Baker's                     0.650          1.000                  1
+Contusion                   0.650          0.500                  1
+Fracture                    0.650          1.000                  1
+
+These findings have two arms that already agree above 0.99, so their outer weight is close to a no-op no matter what it is set to: ACL, Lateral Meniscus, PF OA, Baker's, Fracture
+
+These findings have genuinely different arms, which is where an outer weight actually decides the ordering — and therefore where a weight fitted to the public split can do real damage privately: Medial Meniscus, Medial OA, Lateral OA, Effusion, Synovitis, Contusion
+COMPLETE: /kaggle/working/submission.csv, 3 studies, SHA256=c1478aac771301a0bb7e884d766ce6638b04387e8cdeede5162269e81576e928
+/usr/local/lib/python3.12/dist-packages/mistune.py:435: SyntaxWarning: invalid escape sequence '\|'
+  cells[i][c] = re.sub('\\\\\|', '|', cell)
+/usr/local/lib/python3.12/dist-packages/nbconvert/filters/filter_links.py:36: SyntaxWarning: invalid escape sequence '\_'
+  text = re.sub(r'_', '\_', text) # Escape underscores in display text
+[NbConvertApp] Converting notebook __notebook__.ipynb to notebook
+[NbConvertApp] Writing 759407 bytes to __notebook__.ipynb
+[NbConvertApp] Converting notebook __notebook__.ipynb to html
+[NbConvertApp] Support files will be in __results___files/
+[NbConvertApp] Making directory __results___files
+[NbConvertApp] Making directory __results___files
+[NbConvertApp] Making directory __results___files
+[NbConvertApp] Making directory __results___files
+[NbConvertApp] Making directory __results___files
+[NbConvertApp] Making directory __results___files
+[NbConvertApp] Writing 1612502 bytes to __results__.html

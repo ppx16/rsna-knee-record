@@ -1,0 +1,24 @@
+{
+  "at": "2026-10-05T09:14:48Z",
+  "arm": "0943cfmsft2flat",
+  "kernel": "ppxl16/rsna-knee-0943cfmsft2flat",
+  "version": 1,
+  "ref": 56848247,
+  "before_snapshot": {
+    "at": "2026-10-05T09:14:38Z",
+    "n_teams": 5195,
+    "our_rank": 523,
+    "our_score": 0.943,
+    "bronze_line": 519,
+    "margin": -4,
+    "block": {
+      "score": 0.943,
+      "n": 1014,
+      "lo": 382,
+      "hi": 1395
+    },
+    "in_block_pct": 13.919,
+    "top_score": 0.963
+  },
+  "message": "0943cfmsft2flat - cfmsft2 with the outer per-label routing FLATTENED (preset=parent): differs from 0943cfmsft2 by exactly one line. Strictly improves the final pair, since the pair's value is the better of the two and cfmsft2 stays in it"
+}

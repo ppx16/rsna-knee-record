@@ -206,6 +206,43 @@ Four other facts the rules settled, all previously assumed or wrong:
 readings** — it is neither the 30 h weekly allowance nor this competition's session cap.
 `docs/FIND-2026-10-05-rules-verified.md`.
 
+### 11. ⚠️ WE ARE OUTSIDE THE BRONZE (+1 → **−4**), and a new arm was built, verified and submitted
+
+**Live at 2026-10-05T09:14:38Z**: teams 5195, **rank 523**, bronze line 519, **margin −4**, `0.943`
+block 382..1395 (1014). ⚠️ **The two instruments disagree on direction**: the in-block percentile
+*improved* (14.02 % → **13.92 %**) while the absolute margin fell from +1 to **−4**, because the bronze
+line is an absolute top-10 % line and our rank moved 518 → 523 while the block's floor moved 376 → 382.
+**The medal depends on the margin, so we are currently out.**
+
+**`0943cfmsft2flat` — `ref 56848247`, PENDING**, submitted 09:14:47Z. Built for the reason in §9: the
+recommended second slot `0943cflat` sits on `0943cf`, which is no longer our best. With `C` = cn0 +
+fracture fix, `S` = msft2 view, `R` = routing flattening, the pair values are
+`Y = (cfmsft2, cflat) = C + max(S,R)` and `Y' = (cfmsft2, cfmsft2flat) = C + S + max(0,R)` ⇒ **`Y' ≥ Y`
+for every sign of `R`**. It cannot make the pair worse, because the pair's value is the better of the two
+and `cfmsft2` stays in it.
+
+⚠️ **Verified three ways, because the `parent` preset flattens `coatnet_w` AT RUNTIME and the literal
+0.65→0.75 map is still in the source** (the trap `build_0943_addmember.py` L214-216 records):
+
+| check | result |
+|---|---|
+| cell-by-cell source diff vs `cfmsft2` | **exactly 1 changed line** (`PRESET … "speedy"` → `"parent"`) |
+| the run's OWN log | `[config] preset=parent` · `outer CoAtNet weight per finding: flat 0.65` · all 12 findings **0.650** vs cfmsft2's non-uniform map (ACL/Fracture/LatOA 0.750, LatMen 1.000, MedMen 0.800) |
+| final submission SHA | `095bcf70…` → `c1478aac…` ⇒ the edit reached the output |
+| `msft2` present | cfmsft2's only delta over `0943cf` is the msft2 view, and it moved the rank ⇒ msft2 is in cfmsft2; the one-line diff ⇒ it is in the flat arm too |
+
+⚠️ **Gap, recorded not papered over**: `[raptor-fast]` never logs the Raptor arm composition, and the
+`_raptor.csv` intermediate could not be retrieved (`kernels_output`'s `file_pattern` rejects `*.csv`
+with a ValueError and returns the `.log` regardless). The `msft2` conclusion therefore rests on the
+diff chain above, not on a direct sighting in this run.
+
+⚠️ Also confirmed normal, not an anomaly: the pushed run processed **3 test studies / 15 series** while
+`[eda]` reports 1322 test studies. Code competitions are **re-run server-side on the full hidden test
+set** — which is why submissions sit PENDING for hours. The local execution is a preview.
+
+**Two arms are now PENDING**: `56845973` (meniscus) and `56848247` (flat). Both read against the
+**13.92 %** in-block bar and the **−4** margin recorded above.
+
 ---
 
 ## ⭐⭐ 2026-10-04 DELTA — READ THIS BEFORE ANYTHING BELOW
