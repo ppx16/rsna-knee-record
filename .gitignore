@@ -156,3 +156,7 @@ work/cf448-out/**/_coat_env/
 
 # scratch previews written by the kernel builders' --check mode
 work/_*_preview.py
+
+# raw Kaggle kernel log downloads (rendered copies live in work/klog_ab/*.txt)
+work/klog_flat/
+work/klog_ab/*/
