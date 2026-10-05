@@ -125,6 +125,35 @@ stale `[raptor-fast] ... cuda:0=[0,2]` log line, and now a dead default argument
 from reading **a declaration** instead of **the path that executes**.
 **A grep finds where a value is written; it does not tell you whether that value is ever used.**
 
+### 8. Built, NOT fired: a self-trained hard-label specialist (`msft3-spec`)
+
+`docs/PREREG-2026-10-05-self-trained-specialist.md` + `scripts/build_msft3_specialist.py`
+(`--check` passes for both tiers: anchors unique, compiles, 11 probes present). **Nothing pushed.**
+
+**⛔ Hard entry gate: it may only be fired if the pending meniscus arm (`56845973`) reads a REAL gain**
+(in-block percentile better than 14.07 %). If meniscus is flat, the label-specialist hypothesis is dead
+and this is compute spent on no hypothesis.
+
+It is not "a third same-corpus CoAtNet" (which the stop rule forbids) because it differs in three places
+at once: the **loss is masked** to six labels, the **epoch selection is on that group's AUC**, and the
+**blend target is that group only**. ⚠️ The second is not optional — `evaluate()` returns the all-label
+macro and the loop selects on it, so a masked loss without group-aware selection would train one
+objective and select on another, silently. The six labels are the ones the base's **own log** names
+(*"Medial Meniscus / Medial OA / Lateral OA / Effusion / Synovitis / Contusion 是各臂真正不同…"*) — the
+same sentence the meniscus prereg rests on, so the two experiments share one hypothesis.
+
+**My stated expectation: probably flat-to-negative** (3 reasons in the prereg; the 11× decay was measured
+on this corpus, and msft3-spec is still a fine-tune of it).
+
+⚠️ **One deliberate deviation from A167, flagged:** A167's member gate (solo ≥ ~0.90) is an **all-12-label**
+bar. A model trained on six labels cannot clear it, so applying it here would reject the experiment with
+the wrong ruler. The gate is therefore computed **on the six-label group**. This is a real judgement call,
+not an oversight.
+
+Unverified and stated as such in the prereg: it has **never run a forward pass**; the rebuilt optimizer
+(needed because the author's `AdamW([{bb},{head}])` raises on an empty group when the whole backbone is
+frozen) is the likeliest place for a surprise.
+
 ---
 
 ## ⭐⭐ 2026-10-04 DELTA — READ THIS BEFORE ANYTHING BELOW
