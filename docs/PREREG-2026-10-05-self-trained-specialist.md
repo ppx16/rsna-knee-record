@@ -1,5 +1,16 @@
 # 预注册：自训练硬标签专科 `msft3-spec` — 2026-10-05
 
+> ## ⛔ **NOT FIRED — the §0 entry gate did not open.** (2026-10-05, after the meniscus readout)
+>
+> The meniscus arm `56845973` scored **0.940** against the **0.943** baseline — a regression, and the
+> worst of the round. §0 said this experiment may only be fired if meniscus read a **real gain**.
+> It did not. **The label-specialist axis is falsified and this build stays on disk, un-run.**
+>
+> Full reasoning: `docs/RESULT-2026-10-05-two-arms-flat-or-worse.md` §1.
+>
+> ⚠️ **This is the prereg working.** The alternative was spending ~2.6 GPU-hours on a hypothesis that
+> had already been measured dead. The body below is kept verbatim so the gate stays auditable.
+
 **状态：已建好构建器（`scripts/build_msft3_specialist.py`），`--check` 两档均通过。⛔ 未点火、未推送。**
 
 内壳：`ppxl16/rsna-knee-msft3-spec`（本地 `kernels/kernel-msft3-spec`，尚未 build 落地）。

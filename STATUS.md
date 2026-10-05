@@ -243,6 +243,49 @@ set** — which is why submissions sit PENDING for hours. The local execution is
 **Two arms are now PENDING**: `56845973` (meniscus) and `56848247` (flat). Both read against the
 **13.92 %** in-block bar and the **−4** margin recorded above.
 
+### 12. ⭐ BOTH ARMS LANDED AT OR BELOW BASELINE — the specialist is dead and the final pair changed
+
+| ref | arm | public | vs baseline |
+|---|---|---|---|
+| `56814081` | `0943cfmsft2` (`C+S`) | **0.943** | baseline — **still our best** |
+| `56826372` | `0943cfmsft2m` (`C+S+M`) | 0.943 | flat |
+| `56599932` | `0943cf` (`C`) | 0.943 | flat |
+| **`56848247`** | **`0943cfmsft2flat` (`C+S+R`)** | **0.942** | ⚠️ below |
+| **`56845973`** | **`cfmsft2m-men`** | **0.940** | ⚠️ below — worst of the round |
+
+**1. The meniscus specialist is a REGRESSION, and the prereg had already written what that means.**
+`PREREG-2026-10-05-meniscus-arm.md`: *"公榜 ≤ 0.940 ⇒ 真回归，丢掉"* and *"持平或更差 ⇒ 这一条也无效 …
+本轮所有轴都被否证 ⇒ 转入收尾"*. ⇒ **The label-specialist axis is falsified, and `msft3-spec` is NOT
+FIRED** — its own §0 made the meniscus result a hard entry gate and the gate did not open. **That is the
+prereg working, not a wasted build**; the alternative was ~2.6 GPU-hours on a measured-dead hypothesis.
+
+**2. The routing hedge is measured unhelpful.** `cfmsft2flat` = 0.942 < 0.943, and it was **verified to
+have applied exactly the intended change** (§11), so this measures the *flattening*, not a failed edit.
+⇒ `R ≲ 0`, which retires the argument `FINAL-SELECTION-2026-10-04.md` §3 was built on. **`0943cflat` is
+no longer the right second slot.**
+
+**3. ⭐ FINAL PAIR REVISED** (`docs/RESULT-2026-10-05-two-arms-flat-or-worse.md` §3):
+
+| slot | ref | arm | public |
+|---|---|---|---|
+| **primary** | **`56814081`** | `0943cfmsft2` — `C + S` | 0.943 |
+| **second** | **`56599932`** | `0943cf` — `C`, deliberately **without** `S` | 0.943 |
+
+With `M ≲ 0` and `R ≲ 0` both measured, `(cfmsft2, cf) = C + max(S, 0)` is the **only** candidate pair
+that hedges `S` — the one effect whose evidence is a public-**rank** gain, so whose private sign is
+genuinely unknown. `C` is in **both** arms; the second slot gives up `S`, and that **is** the hedge.
+⚠️ **This is NOT the "delete a measured improvement to buy diversification" error** the 10-04 sheet
+warned against — that was about deleting `C`.
+
+**4. Board at 2026-10-05T16:01:59Z**: teams **5226**, rank **551**, bronze line **522**,
+**margin −29**, `0.943` block 414..1419 (1006), in-block **13.63 %**.
+⚠️ Margin across the day: **+1 → −4 → −29**. In-block percentile meanwhile *improved* (13.92 → 13.63).
+**The instruments disagree in direction; for a medal read the margin.**
+
+**5. Where the campaign stands.** Five axes tried, fourteen arms, **one measured gain (`S`)**. The
+structural boundary in `STRATEGY-2026-10-04-how-far-can-finetuning-go.md` §4 has survived every cheap
+crossing attempt. Any further arm must target a **new axis**, not a variation of a closed one.
+
 ---
 
 ## ⭐⭐ 2026-10-04 DELTA — READ THIS BEFORE ANYTHING BELOW

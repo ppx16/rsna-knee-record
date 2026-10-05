@@ -1,5 +1,26 @@
 # FINAL SELECTION — current sheet, 2026-10-05
 
+> ## ⛔ BOTH RECOMMENDATIONS BELOW ARE SUPERSEDED — see `docs/RESULT-2026-10-05-two-arms-flat-or-worse.md`
+>
+> Two arms landed after this sheet was written, and **both came in at or below the baseline**:
+> `56848247` (`0943cfmsft2flat`) = **0.942**, `56845973` (`cfmsft2m-men`) = **0.940**. So
+> **`R` (routing flattening) is measured unhelpful** — which retires §3's hedge argument *and* the
+> §6 amendment that replaced the second slot with the flat arm.
+>
+> **Final pair, revised:**
+>
+> | slot | ref | arm | public |
+> |---|---|---|---|
+> | **primary** | **`56814081`** | `0943cfmsft2` — `C + S` | 0.943 |
+> | **second** | **`56599932`** | `0943cf` — `C`, deliberately without `S` | 0.943 |
+>
+> Reasoning in `RESULT-2026-10-05` §3: with `M ≲ 0` and `R ≲ 0` both **measured**, the pair
+> `(cfmsft2, cf)` is the only one of the three candidates that hedges `S` — the one effect whose
+> evidence is a public-**rank** gain, so whose private sign is genuinely unknown. `C` is in both arms;
+> what the second slot gives up is `S`, and giving it up **is** the hedge.
+>
+> The body below is kept verbatim so the reversals stay auditable.
+
 **Supersedes `docs/FINAL-SELECTION-2026-10-04.md`, which is stale by one measured result.**
 That sheet was written on 2026-10-04 and **never mentions `msft2` at all** — verified by grep, not by
 recollection. Everything it says about `0943cflat` being the right *second* slot still holds; its
