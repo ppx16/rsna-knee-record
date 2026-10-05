@@ -121,9 +121,14 @@ try:
         raise RuntimeError("duplicate study UIDs after sorting")
 
     # --- 3. run the author's runtime ------------------------------------------------------------
-    _out = {"bag_raw_csv": "/kaggle/working/_meniscus_raw.csv",
-            "receipt_json": "/kaggle/working/_meniscus_receipt.json",
-            "work_dir": "/kaggle/working/_meniscus_work"}
+    # `_validate_output_paths` pins the FILENAMES and requires both to be DIRECT CHILDREN of
+    # work_dir, and refuses to overwrite existing artifacts. First attempt used free-form names
+    # and died with "bag_raw_csv filename drift" -- after the cache had been built correctly.
+    # The names below are the ones it demands, verbatim.
+    _wd = "/kaggle/working/_men0033"
+    _out = {"bag_raw_csv": _wd + "/public0033_bag_raw.csv",
+            "receipt_json": _wd + "/public0033_cached_inference_receipt.json",
+            "work_dir": _wd}
     import time as _m_t
     _t0 = _m_t.time()
     _rec = _rt.run_cached_inference(_cache_s, _mask_s, _st_s, _out)
