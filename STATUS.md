@@ -76,6 +76,33 @@ not spend on it; this file now agrees rather than treating it as the next step.
 **Lesson, applied: before calling anything an "unfilled gap", grep `FACTS.md` for the artifact — not just
 the current table for the string.** A gap in a table is not a gap in knowledge.
 
+### 6. ⚠️⚠️ The GPU budget was mis-read by ~20×, and the error was in the DENOMINATOR
+
+For this entire session I treated GPU as nearly spent and **used that to reject experiments**.
+The figure I quoted was `19664 s / 21600 s` ⇒ "≈ 32 min left". Live, 2026-10-05:
+
+| | used | remaining | total | refresh |
+|---|---|---|---|---|
+| **GPU** | 5.46 h | **24.54 h** | 30.00 h | 2026-10-10 |
+| **TPU** | 3.79 h | 16.21 h | 20.00 h | 2026-10-10 |
+
+```
+19664 / 3600 = 5.46 h  == GPU used, live      ✓   (the numerator was right all along)
+21600 / 3600 = 6.00 h  != GPU total, 30 h     ✗   per-SESSION cap, not the weekly allowance
+```
+
+⇒ remaining should have been `108000 − 19664 ≈ 24.54 h`, not 1936 s. **Same numerator, wrong total.**
+⚠️ **This is why "refresh the page" would not have fixed it — a stale number and a wrong unit look
+identical from outside.** It also reached `docs/PREREG-2026-10-04-convnext-member.md`, which framed the
+ConvNeXt member as affordable **only as a fold-0 probe** when the full 5-fold (~13 h) was always in budget.
+`docs/FIND-2026-10-05-quota-denominator-error.md`. Tool: `work/quota.py` (appends to `state/quota_log.tsv`,
+which had been stale since 2026-09-26 — the log existed but nothing wrote to it).
+
+**Rule: never record or quote an accelerator budget as a bare seconds count or single percentage. Read
+`kaggle quota` at the moment of decision and always print `remaining / total` together** — the pairing is
+what makes a unit error visible. ⚠️ Run it via `D:\kaggle\venv-kaggle\Scripts\kaggle.exe`; the PATH
+`kaggle` failed 6/6 on the OAuth path while the venv one succeeded first try.
+
 ---
 
 ## ⭐⭐ 2026-10-04 DELTA — READ THIS BEFORE ANYTHING BELOW
