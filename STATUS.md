@@ -103,6 +103,28 @@ which had been stale since 2026-09-26 — the log existed but nothing wrote to i
 what makes a unit error visible. ⚠️ Run it via `D:\kaggle\venv-kaggle\Scripts\kaggle.exe`; the PATH
 `kaggle` failed 6/6 on the OAuth path while the venv one succeeded first try.
 
+### 7. The "F_dim 1024 vs 768" blocker on `raptor-knee-arms` was a DEAD DEFAULT — resolved
+
+`docs/FIND-2026-10-05-unused-strong-checkpoints.md` §1 warned that `coatnet384`/`cnv2b336` carry F_dim
+**1024** while our v5/v8/v10 load through **768**, and that this had to be settled before wiring.
+
+**Measured (`work/resolve_fdim.py`): our v5/v8/v10 are ALSO 1024.** Head tensors are identical across
+every CoAtNet/ConvNeXtV2 checkpoint here — `att.0.weight (256,1024)`, `clsW (12,1024)`, `norm.weight (1024,)`
+— and timm reports `coatnet_rmlp_2_rw_384.sw_in12k_ft_in1k num_features = 1024`. **Both sides were 1024.**
+
+`768` occurs **once** in the notebook: `def __init__(self, backbone, F_dim=768, ...)` — a **default
+parameter**. The only call site is `RaptorClassifier(bb, F_dim=bb.num_features)`. It is never reached, and
+the load is `rsna_strict_load` (strict), so a real mismatch would have **raised**, not failed silently.
+
+⇒ **The family is safely wireable.** What genuinely differs: `arch` must match per-arm (`load_model` raises
+on arch drift, so `cnv2b336`/`effv2l480` need their own arch strings), and `effv2l480` really is **1280**
+wide with an EfficientNet tail. `docs/FIND-2026-10-05-fdim-768-was-a-dead-default.md`.
+
+⚠️ **This is the THIRD instance of one disease this session** — `CROP_MM` (per-block, not global), the
+stale `[raptor-fast] ... cuda:0=[0,2]` log line, and now a dead default argument. Each wrong answer came
+from reading **a declaration** instead of **the path that executes**.
+**A grep finds where a value is written; it does not tell you whether that value is ever used.**
+
 ---
 
 ## ⭐⭐ 2026-10-04 DELTA — READ THIS BEFORE ANYTHING BELOW

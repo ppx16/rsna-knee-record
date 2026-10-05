@@ -31,6 +31,17 @@
 （同为 `coatnet_rmlp_2_rw_384`）在我们栈里走的是 `F_dim=768` 的加载路径。这两者不是同一套配置，
 **接入前必须把这个维度对齐搞清楚，否则会静默加载失败或错配。** 这一点我没有查完，如实记下。
 
+> ✅ **2026-10-05 已查完 —— 这是个幻影，警告作废。** 实测（`work/resolve_fdim.py`）：
+> **我们的 v5/v8/v10 也是 1024**，头部张量 `att.0.weight (256,1024)` / `clsW (12,1024)` /
+> `norm.weight (1024,)` 与 `coatnet384`、`cnv2b336` **逐一同形**；`timm` 也说
+> `coatnet_rmlp_2_rw_384.sw_in12k_ft_in1k` 的 `num_features = 1024`。
+> **`768` 全文只出现一次 —— 是 `RaptorClassifier.__init__(self, backbone, F_dim=768, ...)` 的【默认参数】，
+> 而唯一的调用点是 `RaptorClassifier(bb, F_dim=bb.num_features)`。那个默认值从未被用到。**
+> 而且加载是 `rsna_strict_load`（strict）—— 真有维度不符会**抛异常**，不会静默。
+> ⇒ **这条族是可安全接入的**；真正需要处理的只是 arch 字符串（`load_model` 会对 arch 漂移报错）
+> 与 `effv2l480` 的 **1280** 宽度。详见 `docs/FIND-2026-10-05-fdim-768-was-a-dead-default.md`。
+> **教训：`grep` 找到的是值被【写】在哪，不等于它被【用】。凡是要靠常量判定行为的地方，读调用点，不读定义。**
+
 ## 2. ⭐ C48 点名、却一直没补上的缺口：v9 finespacing
 
 C48 原文：
