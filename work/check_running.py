@@ -11,12 +11,33 @@ Three traps, all of which produced a FALSE "NONE" before this script was written
    terminal state -- retry, but do not let the retry wrapper manufacture a verdict.
 
 A status probe that cannot distinguish "idle" from "I failed to ask" is worse than no probe.
+
+A FOURTH false verdict, found while using it: `kernels_status` returns the string
+`KernelWorkerStatus.RUNNING`, not `RUNNING`, so comparing against a bare {"RUNNING","QUEUED"} set
+made every kernel look idle -- `ACTIVE: none` printed WHILE A KERNEL WAS RUNNING. Compare the
+suffix after the last dot. (See is_active().)
+
+⚠️ AND A POWERSHELL NOTE THAT HAS BEEN MISREAD ALL SESSION: piping this (or anything) through
+`Select-Object -First N` makes PowerShell close the pipe early, and the python process then exits
+with code 1 / -1 -- a BROKEN PIPE, not a failure. Measured: exit 0 without truncation, -1 with.
+Several "pwsh went red" moments in this repo were this and nothing else. Read the OUTPUT, and if
+the exit code is the only signal, re-run without truncation before believing it.
 """
 import time
 
 from kaggle.api.kaggle_api_extended import KaggleApi
 
 ACTIVE = {"RUNNING", "QUEUED"}
+
+
+def is_active(st: str) -> bool:
+    """⚠️ `kernels_status` returns e.g. `KernelWorkerStatus.RUNNING`, NOT `RUNNING`.
+
+    The first version of this file compared the raw string against a bare {"RUNNING","QUEUED"}
+    and therefore printed a confident `ACTIVE: none` WHILE A KERNEL WAS RUNNING -- the fourth
+    false verdict this one probe has produced. Compare the suffix after the last dot.
+    """
+    return st.rsplit(".", 1)[-1].strip().upper() in ACTIVE
 
 api = KaggleApi()
 api.authenticate()
@@ -43,11 +64,11 @@ active, unknown = [], []
 for k in ks:
     st = status(k.ref)
     lr = str(getattr(k, "last_run_time", ""))[:19]
-    if st in ACTIVE:
+    if is_active(st):
         active.append(k.ref)
     elif st.startswith(("UNASKED", "NO_STATUS_FIELD")):
         unknown.append(k.ref)
-    print(f"{k.ref:<52} {lr:<20} {st}{'   <== ACTIVE' if st in ACTIVE else ''}")
+    print(f"{k.ref:<52} {lr:<20} {st}{'   <== ACTIVE' if is_active(st) else ''}")
 
 print()
 print("ACTIVE :", active or "none")
