@@ -1,5 +1,22 @@
 # FINAL SELECTION — current sheet, 2026-10-04
 
+> ## ⛔ SUPERSEDED 2026-10-05 — do not tick from this sheet
+>
+> **Use `docs/FINAL-SELECTION-2026-10-05.md` instead.** This sheet was written before the readout of
+> `56814081` (`0943cfmsft2`) and **never mentions `msft2` anywhere** (verified by grep).
+>
+> **Its PRIMARY is wrong. Its SECOND SLOT is right.** The amended recommendation below
+> (`56791368` primary + `56613303` second) becomes
+> **`56814081` (`0943cfmsft2`) primary + `56613303` (`0943cflat`) second** — because `0943cfmsft2`
+> carries the **only change in this repository with a measured gain on the rank instrument**
+> (rank 708 → 487, in-block 38.89 % → 13.66 %), while `0943cfm`'s only extra content (`MCL`) then
+> **measured flat** (in-block 13.67 % → 14.31 % on `56826372`).
+>
+> **Everything below about `0943cflat` — including §3's case check and the finding that it is a strict
+> superset of `0943p` — still holds and is not retracted.** Only the primary changes.
+>
+> The text is kept verbatim so the reversal stays auditable.
+
 **This supersedes nothing; it is a *current* reading of `docs/FINAL-SELECTION.md` (2026-09-28), which
 remains the reasoning of record.** That document was written before the last readouts landed and then
 read against its own pre-registered table. This sheet only updates the candidate list, because three

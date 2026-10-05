@@ -154,6 +154,32 @@ Unverified and stated as such in the prereg: it has **never run a forward pass**
 (needed because the author's `AdamW([{bb},{head}])` raises on an empty group when the whole backbone is
 frozen) is the likeliest place for a surprise.
 
+### 9. ⭐ The final-selection sheet was stale by one measured result — primary changed
+
+`docs/FINAL-SELECTION-2026-10-04.md` recommended **`56791368` (`0943cfm`) primary + `56613303` (`0943cflat`)
+second**, and **never mentions `msft2` anywhere** (grep-verified). It predates the one result that matters.
+
+⇒ **New sheet: `docs/FINAL-SELECTION-2026-10-05.md`.**
+
+| slot | ref | arm | public |
+|---|---|---|---|
+| **primary** | **`56814081`** | `0943cfmsft2` — cn0 + fracture fix + **msft2 6th view** | 0.943 |
+| **second** | **`56613303`** | `0943cflat` — cn0 + fracture fix + flat routing | 0.941 |
+
+**The second slot does not change** — the 10-04 sheet's `0943cflat` argument (a strict superset of
+`0943p`, and its 0.941 is not a defect) still holds and is **not** retracted. Only the primary moves.
+
+**Why, in one line:** writing the four effects as `C` (cn0+fix), `S` (msft2), `M` (MCL), `R` (routing),
+the pair values are `X=(cfmsft2,cfmsft2m)=C+S+max(0,M)`, `Y=(cfmsft2,cflat)=C+max(S,R)`,
+`W=(cfm,cflat)=C+max(M,R)`. **`M` measured flat** (13.67 %→14.31 %) and **`S` measured positive**
+(38.89 %→13.66 %), so **`Y ≥ X` and `Y ≥ W` always**. Both slots keep `C`; between them they hold the
+one measured gain **and** the one documented public-fit hedge.
+
+⚠️ **`0943p` (`56599159`) is dominated by `0943cflat`** (same `R`, plus `C`) and must never be ticked.
+⚠️ **Still a browser-only action** — no `select` verb in the CLI, no `selected` field on `ApiSubmission`,
+legacy `/api/v1` returns 401 (re-verified on 2.1.2 *and* the 2.2.2 wheel).
+⚠️ **If `56845973` (meniscus) reads a real gain — in-block better than 14.07 % — this changes again.**
+
 ---
 
 ## ⭐⭐ 2026-10-04 DELTA — READ THIS BEFORE ANYTHING BELOW
