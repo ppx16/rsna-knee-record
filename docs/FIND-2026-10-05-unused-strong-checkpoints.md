@@ -52,7 +52,22 @@ ARMS 实际挂载的 file： v5, v10, v5(reverse), v8, cn0, msft0_swa   ← 没�
 **⇒ 缺口是真的，至今未补。** 而 `dreaddevelopment/raptor-knee-finespacing` 就在那里：
 `raptor_ft_coatnet_v9_full.pt`（293 MB）。
 
-**它需要自己的几何（C48 已记全）**：`_SLOTS80` = Sagittal-FS 22 / Sagittal 18 / Coronal-FS 15 /
+### ⚠️ 2026-10-05 补正：**表里的缺口是真的，但这条假设不是新的 —— 它已经被实测否证过**
+
+上面这段只查了**当前 `0943*` 表**，因此漏掉了前科。`state/FACTS.md` 里写着：
+
+* **`ref=56389731`**（`ppxl16/rsna-knee-ens-add-finespacing-arm` v1）**2026-09-20 就已建、已跑、已提交** ——
+  `[arm 4] finespacing-v9 | img 336 | slices 80 | span 0.02-0.98 | windows 78 | res 384 | 67s`，
+  **几何逐项正确**，**公榜 0.941，与它自己的基线完全相同**（**C49**、**C54**）。
+* **D14 已把这条轴关闭**：*"给 Raptor 臂加第 5 个视角 —— 两次独立尝试、两次 0.941，关闭"*，
+  两次分别是 `add-widedense-arm`（v4 widedense，几何同样核对过）与 `add-finespacing-arm`（v9）。
+
+⇒ **把 v9 按同样 ~0.20 的剂量再挂进 `0943*` 表，是重跑一个已测出「平」的实验，不是新机会。**
+唯一从未跑过的变体是**剂量测试** `add-finespacing-heavy`（v9 = 0.50、其余 ×0.50），
+`kernels/kernel-exp/add-finespacing-heavy` **已建好、从未推**（**A32**，当时被 GPU 周额度挡住，
+且 `ens_experiment.py --push` 的「静默成功」bug 已修）。**D14 的结论是不要再投入，我同意。**
+
+⚠️ 若哪天真要建：几何（C48 已记全）：`_SLOTS80` = Sagittal-FS 22 / Sagittal 18 / Coronal-FS 15 /
 Coronal 10 / Axial 15，`k_eval = 78`，span **2%–98%**，crop **140mm**，img 336，res 384。
 
 ⚠️ **而且 C48 附带一条必须遵守的警告**：*"Every number quoted… goes with a window count, and the two

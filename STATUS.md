@@ -58,6 +58,24 @@ per family, from the code path, never from a grep.** Same disease as `FIND-2026-
 ⇒ the author added two architectures and an extra input resolution and bought **+0.001**, from a family
 that sits ~0.028 *below* our current 0.943. **That axis is not the lever.**
 
+### 5. ⚠️ A premise from this session that was WRONG: "v9 finespacing is an unbuilt lever"
+
+`docs/FIND-2026-10-05-unused-strong-checkpoints.md` §2 read the **current** `0943*` `ARMS` table, found
+no `finespacing-v9` entry, and concluded the gap was open and worth building. **The table observation is
+correct; the conclusion was not.** `state/FACTS.md` records the prior:
+
+* **`ref=56389731`** — `rsna-knee-ens-add-finespacing-arm` v1, submitted **2026-09-20**, ran at exactly
+  80 slots / 78 windows / span 0.02–0.98 / img 336 / res 384 (the log confirms every field), and read
+  **0.941 — identical to its own baseline** (**C49**, **C54**).
+* **D14 closes the axis**: *"给 Raptor 臂加第 5 个视角 — 两次独立尝试、两次 0.941，关闭"* — the second was
+  `add-widedense-arm` (v4 widedense), also geometry-verified.
+
+⇒ **Re-adding v9 at the same ~0.20 dose would be a re-run of a measured-flat experiment.** The only never-run
+variant is the dose test `add-finespacing-heavy` (v9 = 0.50), built and unpushed since **A32**. D14 says do
+not spend on it; this file now agrees rather than treating it as the next step.
+**Lesson, applied: before calling anything an "unfilled gap", grep `FACTS.md` for the artifact — not just
+the current table for the string.** A gap in a table is not a gap in knowledge.
+
 ---
 
 ## ⭐⭐ 2026-10-04 DELTA — READ THIS BEFORE ANYTHING BELOW

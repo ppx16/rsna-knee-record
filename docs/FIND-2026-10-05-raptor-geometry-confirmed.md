@@ -69,15 +69,32 @@ The same sweep read the descriptions of the sibling datasets. Together they pin 
 | `raptor-knee-finespacing` | 336 px, **80 slices** (22 sag-FS / 18 sag / 15 cor-FS / 10 cor / 15 ax), span 2–98 %, 140 mm, **read at 78 windows** | `_SLOTS64`, span (0.02,0.98), k_eval 62 | **span+res+crop match; slot count and k_eval do NOT** |
 | `raptor-knee-arms` | ConvNeXtV2-Base @336, CoAtNet @384, EfficientNetV2-L @480; *same 2.5D window scheme and the same per-finding attention pooling head*; rank-mean blend **0.915** public, CoAtNet alone **0.914** | no effv2l arm exists | see §4 |
 
-The `finespacing` row is the interesting one: **it is a genuinely denser corpus than anything we render.**
-Our `_SLOTS64` uses 64 slots / 62 eval windows; the author's finespacing corpus is 80 slots / 78 windows
-at the same span, crop and storage resolution. That is the "v9 finespacing gap" the hand-off named, and
-it is **still open** — this check did not close it, it confirmed the shape of it.
+The `finespacing` row is the interesting one: **it is a genuinely denser corpus than anything we render
+today.** Our `_SLOTS64` uses 64 slots / 62 eval windows; the author's finespacing corpus is 80 slots /
+78 windows at the same span, crop and storage resolution.
 
-⚠️ **Caveat on the slot layout:** the description lists five series with counts 22/18/15/10/15 (= 80).
-Our `_SLOTS64` is a *different* five-way split summing to 64. So a finespacing arm is **not** a
-constant-flip of an existing arm — it needs a new slot vector, a new cache, and a new `k_eval`.
-That is a real build, not a re-render.
+⚠️ **BUT READ `state/FACTS.md` C54 AND D14 BEFORE CALLING THIS A GAP.** The current `0943*` `ARMS` table
+does **not** mount v9 — that much is true, and `docs/FIND-2026-10-05-unused-strong-checkpoints.md` §2
+established it by reading the notebook. **What that check missed is that the hypothesis was already
+run and already falsified:**
+
+* **`ref=56389731`** (`ppxl16/rsna-knee-ens-add-finespacing-arm` v1) went in on **2026-09-20**, at 80
+  slots / 78 windows / span 0.02–0.98 / img 336 / res 384, w=0.20 — the geometry was right, the log
+  confirms every field — and it read **0.941, identical to its own baseline** (FACTS **C49**, **C54**).
+* **FACTS D14 closes the axis**: *"给 Raptor 臂加第 5 个视角 — 两次独立尝试、两次 0.941，关闭"*, the two
+  being `add-widedense-arm` (v4 widedense, geometry also verified) and `add-finespacing-arm` (v9).
+
+⇒ **The table gap is real; the hypothesis is not open.** Re-adding v9 to the `0943*` table at the same
+~0.20 dose would be a **re-run of a measured-flat experiment**, not a new opportunity. The only variant
+of this idea that has never been run is the **dose test** — `add-finespacing-heavy` (v9 at w=0.50,
+everything else scaled ×0.50), which `kernel-exp/add-finespacing-heavy` holds **built and never pushed**
+(FACTS **A32**). D14 argues against spending on it.
+
+⚠️ **Caveat on the slot layout, if it is ever built:** the description lists five series with counts
+22/18/15/10/15 (= 80). `_SLOTS80` therefore has to be authored from scratch — `_SLOTS64` is a
+*different* five-way split summing to 64. It is not a constant-flip, and `k_eval` must be **78**, not 62
+(the author's warning: *"hold the window count fixed"*). `k_eval_fixed` per-arm override already exists
+(it was built for cn0).
 
 ## 4. A number worth keeping: `raptor-knee-arms` scores 0.915
 
