@@ -103,7 +103,69 @@ one documented public-fit hedge. Nothing measured-positive is dropped to buy div
 ⚠️ **The two arms above stay valid regardless**, because the pair's value is the better of the two and
 neither of them is `cfmsft2m`.
 
-## 6. What this sheet does NOT claim
+## 6. ⭐ AMENDMENT same day — the second slot can be strictly improved by one cheap arm
+
+§3 recommends `(cfmsft2, cflat)`. But §1 established that **the rank measures our BEST submission**,
+which means `0943cflat` is built on `0943cf` — **an arm that is no longer our best.** Its whole content
+is *"the `0943cf` stack plus flattened routing"*, and `0943cf` is two measured results behind.
+
+**So apply the 10-04 sheet's own hedge argument to the arm that is actually our best:**
+
+```
+Y  = (cfmsft2, cflat)        = C + max(S, R)
+Y' = (cfmsft2, cfmsft2flat)  = C + S + max(0, R)        <- and Y' >= Y for EVERY sign of R
+```
+
+With `C` = cn0 + fracture fix, `S` = msft2 view, `R` = routing flattening. In `Y` the routing hedge
+**replaces** `S`; in `Y'` it **stacks on** it. That is the identical argument the 10-04 amendment made
+when it replaced `0943p` with `0943cflat` — it was simply never re-applied after `cfmsft2` became best.
+
+### Built, and the one-axis claim is PROVEN, not asserted
+
+`kernels/kernel-0943cfmsft2flat` (`scripts/build_msft2_view_arm.py --flat`). **Not pushed.**
+
+Cell-by-cell diff against `kernel-0943cfmsft2` (`work/diff_flat_vs_cfmsft2.py`):
+
+```
+cells: cfmsft2=51  cfmsft2flat=51
+cells that differ: [2]
+--- cell 2: 2 changed line(s) ---
+    -PRESET = os.environ.get("RSNA_PRESET", "speedy")
+    +PRESET = os.environ.get("RSNA_PRESET", "parent")
+VERDICT: every changed line mentions RSNA_PRESET. Claim holds.
+```
+
+And the 2×2 that shows it is the *same* axis `cflat` uses:
+
+| arm | preset | `msft2-ours` view | `_RAD_EXCLUDE` |
+|---|---|---|---|
+| `0943cf` | speedy | 0 | `("Baker's",)` |
+| `0943cflat` | **parent** | 0 | `("Baker's",)` |
+| `0943cfmsft2` | speedy | 1 | `("Baker's",)` |
+| **`0943cfmsft2flat`** | **parent** | **1** | `("Baker's",)` |
+
+### ⚠️ What this does NOT yet have
+
+* **It has never been run.** One kernel execution (~the cost of `cfmsft2`) plus one submission.
+* The `parent` preset flattens `coatnet_w` **at runtime**, so the literal `"coatnet_w": {"__default__": 0.65`
+  is still present in the source. ⚠️ **Do not "verify" this arm by grepping for the literal** — that is
+  exactly the trap `scripts/build_0943_addmember.py` L214-216 records. Verify it the way `preflight_0943.py`
+  does: on the preset name, or better, on the runtime log of a real run.
+* **The pair in §3 remains valid if this arm is never built.** This amendment adds an option; it does not
+  replace the recommendation.
+
+### Amended recommendation, contingent on that run
+
+| slot | ref | arm |
+|---|---|---|
+| **primary** | `56814081` | `0943cfmsft2` |
+| **second** | *new ref, once pushed & scored* | **`0943cfmsft2flat`** — strictly dominates `56613303` |
+| *(fallback)* | `56613303` | `0943cflat` — use if the new arm is not run in time |
+
+⚠️ **Still true after this amendment: if `56845973` (meniscus) reads a real gain, revise again.** Neither
+of the two slots above is `cfmsft2m`, so the pair survives that too.
+
+## 7. What this sheet does NOT claim
 
 * It does **not** rank `0943cfmsft2` above the others **by its displayed score** — all the 0.943s are one
   number, and §"the board cannot rank these arms" still applies to the SCORE. The claim is about the

@@ -43,13 +43,38 @@ for _s in (sys.stdout, sys.stderr):
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 SRC = ROOT / "kernels" / "kernel-0943cf"
-DST = ROOT / "kernels" / "kernel-0943cfmsft2"
 NB = "rsna-knee-restructured-version-3.ipynb"
-SLUG = "rsna-knee-0943cfmsft2"
-TITLE = "RSNA knee 0943cfmsft2"
 CKPT_DATASET = "ppxl16/rsna-knee-msft2-ckpt"
 MEMBER_FILE = "raptor_ft_msft0_swa.pt"
 MEMBER_W = 0.20
+
+# ---- `--flat`: the same arm, with the outer per-label routing FLATTENED ------------------------
+# WHY. `0943cflat` exists so the final pair holds the measured changes in BOTH arms while differing
+# on the routing axis (see scripts/build_0943_addmember.py L126-134). But `0943cflat` is built on
+# `0943cf`, and `0943cf` is NO LONGER our best submission -- `0943cfmsft2` is (it moved in-block
+# 38.89% -> 13.66%; `0943cfmsft2m` then moved 13.67% -> 14.31%, i.e. slightly worse, so it is not).
+# With `C` = cn0+fracture fix, `S` = msft2 view, `R` = flattening, the pair values are
+#     Y  = (cfmsft2, cflat)       = C + max(S, R)
+#     Y' = (cfmsft2, cfmsft2flat) = C + S + max(0, R)
+# and Y' >= Y for every sign of R. So this arm STRICTLY improves the pair the 2026-10-05 selection
+# sheet recommends, using that sheet's own hedge argument and no new hypothesis.
+# ⚠️ It changes exactly ONE axis relative to cfmsft2 (routing), which is what makes the pair clean.
+FLAT = "--flat" in sys.argv
+
+PRESET_SPEEDY_TXT = 'PRESET = os.environ.get("RSNA_PRESET", "speedy")'
+PRESET_PARENT_TXT = 'PRESET = os.environ.get("RSNA_PRESET", "parent")'
+# ⚠️ regex anchors, so escape the literals: unescaped `(` and `)` are consumed as a group delimiter.
+PRESET_OLD = re.escape(PRESET_SPEEDY_TXT)
+PRESET_NEW = PRESET_PARENT_TXT
+
+if FLAT:
+    DST = ROOT / "kernels" / "kernel-0943cfmsft2flat"
+    SLUG = "rsna-knee-0943cfmsft2flat"
+    TITLE = "RSNA knee 0943cfmsft2flat"
+else:
+    DST = ROOT / "kernels" / "kernel-0943cfmsft2"
+    SLUG = "rsna-knee-0943cfmsft2"
+    TITLE = "RSNA knee 0943cfmsft2"
 
 VIEW_W_OLD = r'("cn0-ours": 0\.20)\}'
 VIEW_W_NEW = ('\\1,\n'
@@ -85,6 +110,8 @@ EDITS = [
     ("ARMS gains the msft2-ours entry", ARM5_OLD, ARM5_NEW),
     ("gpu_zero runs index 5", GPU0_OLD, GPU0_NEW),
 ]
+if FLAT:
+    EDITS.append(("outer routing flattened (the `parent` preset)", PRESET_OLD, PRESET_NEW))
 
 
 def apply_edits(texts):
@@ -115,7 +142,12 @@ def check(nb, meta):
     assert "norm=arm.get('norm', _KE_NS['NORM']))" in text, "per-arm norm not honoured"
     assert "_arm.get('k_eval_fixed')" in text, "k_eval_fixed not honoured"
     # the recipe's own invariants
-    assert 'PRESET = os.environ.get("RSNA_PRESET", "speedy")' in text, "preset changed"
+    if FLAT:
+        # assert on the RESULT: the flattened preset must be the one that won
+        assert PRESET_PARENT_TXT in text, "the --flat edit did not land (preset still speedy)"
+        assert PRESET_SPEEDY_TXT not in text, "the speedy preset is still present -- edit was a no-op"
+    else:
+        assert PRESET_SPEEDY_TXT in text, "preset changed"
     assert '_RAD_EXCLUDE = ("Baker\'s",)' in text, "the fracture fix was lost"
     assert '"rad_cal_w": 0.40,' in text, "rad_cal_w changed"
     assert '"coatnet_w": {"__default__": 0.65' in text, "outer routing literal changed"
@@ -159,6 +191,8 @@ def main() -> int:
           % (MEMBER_W, 1.20 + MEMBER_W))
     print("   msft2 share = %.4f  (13.2 measured 0.910-members at 0.10-0.15 as 0.000)"
           % (MEMBER_W / (1.20 + MEMBER_W)))
+    if FLAT:
+        print("   ROUTING: FLATTENED (`parent` preset) -- differs from cfmsft2 on exactly this axis")
 
     if "--push" not in sys.argv:
         print("\nnot pushed (pass --push).")
