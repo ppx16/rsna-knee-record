@@ -153,3 +153,6 @@ work/top_teams_public.json
 # docs/PREREG-2026-10-03-m448-arm.md; the receipts stay.
 work/cf448-out/**/_coat_env/
 
+
+# scratch previews written by the kernel builders' --check mode
+work/_*_preview.py
