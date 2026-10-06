@@ -141,8 +141,12 @@ def build(push: bool) -> int:
     meta.pop("machine_shape", None)
     meta["is_private"] = True
     ds = list(meta.get("dataset_sources") or [])
-    if DS_SLUG not in ds:
-        ds.append(DS_SLUG)
+    # ⚠️ MUST BE `owner/slug`. The first version appended the bare slug and `kernels_push` died with
+    # "Dataset must be specified in the form of '{username}/{dataset-slug}'" -- before pushing anything,
+    # so nothing was wasted, but it is the same class as the other silent-format traps in this repo.
+    ds_ref = "ppxl16/%s" % DS_SLUG
+    if ds_ref not in ds:
+        ds.append(ds_ref)
     meta["dataset_sources"] = ds
     (DST / "kernel-metadata.json").write_text(json.dumps(meta, indent=2) + "\n", encoding="utf-8")
     print("built %s (%d datasets, tpu=%s)" % (DST.relative_to(ROOT), len(ds), meta["enable_tpu"]))
