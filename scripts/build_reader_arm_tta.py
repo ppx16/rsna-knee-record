@@ -49,7 +49,10 @@ CELL = '''# ==== appended by scripts/build_reader_arm_tta.py: the Stack++ reader
 import glob as _o_glob, os as _o_os, shutil as _o_shutil, subprocess as _o_sp, sys as _o_sys, time as _o_time
 import pandas as _o_pd
 OWN_W = 0.30                     # the author's global weight
-SYNOVITIS_W = 0.08               # the author's per-label reduction; evidence is 58 gold studies (CI +/-0.021)
+SYNOVITIS_W = __SYNOVITIS_W__   # per-label reduction on Synovitis; see docs/EXTRACT-2026-10-06g
+#   The author uses 0.08, justified by the observation that most radiology reports never mention
+#   Synovitis, so report-derived labels teach it wrongly. That justification rests on 58 gold studies
+#   whose paired CI is +/-0.021, which is why this constant is a parameter here rather than a fact.
 _o_pub, _o_bak = "/kaggle/working/submission.csv", "/kaggle/working/_stack_submission.csv"
 _o_shutil.copy(_o_pub, _o_bak)
 print("reader leg (tta): stack submission backed up (%d bytes)" % _o_os.path.getsize(_o_bak), flush=True)
@@ -122,7 +125,7 @@ except Exception as _o_err:
 '''
 
 
-def build_nb() -> dict:
+def build_nb(synovitis_w: float = 0.08) -> dict:
     src = SRC / NB
     if not src.is_file():
         raise SystemExit("!! missing %s" % src)
@@ -137,10 +140,12 @@ def build_nb() -> dict:
     if any("build_reader_arm_tta" in (("".join(c.get("source", [])) if isinstance(c.get("source"), list)
                                        else (c.get("source") or ""))) for c in cells):
         raise SystemExit("the tta reader cell is already present -- refusing to append twice")
+    body = CELL.replace("__SYNOVITIS_W__", repr(float(synovitis_w)))
     cells.insert(pub[0] + 1, {"cell_type": "code", "execution_count": None, "metadata": {},
-                              "outputs": [], "source": CELL.splitlines(keepends=True)})
+                              "outputs": [], "source": body.splitlines(keepends=True)})
     nb["cells"] = cells
-    print("   appended the tta reader cell at index %d (publish cell was %d)" % (pub[0] + 1, pub[0]))
+    print("   appended the tta reader cell at index %d (publish cell was %d, Synovitis_w=%.2f)"
+          % (pub[0] + 1, pub[0], synovitis_w))
     return nb
 
 
@@ -149,13 +154,17 @@ def main() -> int:
     ap.add_argument("--check", action="store_true")
     ap.add_argument("--build", action="store_true")
     ap.add_argument("--push", action="store_true")
+    ap.add_argument("--synovitis-w", type=float, default=0.08,
+                    help="the per-label reduction on Synovitis. 0.08 is the author's value; 0.30 disables "
+                         "the reduction entirely and is the pre-registered FIRST variation if this arm is "
+                         "ever iterated (docs/VERIFY-2026-10-06-reader-leg-is-clean.md)")
     a = ap.parse_args()
 
-    nb = build_nb()
+    nb = build_nb(a.synovitis_w)
     text = "\n".join("".join(c.get("source", [])) if isinstance(c.get("source"), list)
                      else (c.get("source") or "") for c in nb["cells"])
     probes = [("build_reader_arm_tta.py", "the cell is present"),
-              ("SYNOVITIS_W = 0.08", "the per-label weight"),
+              ("SYNOVITIS_W = %r" % float(a.synovitis_w), "the per-label weight"),
               ("RSNA_READER_TTA", "the TTA mode"),
               ("_stack_submission.csv", "the fallback backup"),
               ("_o_shutil.copy(_o_bak, _o_pub)", "the restore path"),
@@ -165,7 +174,7 @@ def main() -> int:
     if missing:
         raise SystemExit("!! built notebook is missing: %s" % missing)
     tmp = ROOT / "work" / "_rdrtta_cell.py"
-    tmp.write_text(CELL, encoding="utf-8")
+    tmp.write_text(CELL.replace("__SYNOVITIS_W__", repr(float(a.synovitis_w))), encoding="utf-8")
     py_compile.compile(str(tmp), doraise=True)
     print("PATTERN CHECK OK: cell compiles, all %d probes present" % len(probes))
 
@@ -173,11 +182,14 @@ def main() -> int:
         print("(--check only)")
         return 0
 
-    DST.mkdir(parents=True, exist_ok=True)
-    (DST / NB).write_text(json.dumps(nb, ensure_ascii=False), encoding="utf-8")
+    dst = DST if abs(a.synovitis_w - 0.08) < 1e-9 else ROOT / "kernels" / (
+        "kernel-0943cfmsft2-rdrtta-sy%02d" % round(a.synovitis_w * 100))
+    kid = KID if dst is DST else "ppxl16/" + dst.name.replace("kernel-", "rsna-knee-")
+    dst.mkdir(parents=True, exist_ok=True)
+    (dst / NB).write_text(json.dumps(nb, ensure_ascii=False), encoding="utf-8")
     meta = json.loads((SRC / "kernel-metadata.json").read_text(encoding="utf-8"))
-    meta["id"] = KID
-    meta["title"] = "RSNA knee 0943cfmsft2 rdrtta"
+    meta["id"] = kid
+    meta["title"] = dst.name.replace("kernel-", "RSNA knee ")
     meta["code_file"] = NB
     meta["enable_gpu"] = True
     meta["enable_tpu"] = False
@@ -187,8 +199,8 @@ def main() -> int:
         if r not in ds:
             ds.append(r)
     meta["dataset_sources"] = ds
-    (DST / "kernel-metadata.json").write_text(json.dumps(meta, indent=2) + "\n", encoding="utf-8")
-    print("built %s (%d datasets)" % (DST.relative_to(ROOT), len(ds)))
+    (dst / "kernel-metadata.json").write_text(json.dumps(meta, indent=2) + "\n", encoding="utf-8")
+    print("built %s (%d datasets, id %s)" % (dst.relative_to(ROOT), len(ds), kid))
     if a.push:
         print("REFUSING to push: this arm is GATED on the base reader leg (prereg). "
               "Push deliberately, by hand, once that gate opens.")
