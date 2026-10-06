@@ -1,4 +1,4 @@
-﻿# RSNA Knee Abnormality Detection — STATUS
+# RSNA Knee Abnormality Detection — STATUS
 
 ## 🟢 CURRENT STATE — 2026-10-06T12:08Z — **read this block and nothing else for the state**
 
@@ -439,8 +439,20 @@ in-block **16.03 %**, top **0.964**. ⚠️ Margin across 10-05/10-06: **+1 → 
 the block and falling through it.**
 
 **Remaining**: 16.7 days; 4 of today's 5 submission slots; **GPU 24.31 h, TPU 12.66 h** (both refresh
-2026-10-10). ⚠️ The "6.5–8 h runtime" fear is **refuted** — the 0.943 stack is **< 30 min** on the hidden
-test set (`FIND-2026-10-06b` §2).
+2026-10-10). ⚠️ **CORRECTED 2026-10-06 14:1xZ — the "< 30 min" sentence that stood here was WRONG, and it
+was wrong in the direction of blaming the system.** Two community claims conflict and I had recorded only
+one of them: `qierroo`/`tensorhydra` claim *"sub-30 minute inference on the entire hidden test set"*, but the
+author of **the exact recipe we are running** writes, verbatim, in
+`intoxicatinglips/rsna-knee-pure-0944-verbatim`:
+
+> `RUN_STACK = True` (default): community stack + our reader, the 0.944 blend. Scoring the hidden test set
+> takes **6.5 to 8 hours** of the 9 allowed. **It is not stuck; let it run.**
+> `RUN_STACK = False`: our reader only. Scored in **about 20 minutes**, public LB 0.929.
+
+⇒ **Where the 20 minutes came from**: it is `RUN_STACK=False`, the reader ALONE. I generalised it to the
+whole pipeline. **The full stack + reader is 6.5–8 h.** Our three pending submissions have been PENDING
+3.7–7.9 h, which is consistent with that — though PENDING includes queueing, so it does not prove it.
+**Do not declare a stall before the 9 h cap.** Full intel: `docs/INTEL-2026-10-06-rsna.md`.
 
 ---
 
