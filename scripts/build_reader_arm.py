@@ -124,8 +124,8 @@ except Exception as _o_err:
 '''
 
 
-def build_nb(own_w: float = OWN_W) -> dict:
-    src = SRC / NB
+def build_nb(own_w: float = OWN_W, src_dir: pathlib.Path | None = None) -> dict:
+    src = (src_dir or SRC) / NB
     if not src.is_file():
         raise SystemExit("!! missing %s" % src)
     nb = json.loads(src.read_text(encoding="utf-8", errors="replace"))
@@ -169,18 +169,35 @@ def main() -> int:
     # The default stays 0.30, which is what submission 56872230 already used, so nothing already built moves.
     ap.add_argument("--own-w", type=float, default=OWN_W,
                     help="reader-leg weight; default %(default)s (the value already submitted)")
+    # ⚠️ WHY --src EXISTS. The leg that just landed scored 0.943 on OUR variant stack
+    # (`0943cfmsft2` + reader), while the author of this exact recipe publishes
+    # `community stack 0.943 + the SAME reader = 0.944`. Same reader, same weight, different base -- so the
+    # base is the variable, and the author's own configuration was never built here. `kernel-0943` is our
+    # closest reproduction of the community stack.
+    ap.add_argument("--src", default="",
+                    help="base kernel directory name under kernels/ (default: the one this file was written for)")
     a = ap.parse_args()
+
+    src = (ROOT / "kernels" / a.src) if a.src else SRC
+    if not (src / "kernel-metadata.json").is_file():
+        raise SystemExit("--src %r has no kernel-metadata.json" % a.src)
+    base_tag = src.name.replace("kernel-", "")
 
     w = float(a.own_w)
     if not 0.0 < w < 1.0:
         raise SystemExit("--own-w must be strictly between 0 and 1 (got %r)" % (a.own_w,))
     is_default = abs(w - OWN_W) < 1e-9
     tag = "" if is_default else "-w%02d" % round(w * 100)
-    dst = DST if is_default else (ROOT / "kernels" / ("kernel-0943cfmsft2-rdr-w%02d" % round(w * 100)))
-    kid = KID if is_default else ("ppxl16/rsna-knee-0943cfmsft2-rdr-w%02d" % round(w * 100))
-    print("reader leg: OWN_W=%r -> %s (%s)" % (w, dst.relative_to(ROOT), kid))
+    is_base_default = not a.src
+    if is_base_default:
+        dst = DST if is_default else (ROOT / "kernels" / ("kernel-0943cfmsft2-rdr-w%02d" % round(w * 100)))
+        kid = KID if is_default else ("ppxl16/rsna-knee-0943cfmsft2-rdr-w%02d" % round(w * 100))
+    else:
+        dst = ROOT / "kernels" / ("kernel-%s-rdr%s" % (base_tag, tag))
+        kid = "ppxl16/rsna-knee-%s-rdr%s" % (base_tag, tag)
+    print("reader leg: base=%s OWN_W=%r -> %s (%s)" % (base_tag, w, dst.relative_to(ROOT), kid))
 
-    nb = build_nb(w)
+    nb = build_nb(w, src)
     if a.build:
         dst.mkdir(parents=True, exist_ok=True)
         # ⚠️ ensure_ascii=True IS LOAD-BEARING, not a style choice. `KaggleApi.kernels_push` reads the
@@ -218,9 +235,11 @@ def main() -> int:
         print("(--check only; nothing written to %s)" % dst.relative_to(ROOT))
         return 0
 
-    meta = json.loads((SRC / "kernel-metadata.json").read_text(encoding="utf-8"))
+    meta = json.loads((src / "kernel-metadata.json").read_text(encoding="utf-8"))
     meta["id"] = kid
-    meta["title"] = "RSNA knee 0943cfmsft2 rdr" + tag
+    # ⚠️ The title must slugify to the id or SaveKernel returns 409 Conflict. It used to be hardcoded to
+    # "RSNA knee 0943cfmsft2 rdr", which is right for the default base and wrong for every other one.
+    meta["title"] = "RSNA knee %s rdr%s" % (base_tag, tag)
     meta["code_file"] = NB
     meta["enable_gpu"] = True
     meta["enable_tpu"] = False

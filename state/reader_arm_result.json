@@ -1,0 +1,48 @@
+{
+  "ref": "56872230",
+  "arm": "0943cfmsft2-rdr",
+  "public_score": "0.943",
+  "before": {
+    "at": "2026-10-06T06:11:10Z",
+    "n_teams": 5278,
+    "our_rank": 645,
+    "our_score": 0.943,
+    "bronze_line": 527,
+    "margin": -118,
+    "block": {
+      "score": 0.943,
+      "n": 999,
+      "lo": 485,
+      "hi": 1483
+    },
+    "in_block_pct": 16.032,
+    "top_score": 0.964
+  },
+  "after": {
+    "at": "2026-10-06T14:56:48Z",
+    "n_teams": 5316,
+    "our_rank": 710,
+    "our_score": 0.943,
+    "bronze_line": 531,
+    "margin": -179,
+    "block": {
+      "score": 0.943,
+      "n": 972,
+      "lo": 554,
+      "hi": 1525
+    },
+    "in_block_pct": 16.066,
+    "top_score": 0.964
+  },
+  "at": "2026-10-06T14:56:48Z",
+  "delta_in_block_pct_raw": 0.034,
+  "delta_margin": -61,
+  "drift_ranks_per_hour": 7.42,
+  "drift_adjusted_before_pct": 16.066,
+  "delta_in_block_pct_drift_adjusted": 0.0,
+  "rank_verdict": "no measurable change",
+  "rank_verdict_basis": "drift-adjusted",
+  "verdict": "no measurable change",
+  "verdict_rule": "in-block percentile vs the drift-adjusted bar (prereg: reader leg)",
+  "instrument_blind": "public score 0.943 is not above our existing best 0.943, so the board cannot show this arm at all -- any rank movement recorded above is DRIFT, and the pre-registered '+/-3 -> pair unchanged' branch holds by construction rather than by measurement"
+}

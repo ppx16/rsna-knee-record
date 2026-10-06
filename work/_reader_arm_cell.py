@@ -3,7 +3,7 @@
 # The stack's submission is written by the previous cell; this cell only ever REPLACES it on success.
 import glob as _o_glob, os as _o_os, shutil as _o_shutil, subprocess as _o_sp, sys as _o_sys, time as _o_time
 import pandas as _o_pd
-OWN_W = 0.15   # chosen before submitting, not tuned on the leaderboard
+OWN_W = 0.3   # chosen before submitting, not tuned on the leaderboard
 _o_pub, _o_bak = "/kaggle/working/submission.csv", "/kaggle/working/_stack_submission.csv"
 _o_shutil.copy(_o_pub, _o_bak)
 print("reader leg: stack submission backed up (%d bytes)" % _o_os.path.getsize(_o_bak), flush=True)
