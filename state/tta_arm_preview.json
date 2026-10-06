@@ -1,0 +1,19 @@
+{
+  "ref": "ppxl16/rsna-knee-0943cfmsft2-rdrtta",
+  "status": "KernelWorkerStatus.COMPLETE",
+  "log_chars": 16747,
+  "at": "2026-10-06T08:10:35Z",
+  "reader_lines": [
+    "reader leg (tta): stack submission backed up (830 bytes)",
+    "reader leg (tta): 3 checkpoints; src=/kaggle/input/datasets/goodpjw2008/rsna-knee-2-5d-convnext-reader; data=/kaggle/input/competitions/rsna-knee-abnormality-detection",
+    "reader leg (tta): free GPU memory (GB) [15.4, 15.5]",
+    "reader leg (tta): inference took 32s",
+    "reader leg (tta): BLENDED 3 ckpts, Synovitis_w=0.08 other_w=0.30, 32s"
+  ],
+  "wrote_own": true,
+  "blended": true,
+  "failed": false,
+  "stack_complete": true,
+  "composed": true,
+  "errors": []
+}
