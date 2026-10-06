@@ -1,0 +1,25 @@
+{
+  "at": "2026-10-06T08:50:37Z",
+  "arm": "0943cfmsft2-rdrtta",
+  "kernel": "ppxl16/rsna-knee-0943cfmsft2-rdrtta",
+  "version": 1,
+  "before_snapshot": {
+    "at": "2026-10-06T08:50:37Z",
+    "n_teams": 5288,
+    "our_rank": 670,
+    "our_score": 0.943,
+    "bronze_line": 528,
+    "margin": -142,
+    "block": {
+      "score": 0.943,
+      "n": 985,
+      "lo": 510,
+      "hi": 1494
+    },
+    "in_block_pct": 16.26,
+    "top_score": 0.964
+  },
+  "message": "0943cfmsft2 + the Stack++ 2.5D ConvNeXt reader as a separate TTA leg (Synovitis_w=0.08, other_w=0.30, 3 fold checkpoints). Stack unchanged; the reader is a different architecture family blended as its own leg. Safe fallback: any reader failure keeps the stack's submission",
+  "note": "server-side re-run; the 9 h cap is the risk",
+  "ref": 56876044
+}

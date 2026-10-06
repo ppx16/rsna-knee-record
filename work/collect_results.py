@@ -262,6 +262,43 @@ else:
     print("   DRIFT: not estimable (state/rank_track.jsonl missing or has <2 usable points).")
     print("      => the raw BEFORE comparison stands, and any verdict is weaker for it.")
 
+# ---------------------------------------------------------------- the TTA reader arm's score
+# ⚠️ SAME INSTRUMENT, DIFFERENT QUESTION. The plain reader leg above is judged on how far the IN-BLOCK
+# PERCENTILE moves. This one is judged on whether it CROSSES THE BRONZE STEP -- because 0.944 lands at ranks
+# 319-504, entirely inside the line, while 0.943 is a 990-wide block that straddles it. So the criterion here
+# is the DISPLAYED SCORE. See docs/PREREG-2026-10-06n-tta-reader-arm.md.
+print()
+print("=" * 92)
+print("MEASUREMENT 3 -- TTA reader arm, submission 56876044")
+_tscore = None
+_t = cli(["competitions", "submissions", "-c", COMP])
+if _t is None:
+    print("   score: UNASKED (transport failed on every attempt)")
+else:
+    for ln in _t.splitlines():
+        m = re.match(r"^56876044\s+\S+\s+(\d{4}-\d\d-\d\d \d\d:\d\d:\d\d)\S*\s+(.*)$", ln.strip())
+        if m:
+            sm = re.search(r"SubmissionStatus\.(\w+)(?:\s+([\d.]+))?", m.group(2))
+            _tscore = (sm.group(2) or None) if sm else None
+            print("   submitted: %s   status: %s   public: %s"
+                  % (m.group(1), sm.group(1) if sm else "?", _tscore or "-"))
+            break
+    else:
+        print("   the submission is ABSENT from the table (never submitted, or removed)")
+_trec = STATE / "submit_56876044.json"
+if _trec.is_file():
+    _b = json.loads(_trec.read_text(encoding="utf-8")).get("before_snapshot") or {}
+    print("   BEFORE (08:50Z): rank %s, line %s, margin %s, in-block %s%%"
+          % (_b.get("our_rank"), _b.get("bronze_line"), _b.get("margin"), _b.get("in_block_pct")))
+    print("   expected score ~18:50-19:50Z (10-11 h after 08:50Z, FACTS A7); kernel cap not applicable")
+print("   READ RULE (preregistered, SCORE-based because this is a threshold question):")
+print("      >=0.945  above the measured public ceiling -> record the anomaly")
+print("      0.944    *** CROSSES THE BRONZE LINE *** (ranks 319-504, entirely inside) -> becomes primary,")
+print("               second stays 56613303, and STOP spending slots")
+print("      0.943    invisible to the rank instrument (the board carries our BEST) -> pair unchanged;")
+print("               only then do the other variants (-rdrtta-sy30, w=0.15) have a stated basis")
+print("      <=0.942  not our best -> pair unchanged, and the reader-variant line ends here")
+
 # ---------------------------------------------------------------- the gate's gold AUC
 print()
 print("=" * 92)
