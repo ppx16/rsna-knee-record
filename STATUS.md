@@ -1,6 +1,6 @@
 # RSNA Knee Abnormality Detection — STATUS
 
-## 🟢 CURRENT STATE — 2026-10-06T08:22Z — **read this block and nothing else for the state**
+## 🟢 CURRENT STATE — 2026-10-06T08:31Z — **read this block and nothing else for the state**
 
 *Every number below was assembled from files (`work/assemble_state.py`), not from prose. The DELTA sections
 further down are a chronological audit trail and several are superseded; they are kept because this
@@ -12,6 +12,14 @@ repository has been damaged before by a STATUS whose prose had drifted.*
 | **board** (`2026-10-06T08:16:25Z`, `state/lb_snapshot_2026-10-06T081625Z.json`) | teams **5286**, rank **665**, `0.943`, bronze line **528**, **margin −137**, in-block **16.178 %**, top **0.964** — ⚠️ **drifting +145…+240 ranks/day and accelerating**; re-take with `work/lb_snapshot.py`, never quote this line as current |
 | **quota** (`kaggle quota`, venv CLI — columns are `used / remaining / total`) | **GPU 5.84 h used, 24.16 h remaining** / 30 · **TPU 7.34 h used, 12.66 h remaining** / 20 · both refresh **2026-10-10** |
 | **submissions today** | **1 / 5** (45 visible in total) |
+
+> ### 👉 THE ONE MANUAL ACTION: `FINAL-TICK.md` (repo root)
+>
+> The final pair is selected in a **browser** — there is no API for it (no `select` verb, no `selected`
+> field, legacy `/api/v1` 401s; all three checked on kaggle 2.1.2 *and* 2.2.2), **Kaggle's auto-ticked
+> default is NOT this pair**, and **thirteen other submissions also display 0.942–0.943**. `FINAL-TICK.md`
+> gives the two description prefixes to match on, what to run before ticking, and the one condition (the
+> reader leg reaching 0.944) that changes the table. Read it before touching the submission page.
 
 ### ✅ FINAL PAIR — locked, and verified present + uniquely identifiable
 
