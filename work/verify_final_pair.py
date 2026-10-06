@@ -28,7 +28,9 @@ for ln in txt.splitlines():
     if not m:
         continue
     ref, fname, date, rest = m.groups()
-    sm = re.search(r"SubmissionStatus\.(\w+)\s+([\d.]+|)", rest)
+    # ⚠️ optional score group -- a PENDING row has no trailing whitespace, and requiring one makes the
+    # row report `?`, which reads like a fault instead of "still being scored".
+    sm = re.search(r"SubmissionStatus\.(\w+)(?:\s+([\d.]+))?", rest)
     desc = rest[:rest.find("SubmissionStatus")].strip() if "SubmissionStatus" in rest else rest
     rows.append((ref, date, (sm.group(2) or "-") if sm else "?", sm.group(1) if sm else "?", desc, fname))
 

@@ -29,7 +29,10 @@ for ln in txt.splitlines():
     if not m:
         continue
     ref, fname, date, rest = m.groups()
-    sm = re.search(r"SubmissionStatus\.(\w+)\s+([\d.]+|)\s*([\d.]+|)", rest)
+    # ⚠️ the score groups must be OPTIONAL: a PENDING row ends right after `PENDING` with no trailing
+    # whitespace, so the old `\s+([\d.]+|)` failed to match and the row reported `?` -- which reads like
+    # a FAULT when it actually means "still being scored".
+    sm = re.search(r"SubmissionStatus\.(\w+)(?:\s+([\d.]+))?(?:\s+([\d.]+))?", rest)
     status = sm.group(1) if sm else "?"
     score = (sm.group(2) or "-") if sm else "-"
     desc = rest[:rest.find("SubmissionStatus")] if "SubmissionStatus" in rest else rest

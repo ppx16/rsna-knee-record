@@ -40,6 +40,18 @@ dependence on the **public-fitted** per-label routing, which `cflat` does. **The
 Watchers `work/watch_rdr_submission.py` and `work/watch_distilled_gate.py` implement those rules verbatim
 and write `state/reader_arm_result.json` / `state/gate_distilled_result.json`.
 
+⚠️ **Those watchers are SESSION-SCOPED — if the session ends before a measurement lands, they die and their
+result file is never written.** The results are still recoverable, and **one command does it**:
+
+```
+python work/collect_results.py
+```
+
+It prints, for both measurements, the raw evidence *and* the pre-registered verdict above; if the gate's
+watcher file is absent it prints the exact fallback (fetch the kernel log and look for
+`[zeroshot] zero training steps: GOLD macro-AUC <N>`). It never reports a verdict it could not earn —
+transport failure prints `UNASKED`, a missing score prints `PENDING`, an unreadable log prints `UNREAD`.
+
 ### ⛔ Every other axis is CLOSED BY MEASUREMENT — do not reopen
 
 Specialist (meniscus `56845973` = **0.940** vs a 0.943 baseline) · external / more data (the corpus **is** the
