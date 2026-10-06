@@ -38,7 +38,21 @@ WORK = pathlib.Path("work/klog_gate_distilled")
 OUT = pathlib.Path("state/gate_distilled_result.json")
 
 api = KaggleApi()
-api.authenticate()
+# ⚠️ A LONG-RUNNING WATCHER MUST SURVIVE A TRANSIENT AUTH FAILURE. `api.kaggle.com` intermittently dies
+# with SSLEOFError during OAuth, and this process authenticates ONCE at module scope before its polling
+# loop -- so an unguarded failure here kills the watcher instantly and the result is never read. The scope
+# of this script is hours; the failure mode is seconds. Retry it.
+_last = None
+for _try in range(8):
+    try:
+        api.authenticate()
+        break
+    except Exception as _e:  # noqa: BLE001
+        _last = _e
+        print("auth attempt %d failed: %s" % (_try + 1, type(_e).__name__), flush=True)
+        time.sleep(10)
+else:
+    raise SystemExit("could not authenticate after 8 attempts (%r) -- TRANSPORT, not a result" % _last)
 
 
 def status():

@@ -28,6 +28,18 @@ import subprocess
 import sys
 import time
 
+# ⚠️ THIS SCRIPT PRINTS EMOJI, AND THIS CONSOLE IS GBK.
+# On Windows the default stdout encoding here is cp936/GBK, which cannot encode `⚠️`; the first print that
+# contains one raises UnicodeEncodeError and KILLS THE SCRIPT MID-REPORT. That is exactly what happened:
+# measurement 1 printed, then the traceback swallowed measurements 2 and 3 -- so the recovery path was
+# silently reporting only one third of what it exists to report, while looking like it had run.
+# Fix at the source (all prints) rather than deleting the emoji one at a time.
+try:
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+    sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+except Exception:  # noqa: BLE001  -- non-reconfigurable stream (e.g. redirected): fall back to plain prints
+    pass
+
 # ⚠️ THE RETRY MUST WRAP THE IMPORT, NOT JUST THE CALLS.
 # `kaggle/__init__.py` line 8 calls `api.authenticate()` at import time, so a transient api.kaggle.com
 # SSLEOFError surfaces as a failure of the `from kaggle... import KaggleApi` statement itself. The first
