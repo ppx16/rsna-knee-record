@@ -1,0 +1,25 @@
+{
+  "at": "2026-10-06T06:11:19Z",
+  "arm": "0943cfmsft2-rdr",
+  "kernel": "ppxl16/rsna-knee-0943cfmsft2-rdr",
+  "version": 1,
+  "ref": 56872230,
+  "before_snapshot": {
+    "at": "2026-10-06T06:11:10Z",
+    "n_teams": 5278,
+    "our_rank": 645,
+    "our_score": 0.943,
+    "bronze_line": 527,
+    "margin": -118,
+    "block": {
+      "score": 0.943,
+      "n": 999,
+      "lo": 485,
+      "hi": 1483
+    },
+    "in_block_pct": 16.032,
+    "top_score": 0.964
+  },
+  "message": "0943cfmsft2 + the public 2.5D ConvNeXt reader as a separate 30% rank leg (goodpjw2008/rsna-knee-2-5d-convnext-reader, 3 fold checkpoints). The stack is unchanged; the reader is a different architecture family blended as its own leg, not inside the Raptor sub-blend. Safe fallback: any reader failure keeps the stack's submission",
+  "note": "server-side re-run expected 6.5-8 h (+~20 min reader); 9 h cap is the risk"
+}
