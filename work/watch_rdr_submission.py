@@ -98,11 +98,76 @@ after = json.loads(snaps[-1].read_text(encoding="utf-8")) if snaps else None
 
 rec = {"ref": REF, "arm": "0943cfmsft2-rdr", "public_score": score, "before": before, "after": after,
        "at": dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")}
+
+
+# ⚠️ THE RAW BEFORE/AFTER COMPARISON IS WRONG ON THIS BOARD -- and it was wrong here until now.
+# The board drifts: teams keep passing our 0.943, so our rank FALLS with time even when our own score cannot
+# change. In-block percentile therefore RISES on its own. Measured this session at +145..+240 ranks/day,
+# which over an 8 h wait is ~65 ranks -- about +6.5 points in a 990-wide block. The rule this replaces would
+# have written "WORSE" for an arm that did nothing at all, and the pre-registered branch for WORSE is
+# 'the composition is harmful; drop the leg'. That is a confidently wrong verdict produced by drift alone,
+# written into the machine-readable file a handover reads.
+# So: age the BEFORE rank by the measured drift, re-express it in TODAY's block geometry, judge against THAT.
+# collect_results.py was corrected the same way; this is the script that persists the answer to disk.
+def _rate_per_hour(track, t0, t1):
+    if not track.is_file():
+        return None
+    pts = []
+    for ln in track.read_text(encoding="utf-8").splitlines():
+        ln = ln.strip()
+        if not ln:
+            continue
+        try:
+            d = json.loads(ln)
+            t = dt.datetime.strptime(d["at"], "%Y-%m-%dT%H:%M:%SZ").replace(tzinfo=dt.timezone.utc)
+        except Exception:  # noqa: BLE001
+            continue
+        if isinstance(d.get("rank"), int):
+            pts.append((t, d["rank"]))
+    pts.sort()
+    for win in ([(t, r) for t, r in pts if t0 <= t <= t1], [(t, r) for t, r in pts if t <= t1]):
+        if len(win) >= 2:
+            span = (win[-1][0] - win[0][0]).total_seconds() / 3600.0
+            if span >= 0.5:
+                return (win[-1][1] - win[0][1]) / span
+    return None
+
+
 if before and after:
-    d_pct = after["in_block_pct"] - before["in_block_pct"]
-    rec["delta_in_block_pct"] = round(d_pct, 3)
+    raw = after["in_block_pct"] - before["in_block_pct"]
+    rec["delta_in_block_pct_raw"] = round(raw, 3)
     rec["delta_margin"] = after["margin"] - before["margin"]
-    rec["verdict"] = ("REAL GAIN (>=3 points better)" if d_pct <= -3 else
-                      "no measurable change" if abs(d_pct) < 3 else "WORSE")
+    try:
+        t0 = dt.datetime.strptime(before["at"], "%Y-%m-%dT%H:%M:%SZ").replace(tzinfo=dt.timezone.utc)
+        t1 = dt.datetime.strptime(after["at"], "%Y-%m-%dT%H:%M:%SZ").replace(tzinfo=dt.timezone.utc)
+    except Exception:  # noqa: BLE001
+        t0 = t1 = None
+    rate = _rate_per_hour(STATE / "rank_track.jsonl", t0, t1) if (t0 and t1) else None
+    blk = after.get("block") or {}
+    if rate is not None and t0 and t1 and blk.get("hi", 0) > blk.get("lo", 0):
+        hrs = (t1 - t0).total_seconds() / 3600.0
+        adj_rank = before["our_rank"] + rate * hrs
+        adj_pct = (adj_rank - blk["lo"]) / float(blk["hi"] - blk["lo"]) * 100.0
+        d = after["in_block_pct"] - adj_pct
+        rec["drift_ranks_per_hour"] = round(rate, 2)
+        rec["drift_adjusted_before_pct"] = round(adj_pct, 3)
+        rec["delta_in_block_pct_drift_adjusted"] = round(d, 3)
+        rec["verdict"] = ("REAL GAIN (>=3 points better)" if d <= -3 else
+                          "no measurable change" if abs(d) < 3 else "WORSE")
+        rec["verdict_basis"] = "drift-adjusted"
+    else:
+        rec["verdict"] = ("REAL GAIN (>=3 points better)" if raw <= -3 else
+                          "no measurable change" if abs(raw) < 3 else "WORSE")
+        rec["verdict_basis"] = "RAW -- drift could NOT be estimated, so this verdict is WEAK by construction"
+    # ⚠️ the degeneracy: the board carries our BEST submission, so a tie moves the rank by exactly nothing
+    try:
+        _s = float(score) if score else None
+    except Exception:  # noqa: BLE001
+        _s = None
+    if _s is not None and _s <= 0.943:
+        rec["instrument_blind"] = (
+            "public score %.3f is not above our existing best 0.943, so the board cannot show this arm at "
+            "all -- any rank movement recorded above is DRIFT, and the pre-registered '+/-3 -> pair "
+            "unchanged' branch holds by construction rather than by measurement" % _s)
 RESULT.write_text(json.dumps(rec, indent=2), encoding="utf-8")
 print(json.dumps(rec, indent=2))
