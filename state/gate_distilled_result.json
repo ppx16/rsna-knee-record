@@ -1,0 +1,14 @@
+{
+  "ref": "ppxl16/rsna-knee-msft2-gate-distilled",
+  "status": "KernelWorkerStatus.COMPLETE",
+  "log_chars": 3056,
+  "at": "2026-10-06T12:06:43Z",
+  "gold_macro_auc": 0.8895,
+  "verdict_line": "[zeroshot] VERDICT: FAIL (parent bar 0.8963, got 0.8895)",
+  "head_loaded": true,
+  "head_tensors_carried": true,
+  "warm_start": "/kaggle/input/datasets/ppxl16/rsna-knee-coat-distilled-ckpt/coatnet_384_full_cohort_swa.pt",
+  "per_label": "{\"ACL\": 0.951, \"MCL\": 0.9252, \"Medial Meniscus\": 0.9772, \"Lateral Meniscus\": 0.8658, \"Medial OA\": 0.9736, \"Lateral OA\": 0.7698, \"PF OA\": 0.8353, \"Effusion\": 0.9677, \"Synovitis\": 0.7957, \"Baker's\": 0.9185, \"Contusion\": 0.8731, \"Fracture\": 0.8208}",
+  "errors": [],
+  "decision": "below the A167 member gate -> reject as a member"
+}
