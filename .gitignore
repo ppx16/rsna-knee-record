@@ -170,3 +170,5 @@ work/newpub_1006/
 # the public reader's 369 MB of checkpoints + wheels (re-fetchable via work/fetch_reader.py)
 work/reader/
 work/klog_rdr/
+work/klog_f1/
+work/klog_rdr2/
