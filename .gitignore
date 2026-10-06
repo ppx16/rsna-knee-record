@@ -163,3 +163,6 @@ work/klog_ab/*/
 
 # downloaded Kaggle Models for evaluation (keep the scripts, not the blobs)
 work/models_axis/
+
+# pulled third-party notebooks
+work/newpub_1006/

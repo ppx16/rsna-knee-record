@@ -100,7 +100,7 @@ evidently for ours. **Dropped, and recorded rather than quietly forgotten.**
 merge that is uncontaminated on the other 4349 rows), so this is a close comparison rather than an exact
 one. It is however decisive against the *large* gap their panel shows.
 
-## Lever 1 — ⭐ the actionable one, and it needs no new training at all
+## Verdict on Lever 1 — the actionable one, needing no new training at all
 
 Everything in the Lever 1 section above stands unchanged, and the label investigation **strengthens**
 rather than weakens it: **their reader scores 0.912 on the 58 gold as a single model family, against our
