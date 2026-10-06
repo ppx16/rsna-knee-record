@@ -1,0 +1,47 @@
+{
+  "ref": "56878092",
+  "arm": "0943cfmsft2-rdr",
+  "public_score": "0.944",
+  "before": {
+    "at": "2026-10-06T10:23:16Z",
+    "n_teams": 5297,
+    "our_rank": 683,
+    "our_score": 0.943,
+    "bronze_line": 529,
+    "margin": -154,
+    "block": {
+      "score": 0.943,
+      "n": 982,
+      "lo": 521,
+      "hi": 1502
+    },
+    "in_block_pct": 16.514,
+    "top_score": 0.964
+  },
+  "after": {
+    "at": "2026-10-06T17:26:50Z",
+    "n_teams": 5326,
+    "our_rank": 545,
+    "our_score": 0.944,
+    "bronze_line": 532,
+    "margin": -13,
+    "block": {
+      "score": 0.943,
+      "n": 968,
+      "lo": 570,
+      "hi": 1537
+    },
+    "in_block_pct": -2.585,
+    "top_score": 0.964
+  },
+  "at": "2026-10-06T17:26:51Z",
+  "delta_in_block_pct_raw": -19.099,
+  "delta_margin": 141,
+  "drift_ranks_per_hour": -19.55,
+  "drift_adjusted_before_pct": -2.585,
+  "delta_in_block_pct_drift_adjusted": 0.0,
+  "rank_verdict": "no measurable change",
+  "rank_verdict_basis": "drift-adjusted",
+  "verdict_rule": "DISPLAYED SCORE vs the bronze step (prereg: TTA / w=0.15)",
+  "verdict": "*** CROSSES THE BRONZE LINE *** (ranks 319-504, entirely inside) -> becomes PRIMARY, second stays 56613303, and STOP spending slots"
+}

@@ -26,7 +26,7 @@ import subprocess
 
 KG = r"D:\kaggle\venv-kaggle\Scripts\kaggle.exe"
 COMP = "rsna-knee-abnormality-detection"
-PAIR = {"56814081": "PRIMARY  0943cfmsft2",
+PAIR = {"56878092": "PRIMARY  0943cfmsft2-rdr-w15",
         "56613303": "SECOND   0943cflat"}
 
 r = subprocess.run([KG, "competitions", "submissions", "-c", COMP],
