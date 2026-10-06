@@ -1,0 +1,25 @@
+{
+  "at": "2026-10-06T10:23:16Z",
+  "arm": "0943cfmsft2-rdr-w15",
+  "kernel": "ppxl16/rsna-knee-0943cfmsft2-rdr-w15",
+  "version": 1,
+  "before_snapshot": {
+    "at": "2026-10-06T10:23:16Z",
+    "n_teams": 5297,
+    "our_rank": 683,
+    "our_score": 0.943,
+    "bronze_line": 529,
+    "margin": -154,
+    "block": {
+      "score": 0.943,
+      "n": 982,
+      "lo": 521,
+      "hi": 1502
+    },
+    "in_block_pct": 16.514,
+    "top_score": 0.964
+  },
+  "message": "0943cfmsft2 + the public 2.5D ConvNeXt reader as a separate leg at w=0.15 (goodpjw2008/rsna-knee-2-5d-convnext-reader, 3 fold checkpoints). Stack unchanged; the reader is a different architecture family. Safe fallback: any reader failure keeps the stack's submission",
+  "note": "server-side re-run; the 9 h cap is the risk",
+  "ref": 56878092
+}

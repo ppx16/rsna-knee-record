@@ -262,42 +262,52 @@ else:
     print("   DRIFT: not estimable (state/rank_track.jsonl missing or has <2 usable points).")
     print("      => the raw BEFORE comparison stands, and any verdict is weaker for it.")
 
-# ---------------------------------------------------------------- the TTA reader arm's score
+# ---------------------------------------------------------------- the reader ARMS judged on the SCORE
 # ⚠️ SAME INSTRUMENT, DIFFERENT QUESTION. The plain reader leg above is judged on how far the IN-BLOCK
-# PERCENTILE moves. This one is judged on whether it CROSSES THE BRONZE STEP -- because 0.944 lands at ranks
-# 319-504, entirely inside the line, while 0.943 is a 990-wide block that straddles it. So the criterion here
-# is the DISPLAYED SCORE. See docs/PREREG-2026-10-06n-tta-reader-arm.md.
-print()
-print("=" * 92)
-print("MEASUREMENT 3 -- TTA reader arm, submission 56876044")
-_tscore = None
-_t = cli(["competitions", "submissions", "-c", COMP])
-if _t is None:
-    print("   score: UNASKED (transport failed on every attempt)")
-else:
-    for ln in _t.splitlines():
-        m = re.match(r"^56876044\s+\S+\s+(\d{4}-\d\d-\d\d \d\d:\d\d:\d\d)\S*\s+(.*)$", ln.strip())
-        if m:
-            sm = re.search(r"SubmissionStatus\.(\w+)(?:\s+([\d.]+))?", m.group(2))
-            _tscore = (sm.group(2) or None) if sm else None
-            print("   submitted: %s   status: %s   public: %s"
-                  % (m.group(1), sm.group(1) if sm else "?", _tscore or "-"))
-            break
+# PERCENTILE moves. These are judged on whether they CROSS THE BRONZE STEP -- because 0.944 lands at ranks
+# 319-504, entirely inside the line, while 0.943 is a ~990-wide block that straddles it. So the criterion
+# here is the DISPLAYED SCORE.
+# Written as a LOOP rather than a copy per arm, deliberately: a third copy is exactly where a registered
+# rule quietly stops matching the arm it was registered for, which is the failure this repository keeps
+# recording. Adding an arm is now one tuple.
+SCORE_ARMS = [
+    ("56876044", "TTA reader arm (w=0.30 + TTA)", "08:50Z", "18:50-19:50Z",
+     "docs/PREREG-2026-10-06n-tta-reader-arm.md"),
+    ("56878092", "reader leg at w=0.15", "10:23Z", "20:23-21:23Z",
+     "docs/PREREG-2026-10-06o-reader-w015.md"),
+]
+for _i, (_ref, _label, _fired, _expect, _prereg) in enumerate(SCORE_ARMS, start=3):
+    print()
+    print("=" * 92)
+    print("MEASUREMENT %d -- %s, submission %s" % (_i, _label, _ref))
+    _sc = None
+    _txt = cli(["competitions", "submissions", "-c", COMP])
+    if _txt is None:
+        print("   score: UNASKED (transport failed on every attempt)")
     else:
-        print("   the submission is ABSENT from the table (never submitted, or removed)")
-_trec = STATE / "submit_56876044.json"
-if _trec.is_file():
-    _b = json.loads(_trec.read_text(encoding="utf-8")).get("before_snapshot") or {}
-    print("   BEFORE (08:50Z): rank %s, line %s, margin %s, in-block %s%%"
-          % (_b.get("our_rank"), _b.get("bronze_line"), _b.get("margin"), _b.get("in_block_pct")))
-    print("   expected score ~18:50-19:50Z (10-11 h after 08:50Z, FACTS A7); kernel cap not applicable")
-print("   READ RULE (preregistered, SCORE-based because this is a threshold question):")
-print("      >=0.945  above the measured public ceiling -> record the anomaly")
-print("      0.944    *** CROSSES THE BRONZE LINE *** (ranks 319-504, entirely inside) -> becomes primary,")
-print("               second stays 56613303, and STOP spending slots")
-print("      0.943    invisible to the rank instrument (the board carries our BEST) -> pair unchanged;")
-print("               only then do the other variants (-rdrtta-sy30, w=0.15) have a stated basis")
-print("      <=0.942  not our best -> pair unchanged, and the reader-variant line ends here")
+        for ln in _txt.splitlines():
+            m = re.match(r"^%s\s+\S+\s+(\d{4}-\d\d-\d\d \d\d:\d\d:\d\d)\S*\s+(.*)$" % _ref, ln.strip())
+            if m:
+                sm = re.search(r"SubmissionStatus\.(\w+)(?:\s+([\d.]+))?", m.group(2))
+                _sc = (sm.group(2) or None) if sm else None
+                print("   submitted: %s   status: %s   public: %s"
+                      % (m.group(1), sm.group(1) if sm else "?", _sc or "-"))
+                break
+        else:
+            print("   the submission is ABSENT from the table (never submitted, or removed)")
+    _rec = STATE / ("submit_%s.json" % _ref)
+    if _rec.is_file():
+        _b = json.loads(_rec.read_text(encoding="utf-8")).get("before_snapshot") or {}
+        print("   BEFORE (%s): rank %s, line %s, margin %s, in-block %s%%"
+              % (_fired, _b.get("our_rank"), _b.get("bronze_line"), _b.get("margin"),
+                 _b.get("in_block_pct")))
+    print("   expected score ~%s (10-11 h, FACTS A7)" % _expect)
+    print("   READ RULE (preregistered, SCORE-based -- a threshold question, not a rank increment):")
+    print("      0.944    *** CROSSES THE BRONZE LINE *** (ranks 319-504, entirely inside) -> becomes")
+    print("               primary, second stays 56613303, and STOP spending slots")
+    print("      0.943    invisible to the rank instrument (the board carries our BEST) -> pair unchanged")
+    print("      <=0.942  not our best -> pair unchanged, and the reader-variant line ends here")
+    print("      prereg  : %s" % _prereg)
 
 # ---------------------------------------------------------------- the gate's gold AUC
 print()

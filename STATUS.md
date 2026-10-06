@@ -1,6 +1,6 @@
 # RSNA Knee Abnormality Detection — STATUS
 
-## 🟢 CURRENT STATE — 2026-10-06T08:52Z — **read this block and nothing else for the state**
+## 🟢 CURRENT STATE — 2026-10-06T10:25Z — **read this block and nothing else for the state**
 
 *Every number below was assembled from files (`work/assemble_state.py`), not from prose. The DELTA sections
 further down are a chronological audit trail and several are superseded; they are kept because this
@@ -9,9 +9,9 @@ repository has been damaged before by a STATUS whose prose had drifted.*
 | | |
 |---|---|
 | **deadline** | **2026-10-22 23:59Z — 16.7 days** |
-| **board** (`2026-10-06T08:50:37Z`, from the TTA arm's own BEFORE snapshot) | teams **5288**, rank **670**, `0.943`, bronze line **528**, **margin −142**, in-block **16.26 %**, top **0.964** — ⚠️ **drifting +145…+240 ranks/day and accelerating** (rank 645→670 in 2.7 h); re-take with `work/lb_snapshot.py`, never quote this line as current |
+| **board** (`2026-10-06T10:23:16Z`, from the w=0.15 arm's own BEFORE snapshot) | teams **5297**, rank **683**, `0.943`, bronze line **529**, **margin −154**, in-block **16.514 %**, top **0.964** — ⚠️ **drifting +145…+240 ranks/day and accelerating** (rank 645→670→683 in 4.2 h; the `0.943` block's floor rose 485→521 while its width fell 999→982). Re-take with `work/lb_snapshot.py`, never quote this line as current |
 | **quota** (`kaggle quota`, venv CLI — columns are `used / remaining / total`) | **GPU 5.84 h used, 24.16 h remaining** / 30 · **TPU 7.34 h used, 12.66 h remaining** / 20 · both refresh **2026-10-10** |
-| **submissions today** | **2 / 5** (46 visible in total) |
+| **submissions today** | **3 / 5** (47 visible in total) |
 
 > ### 👉 THE ONE MANUAL ACTION: `FINAL-TICK.md` (repo root)
 >
@@ -60,6 +60,7 @@ dependence on the **public-fitted** per-label routing, which `cflat` does. **The
 | **reader leg** | `ppxl16/rsna-knee-0943cfmsft2-rdr` → submission **`56872230`** | **PENDING** (since 06:11Z) — ⚠️ **this is NOT a stall.** `FACTS` **A7** measured it: *提交 → 出分 **10–11 h***（6.5–8 h 是**内核自己跑**的时间，两者不是一回事）。⇒ **预期出分 ≈ 16:11–17:11Z**；服务端内核的 9 h 上限在 **15:11Z** 到点。而 **A73**：失败会**在几分钟内**从日志抛出 ⇒ 现在还是 PENDING 说明它没有早退 | in-block percentile against **the DRIFT-ADJUSTED bar that `work/collect_results.py` prints**, NOT against the frozen 16.03 % it was registered with; **≥ 3 points better ⇒ real**; displayed score is NOT the criterion. ⚠️ **But what the outcome MEANS is fixed**: `0.944` puts us at ranks 319–504, **inside the bronze line**; `0.943` leaves us in the 990-wide block that straddles it. See `docs/TARGET-2026-10-06j` |
 | **distilled zero-shot gate** | `ppxl16/rsna-knee-msft2-gate-distilled` | **QUEUED** (since 07:15Z) | gold-58 macro-AUC: **≥0.92** geometry matches + strong · 0.90–0.92 usable · 0.85–0.90 below the member gate · **<0.85 geometry mismatch, reject** |
 | **TTA reader arm** ⭐ FIRED | `ppxl16/rsna-knee-0943cfmsft2-rdrtta` → submission **`56876044`** | **PENDING** (since 08:50Z) | ⚠️ **SCORE-based, because this is a THRESHOLD question, not a rank-increment one** (`docs/PREREG-2026-10-06n-tta-reader-arm.md`): **0.944 ⇒ crosses the bronze line (ranks 319–504, entirely inside) ⇒ becomes primary and STOP**; 0.943 ⇒ invisible to the rank instrument, pair unchanged; ≤0.942 ⇒ pair unchanged, reader-variant line ends. Expected **~18:50–19:50Z** |
+| **reader leg w=0.15** ⭐ FIRED | `ppxl16/rsna-knee-0943cfmsft2-rdr-w15` → submission **`56878092`** | **PENDING** (since 10:23Z) | Same score-based rule (`docs/PREREG-2026-10-06o-reader-w015.md`). The author's sweep is **0.15→0.944, 0.30→0.944, 0.45→0.942**, so 0.15 is the other supported point of the same plateau; their sweep ran on the COMMUNITY stack while ours is the `0943cfmsft2` variant, so the better weight for us need not be 0.30. ⚠️ the two weights are **highly correlated**. Expected **~20:23–21:23Z** |
 
 Watchers `work/watch_rdr_submission.py` and `work/watch_distilled_gate.py` implement those rules verbatim
 and write `state/reader_arm_result.json` / `state/gate_distilled_result.json`.
