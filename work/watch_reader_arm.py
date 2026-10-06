@@ -10,6 +10,7 @@ not the absence of an error.
 """
 import json
 import pathlib
+import datetime as _dt
 import time
 
 from kaggle.api.kaggle_api_extended import KaggleApi
@@ -69,7 +70,7 @@ log = fetch()
 print("status:", st, "| log chars:", len(log))
 
 rec = {"ref": REF, "status": st, "log_chars": len(log),
-       "at": time.strftime("%Y-%m-%dT%H:%M:%SZ")}
+       "at": _dt.datetime.now(_dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")}
 if log:
     rec["reader_lines"] = [l.strip() for l in log.splitlines() if "reader leg" in l]
     rec["blended"] = any("reader leg: BLENDED" in l for l in log.splitlines())

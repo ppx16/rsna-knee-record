@@ -2,7 +2,7 @@
   "ref": "ppxl16/rsna-knee-0943cfmsft2-rdr",
   "status": "KernelWorkerStatus.COMPLETE",
   "log_chars": 16745,
-  "at": "2026-10-06T14:10:13Z",
+  "at": "2026-10-06T06:10:13Z",
   "reader_lines": [
     "reader leg: stack submission backed up (830 bytes)",
     "reader leg: 3 checkpoints from /kaggle/input/datasets/goodpjw2008/rsna-knee-2-5d-convnext-reader",
@@ -14,5 +14,6 @@
   "blended": true,
   "failed": false,
   "stack_complete": true,
-  "elapsed_s": 0
+  "elapsed_s": 0,
+  "at_correction": "was 2026-10-06T14:10:13Z -- `time.strftime` returns LOCAL time (UTC+8 here), so the value was 8 hours ahead while labelled Z. Fixed in watch_reader_arm.py."
 }

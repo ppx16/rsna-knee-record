@@ -14,6 +14,7 @@ verdict it did not earn: an unreadable log is reported as unread, not as a resul
 import json
 import pathlib
 import re
+import datetime as _dt
 import time
 
 from kaggle.api.kaggle_api_extended import KaggleApi
@@ -81,7 +82,7 @@ print("terminal status:", st)
 log = fetch_log()
 print("log chars:", len(log))
 
-rec = {"ref": REF, "status": st, "log_chars": len(log), "at": time.strftime("%Y-%m-%dT%H:%M:%SZ")}
+rec = {"ref": REF, "status": st, "log_chars": len(log), "at": _dt.datetime.now(_dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")}
 
 if log:
     # the log's own wall clock: the largest [  NNNNs] stamp
