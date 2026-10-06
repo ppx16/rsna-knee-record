@@ -74,7 +74,27 @@ returns `C`. Neither of the other pairs can say that.
 | slot | ref | arm | public |
 |---|---|---|---|
 | **primary** | **`56814081`** | `0943cfmsft2` — `C + S` | 0.943 |
-| **second** | **`56599932`** | `0943cf` — `C`, and deliberately **without** `S` | 0.943 |
+| ~~**second**~~ | ~~**`56599932`**~~ | ~~`0943cf` — `C`, and deliberately **without** `S`~~ | ~~0.943~~ |
+
+> ## ⛔ THE SECOND SLOT ABOVE IS SUPERSEDED — it is `56613303` (`0943cflat`)
+>
+> **The primary is unchanged.** The second slot was reverted on 2026-10-06 by
+> `docs/REVISION-2026-10-06c-second-slot-reverts-to-cflat.md`, and the reason is worth stating here because
+> it is a defect in the reasoning *below*, not merely a change of mind:
+>
+> **The argument below compares the two candidates on PUBLIC numbers, and on public numbers they are
+> EXACTLY EQUAL** (`S > 0`, `R ≲ 0` ⇒ both pairs return `C + S`). A comparison that cannot separate its
+> options cannot choose between them — so the choice has to be made on something else, and the competition's
+> own **Dataset Distribution Notice** supplies it: *"prevalence … is not guaranteed to be the same across the
+> training, public leaderboard, and final evaluation datasets."* The frontier's per-label routing map was
+> fitted on the **public** split, so the second slot should be the arm that **drops** that dependence —
+> `cflat`.
+>
+> Case check: `(cfmsft2, cflat) = max(P(C+S), P(C+R))` beats `(cfmsft2, cf) = max(P(C+S), P(C))` in every
+> case **except** `S < 0` **and** `R < 0` **and** `R > S`. **On our measurements the two are identical, so the
+> switch costs nothing.** `0943p` remains dominated by `cflat` either way.
+>
+> **Authoritative current state: the `CURRENT STATE` block at the top of `STATUS.md`.**
 
 Superficially this looks like "dropping a positive change to buy diversification" — the exact thing
 `FINAL-SELECTION-2026-10-04.md` §3 argued against. **It is not.** That argument was about deleting `C`,
