@@ -21,5 +21,7 @@
     "top_score": 0.964
   },
   "message": "0943cfmsft2 + the public 2.5D ConvNeXt reader as a separate 30% rank leg (goodpjw2008/rsna-knee-2-5d-convnext-reader, 3 fold checkpoints). The stack is unchanged; the reader is a different architecture family blended as its own leg, not inside the Raptor sub-blend. Safe fallback: any reader failure keeps the stack's submission",
-  "note": "server-side re-run expected 6.5-8 h (+~20 min reader); 9 h cap is the risk"
+  "note": "server-side re-run of the notebook: 6.5-8 h for the KERNEL itself (+~20 min reader); the 9 h kernel-session cap expires 15:11Z. ⚠️ THAT IS NOT THE SCORING TURNAROUND. FACTS A7 measured submit -> score at 10-11 h, so the score is expected ~16:11-17:11Z. Do not read a long PENDING as a stall: FACTS A73 records that these arms are fail-CLOSED and a missing source throws within MINUTES, so a real failure would have gone ERROR early rather than sat here.",
+  "expected_score_at_utc": "2026-10-06T16:11Z..17:11Z",
+  "kernel_cap_expires_utc": "2026-10-06T15:11Z"
 }

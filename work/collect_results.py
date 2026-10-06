@@ -126,6 +126,8 @@ print("   BEFORE snapshot: rank %s, line %s, margin %s, in-block %.3f%%"
       % (before["our_rank"], before["bronze_line"], before["margin"], before["in_block_pct"]))
 print("   READ RULE (fixed in advance): in-block percentile vs %.3f%%, margin vs %s."
       % (before["in_block_pct"], before["margin"]))
+print("      ⚠️ Those are the values AS REGISTERED. They are NOT the bar to compare against: drift has moved")
+print("         them, and the drift-adjusted bar is printed below. Do not stop reading at this line.")
 print("      >= 3 points better  -> real gain; switch the primary and fire the pre-registered TTA arm")
 print("      within +/-3 points  -> no measurable change; the pair stays 56814081 + 56613303")
 print("      worse               -> the composition is harmful; drop the leg")
