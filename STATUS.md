@@ -286,6 +286,38 @@ warned against — that was about deleting `C`.
 structural boundary in `STRATEGY-2026-10-04-how-far-can-finetuning-go.md` §4 has survived every cheap
 crossing attempt. Any further arm must target a **new axis**, not a variation of a closed one.
 
+### 13. ⭐ EVERY AXIS IS NOW MEASURED SHUT — the campaign is at its structural ceiling
+
+Since §12, three more axes were closed **without spending an accelerator on them**, and the last one was
+closed by the user's own pushback:
+
+| axis | verdict | how it was closed |
+|---|---|---|
+| External / more **data** | ⛔ **closed, proven** | the raptor corpus is the competition train set **id for id** (`corpus_ids == train_ids`, 4407/4407); and no public Kaggle-mountable knee MRI labels more than ACL + meniscus. |
+| Competition-specific **Kaggle Models** | ⛔ **closed, measured** | the only evaluable one scores **0.7992** macro on 4407 studies — 0.10 below the A167 gate. The rest are repackages of what we already mount, or undocumented. `RESULT-2026-10-05-models-axis-closed.md` |
+| **Five-fold `msft2`** | ⛔ **not proceeded** | user: *"没必要做五折吧"* — and they are right. `msft2` gained because it went absent → present; folds 1–4 are the same recipe on overlapping data, and the sub-blend already rank-means six views. ~10–13 of the remaining 16.21 TPU-h for a gain below display resolution. `PREREG-2026-10-05-five-fold-msft2.md` |
+| Specialist | ⛔ closed | meniscus `56845973` = **0.940** vs a 0.943 baseline |
+| View-adding | ⛔ closed | `FACTS` D14, two independent attempts |
+| Our own ConvNeXt | ⛔ closed | gold-58 0.9003 but **870-OOF 0.8493** — instruments differ by 0.051 |
+| Routing / weights / calibration | ⛔ closed | `R` now measured too: `cfmsft2flat` = **0.942** < 0.943 |
+
+**⇒ FINAL PAIR (locked):**
+
+| slot | ref | arm | public |
+|---|---|---|---|
+| **primary** | **`56814081`** | `0943cfmsft2` — `C + S` | 0.943 |
+| **second** | **`56599932`** | `0943cf` — `C`, deliberately without `S` | 0.943 |
+
+⚠️ **Still a BROWSER-ONLY action** (§9: no `select` verb, no `selected` field, `/api/v1` 401s). The
+auto-ticked default is **not** this pair.
+
+**Board at 2026-10-05T16:05Z**: teams 5226, rank **551**, bronze line **522**, **margin −29**,
+in-block **13.63 %**. ⚠️ Margin across the day: **+1 → −4 → −29**.
+
+**Remaining**: 17 days to the 2026-10-22 deadline; 3 of today's 5 submission slots; TPU ~13.6 h (fold 1
+is burning ~2.6 of it and cannot be stopped through the API); **GPU ~24.4 h untouched, reserved for
+submissions per `A31`**.
+
 ---
 
 ## ⭐⭐ 2026-10-04 DELTA — READ THIS BEFORE ANYTHING BELOW

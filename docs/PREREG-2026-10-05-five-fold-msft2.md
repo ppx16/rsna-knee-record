@@ -1,5 +1,24 @@
 # 预注册：五折 `msft2` — 2026-10-05
 
+> ## ⛔ **NOT PROCEEDED — folds 2–4 will not be pushed.** (2026-10-05, user pushback "没必要做五折吧")
+>
+> **The user is right, and their objection is stronger than this prereg's argument for the plan.**
+>
+> `msft2` moved our rank 221 places because it went from **absent to present** as a member. Folds 1–4
+> are not absent information — they are **the same recipe on heavily overlapping data**. The Raptor
+> sub-blend already rank-means six views; adding four highly correlated siblings to it is close to a
+> no-op. Meanwhile the cost is **~10–13 of the remaining 16.21 TPU-hours**, for a gain this prereg's own
+> §6 concedes is *"below what the displayed score can resolve"*.
+>
+> ⚠️ **And §1's second justification was not honest.** "It produces a full 4407-study OOF" is a
+> **research artifact, not a submission**. Using it to justify the spend dressed a want as a reason.
+>
+> **What still happens:** fold 1 was already QUEUED when the objection arrived, and the Kaggle API has
+> **no cancel verb** (`kernels_delete` deletes the kernel; it is not a stop). So it will complete and
+> consume ~2.6 TPU-h unless stopped in the browser. On completing it yields one genuinely new fact —
+> **the real per-fold CoAtNet cost, which this repository has never measured directly** — and nothing
+> else will be pushed.
+
 **状态：构建器 `scripts/build_msft2_folds.py` 已就绪（`--check` 通过）。开跑前写死读数规则。**
 
 ---
