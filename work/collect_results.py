@@ -115,6 +115,95 @@ print("      within +/-3 points  -> no measurable change; the pair stays 5681408
 print("      worse               -> the composition is harmful; drop the leg")
 print("   ⚠️ The DISPLAYED SCORE is not the criterion: the author's own pipeline scored 0.944/0.944/0.943.")
 
+# ---------------------------------------------------------------- DRIFT: the BEFORE baseline is going stale
+# ⚠️ WHY THIS IS HERE. The rule above compares a NEW rank against a BEFORE snapshot -- but the board does not
+# hold still. Teams keep passing our 0.943, so our rank FALLS with time even though our own score cannot
+# change. Measured this session, the rate is ACCELERATING: 4.1 -> 6.6 -> 10.2 ranks/h, and the margin to the
+# bronze line went -29 (10-05 16:05) -> -136 (10-06 08:05). We are not hovering at the bronze boundary; we
+# are 136 ranks BEHIND it and losing ~170 ranks/day.
+#
+# A raw comparison against a hours-old baseline therefore UNDERSTATES a real gain, and can report a genuine
+# improvement as "no measurable change" -- or, worse, let drift alone look like the arm made things worse.
+# So print the DRIFT-ADJUSTED baseline: what the old best would read if re-measured now.
+
+
+def _drift_rates(track: pathlib.Path):
+    """(window_hours, ranks_per_hour) for a recent burst and for a robust longer window."""
+    if not track.is_file():
+        return None
+    pts = []
+    for ln in track.read_text(encoding="utf-8").splitlines():
+        ln = ln.strip()
+        if not ln:
+            continue
+        try:
+            d = json.loads(ln)
+            t = dt.datetime.strptime(d["at"], "%Y-%m-%dT%H:%M:%SZ").replace(tzinfo=dt.timezone.utc)
+        except Exception:  # noqa: BLE001
+            continue
+        if isinstance(d.get("rank"), int):
+            pts.append((t, d["rank"]))
+    if len(pts) < 2:
+        return None
+    pts.sort()
+    last_t, last_r = pts[-1]
+    out = []
+    for hours in (3.0, 48.0):
+        base = None
+        for t, r in pts[:-1]:
+            if (last_t - t).total_seconds() / 3600.0 <= hours:
+                base = (t, r)
+                break
+        if base is None or base[0] == last_t:
+            continue
+        span = (last_t - base[0]).total_seconds() / 3600.0
+        if span < 1.0:
+            continue
+        out.append((span, (last_r - base[1]) / span))
+    return (last_t, last_r, out) if out else None
+
+
+_d = _drift_rates(STATE / "rank_track.jsonl")
+_snaps = sorted(STATE.glob("lb_snapshot_*.json"))
+_before_t = None
+if _d:
+    _last_t, _last_r, _rates = _d
+    # locate the BEFORE snapshot's own timestamp by matching its rank in the track
+    for _t, _r in [(dt.datetime.strptime(json.loads(l)["at"], "%Y-%m-%dT%H:%M:%SZ").replace(tzinfo=dt.timezone.utc),
+                    json.loads(l)["rank"])
+                   for l in (STATE / "rank_track.jsonl").read_text(encoding="utf-8").splitlines()
+                   if l.strip() and '"rank"' in l and "teams" in l]:
+        if _r == before["our_rank"]:
+            _before_t = _t
+    print()
+    print("   DRIFT (this baseline does NOT hold still):")
+    for _span, _rate in _rates:
+        print("      over the last %5.1f h: %+6.2f ranks/h  (%+.0f ranks/day)"
+              % (_span, _rate, _rate * 24))
+    if _before_t is not None:
+        _dt_h = (_last_t - _before_t).total_seconds() / 3600.0
+        _recent = _rates[0][1]
+        _adj_rank = before["our_rank"] + _recent * _dt_h
+        _blk = json.loads(_snaps[-1].read_text(encoding="utf-8"))["block"] if _snaps else None
+        print("      the BEFORE snapshot is %.1f h old -> at %+.2f ranks/h the old best would now read"
+              % (_dt_h, _recent))
+        print("      rank ~%.0f (observed then: %d)" % (_adj_rank, before["our_rank"]))
+        if _blk and _blk.get("hi", 0) > _blk.get("lo", 0):
+            _adj_pct = (_adj_rank - _blk["lo"]) / float(_blk["hi"] - _blk["lo"]) * 100.0
+            print("      = %.3f%% in-block against TODAY's block %d..%d, vs the %.3f%% recorded before"
+                  % (_adj_pct, _blk["lo"], _blk["hi"], before["in_block_pct"]))
+            print("      => compare the new arm against ~%.3f%%, NOT %.3f%%; the gap between them is drift"
+                  % (_adj_pct, before["in_block_pct"]))
+            print("         that this submission did not cause.")
+        print("      ⚠️ the rate is an ESTIMATE from rank_track.jsonl and it is accelerating; if it moved")
+        print("         during the wait, re-take a snapshot and recompute rather than trusting this number.")
+    else:
+        print("      ⚠️ could not match the BEFORE rank in rank_track.jsonl -> adjustment NOT applied.")
+else:
+    print()
+    print("   DRIFT: not estimable (state/rank_track.jsonl missing or has <2 usable points).")
+    print("      => the raw BEFORE comparison stands, and any verdict is weaker for it.")
+
 # ---------------------------------------------------------------- the gate's gold AUC
 print()
 print("=" * 92)
