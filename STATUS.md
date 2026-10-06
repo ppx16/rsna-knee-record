@@ -21,11 +21,26 @@ repository has been damaged before by a STATUS whose prose had drifted.*
 > gives the two description prefixes to match on, what to run before ticking, and the one condition (the
 > reader leg reaching 0.944) that changes the table. Read it before touching the submission page.
 
+> ### ⭐⭐⭐ 2026-10-06 17:26Z — **WE CROSSED TO 0.944.** Primary is now `56878092`.
+>
+> `56878092` (reader leg **w=0.15**) measured **0.944** and crossed the bronze step. The board moved with
+> it: **rank 683 → 545**, **margin −154 → −13** (+141 places), teams 5326, line 532.
+> Per the prereg the reader-variant line **stops** here. `56814081` drops out of the pair; the second slot
+> is unchanged.
+>
+> 🚨 When ticking, the ONLY reliable distinguishing token is **`w=0.15`**: the new primary's
+> description prefix CLASHES with `56872230` (both begin `0943cfmsft2 + the public 2.5D ConvNeXt reader as a
+> separate leg...`). `56872230` says `30% rank leg` and scores 0.943. If you cannot see `w=0.15`, do not tick.
+>
+> ⚠️ **The position is thin**: margin **−13** at the public ceiling, and drift runs ~120–180
+> ranks/day against us. Public material tops out at 0.944, so holding bronze needs something ABOVE it -- and
+> the one unexplored axis is the 3D volume arm (FACTS A160).
+
 ### ✅ FINAL PAIR — locked, and verified present + uniquely identifiable
 
 | slot | ref | arm | public |
 |---|---|---|---|
-| **primary** | **`56814081`** | `0943cfmsft2` — `C + S` | 0.943 |
+| **primary** | **`56878092`** | `0943cfmsft2` + reader leg **w=0.15** | **0.944** |
 | **second** | **`56613303`** | `0943cflat` — `C + R`, **without** the public-fitted routing | 0.941 |
 
 ⚠️ **BROWSER-ONLY action.** No `select` verb, no `selected` field on `ApiSubmission`, legacy `/api/v1` 401s
