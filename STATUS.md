@@ -1,6 +1,6 @@
 # RSNA Knee Abnormality Detection — STATUS
 
-## 🟢 CURRENT STATE — 2026-10-06T07:25Z — **read this block and nothing else for the state**
+## 🟢 CURRENT STATE — 2026-10-06T08:22Z — **read this block and nothing else for the state**
 
 *Every number below was assembled from files (`work/assemble_state.py`), not from prose. The DELTA sections
 further down are a chronological audit trail and several are superseded; they are kept because this
@@ -9,8 +9,8 @@ repository has been damaged before by a STATUS whose prose had drifted.*
 | | |
 |---|---|
 | **deadline** | **2026-10-22 23:59Z — 16.7 days** |
-| **board** (`2026-10-06T06:11:10Z`, `state/lb_snapshot_2026-10-06T061110Z.json`) | teams **5278**, rank **645**, `0.943`, bronze line **527**, **margin −118**, in-block **16.03 %**, top **0.964** |
-| **quota** (`kaggle quota`, venv CLI) | **GPU 24.31 h** / 30 · **TPU 12.66 h** / 20 · both refresh **2026-10-10** |
+| **board** (`2026-10-06T08:16:25Z`, `state/lb_snapshot_2026-10-06T081625Z.json`) | teams **5286**, rank **665**, `0.943`, bronze line **528**, **margin −137**, in-block **16.178 %**, top **0.964** — ⚠️ **drifting +145…+240 ranks/day and accelerating**; re-take with `work/lb_snapshot.py`, never quote this line as current |
+| **quota** (`kaggle quota`, venv CLI — columns are `used / remaining / total`) | **GPU 5.84 h used, 24.16 h remaining** / 30 · **TPU 7.34 h used, 12.66 h remaining** / 20 · both refresh **2026-10-10** |
 | **submissions today** | **1 / 5** (45 visible in total) |
 
 ### ✅ FINAL PAIR — locked, and verified present + uniquely identifiable
@@ -30,11 +30,26 @@ the competition's own **Dataset Distribution Notice** states prevalence *"is not
 across the training, public leaderboard, and final evaluation datasets"* — so the second slot should drop
 dependence on the **public-fitted** per-label routing, which `cflat` does. **The switch is free.**
 
+### 🎯 WHAT "BETTER" MEANS — quantified, so it is not re-litigated
+
+* **One displayed step IS the bronze line.** From the raw board (`work/target_score.py`, re-run it — the line
+  is a FRACTION of the field and moves): `0.944` = 186 teams at ranks **319–504, entirely inside**;
+  `0.943` = 990 teams at ranks **505–1494, straddling it**, and we sit at 665. The only single step that
+  reaches bronze is **+0.001**. `docs/TARGET-2026-10-06j-one-displayed-step-is-bronze.md`
+* **The public ceiling is exactly 0.944.** Every newest public notebook that survives checking claims at most
+  0.944 (`docs/FIND-2026-10-06k-public-ceiling-is-0944.md`). So **bronze is reachable and higher is not** on
+  public material — the 63 teams from 0.945 up to 0.964 are doing something unpublished. **Do not go looking
+  for another public lever**; three sweeps have already converged and this one bounds it.
+* **Axes closed by measurement, do not reopen:** five-fold `msft2` (evidence, not budget),
+  `OWN_W` sweep (author's own sweep shows a plateau), specialist/meniscus, external data, Kaggle Models,
+  view-adding, our own ConvNeXt, routing/weights/calibration. Evidence:
+  `docs/DECLINE-2026-10-06h-three-levers-rechecked.md`.
+
 ### ⏳ TWO MEASUREMENTS IN FLIGHT — nothing else is running
 
 | what | id | status | how it will be read (fixed in advance) |
 |---|---|---|---|
-| **reader leg** | `ppxl16/rsna-knee-0943cfmsft2-rdr` → submission **`56872230`** | **PENDING** (since 06:11Z) | in-block percentile vs **16.03 %**, margin vs **−118**; **≥ 3 points better ⇒ real**; displayed score is NOT the criterion (the author's own pipeline scored 0.944/0.944/0.943) |
+| **reader leg** | `ppxl16/rsna-knee-0943cfmsft2-rdr` → submission **`56872230`** | **PENDING** (since 06:11Z; a code submission, so Kaggle RE-RUNS it server-side — the recorded expectation is 6.5–8 h, and the 9 h cap is the risk) | in-block percentile against **the DRIFT-ADJUSTED bar that `work/collect_results.py` prints**, NOT against the frozen 16.03 % it was registered with; **≥ 3 points better ⇒ real**; displayed score is NOT the criterion. ⚠️ **But what the outcome MEANS is fixed**: `0.944` puts us at ranks 319–504, **inside the bronze line**; `0.943` leaves us in the 990-wide block that straddles it. See `docs/TARGET-2026-10-06j` |
 | **distilled zero-shot gate** | `ppxl16/rsna-knee-msft2-gate-distilled` | **QUEUED** (since 07:15Z) | gold-58 macro-AUC: **≥0.92** geometry matches + strong · 0.90–0.92 usable · 0.85–0.90 below the member gate · **<0.85 geometry mismatch, reject** |
 
 Watchers `work/watch_rdr_submission.py` and `work/watch_distilled_gate.py` implement those rules verbatim
