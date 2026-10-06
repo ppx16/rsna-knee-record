@@ -1,23 +1,38 @@
 # 预注册：五折 `msft2` — 2026-10-05
 
-> ## ⛔ **NOT PROCEEDED — folds 2–4 will not be pushed.** (2026-10-05, user pushback "没必要做五折吧")
+> ## ⛔ **NOT PROCEEDED — and fold 1 has now closed the question with data.** (2026-10-06)
 >
-> **The user is right, and their objection is stronger than this prereg's argument for the plan.**
+> **Fold 1 completed on TPU v5e-8. Its result says the plan was not worth doing, and the quota says it
+> was not even possible.**
 >
-> `msft2` moved our rank 221 places because it went from **absent to present** as a member. Folds 1–4
-> are not absent information — they are **the same recipe on heavily overlapping data**. The Raptor
-> sub-blend already rank-means six views; adding four highly correlated siblings to it is close to a
-> no-op. Meanwhile the cost is **~10–13 of the remaining 16.21 TPU-hours**, for a gain this prereg's own
-> §6 concedes is *"below what the displayed score can resolve"*.
+> ```
+> [cv] fold 1/5: train 3527 | OOF held-out 822
+> [raptor] head tensors carried: 8            <- msft2's critical fix, verified again
+> [msft2] HEAD loaded: 8/8 tensors, names and shapes verified
+> [zeroshot] VERDICT: PASS (parent bar 0.8963, got 0.8961)
+> SWA over epochs [3, 2, 1] | gold 0.9082 (best-epoch 0.9088) no gain
+> ```
 >
-> ⚠️ **And §1's second justification was not honest.** "It produces a full 4407-study OOF" is a
-> **research artifact, not a submission**. Using it to justify the spend dressed a want as a reason.
+> **Fold 1 = 0.9088 (best) / 0.9082 (SWA); fold 0, the one already in the stack, = 0.9069.** The two are
+> the same model to within noise, so a five-fold average would land near **0.907–0.910** — **no material
+> gain over the single fold 0**, for the price below.
 >
-> **What still happens:** fold 1 was already QUEUED when the objection arrived, and the Kaggle API has
-> **no cancel verb** (`kernels_delete` deletes the kernel; it is not a stop). So it will complete and
-> consume ~2.6 TPU-h unless stopped in the browser. On completing it yields one genuinely new fact —
-> **the real per-fold CoAtNet cost, which this repository has never measured directly** — and nothing
-> else will be pushed.
+> ⚠️ **And the price was never affordable.** Measured from the quota log:
+>
+> | | TPU used |
+> |---|---|
+> | 2026-10-05 08:00 | 3.79 h |
+> | 2026-10-06 05:55 | 6.99 h → **+3.20 h** |
+> | 2026-10-06 14:20 | 7.34 h → **+0.35 h tail** |
+>
+> ⇒ **one fold costs ≈ 3.2–3.6 h, not the inherited 2.6 h.** Five folds would have been **16–18 h**,
+> against a remaining budget of **16.21 h at the time**. **The plan could not have completed.** The
+> "~2.6 h per fold" figure came from `PREREG-2026-10-04-convnext-member.md`, i.e. it was sized for the
+> ConvNeXt member — and the CoAtNet fold cost had never been measured. Now it has.
+>
+> **What fold 1 did buy:** three things that were only assumptions are now verified — the head-carrying
+> fix works on a second fold, the zero-shot gate passes, and the CoAtNet recipe reproduces across folds.
+> That is worth the ~3.4 TPU-hours; the arm is not.
 
 **状态：构建器 `scripts/build_msft2_folds.py` 已就绪（`--check` 通过）。开跑前写死读数规则。**
 
