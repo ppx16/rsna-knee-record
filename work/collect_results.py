@@ -66,7 +66,23 @@ KG = r"D:\kaggle\venv-kaggle\Scripts\kaggle.exe"
 STATE = pathlib.Path("state")
 
 api = KaggleApi()
-api.authenticate()
+# ⚠️ THE IMPORT IS NOT THE ONLY PLACE THIS AUTHENTICATES. The loop above guards `from kaggle... import`,
+# but the SDK authenticates AGAIN here -- and this call was left bare. On 2026-10-06 it died with exactly
+# the SSLEOFError this file exists to survive, at THIS line, AFTER the import retry had already succeeded.
+# A recovery path with two authentication points and one guard has no guard.
+_last = None
+for _try in range(6):
+    try:
+        api.authenticate()
+        break
+    except Exception as _e:  # noqa: BLE001
+        _last = _e
+        print("api.authenticate() attempt %d failed: %s" % (_try + 1, type(_e).__name__), file=sys.stderr)
+        time.sleep(8)
+else:
+    print("COULD NOT AUTHENTICATE after 6 attempts (%r) -- TRANSPORT, not a result." % (_last,))
+    print("Re-run `python work/collect_results.py`; nothing about the measurements has been learned.")
+    raise SystemExit(2)
 now = dt.datetime.now(dt.timezone.utc)
 print("collected at %s   (%.1f days to the 2026-10-22 deadline)\n"
       % (now.strftime("%Y-%m-%dT%H:%M:%SZ"),
