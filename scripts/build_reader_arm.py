@@ -124,7 +124,7 @@ except Exception as _o_err:
 '''
 
 
-def build_nb() -> dict:
+def build_nb(own_w: float = OWN_W) -> dict:
     src = SRC / NB
     if not src.is_file():
         raise SystemExit("!! missing %s" % src)
@@ -144,7 +144,7 @@ def build_nb() -> dict:
         raise SystemExit("sanity: no submission.csv anywhere in the source notebook")
     pos = pub[0] + 1
 
-    body = CELL.replace("__OWN_W__", repr(OWN_W))
+    body = CELL.replace("__OWN_W__", repr(float(own_w)))
     new_cell = {"cell_type": "code", "execution_count": None, "metadata": {},
                 "outputs": [], "source": body.splitlines(keepends=True)}
     if any("build_reader_arm" in (("".join(c.get("source", [])) if isinstance(c.get("source"), list)
@@ -161,18 +161,35 @@ def main() -> int:
     ap.add_argument("--check", action="store_true")
     ap.add_argument("--build", action="store_true")
     ap.add_argument("--push", action="store_true")
+    # ⚠️ WHY THIS FLAG EXISTS. `OWN_W` used to be a module constant, so building the OTHER point of the
+    # author's weight plateau meant hand-editing this file -- and hand-edits under time pressure are how a
+    # pre-registered variant silently stops being the variant that was registered. The author's own sweep is
+    # 0.15 -> 0.944, 0.30 -> 0.944, 0.45 -> 0.942, so 0.15 is an equally supported point; and their sweep was
+    # on the COMMUNITY stack while ours is the 0943cfmsft2 variant, so the better point may differ.
+    # The default stays 0.30, which is what submission 56872230 already used, so nothing already built moves.
+    ap.add_argument("--own-w", type=float, default=OWN_W,
+                    help="reader-leg weight; default %(default)s (the value already submitted)")
     a = ap.parse_args()
 
-    nb = build_nb()
+    w = float(a.own_w)
+    if not 0.0 < w < 1.0:
+        raise SystemExit("--own-w must be strictly between 0 and 1 (got %r)" % (a.own_w,))
+    is_default = abs(w - OWN_W) < 1e-9
+    tag = "" if is_default else "-w%02d" % round(w * 100)
+    dst = DST if is_default else (ROOT / "kernels" / ("kernel-0943cfmsft2-rdr-w%02d" % round(w * 100)))
+    kid = KID if is_default else ("ppxl16/rsna-knee-0943cfmsft2-rdr-w%02d" % round(w * 100))
+    print("reader leg: OWN_W=%r -> %s (%s)" % (w, dst.relative_to(ROOT), kid))
+
+    nb = build_nb(w)
     if a.build:
-        DST.mkdir(parents=True, exist_ok=True)
-        (DST / NB).write_text(json.dumps(nb, ensure_ascii=False), encoding="utf-8")
+        dst.mkdir(parents=True, exist_ok=True)
+        (dst / NB).write_text(json.dumps(nb, ensure_ascii=False), encoding="utf-8")
 
     text = "\n".join("".join(c.get("source", [])) if isinstance(c.get("source"), list)
                      else (c.get("source") or "") for c in nb["cells"])
     probes = [
         ("build_reader_arm.py", "the reader cell is present"),
-        ("OWN_W = %r" % OWN_W, "the weight"),
+        ("OWN_W = %r" % float(w), "the weight"),
         ("_stack_submission.csv", "the fallback backup"),
         ('_o_shutil.copy(_o_bak, _o_pub)', "the restore-on-failure path"),
         ("cnxt_v0_fold0.pt", "the checkpoint locator"),
@@ -184,18 +201,18 @@ def main() -> int:
     if missing:
         raise SystemExit("!! built notebook is missing: %s" % missing)
     tmp = ROOT / "work" / "_reader_arm_cell.py"
-    tmp.write_text(CELL.replace("__OWN_W__", repr(OWN_W)), encoding="utf-8")
+    tmp.write_text(CELL.replace("__OWN_W__", repr(float(w))), encoding="utf-8")
     py_compile.compile(str(tmp), doraise=True)
     print("PATTERN CHECK OK: cell compiles, all %d probes present, %d cells total"
           % (len(probes), len(nb["cells"])))
 
     if not a.build:
-        print("(--check only; nothing written to %s)" % DST.relative_to(ROOT))
+        print("(--check only; nothing written to %s)" % dst.relative_to(ROOT))
         return 0
 
     meta = json.loads((SRC / "kernel-metadata.json").read_text(encoding="utf-8"))
-    meta["id"] = KID
-    meta["title"] = "RSNA knee 0943cfmsft2 rdr"
+    meta["id"] = kid
+    meta["title"] = "RSNA knee 0943cfmsft2 rdr" + tag
     meta["code_file"] = NB
     meta["enable_gpu"] = True
     meta["enable_tpu"] = False
@@ -204,16 +221,16 @@ def main() -> int:
     if READER_DS not in ds:
         ds.append(READER_DS)
     meta["dataset_sources"] = ds
-    (DST / "kernel-metadata.json").write_text(json.dumps(meta, indent=2) + "\n", encoding="utf-8")
+    (dst / "kernel-metadata.json").write_text(json.dumps(meta, indent=2) + "\n", encoding="utf-8")
     print("built %s  datasets=%d (reader dataset %s)"
-          % (DST.relative_to(ROOT), len(ds), "added" if READER_DS in ds else "MISSING"))
+          % (dst.relative_to(ROOT), len(ds), "added" if READER_DS in ds else "MISSING"))
 
     if a.push:
         from kaggle.api.kaggle_api_extended import KaggleApi
         api = KaggleApi()
         api.authenticate()
-        api.kernels_push(str(DST))
-        print("PUSHED %s" % KID)
+        api.kernels_push(str(dst))
+        print("PUSHED %s" % kid)
     return 0
 
 
