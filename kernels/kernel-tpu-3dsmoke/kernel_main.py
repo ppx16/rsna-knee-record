@@ -107,9 +107,27 @@ def load_labels(path):
                 continue
             y = []
             for t in TARGETS:
-                v = (r.get(t + '__verdict') or r.get(t) or '').strip().upper()
-                y.append(1.0 if v in ('YES', '1', 'TRUE') else (0.0 if v in ('NO', '0', 'FALSE')
-                                                                else float('nan')))
+                # ⚠️ THE LABEL TABLE IS SOFT. `report_labels_v4hybrid.csv` carries ACL/MCL/... as FLOATS
+                # (0.25, 0.975, 0.34, 0.025 ...) with no `__verdict` column at all, so the original parser
+                # -- which only accepted YES/NO/TRUE/FALSE and returned nan otherwise -- turned EVERY cell
+                # into nan, the mask went all-False, and an empty tensor reached BCEWithLogitsLoss. That is
+                # why the first smoke printed `loss nan` on all 12 steps. The mechanism verdict (PASS) was
+                # still true, but the label path was broken, and a real arm built on it would have trained
+                # on nothing.
+                raw = (r.get(t + '__verdict') or r.get(t) or '').strip()
+                if not raw:
+                    y.append(float('nan'))
+                    continue
+                up = raw.upper()
+                if up in ('YES', 'TRUE'):
+                    y.append(1.0)
+                elif up in ('NO', 'FALSE'):
+                    y.append(0.0)
+                else:
+                    try:
+                        y.append(float(raw))          # the soft-label case, which is the real one here
+                    except ValueError:
+                        y.append(float('nan'))
             out[uid] = np.array(y, dtype=np.float32)
     log('[3d] labels : %d rows parsed' % len(out))
     return out
