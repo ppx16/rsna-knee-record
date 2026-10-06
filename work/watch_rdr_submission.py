@@ -33,13 +33,31 @@ import time
 from kaggle.api.kaggle_api_extended import KaggleApi
 
 COMP = "rsna-knee-abnormality-detection"
-REF = "56872230"
 KG = r"D:\kaggle\venv-kaggle\Scripts\kaggle.exe"
 STATE = pathlib.Path("state")
-RESULT = STATE / "reader_arm_result.json"
 
-before = json.loads((STATE / "submit_56872230.json").read_text(encoding="utf-8"))["before_snapshot"]
+# ⚠️ GENERALISED OVER ARMS -- AND OVER WHICH RULE APPLIES, because they are NOT judged the same way.
+# The plain reader leg is read on the IN-BLOCK PERCENTILE. The TTA and w=0.15 arms are read on the DISPLAYED
+# SCORE, because for them the question is whether they CROSS the bronze step, not how far they move a rank.
+# A watcher that applied the wrong rule would write a confident wrong verdict -- which this file already did
+# once, before the drift correction, so it is worth saying twice.
+import argparse as _ap
+
+_p = _ap.ArgumentParser()
+_p.add_argument("--ref", default="56872230")
+_p.add_argument("--arm", default="0943cfmsft2-rdr")
+_p.add_argument("--rule", choices=("rank", "score"), default="rank",
+                help="rank = in-block percentile (plain reader leg); score = threshold (TTA / w=0.15)")
+_p.add_argument("--out", default="state/reader_arm_result.json")
+_a = _p.parse_args()
+REF = _a.ref
+ARM = _a.arm
+RULE = _a.rule
+RESULT = pathlib.Path(_a.out)
+
+before = json.loads((STATE / ("submit_%s.json" % REF)).read_text(encoding="utf-8"))["before_snapshot"]
 print("BEFORE:", json.dumps(before), flush=True)
+print("arm=%s ref=%s rule=%s -> %s" % (ARM, REF, RULE, RESULT), flush=True)
 
 api = KaggleApi()
 # ⚠️ RETRY THE AUTH CALL ITSELF, not just the import. This line authenticates ONCE at module scope, before
@@ -152,22 +170,43 @@ if before and after:
         rec["drift_ranks_per_hour"] = round(rate, 2)
         rec["drift_adjusted_before_pct"] = round(adj_pct, 3)
         rec["delta_in_block_pct_drift_adjusted"] = round(d, 3)
-        rec["verdict"] = ("REAL GAIN (>=3 points better)" if d <= -3 else
-                          "no measurable change" if abs(d) < 3 else "WORSE")
-        rec["verdict_basis"] = "drift-adjusted"
+        rec["rank_verdict"] = ("REAL GAIN (>=3 points better)" if d <= -3 else
+                               "no measurable change" if abs(d) < 3 else "WORSE")
+        rec["rank_verdict_basis"] = "drift-adjusted"
     else:
-        rec["verdict"] = ("REAL GAIN (>=3 points better)" if raw <= -3 else
-                          "no measurable change" if abs(raw) < 3 else "WORSE")
-        rec["verdict_basis"] = "RAW -- drift could NOT be estimated, so this verdict is WEAK by construction"
-    # ⚠️ the degeneracy: the board carries our BEST submission, so a tie moves the rank by exactly nothing
-    try:
-        _s = float(score) if score else None
-    except Exception:  # noqa: BLE001
-        _s = None
+        rec["rank_verdict"] = ("REAL GAIN (>=3 points better)" if raw <= -3 else
+                               "no measurable change" if abs(raw) < 3 else "WORSE")
+        rec["rank_verdict_basis"] = "RAW -- drift could NOT be estimated, so this is WEAK by construction"
+
+# ---- the PRIMARY verdict, which is NOT the same question for every arm -------------------------------
+# The rank block above answers 'did this move us WITHIN the 0.943 band?'. For the TTA and w=0.15 arms the
+# registered question is 'did this CROSS the bronze step?', and the rank cannot answer it at all: the board
+# carries our BEST submission, so anything at or below 0.943 leaves the rank exactly where drift put it.
+try:
+    _s = float(score) if score else None
+except Exception:  # noqa: BLE001
+    _s = None
+if RULE == "rank":
+    rec["verdict"] = rec.get("rank_verdict", "NOT READ")
+    rec["verdict_rule"] = "in-block percentile vs the drift-adjusted bar (prereg: reader leg)"
     if _s is not None and _s <= 0.943:
         rec["instrument_blind"] = (
             "public score %.3f is not above our existing best 0.943, so the board cannot show this arm at "
             "all -- any rank movement recorded above is DRIFT, and the pre-registered '+/-3 -> pair "
             "unchanged' branch holds by construction rather than by measurement" % _s)
+else:
+    rec["verdict_rule"] = "DISPLAYED SCORE vs the bronze step (prereg: TTA / w=0.15)"
+    if _s is None:
+        rec["verdict"] = "NOT READ (no public score yet) -- never record this as 'worse'"
+    elif _s >= 0.945:
+        rec["verdict"] = "ABOVE the measured public ceiling (0.944) -- record the anomaly, do not rush"
+    elif _s == 0.944:
+        rec["verdict"] = ("*** CROSSES THE BRONZE LINE *** (ranks 319-504, entirely inside) -> becomes "
+                          "PRIMARY, second stays 56613303, and STOP spending slots")
+    elif _s == 0.943:
+        rec["verdict"] = ("INSTRUMENT IS BLIND to this arm (the board carries our BEST): a tie at 0.943 "
+                          "cannot be told apart from 56814081 by rank -> pair unchanged, by construction")
+    else:
+        rec["verdict"] = "not our best (<0.943) -> pair unchanged, and the reader-variant line ends here"
 RESULT.write_text(json.dumps(rec, indent=2), encoding="utf-8")
 print(json.dumps(rec, indent=2))
