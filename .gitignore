@@ -174,3 +174,5 @@ work/klog_f1/
 work/klog_rdr2/
 work/coat_probe/
 work/models_axis/
+work/distilled_dataset/
+work/_gate_distilled_preview.py
