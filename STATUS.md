@@ -1,5 +1,70 @@
 # RSNA Knee Abnormality Detection — STATUS
 
+## 🟢 CURRENT STATE — 2026-10-06T07:25Z — **read this block and nothing else for the state**
+
+*Every number below was assembled from files (`work/assemble_state.py`), not from prose. The DELTA sections
+further down are a chronological audit trail and several are superseded; they are kept because this
+repository has been damaged before by a STATUS whose prose had drifted.*
+
+| | |
+|---|---|
+| **deadline** | **2026-10-22 23:59Z — 16.7 days** |
+| **board** (`2026-10-06T06:11:10Z`, `state/lb_snapshot_2026-10-06T061110Z.json`) | teams **5278**, rank **645**, `0.943`, bronze line **527**, **margin −118**, in-block **16.03 %**, top **0.964** |
+| **quota** (`kaggle quota`, venv CLI) | **GPU 24.31 h** / 30 · **TPU 12.66 h** / 20 · both refresh **2026-10-10** |
+| **submissions today** | **1 / 5** (45 visible in total) |
+
+### ✅ FINAL PAIR — locked, and verified present + uniquely identifiable
+
+| slot | ref | arm | public |
+|---|---|---|---|
+| **primary** | **`56814081`** | `0943cfmsft2` — `C + S` | 0.943 |
+| **second** | **`56613303`** | `0943cflat` — `C + R`, **without** the public-fitted routing | 0.941 |
+
+⚠️ **BROWSER-ONLY action.** No `select` verb, no `selected` field on `ApiSubmission`, legacy `/api/v1` 401s
+(all three verified on kaggle 2.1.2 *and* the 2.2.2 wheel). **The auto-ticked default is NOT this pair**, and
+**six other submissions also display 0.942–0.943** — pick by the description text, never by the score.
+Verified `work/verify_final_pair.py`: both COMPLETE, description prefixes collide with nothing.
+
+Rationale (`docs/REVISION-2026-10-06c-…`): the two candidates are **exactly equal on public numbers**, and
+the competition's own **Dataset Distribution Notice** states prevalence *"is not guaranteed to be the same
+across the training, public leaderboard, and final evaluation datasets"* — so the second slot should drop
+dependence on the **public-fitted** per-label routing, which `cflat` does. **The switch is free.**
+
+### ⏳ TWO MEASUREMENTS IN FLIGHT — nothing else is running
+
+| what | id | status | how it will be read (fixed in advance) |
+|---|---|---|---|
+| **reader leg** | `ppxl16/rsna-knee-0943cfmsft2-rdr` → submission **`56872230`** | **PENDING** (since 06:11Z) | in-block percentile vs **16.03 %**, margin vs **−118**; **≥ 3 points better ⇒ real**; displayed score is NOT the criterion (the author's own pipeline scored 0.944/0.944/0.943) |
+| **distilled zero-shot gate** | `ppxl16/rsna-knee-msft2-gate-distilled` | **QUEUED** (since 07:15Z) | gold-58 macro-AUC: **≥0.92** geometry matches + strong · 0.90–0.92 usable · 0.85–0.90 below the member gate · **<0.85 geometry mismatch, reject** |
+
+Watchers `work/watch_rdr_submission.py` and `work/watch_distilled_gate.py` implement those rules verbatim
+and write `state/reader_arm_result.json` / `state/gate_distilled_result.json`.
+
+### ⛔ Every other axis is CLOSED BY MEASUREMENT — do not reopen
+
+Specialist (meniscus `56845973` = **0.940** vs a 0.943 baseline) · external / more data (the corpus **is** the
+competition train set, id for id) · competition-specific Kaggle Models (best evaluable = **0.7992**, 0.10
+below the gate) · Kaggle **Models** hub (rejected `yunus` head, closed) · view-adding (`FACTS` D14, two
+independent attempts) · our own ConvNeXt (gold-58 0.9003 but **870-OOF 0.8493**) · routing/weights/calibration
+(`FACTS` D1/D2/D3/D10–D13, all real measurements; `R` now measured too) · five-fold `msft2` (fold 1 = 0.9088
+vs fold 0's 0.9069, and one fold costs **3.2–3.6 h**, so five folds = 16–18 h > the whole TPU budget) ·
+`lixin73`'s DINOv2 checkpoint (**0.8634** on 874 studies = `cn0`, already in the stack) · "4-Way Consensus"
+(**the 4th checkpoint has never been published** — 6 searches + full listings of all three mounted CoAt
+datasets).
+
+### ▶️ NEXT ACTION, in order
+
+1. **If the reader leg reads ≥ 3 points better** — switch the primary to it, and build the pre-registered
+   TTA variant: its source is already extracted and verified in `work/stackpp_src/`
+   (`docs/EXTRACT-2026-10-06g-…`). Vary `Synovitis_w = 0.08` **first** — it is the only item that alters a
+   fitted quantity, and its evidence is 58 gold studies (CI ±0.021).
+2. **If the distilled gate reads ≥ 0.92** — wire it as a CoAt-family member and spend one arm on it.
+3. **Otherwise** — hold. The public surface is **converged** (three sweeps: everything new is a fork, a
+   reprocessing, or a title that overstates; a notebook named `0946` was corrected by its own forker to
+   **0.943**).
+
+---
+
 ## ⭐ 2026-10-05 DELTA — the live state, and one suspicion checked and killed
 
 ### 1. Where we actually stand (snapshot 2026-10-05T07:59:16Z, persisted)
