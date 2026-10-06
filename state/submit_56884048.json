@@ -1,0 +1,25 @@
+{
+  "at": "2026-10-06T15:07:49Z",
+  "arm": "0943-rdr",
+  "kernel": "ppxl16/rsna-knee-0943-rdr",
+  "version": 1,
+  "before_snapshot": {
+    "at": "2026-10-06T15:07:49Z",
+    "n_teams": 5317,
+    "our_rank": 716,
+    "our_score": 0.943,
+    "bronze_line": 531,
+    "margin": -185,
+    "block": {
+      "score": 0.943,
+      "n": 972,
+      "lo": 557,
+      "hi": 1528
+    },
+    "in_block_pct": 16.375,
+    "top_score": 0.964
+  },
+  "message": "0943 (the community stack) + the public 2.5D ConvNeXt reader at w=0.30. Same reader and same weight as 56872230, which measured 0.943 on our variant stack -- the author publishes 0.944 for this configuration on the community stack, so this arm isolates the BASE as the variable. Safe fallback: any reader failure keeps the stack's submission",
+  "note": "server-side re-run; the 9 h cap is the risk",
+  "ref": 56884048
+}

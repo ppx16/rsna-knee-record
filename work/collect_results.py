@@ -275,6 +275,8 @@ SCORE_ARMS = [
      "docs/PREREG-2026-10-06n-tta-reader-arm.md"),
     ("56878092", "reader leg at w=0.15", "10:23Z", "20:23-21:23Z",
      "docs/PREREG-2026-10-06o-reader-w015.md"),
+    ("56884048", "reader leg on the COMMUNITY stack (0943 + reader, w=0.30)", "15:1xZ", "~01:1xZ next day",
+     "docs/PREREG-2026-10-06r-reader-on-community-stack.md"),
 ]
 for _i, (_ref, _label, _fired, _expect, _prereg) in enumerate(SCORE_ARMS, start=3):
     print()
