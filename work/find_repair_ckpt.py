@@ -8,6 +8,20 @@ shape of a capability that is declared but not supplied -- the `F_dim=768` patte
 So: search Kaggle for the checkpoint. If it is public, adding a 4th CoAt member is a real lever; if it is
 not, then "4-Way Consensus" is a label nobody is actually running, and our 3-member stack is the truth.
 """
+
+# --- GBK CONSOLE GUARD (see work/patch_gbk_guard.py) -------------------------------------------------
+# This console is cp936, which cannot encode the U+26A0 warning sign used below. An unguarded
+# `print("... \u26a0 ...")` raises UnicodeEncodeError at that line and kills the script MID-REPORT, while
+# everything printed earlier is already on screen -- so the run looks complete. Self-contained on purpose:
+# it imports `sys` itself and depends on nothing else in this tree.
+import sys as _sys
+
+try:
+    _sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+    _sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+except Exception:  # noqa: BLE001  -- non-reconfigurable stream: leave it alone, prints still degrade
+    pass
+# ----------------------------------------------------------------------------------------------------
 from kaggle.api.kaggle_api_extended import KaggleApi
 
 api = KaggleApi()

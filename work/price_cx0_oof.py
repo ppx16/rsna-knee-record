@@ -8,6 +8,20 @@ The run also wrote an OOF over the 870 held-out studies of fold 0. That is ~15x 
 its CI is roughly sqrt(15) = ~4x tighter. This computes the macro ROC-AUC on it and compares
 the two instruments, so the continue/stop call rests on the tighter one.
 """
+
+# --- GBK CONSOLE GUARD (see work/patch_gbk_guard.py) -------------------------------------------------
+# This console is cp936, which cannot encode the U+26A0 warning sign used below. An unguarded
+# `print("... \u26a0 ...")` raises UnicodeEncodeError at that line and kills the script MID-REPORT, while
+# everything printed earlier is already on screen -- so the run looks complete. Self-contained on purpose:
+# it imports `sys` itself and depends on nothing else in this tree.
+import sys as _sys
+
+try:
+    _sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+    _sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+except Exception:  # noqa: BLE001  -- non-reconfigurable stream: leave it alone, prints still degrade
+    pass
+# ----------------------------------------------------------------------------------------------------
 import json
 import pathlib
 

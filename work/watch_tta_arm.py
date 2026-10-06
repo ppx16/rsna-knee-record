@@ -11,6 +11,20 @@ This is plumbing verification, not an experiment read. What proves composition:
 ⚠️ As on the plain leg, `0.0000 of label cells moved` is meaningless on 3 studies and is not a failure: at
 w=0.30 the stack's order survives unless the reader reverses it hard enough to overcome the weight.
 """
+
+# --- GBK CONSOLE GUARD (see work/patch_gbk_guard.py) -------------------------------------------------
+# This console is cp936, which cannot encode the U+26A0 warning sign used below. An unguarded
+# `print("... \u26a0 ...")` raises UnicodeEncodeError at that line and kills the script MID-REPORT, while
+# everything printed earlier is already on screen -- so the run looks complete. Self-contained on purpose:
+# it imports `sys` itself and depends on nothing else in this tree.
+import sys as _sys
+
+try:
+    _sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+    _sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+except Exception:  # noqa: BLE001  -- non-reconfigurable stream: leave it alone, prints still degrade
+    pass
+# ----------------------------------------------------------------------------------------------------
 import datetime as dt
 import json
 import pathlib

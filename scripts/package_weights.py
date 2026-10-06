@@ -46,6 +46,20 @@ Notes on the Kaggle CLI (all measured on this machine, 2026-09-11):
   * `PYTHONUTF8=1` must be set for the CLI on this zh-CN Windows box or it fails to read
     UTF-8 files. The script sets it for every child process it spawns.
 """
+
+# --- GBK CONSOLE GUARD (see work/patch_gbk_guard.py) -------------------------------------------------
+# This console is cp936, which cannot encode the U+26A0 warning sign used below. An unguarded
+# `print("... \u26a0 ...")` raises UnicodeEncodeError at that line and kills the script MID-REPORT, while
+# everything printed earlier is already on screen -- so the run looks complete. Self-contained on purpose:
+# it imports `sys` itself and depends on nothing else in this tree.
+import sys as _sys
+
+try:
+    _sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+    _sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+except Exception:  # noqa: BLE001  -- non-reconfigurable stream: leave it alone, prints still degrade
+    pass
+# ----------------------------------------------------------------------------------------------------
 import argparse
 import csv
 import io

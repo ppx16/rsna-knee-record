@@ -12,7 +12,7 @@ The guard goes immediately AFTER the module docstring, so it runs before any oth
 """
 from __future__ import annotations
 
-
+import argparse
 # --- GBK CONSOLE GUARD (see work/patch_gbk_guard.py) -------------------------------------------------
 # This console is cp936, which cannot encode the U+26A0 warning sign used below. An unguarded
 # `print("... \u26a0 ...")` raises UnicodeEncodeError at that line and kills the script MID-REPORT, while
@@ -98,14 +98,34 @@ def insert_after_docstring(text: str) -> str:
 
 
 def main() -> int:
+    ap = argparse.ArgumentParser()
+    ap.add_argument(
+        "--all",
+        action="store_true",
+        help="guard EVERY .py in work/ and scripts/, not only those whose SOURCE prints a bad character",
+    )
+    a = ap.parse_args()
+
     targets = []
     for d in ("work", "scripts"):
-        for p in sorted(pathlib.Path(d).glob("*.py")):
+        root = pathlib.Path(d)
+        if not root.is_dir():
+            continue
+        for p in sorted(root.glob("*.py")):
             risky, bad = at_risk(p)
-            if risky:
+            if risky or a.all:
                 targets.append((p, bad))
 
-    print("candidates whose prints emit cp936-unencodable chars: %d" % len(targets))
+    # ⚠️ WHY `--all` EXISTS. The literal scan is STRUCTURALLY unable to find the worst cases: when a script
+    # prints data that ARRIVES AT RUNTIME -- a downloaded leaderboard, a remote kernel title -- the offending
+    # character is not in the source at all. That killed three runs today: collect_results.py on a literal
+    # warning sign, then lb_snapshot.py on a team name containing U+0E3F, then the public-surface mining
+    # command on a kernel title containing U+2B50.
+    #
+    # A user-level PYTHONIOENCODING is NOT a fix either, which was measured the hard way: it reaches only
+    # processes started after it is set, and a long-running parent hands its STALE environment to every child
+    # it spawns. So the guard has to live in the file.
+    print("files to consider: %d%s" % (len(targets), "   (--all)" if a.all else ""))
     patched, skipped, failed = [], [], []
     for p, bad in targets:
         text = p.read_text(encoding="utf-8")

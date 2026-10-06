@@ -11,6 +11,20 @@ This dataset ships `dinov2_seed17_fold0_oof.csv` / `.npy`, `_test.csv` / `.npy`,
 gold labels **baked into those 58 rows**, so measuring anything against v5 returns a tautological 1.0000.
 The clean table is `report_labels_v4hybrid.csv` (0.8991 against the gold), which is what is used here.
 """
+
+# --- GBK CONSOLE GUARD (see work/patch_gbk_guard.py) -------------------------------------------------
+# This console is cp936, which cannot encode the U+26A0 warning sign used below. An unguarded
+# `print("... \u26a0 ...")` raises UnicodeEncodeError at that line and kills the script MID-REPORT, while
+# everything printed earlier is already on screen -- so the run looks complete. Self-contained on purpose:
+# it imports `sys` itself and depends on nothing else in this tree.
+import sys as _sys
+
+try:
+    _sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+    _sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+except Exception:  # noqa: BLE001  -- non-reconfigurable stream: leave it alone, prints still degrade
+    pass
+# ----------------------------------------------------------------------------------------------------
 import glob
 import pathlib
 
