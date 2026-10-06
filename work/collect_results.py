@@ -131,6 +131,46 @@ print("      within +/-3 points  -> no measurable change; the pair stays 5681408
 print("      worse               -> the composition is harmful; drop the leg")
 print("   ⚠️ The DISPLAYED SCORE is not the criterion: the author's own pipeline scored 0.944/0.944/0.943.")
 
+# ---------------------------------------------------------------- WHAT THE RANK INSTRUMENT CAN AND CANNOT SHOW
+# ⚠️ THE PUBLIC BOARD SHOWS OUR **BEST** SUBMISSION, NOT OUR NEWEST. So the rank moves ONLY if this arm
+# becomes our new best. That splits the outcome three ways, and two of them move the rank by nothing:
+#
+#   score > 0.943  -> the best changed, the rank moves, the in-block read above is meaningful.
+#   score = 0.943  -> the board CANNOT distinguish this arm from the best we already have. Any rank movement
+#                     seen then is DRIFT, not this arm. The pre-registered '+/-3 points -> pair unchanged'
+#                     branch applies -- but by CONSTRUCTION rather than by measurement. And 0.943 is a normal
+#                     author-side outcome (0.944/0.944/0.943), so it refutes nothing either.
+#   score < 0.943  -> not our best; the rank stays wherever drift puts it. Drop the leg.
+#
+# Writing this down because 'the percentile did not move' reads like 'no effect' when it can equally mean
+# 'the instrument is blind to this by design'. This board has already produced one sub-resolution trap --
+# 990 teams inside a single displayed value -- and this is the same trap wearing different clothes.
+print()
+if score is None:
+    print("   ⚠️ No public score yet, so nothing can be compared. When it arrives: the board shows our BEST")
+    print("      submission, so a score of 0.943 or lower will NOT move the rank at all, and any movement")
+    print("      seen at that point is drift rather than this arm.")
+else:
+    try:
+        _s = float(score)
+    except Exception:  # noqa: BLE001
+        _s = None
+    if _s is None:
+        print("   public score %r is not a number -- do not interpret it" % (score,))
+    elif _s > 0.943:
+        print("   score %.3f > 0.943 -> THIS ARM IS THE NEW BEST; the rank read above is meaningful." % _s)
+        print("      ⚠️ 0.944 is the bronze step: ranks 319-504, entirely inside the line.")
+        print("      See docs/TARGET-2026-10-06j-one-displayed-step-is-bronze.md")
+    elif _s == 0.943:
+        print("   score 0.943 -> *** THE INSTRUMENT IS BLIND TO THIS ARM. *** The board shows our BEST")
+        print("      submission, so a tie at 0.943 cannot be told apart from 56814081 by rank, and any rank")
+        print("      movement is DRIFT. The pre-registered '+/-3 points -> pair unchanged' branch therefore")
+        print("      holds BY CONSTRUCTION, not by measurement -- and 0.943 is a normal author-side result")
+        print("      (0.944/0.944/0.943), so it is not a refutation of the composition either.")
+    else:
+        print("   score %.3f < 0.943 -> not our best; the rank will not move for this arm. Drop the leg;" % _s)
+        print("      the final pair is unchanged.")
+
 # ---------------------------------------------------------------- DRIFT: the BEFORE baseline is going stale
 # ⚠️ WHY THIS IS HERE. The rule above compares a NEW rank against a BEFORE snapshot -- but the board does not
 # hold still. Teams keep passing our 0.943, so our rank FALLS with time even though our own score cannot
