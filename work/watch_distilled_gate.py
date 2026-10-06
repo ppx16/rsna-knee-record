@@ -76,7 +76,9 @@ def fetch():
 
 
 print("watching %s ..." % REF, flush=True)
-for _ in range(80):                     # ~13 h at 10-min polls
+for _ in range(200):                    # ~33 h at 10-min polls -- TPU queues have been observed
+                                        # at ~26 h (FACTS A33), so a 13 h window could expire
+                                        # BEFORE the gate ever ran, leaving the result unread.
     st = status()
     if st.endswith(("COMPLETE", "ERROR", "CANCEL")):
         break
