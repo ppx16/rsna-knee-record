@@ -1,6 +1,23 @@
 # FINAL SELECTION — current sheet, 2026-10-05
 
-> ## ⛔ BOTH RECOMMENDATIONS BELOW ARE SUPERSEDED — see `docs/RESULT-2026-10-05-two-arms-flat-or-worse.md`
+> ## ⛔ THE SECOND SLOT REVERTS TO `56613303` — see `docs/REVISION-2026-10-06c-second-slot-reverts-to-cflat.md`
+>
+> **Final pair: primary `56814081` (`0943cfmsft2`), second `56613303` (`0943cflat`).**
+>
+> The banner below moved the second slot to `56599932` (`0943cf`). That was reasoned from **public** numbers,
+> on which the two candidates are **exactly equal** — and the competition's own Data Description carries a
+> **Dataset Distribution Notice** stating that abnormality prevalence *"is not guaranteed to be the same
+> across the training, public leaderboard, and final evaluation datasets."* The frontier's per-label routing
+> map and calibrator were fitted on the **public** split, so the second slot should drop that dependence,
+> which is exactly what `cflat` does.
+>
+> Case check: `(cfmsft2, cflat) = max(P(C+S), P(C+R))` beats `(cfmsft2, cf) = max(P(C+S), P(C))` in every
+> case **except** when `S < 0` **and** `R < 0` **and** `R > S`; and on our measurements (`S > 0` from the
+> rank move, `R ≲ 0` from `cfmsft2flat` = 0.942 < 0.943) the two are **identical**. **The switch is free.**
+>
+> ⚠️ `0943p` (`56599159`) is dominated by `cflat` and must never be ticked.
+
+> ## (superseded) ⛔ BOTH RECOMMENDATIONS BELOW ARE SUPERSEDED — see `docs/RESULT-2026-10-05-two-arms-flat-or-worse.md`
 >
 > Two arms landed after this sheet was written, and **both came in at or below the baseline**:
 > `56848247` (`0943cfmsft2flat`) = **0.942**, `56845973` (`cfmsft2m-men`) = **0.940**. So

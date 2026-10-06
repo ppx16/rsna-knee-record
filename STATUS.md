@@ -306,17 +306,26 @@ closed by the user's own pushback:
 | slot | ref | arm | public |
 |---|---|---|---|
 | **primary** | **`56814081`** | `0943cfmsft2` — `C + S` | 0.943 |
-| **second** | **`56599932`** | `0943cf` — `C`, deliberately without `S` | 0.943 |
+| **second** | **`56613303`** | `0943cflat` — `C + R`, **without** the public-fitted routing | 0.941 |
+
+⚠️ **The second slot was `56599932` (`0943cf`) for a few hours on 2026-10-05 and has reverted.** Reasoning
+and the full case check: `docs/REVISION-2026-10-06c-second-slot-reverts-to-cflat.md`. The short version:
+the two candidates are **exactly equal on public numbers**, so the choice must be made on the organisers'
+**Dataset Distribution Notice** — *"prevalence … is not guaranteed to be the same across the training, public
+leaderboard, and final evaluation datasets"* — and `cflat` is the one that drops the **public-fitted**
+per-label routing map. **The switch is free on every measurement we hold.**
 
 ⚠️ **Still a BROWSER-ONLY action** (§9: no `select` verb, no `selected` field, `/api/v1` 401s). The
 auto-ticked default is **not** this pair.
 
-**Board at 2026-10-05T16:05Z**: teams 5226, rank **551**, bronze line **522**, **margin −29**,
-in-block **13.63 %**. ⚠️ Margin across the day: **+1 → −4 → −29**.
+**Board at 2026-10-06T06:11Z**: teams **5278**, rank **645**, bronze line **527**, **margin −118**,
+in-block **16.03 %**, top **0.964**. ⚠️ Margin across 10-05/10-06: **+1 → −4 → −29 → −118**, and the
+`0.943` block is **shrinking** (1014 → 999) while its floor rises 376 → 485 — **we are in the lower part of
+the block and falling through it.**
 
-**Remaining**: 17 days to the 2026-10-22 deadline; 3 of today's 5 submission slots; TPU ~13.6 h (fold 1
-is burning ~2.6 of it and cannot be stopped through the API); **GPU ~24.4 h untouched, reserved for
-submissions per `A31`**.
+**Remaining**: 16.7 days; 4 of today's 5 submission slots; **GPU 24.31 h, TPU 12.66 h** (both refresh
+2026-10-10). ⚠️ The "6.5–8 h runtime" fear is **refuted** — the 0.943 stack is **< 30 min** on the hidden
+test set (`FIND-2026-10-06b` §2).
 
 ---
 
