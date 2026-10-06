@@ -183,7 +183,15 @@ def main() -> int:
     nb = build_nb(w)
     if a.build:
         dst.mkdir(parents=True, exist_ok=True)
-        (dst / NB).write_text(json.dumps(nb, ensure_ascii=False), encoding="utf-8")
+        # ⚠️ ensure_ascii=True IS LOAD-BEARING, not a style choice. `KaggleApi.kernels_push` reads the
+        # code_file with `f.read()` -- the SYSTEM default encoding, which is GBK here -- so a notebook
+        # written as raw UTF-8 dies INSIDE the SDK, before anything is uploaded:
+        #   UnicodeDecodeError: 'gbk' codec can't decode byte 0x8b in position 3768
+        # Measured on this exact artefact: 311,810 bytes, 147 of them non-ASCII (the appended cell's
+        # comments). Escaping to \uXXXX is byte-identical in meaning, leaves the probes below working (they
+        # check the PARSED cells, not the raw text), and removes the dependency on the operator remembering
+        # PYTHONUTF8=1 -- which is exactly how the first push attempt was lost.
+        (dst / NB).write_text(json.dumps(nb, ensure_ascii=True), encoding="utf-8")
 
     text = "\n".join("".join(c.get("source", [])) if isinstance(c.get("source"), list)
                      else (c.get("source") or "") for c in nb["cells"])

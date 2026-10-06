@@ -186,7 +186,10 @@ def main() -> int:
         "kernel-0943cfmsft2-rdrtta-sy%02d" % round(a.synovitis_w * 100))
     kid = KID if dst is DST else "ppxl16/" + dst.name.replace("kernel-", "rsna-knee-")
     dst.mkdir(parents=True, exist_ok=True)
-    (dst / NB).write_text(json.dumps(nb, ensure_ascii=False), encoding="utf-8")
+    # ⚠️ ensure_ascii=True IS LOAD-BEARING -- see the long note in scripts/build_reader_arm.py.
+    # `KaggleApi.kernels_push` reads the code_file with the SYSTEM default encoding (GBK here), so a
+    # notebook written as raw UTF-8 raises UnicodeDecodeError inside the SDK before anything is uploaded.
+    (dst / NB).write_text(json.dumps(nb, ensure_ascii=True), encoding="utf-8")
     meta = json.loads((SRC / "kernel-metadata.json").read_text(encoding="utf-8"))
     meta["id"] = kid
     meta["title"] = dst.name.replace("kernel-", "RSNA knee ")
