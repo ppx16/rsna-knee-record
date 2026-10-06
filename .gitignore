@@ -166,3 +166,6 @@ work/models_axis/
 
 # pulled third-party notebooks
 work/newpub_1006/
+
+# the public reader's 369 MB of checkpoints + wheels (re-fetchable via work/fetch_reader.py)
+work/reader/
