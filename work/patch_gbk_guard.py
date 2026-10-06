@@ -12,7 +12,8 @@ The guard goes immediately AFTER the module docstring, so it runs before any oth
 """
 from __future__ import annotations
 
-import argparse
+
+
 # --- GBK CONSOLE GUARD (see work/patch_gbk_guard.py) -------------------------------------------------
 # This console is cp936, which cannot encode the U+26A0 warning sign used below. An unguarded
 # `print("... \u26a0 ...")` raises UnicodeEncodeError at that line and kills the script MID-REPORT, while
@@ -26,6 +27,7 @@ try:
 except Exception:  # noqa: BLE001  -- non-reconfigurable stream: leave it alone, prints still degrade
     pass
 # ----------------------------------------------------------------------------------------------------
+import argparse
 import ast
 import pathlib
 import sys
@@ -130,14 +132,15 @@ def main() -> int:
     for p, bad in targets:
         text = p.read_text(encoding="utf-8")
 
-        # Strip any block a previous run of THIS patcher inserted, so a bad insertion is repairable and the
-        # operation is idempotent. A hand-written guard from another script is recognised by `reconfigure`
-        # and left alone.
-        if MARK in text:
-            text = text.replace(BLOCK, "", 1)
-            if MARK in text:  # a second copy: strip repeatedly
-                text = text.replace(BLOCK, "", 1)
-        elif "reconfigure" in text:
+        # ⚠️ SKIP WHEN ALREADY GUARDED -- DO NOT STRIP AND RE-INSERT.
+        # The first two versions stripped their own BLOCK and re-inserted it, to stay repairable. That is
+        # NOT idempotent in practice, because BLOCK begins with a newline: removing it either glues two
+        # lines together (replace with "") or adds a blank line on EVERY run (replace with "\n"). The first
+        # was a SyntaxError this patcher hit on itself; the second was measured creeping two blank lines per
+        # pass across 11 files. Presence of the marker is now the entire test. The cost is that a
+        # previously mis-inserted block must be repaired by hand -- which has already happened once, and is
+        # far cheaper than a tool that quietly rewrites its own output differently each time it runs.
+        if MARK in text or "reconfigure" in text:
             skipped.append(p.name)
             continue
 
