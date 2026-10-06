@@ -25,9 +25,29 @@ import json
 import pathlib
 import re
 import subprocess
+import sys
 import time
 
-from kaggle.api.kaggle_api_extended import KaggleApi
+# ⚠️ THE RETRY MUST WRAP THE IMPORT, NOT JUST THE CALLS.
+# `kaggle/__init__.py` line 8 calls `api.authenticate()` at import time, so a transient api.kaggle.com
+# SSLEOFError surfaces as a failure of the `from kaggle... import KaggleApi` statement itself. The first
+# version of this file imported at module top with no retry, and died with a full traceback on the very
+# error it exists to survive -- a recovery path that cannot recover is worse than none.
+KaggleApi = None
+for _attempt in range(6):
+    try:
+        from kaggle.api.kaggle_api_extended import KaggleApi as _K
+
+        KaggleApi = _K
+        break
+    except Exception as _e:  # noqa: BLE001  (SSLEOFError and friends, raised from the import)
+        print("auth import attempt %d failed: %s" % (_attempt + 1, type(_e).__name__), file=sys.stderr)
+        time.sleep(8)
+
+if KaggleApi is None:
+    print("COULD NOT AUTHENTICATE after 6 attempts -- this is a TRANSPORT failure, not a result.")
+    print("Re-run `python work/collect_results.py`; nothing about the measurements has been learned.")
+    raise SystemExit(2)
 
 COMP = "rsna-knee-abnormality-detection"
 KG = r"D:\kaggle\venv-kaggle\Scripts\kaggle.exe"
@@ -100,9 +120,15 @@ if g.is_file():
     print("   gold-58 macro-AUC: %s" % rec.get("gold_macro_auc"))
     print("   decision (from the watcher's pre-registered rule): %s" % rec.get("decision"))
 else:
-    print("   watcher file: ABSENT -- the watcher did not survive. Recover the log with:")
+    # ⚠️ "the file is absent" does NOT mean "the watcher died". It is written only when a watcher reaches a
+    # terminal kernel state, so a still-running watcher looks identical to a dead one from here. The first
+    # version printed "the watcher did not survive", which is an inference this script cannot make --
+    # exactly the "I failed to ask" vs "absent" confusion this repository has hit four times.
+    print("   watcher file: NOT WRITTEN YET (a running watcher writes it only on a terminal state,")
+    print("                 so this is indistinguishable here from a dead watcher -- check both)")
+    print("   either way the log is recoverable directly:")
     print("      python work/read_finished_runs.py        (fetches and greps the kernel log)")
-    print("   or read it directly:  kaggle kernels output ppxl16/rsna-knee-msft2-gate-distilled")
+    print("   or:  kaggle kernels output ppxl16/rsna-knee-msft2-gate-distilled")
     print("   and look for the line  [zeroshot] zero training steps: GOLD macro-AUC <N>")
 print("   READ RULE (fixed in advance): >=0.92 geometry matches + as strong as claimed -> wire as a member")
 print("      0.90-0.92 usable but no better than msft2 (0.9069) | 0.85-0.90 below the A167 gate")
