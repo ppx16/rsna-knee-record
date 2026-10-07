@@ -1,6 +1,6 @@
 # RSNA Knee Abnormality Detection — STATUS
 
-## 🟢 CURRENT STATE — 2026-10-06T12:08Z — **read this block and nothing else for the state**
+## 🟢 CURRENT STATE — 2026-10-07T03:05Z — **read this block and nothing else for the state**
 
 *Every number below was assembled from files (`work/assemble_state.py`), not from prose. The DELTA sections
 further down are a chronological audit trail and several are superseded; they are kept because this
@@ -9,9 +9,9 @@ repository has been damaged before by a STATUS whose prose had drifted.*
 | | |
 |---|---|
 | **deadline** | **2026-10-22 23:59Z — 16.7 days** |
-| **board** (`2026-10-06T10:23:16Z`, from the w=0.15 arm's own BEFORE snapshot) | teams **5297**, rank **683**, `0.943`, bronze line **529**, **margin −154**, in-block **16.514 %**, top **0.964** — ⚠️ **drifting +145…+240 ranks/day and accelerating** (rank 645→670→683 in 4.2 h; the `0.943` block's floor rose 485→521 while its width fell 999→982). Re-take with `work/lb_snapshot.py`, never quote this line as current |
+| **board** (`2026-10-07T03:0xZ`, `work/lb_snapshot.py`) | teams **5358**, rank **593**, **`0.944`**, bronze line **535**, **margin −58**, top **0.964** — ⚠️ **WE ARE ERODING, NOT HOLDING**: rank 545→588→593 and margin **−13 → −53 → −58** across 17:26Z→01:12Z→03:05Z. The line moved 3 places while we moved 48, so this is new submissions passing us, not the line shifting. Public material tops out at exactly 0.944, so **0.944 cannot hold bronze**. Re-take with `work/lb_snapshot.py`. |
 | **quota** (`kaggle quota`, venv CLI — columns are `used / remaining / total`) | **GPU 5.84 h used, 24.16 h remaining** / 30 · **TPU 7.34 h used, 12.66 h remaining** / 20 · both refresh **2026-10-10** |
-| **submissions today** | **4 / 5** (48 visible in total) |
+| **submissions today** | **0 / 5** (fresh day, 2026-10-07) |
 
 > ### 👉 THE ONE MANUAL ACTION: `FINAL-TICK.md` (repo root)
 >
