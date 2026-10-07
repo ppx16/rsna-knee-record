@@ -12,7 +12,8 @@
   "dataset_sources": [
     "dreaddevelopment/knee-raptor-corpus",
     "flight0234/rsna-knee-hybrid-report-labels",
-    "ppxl16/rsna-knee-cv-folds"
+    "ppxl16/rsna-knee-cv-folds",
+    "dreaddevelopment/knee-raptor-corpus-ext"
   ],
   "kernel_sources": [],
   "competition_sources": [],
