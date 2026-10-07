@@ -1,0 +1,1 @@
+{"at": "2026-10-07 16:30:03", "held_fold": 0, "macro_auc": 0.6634, "n_val": 881, "history": [[0, 0.6307], [0, 0.6291], [0, 0.6446], [0, 0.6517], [0, 0.6577], [0, 0.6634]], "gate": "solo >= 0.90 on this large-n instrument (msft2 = 0.8847 same instrument)", "decision": "BELOW the member bar -- record honestly, do not wire it"}
