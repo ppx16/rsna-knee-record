@@ -1,0 +1,20 @@
+{
+  "id": "ppxl16/rsna-knee-tpu-3darm",
+  "title": "RSNA knee tpu 3darm",
+  "code_file": "kernel_main.py",
+  "language": "python",
+  "kernel_type": "script",
+  "is_private": true,
+  "enable_gpu": false,
+  "enable_tpu": true,
+  "enable_internet": false,
+  "keywords": [],
+  "dataset_sources": [
+    "dreaddevelopment/knee-raptor-corpus",
+    "flight0234/rsna-knee-hybrid-report-labels",
+    "ppxl16/rsna-knee-cv-folds"
+  ],
+  "kernel_sources": [],
+  "competition_sources": [],
+  "model_sources": []
+}
