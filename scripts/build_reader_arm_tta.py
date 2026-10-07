@@ -48,7 +48,7 @@ CELL = '''# ==== appended by scripts/build_reader_arm_tta.py: the Stack++ reader
 # The stack's submission is written by the previous cell; this cell only ever REPLACES it on success.
 import glob as _o_glob, os as _o_os, shutil as _o_shutil, subprocess as _o_sp, sys as _o_sys, time as _o_time
 import pandas as _o_pd
-OWN_W = 0.30                     # the author's global weight
+OWN_W = __OWN_W__                 # parameterised; see --own-w
 SYNOVITIS_W = __SYNOVITIS_W__   # per-label reduction on Synovitis; see docs/EXTRACT-2026-10-06g
 #   The author uses 0.08, justified by the observation that most radiology reports never mention
 #   Synovitis, so report-derived labels teach it wrongly. That justification rests on 58 gold studies
@@ -125,7 +125,7 @@ except Exception as _o_err:
 '''
 
 
-def build_nb(synovitis_w: float = 0.08) -> dict:
+def build_nb(synovitis_w: float = 0.08, own_w: float = 0.30) -> dict:
     src = SRC / NB
     if not src.is_file():
         raise SystemExit("!! missing %s" % src)
@@ -140,7 +140,7 @@ def build_nb(synovitis_w: float = 0.08) -> dict:
     if any("build_reader_arm_tta" in (("".join(c.get("source", [])) if isinstance(c.get("source"), list)
                                        else (c.get("source") or ""))) for c in cells):
         raise SystemExit("the tta reader cell is already present -- refusing to append twice")
-    body = CELL.replace("__SYNOVITIS_W__", repr(float(synovitis_w)))
+    body = CELL.replace("__SYNOVITIS_W__", repr(float(synovitis_w))).replace("__OWN_W__", repr(float(own_w)))
     cells.insert(pub[0] + 1, {"cell_type": "code", "execution_count": None, "metadata": {},
                               "outputs": [], "source": body.splitlines(keepends=True)})
     nb["cells"] = cells
@@ -158,13 +158,18 @@ def main() -> int:
                     help="the per-label reduction on Synovitis. 0.08 is the author's value; 0.30 disables "
                          "the reduction entirely and is the pre-registered FIRST variation if this arm is "
                          "ever iterated (docs/VERIFY-2026-10-06-reader-leg-is-clean.md)")
+    ap.add_argument("--own-w", type=float, default=0.30,
+                    help="the reader leg's global weight. w=0.15 measured 0.944 on the plain leg while 0.30 "
+                         "measured 0.943, and TTA was only ever built at 0.30 -- so this flag is what makes "
+                         "the one untested combination (w=0.15 + TTA) buildable")
     a = ap.parse_args()
 
-    nb = build_nb(a.synovitis_w)
+    nb = build_nb(a.synovitis_w, a.own_w)
     text = "\n".join("".join(c.get("source", [])) if isinstance(c.get("source"), list)
                      else (c.get("source") or "") for c in nb["cells"])
     probes = [("build_reader_arm_tta.py", "the cell is present"),
               ("SYNOVITIS_W = %r" % float(a.synovitis_w), "the per-label weight"),
+              ("OWN_W = %r" % float(a.own_w), "the reader leg weight"),
               ("RSNA_READER_TTA", "the TTA mode"),
               ("_stack_submission.csv", "the fallback backup"),
               ("_o_shutil.copy(_o_bak, _o_pub)", "the restore path"),
@@ -182,9 +187,14 @@ def main() -> int:
         print("(--check only)")
         return 0
 
-    dst = DST if abs(a.synovitis_w - 0.08) < 1e-9 else ROOT / "kernels" / (
-        "kernel-0943cfmsft2-rdrtta-sy%02d" % round(a.synovitis_w * 100))
-    kid = KID if dst is DST else "ppxl16/" + dst.name.replace("kernel-", "rsna-knee-")
+    # ⚠️ The destination must vary with BOTH knobs, or two different arms overwrite each other's artefacts.
+    _tag = ""
+    if abs(a.synovitis_w - 0.08) >= 1e-9:
+        _tag += "-sy%02d" % round(a.synovitis_w * 100)
+    if abs(a.own_w - 0.30) >= 1e-9:
+        _tag += "-w%02d" % round(a.own_w * 100)
+    dst = DST if not _tag else ROOT / "kernels" / ("kernel-0943cfmsft2-rdrtta" + _tag)
+    kid = KID if not _tag else "ppxl16/" + dst.name.replace("kernel-", "rsna-knee-")
     dst.mkdir(parents=True, exist_ok=True)
     # ⚠️ ensure_ascii=True IS LOAD-BEARING -- see the long note in scripts/build_reader_arm.py.
     # `KaggleApi.kernels_push` reads the code_file with the SYSTEM default encoding (GBK here), so a
