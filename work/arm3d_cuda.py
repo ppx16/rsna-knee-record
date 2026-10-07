@@ -138,9 +138,14 @@ def macro_auc(y, p):
     for j in range(y.shape[1]):
         col = y[:, j]
         m = np.isfinite(col)
-        if m.sum() < 10 or len(np.unique(col[m])) < 2:
+        if m.sum() < 10:
             continue
-        aucs.append(roc_auc_score(col[m], p[m, j]))
+        # BINARISE: the table carries SOFT probabilities and roc_auc_score refuses continuous y_true.
+        # Convention stated so the bar cannot drift silently: positive when the label exceeds 0.5.
+        b = (col[m] > 0.5).astype(np.int8)
+        if b.min() == b.max():
+            continue
+        aucs.append(roc_auc_score(b, p[m, j]))
     return (float(np.mean(aucs)) if aucs else float('nan')), aucs
 
 
@@ -198,7 +203,8 @@ def main():
         raise KeyError(u)
     lab = load_labels(lpath)
     folds = load_folds(fpath)
-    log('[3darm] vols %s | ids %d | labels %d | folds %d' % (vols.shape, len(ids), len(lab), len(folds)))
+    log('[3darm] studies %d across %d part(s) | labels %d | folds %d'
+        % (len(ids), len(PARTS), len(lab), len(folds)))
 
     # only studies that have BOTH an id in the corpus and a fold assignment and at least one label
     usable = [u for u in ids if u in folds and u in lab and np.isfinite(lab[u]).any()]
