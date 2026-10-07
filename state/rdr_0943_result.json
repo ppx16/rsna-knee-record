@@ -1,0 +1,47 @@
+{
+  "ref": "56884048",
+  "arm": "0943cfmsft2-rdr",
+  "public_score": "0.943",
+  "before": {
+    "at": "2026-10-06T15:07:49Z",
+    "n_teams": 5317,
+    "our_rank": 716,
+    "our_score": 0.943,
+    "bronze_line": 531,
+    "margin": -185,
+    "block": {
+      "score": 0.943,
+      "n": 972,
+      "lo": 557,
+      "hi": 1528
+    },
+    "in_block_pct": 16.375,
+    "top_score": 0.964
+  },
+  "after": {
+    "at": "2026-10-07T01:12:37Z",
+    "n_teams": 5352,
+    "our_rank": 588,
+    "our_score": 0.944,
+    "bronze_line": 535,
+    "margin": -53,
+    "block": {
+      "score": 0.943,
+      "n": 956,
+      "lo": 613,
+      "hi": 1568
+    },
+    "in_block_pct": -2.618,
+    "top_score": 0.964
+  },
+  "at": "2026-10-07T01:12:37Z",
+  "delta_in_block_pct_raw": -18.993,
+  "delta_margin": 132,
+  "drift_ranks_per_hour": -12.7,
+  "drift_adjusted_before_pct": -2.618,
+  "delta_in_block_pct_drift_adjusted": -0.0,
+  "rank_verdict": "no measurable change",
+  "rank_verdict_basis": "drift-adjusted",
+  "verdict_rule": "DISPLAYED SCORE vs the bronze step (prereg: TTA / w=0.15)",
+  "verdict": "INSTRUMENT IS BLIND to this arm (the board carries our BEST): a tie at 0.943 cannot be told apart from 56814081 by rank -> pair unchanged, by construction"
+}
