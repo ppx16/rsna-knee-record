@@ -1,0 +1,16 @@
+{
+  "at": "2026-10-12T02:16:57Z",
+  "n_teams": 5794,
+  "our_rank": 506,
+  "our_score": 0.954,
+  "bronze_line": 579,
+  "margin": 73,
+  "block": {
+    "score": 0.943,
+    "n": 543,
+    "lo": 1634,
+    "hi": 2176
+  },
+  "in_block_pct": -208.118,
+  "top_score": 0.966
+}

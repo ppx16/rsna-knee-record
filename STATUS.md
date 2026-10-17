@@ -9,9 +9,73 @@ repository has been damaged before by a STATUS whose prose had drifted.*
 | | |
 |---|---|
 | **deadline** | **2026-10-22 23:59Z — 16.7 days** |
-| **board** (`2026-10-07T03:0xZ`, `work/lb_snapshot.py`) | teams **5358**, rank **593**, **`0.944`**, bronze line **535**, **margin −58**, top **0.964** — ⚠️ **WE ARE ERODING, NOT HOLDING**: rank 545→588→593 and margin **−13 → −53 → −58** across 17:26Z→01:12Z→03:05Z. The line moved 3 places while we moved 48, so this is new submissions passing us, not the line shifting. Public material tops out at exactly 0.944, so **0.944 cannot hold bronze**. Re-take with `work/lb_snapshot.py`. |
+| **board** (`2026-10-07T03:0xZ`, `work/lb_snapshot.py`) | teams **5358**, rank **593**, **`0.944`**, bronze line **535**, **margin −58**, top **0.964** — ⚠️ **WE ARE ERODING, NOT HOLDING**: rank 545→588→593 and margin **−13 → −53 → −58** across 17:26Z→01:12Z→03:05Z. The line moved 3 places while we moved 48, so this is new submissions passing us, not the line shifting. Public **notebook** material tops out at exactly 0.944, so **0.944 cannot hold bronze** ⚠️ 口径见下方 IN FLIGHT 区（**榜单**最高 0.964、且 ≥0.946 的队伍有一百多个 —— 比我们高的用的是未公开方法）。 Re-take with `work/lb_snapshot.py`. |
 | **quota** (`kaggle quota`, venv CLI — columns are `used / remaining / total`) | **GPU 5.84 h used, 24.16 h remaining** / 30 · **TPU 7.34 h used, 12.66 h remaining** / 20 · both refresh **2026-10-10** |
 | **submissions today** | **0 / 5** (fresh day, 2026-10-07) |
+
+> ### 🔄 IN FLIGHT — 2026-10-07 — 微调臂/配方两方向的审计与两个内核
+>
+> **审计把两条方向的判断都改写了**（全文 `docs/RESULT-2026-10-07-two-directions-audit.md`，事实进 FACTS **A170/A171/C87/C88/D20/D21/D22**）：
+>
+> | 方向 | 真实状态 |
+> |---|---|
+> | **配方 · v9 当第 5 个视角** | ⛔ **关闭**。D14：两次独立尝试（v4 widedense、**v9 finespacing**）**都是 0.941 平**。唯一没跑的 0.50 剂量测试建好未推，**判定不推**（D21）。 |
+> | **配方 · reader 腿权重** | w=0.15 是唯一越过铜线的（→ **0.944**）；w=0.30 / TTA / community-stack 全 0.943。**0.944 就是公开面天花板。** |
+> | **微调臂 · v5 warm-start** | ✅ **已做已收获**：`msft2` = 从 maxspan v5(0.9214) 的 backbone+head warm-start 微调，**solo 0.9069，唯一被公榜量到的增益**（C87）。 |
+> | **微调臂 · v9 warm-start** | 🔄 **唯一仍开着的变体**，内核已建待推：`kernels/kernel-v9ft`（与 msft2 **只差 3 行** ⇒ 唯一变量是起始检查点）。 |
+>
+> ⚠️ **两条更正**：① A168 说的"已修"**只存在于 `kernel-msft2`**，`kernel-raptor-train*` **从来没有过**，本轮才补上（旧加载器对 v5/v9 两个公开检查点都解出 **0 个 backbone 张量**且静默通过 —— A170）。② 我写的判据「gold-58 上 Δ ≥ +0.0005」**作废**：gold-58 配对 CI 半宽 **±0.021**，门槛比仪器分辨率高 42 倍（**D20**，与 D16/C68/C78/C81 一致）。**臂间比较改用 OOF(±0.004)。**
+>
+> ### 📌 2026-10-07 收尾 —— 六条路线全部按实测关闭；今天的两个名额都已用掉
+>
+> | 路线 | 实测结论 | FACTS |
+> |---|---|---|
+> | 配方 · v9 当第 5 视角 | ⛔ 两次 0.941 平 | D14 / D21 |
+> | 配方 · reader 腿权重 | 只有 **w=0.15** 越过铜线（0.944）；整条轴只有 0.002 宽 | — |
+> | 微调臂 · v5/v8/v9 warm-start | **v5（msft2）是唯一成功的**；**v8 0.8899 / v9 0.8907 双双被守卫拒** | C91 / C92 / C96 |
+> | **几何匹配** | ⛔ **无可检出好处**（匹配的 v8 **低于**不匹配的 v5） | **C95** |
+> | 切片密度（44/64/80） | ⛔ solo +0.0065 → **成员 +0.0007，CI 跨 0** | **C90** |
+> | 逐 finding 选臂 | ⛔ **事后上限只有 +0.0044**；`msft0` 已在 12 项里 8 项最好 | **C97** |
+> | 3D 体积臂 | ⛔ 0.6493 / ~0.78 ≪ 0.90 门槛；且两个旧坑复发 | A175 |
+>
+> ⇒ **RSNA 已到公开面天花板（0.944）。我没有找到越过 0.945 的路，这一点不粉饰。**
+> 剩下的差距是**模型质量**，而所有可及的新模型路线都已关闭。
+>
+> ### ⭐ 今天唯一期望为正的动作：最终配对改成【跨底座】
+>
+> `FINAL-TICK.md` 已更新，`work/verify_final_pair.py` 实测 **`pair present and COMPLETE`**：
+> · **primary `56878092`**（0.944，reader 腿 w=0.15）—— 认 **`w=0.15`**，别碰 `56872230`（`30% rank leg`，0.943）
+> · **second `56570151`**（**0.943**，`0943s` **稀疏 stack**，**另一支底座**）—— 从 `56613303`（0.941，同血统近邻）换过来
+> ⇒ **分数更高 (+0.002) 且底座更远** = 纯改进。理由与边界见 `docs/STRATEGY-2026-10-07-final-pair-diversity.md`。
+> ⚠️ private 榜**无法本地测量**，去相关是**结构判断**；但这次**分数也是顺向的**，所以即使收益为零也不亏。
+>
+> ### 今天用掉的名额
+> · **ARC** `56909422`（PENDING）—— live 游戏复跑，零风险掷骰子
+> · **RSNA** `56910273`（TTA + w=0.15，唯一没试过的配方组合）
+> · **RSNA 还剩 4 个名额，我没有烧** —— 没有新东西可交，重交同一内核给同一个分。**不为"用掉名额"制造零期望动作。**
+>
+> ### 🔄 明天的第一件事：ARC 的 `duck-18-1gc-fix` **v5**
+> boot 链已过四道关（zstandard → CUDA toolkit → 父进程 numpy → 三个 patch 阶段），
+> **只剩子进程环境这一道**。v5 实施的是 F58 的**晚执行 `.pth`**（sitecustomize 里的插入被证明会被执行顺序覆盖）。
+> 读数器 `work/watch_duckfix.py` 已挂，看两行：
+> · `[arc_numpy_fix] pruned [...] root ...` ← `.pth` 跑了吗
+> · `[sitecustomize] NUMPY_OK ...` ← 子进程 numpy 好了吗
+> **若这两行正常，SGLang 就起来了** —— 那是这条重型 clone 第一次跑通，档位是 **40–55**（我们现在 24.53）。
+> 台账 `arc-agi-3-ledger` 已到 **F58**（全部推送）。
+>
+> **一条命令读完全部**：`python work/collect_results.py`；RSNA 账本用 `python work/rsna_daily.py`。
+>
+> ### ⭐⭐ 为什么是 v8（FACTS **C93**，本轮最重要的结论）
+> msft2（从 maxspan v5 warm-start 的 CoAtNet）是**唯一被量到越过 +0.005 的成员**：**成员 delta +0.0084，CI [+0.0060,+0.0107]**（C91）。而 A158 的模式说**只有 CoAtNet 族通过**。检查点按**几何匹配**排序（`work/rank_warmstart_ckpts.py`，从 .pt 直接读）：
+> · v5 = **64 槽** ⇒ 在本语料读 **0.8963**（吃过不匹配的亏） · v9 = **80 槽** ⇒ **0.8907，被守卫拒**（掉 0.0124） · **v8 = 44 槽 ⇒ 与我们的语料【完全匹配】** ⭐
+> ⇒ **预登记预测**：v8 的起始分应**高于** msft2 的 0.8963。
+>
+> ### ⚠️ 两条必须先读再判的纪律
+> 1. **solo 分不决定任何事。** C90：同一个臂 **solo +0.0065（真实）→ 成员只剩 +0.0007**（CI [−0.0004,+0.0017] 跨 0）。⇒ 任何新臂训完，**唯一决定性的数是成员增量**：`python scripts/member_add_test.py --arm <tag>@f0 --strong`（**零 GPU**，从本地 OOF 直接算）。要打的标是 **msft2 的 +0.0084**。
+> 2. **`scripts/member_add_test.py` 曾有盲区，已修**（C91）：它原来扫不到 `work/**`，**因此 A158 的"库存已榨干"漏掉了我们最好的臂 msft2**。可见臂数 22 → 31。
+> 3. ⚠️ **预先记下的反证**：**v8 已经作为【视图】在栈里**（C15），v8 微调可能与它冗余（A158 的替代品陷阱）。**必须实测，不能假设。**
+>
+> ⚠️ **战略转向的依据（D22）**：0.944 已是公开天花板，而按 A167 的 11× 衰减律外推，v9 warm-start 的预期成员增益也只在 **+0.0002** 量级、**低于公榜分辨率**。⇒ "只在意公榜会对公榜过拟合、要做好本地 CV 增强泛化"从建议变成**主要依据**。
 
 > ### 👉 THE ONE MANUAL ACTION: `FINAL-TICK.md` (repo root)
 >
@@ -35,6 +99,11 @@ repository has been damaged before by a STATUS whose prose had drifted.*
 > ⚠️ **The position is thin**: margin **−13** at the public ceiling, and drift runs ~120–180
 > ranks/day against us. Public material tops out at 0.944, so holding bronze needs something ABOVE it -- and
 > the one unexplored axis is the 3D volume arm (FACTS A160).
+>
+> ⚠️ **2026-10-07 更正（FACTS C89）—— 上面那句 "Public material tops out at 0.944" 是两个不同口径混在一起，必须分开读：**
+> · **公开 *notebook* 面** 确实顶在 **0.944**（本次重扫最新 40 条，无任何高于它的配方或机制；"0946" 那种标题是融合进公开 0.946 管线、不是它自己的分数）—— 这一半成立。
+> · **榜单** 并没有顶在 0.944：2026-09-28 那份完整榜 **最高 0.959**，**≥0.946 有 139 队**、≥0.950 **75 队**、≥0.955 **24 队**、≥0.958 **6 队**。⇒ **榜上比我们高的队伍用的是未公开的方法，不是"公开面没有更高的"。**
+> · 另：**"3D 体积臂是唯一未探索的轴" 已不再成立** —— 3D 两个起点都实测过，从零 **0.7077–0.7195**、`r3d_18` 预训练平台 **0.7808/0.7849**，**都远低于 A167 的 0.90 成员门槛**。
 
 ### ✅ FINAL PAIR — locked, and verified present + uniquely identifiable
 

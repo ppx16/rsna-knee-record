@@ -212,6 +212,19 @@ Everything else in this notebook is ready to run once that file exists.
 
 
 # ------------------------------- data ----------------------------------------
+# ---- anatomical mirror TTA: corpus slot -> plane ------------------------------------------
+# Read VERBATIM from kernels/kernel-diag-slots/diag_slots.py, not inferred. NOTE sagittal
+# appears TWICE (fluid=1 then fluid=0), so its block is 12+10 = 22 slots, not 12 -- the
+# boundary that work/mirror_tta.py's self-test caught me getting wrong.
+import os as _os
+_SLOT_GROUPS_44 = [("Sagittal", 1, 12), ("Sagittal", 0, 10), ("Coronal", 1, 8),
+                   ("Coronal", 0, 6), ("Axial", -1, 8)]
+_SLOT_PLANES = [p.lower() for p, _f, k in _SLOT_GROUPS_44 for _ in range(k)]
+assert len(_SLOT_PLANES) == 44, len(_SLOT_PLANES)
+# opt-in: set RAPTOR_MIRROR=1 and run eval twice to isolate the effect
+MIRROR_ENABLED = bool(_os.environ.get("RAPTOR_MIRROR", ""))
+
+
 class StudyWindows(Dataset):
     """Per-study bag of 2.5D windows sampled from all_vols.npy (memmap).
     Each window = 3 physically-consecutive slices -> RGB, resized to `res`, in [0,1]
@@ -280,6 +293,20 @@ class StudyWindows(Dataset):
         for c in cs:
             c = max(1, min(c, self._D - 2))
             tri = np.stack([vol[c - 1], vol[c], vol[c + 1]], 0).astype(np.float32) / 255.0  # (3,H,W)
+            # ---- anatomical mirror TTA (opt-in, default OFF) -----------------------------
+            # The axis is chosen PER WINDOW from the plane of THIS window's centre slice, and
+            # `c` indexes the corpus slot axis directly, so the plane is a plain lookup. A
+            # batch-level width flip would be WRONG for sagittal windows: their L/R axis IS
+            # the 3-slice axis. Mirrored after /255 deliberately -- flips are linear index ops
+            # and commute with a scalar division, so this equals "mirror the knee, then
+            # normalise" exactly.
+            # call-time lookup: the eval driver sets/clears RAPTOR_MIRROR between two
+            # main() calls, which is what isolates the mirror in one kernel session
+            if _os.environ.get("RAPTOR_MIRROR"):
+                if _SLOT_PLANES[c] == "sagittal":
+                    tri = tri[::-1]            # L/R is the slice axis
+                else:
+                    tri = tri[:, :, ::-1]      # L/R is the image width
             H, W = tri.shape[-2], tri.shape[-1]
             if not self.roi:
                 tiles.append(self._resize(tri))
@@ -336,8 +363,25 @@ def load_raptor(bb, ckpt_path):
         print("[raptor] RANDOM-INIT control (no SSL weights)", flush=True)
         return "random-init"
     ck = torch.load(ckpt_path, map_location="cpu", weights_only=False)
-    st = ck["student"] if "student" in ck else ck
-    bbst = {k[len("backbone."):]: v for k, v in st.items() if k.startswith("backbone.")}
+    # Released checkpoints nest their tensors under a container key, and which key it is
+    # varies ("model" for the MaxSpan/CoAtNet line, "student" for the SSL line,
+    # "state_dict" elsewhere). Unwrapping only "student" failed SILENTLY: a foreign
+    # container yielded an EMPTY dict, load_state_dict(strict=False) accepted it, and the
+    # run continued from timm weights while printing a success line.
+    st = ck
+    for _container in ("model", "student", "state_dict", "net", "backbone", "ema"):
+        if isinstance(st, dict) and isinstance(st.get(_container), dict):
+            st = st[_container]
+            break
+    if not isinstance(st, dict):
+        raise RuntimeError(f"load_raptor({os.path.basename(ckpt_path)}): no state dict found")
+    bbst = {k[len("backbone."):]: v for k, v in st.items()
+            if isinstance(k, str) and k.startswith("backbone.")}
+    if not bbst:
+        raise RuntimeError(
+            f"load_raptor({os.path.basename(ckpt_path)}): extracted 0 backbone tensors -- "
+            f"refusing to train from timm weights by accident. top-level keys="
+            f"{list(ck)[:8]} nested keys={list(st)[:8]}")
     missing, unexpected = bb.load_state_dict(bbst, strict=False)
     ep = ck.get("epoch", "?")
     print(f"[raptor] loaded backbone from {os.path.basename(ckpt_path)} (ssl epoch {ep}) | "
@@ -381,6 +425,11 @@ def main():
     # Defaults to ImageNet-pretrained weights, which is what every released arm was trained from.
     # The previous default pointed at a self-supervised checkpoint that is not distributed here,
     # so following the example run above failed on a missing file.
+    ap.add_argument("--init_ckpt", default=None,
+                    help="full model state_dict (backbone+head) to START from, e.g. the "
+                         "released MaxSpan v5 CoAtNet (gold_auc 0.9214).")
+    ap.add_argument("--eval_only", action="store_true",
+                    help="score --init_ckpt on the gold split and exit; no training.")
     ap.add_argument("--ckpt", default="timm",
                     help="'timm' for ImageNet-pretrained weights, or a path to your own "
                          "self-supervised checkpoint")
@@ -505,6 +554,30 @@ def main():
         except Exception as e:
             print(f"[raptor] grad_ckpt unsupported for {a.arch}: {e}", flush=True)
     model = RaptorClassifier(bb, F_dim=F_dim).to(dev)
+    if a.init_ckpt:
+        # The released checkpoint's head tensors are named exactly like ours, so its
+        # "model" dict IS our state_dict. Load it, and SAY how much landed -- an
+        # under-matching load re-initialises silently and still looks like a success.
+        _ick = torch.load(a.init_ckpt, map_location="cpu", weights_only=False)
+        _ist = _ick
+        for _c in ("model", "student", "state_dict"):
+            if isinstance(_ist, dict) and isinstance(_ist.get(_c), dict):
+                _ist = _ist[_c]
+                break
+        _own = model.state_dict()
+        _use = {k: v for k, v in _ist.items()
+                if k in _own and hasattr(v, "shape") and tuple(v.shape) == tuple(_own[k].shape)}
+        _n_head = sum(1 for k in _use if not k.startswith("backbone."))
+        if len(_use) < 0.5 * len(_own):
+            raise RuntimeError(
+                f"--init_ckpt matched only {len(_use)}/{len(_own)} tensors from "
+                f"{os.path.basename(a.init_ckpt)} -- refusing (this would re-initialise "
+                f"silently). ckpt keys={list(_ist)[:6]}")
+        model.load_state_dict(_use, strict=False)
+        print(f"[init] {os.path.basename(a.init_ckpt)}: loaded {len(_use)}/{len(_own)} tensors "
+              f"({_n_head} head) | reported gold_auc={_ick.get('gold_auc')} "
+              f"| src={_ick.get('src')} res={_ick.get('res')}", flush=True)
+
     if a.freeze_blocks > 0:
         # Backbones name their layer groups differently: ViT-style models use blocks.N., while
         # CoAtNet, MaxViT and ConvNeXt use stages.N. Matching only one of those froze nothing at
@@ -548,6 +621,26 @@ def main():
         return float(np.mean(list(aucs.values()))), aucs, P, Y
 
     best = 0.0; best_state = None; best_P = None; t0 = time.time(); hist = []
+
+    if a.eval_only:
+        # The cheap decisive measurement: score the loaded weights on the gold split and
+        # exit. Costs minutes, and it answers "does this member add" before any GPU is
+        # spent on a fine-tune.
+        if not a.init_ckpt:
+            raise RuntimeError("--eval_only needs --init_ckpt")
+        _au, _aucs, _P, _Y = evaluate()
+        print(f"[eval-only] tag={a.tag} arch={a.arch} res={a.res} k_eval={a.k_eval} "
+              f"n_gold={len(gold_ids)} gold macro AUC = {float(_au):.4f}", flush=True)
+        for _n in LAB:
+            if _n in _aucs:
+                print(f"[eval-only]   {_n:<24} {_aucs[_n]:.4f}", flush=True)
+        np.savez(os.path.join(HERE, f"raptor_gold_{a.tag}.npz"),
+                 pred=_P, truth=_Y, ids=np.array(gold_ids))
+        json.dump({"tag": a.tag, "eval_only": True, "init_ckpt": a.init_ckpt,
+                   "gold_auc": float(_au), "aucs": _aucs, "arch": a.arch, "res": a.res,
+                   "k_eval": a.k_eval, "src": src, "n_gold": len(gold_ids)},
+                  open(os.path.join(HERE, f"raptor_evalonly_{a.tag}.json"), "w"), indent=1)
+        return
     TOPK = max(1, a.topk); topk = []
     for ep in range(a.epochs):
         model.train(); tot = 0.0

@@ -341,10 +341,31 @@ def main():
                                     "verdict": "no-overlap"})
                     continue
                 c = corr_rows(v[keep], r[keep])
-                verdict = "OK" if np.median(c) > 0.9 else "MISMATCH"
-                print("  row %-5d slots %2d/%2d (comparable %2d)  corr min/med/max = %.3f / %.3f / %.3f  [%.0fs]" % (
-                    row, int(m.sum()), v.shape[0], int(keep.sum()), c.min(), np.median(c), c.max(),
-                    time.time() - t0), flush=True)
+                # ---- C86 patch: the verdict was STRUCTURE-ONLY, and that is a real hole -------
+                # corr_rows() mean-centres and normalises each row before correlating, so it is
+                # INVARIANT to any global or monotone rescale. Measured 2026-09-25: our built
+                # corpus had mean non-zero intensity 58.12 against the published 102.24 -- 43%
+                # too dark, caused by min-max normalisation -- and this verifier still read
+                # "FAITHFUL, median correlation 0.9813". A verifier that cannot see the defect it
+                # exists to catch is worse than no verifier, because it is believed. So the
+                # verdict now needs BOTH: structure (correlation) AND scale (intensity level).
+                _ov = v[keep].astype(np.float64)
+                _or = r[keep].astype(np.float64)
+                _mv = float(_ov[_ov > 0].mean()) if (_ov > 0).any() else 0.0
+                _mr = float(_or[_or > 0].mean()) if (_or > 0).any() else 0.0
+                scale = (_mv / _mr) if _mr else float("nan")
+                ok_corr = np.median(c) > 0.9
+                ok_scale = bool(0.85 <= scale <= 1.15)      # 15% band; the observed defect was 43%
+                if ok_corr and ok_scale:
+                    verdict = "OK"
+                elif ok_corr:
+                    verdict = "OK-STRUCTURE-ONLY"           # structure right, brightness wrong
+                else:
+                    verdict = "MISMATCH"
+                print("  row %-5d slots %2d/%2d (comparable %2d)  corr min/med/max = %.3f / %.3f / %.3f  "
+                      "meanNZ ours/ref = %.2f / %.2f (scale %.3f)  [%.0fs]" % (
+                          row, int(m.sum()), v.shape[0], int(keep.sum()), c.min(), np.median(c),
+                          c.max(), _mv, _mr, scale, time.time() - t0), flush=True)
                 for plane, fluid, k, n, idx in audit:
                     print("      %-9s fluid=%-3d k=%2d stack=%-4d idx=%s" % (
                         plane, fluid, k, n, idx[:6]), flush=True)
@@ -352,16 +373,30 @@ def main():
                 results.append({"row": row, "slots": int(m.sum()), "comparable": int(keep.sum()),
                                 "corr_min": float(c.min()), "corr_med": float(np.median(c)),
                                 "corr_max": float(c.max()), "verdict": verdict,
+                                "meanNZ_ours": _mv, "meanNZ_ref": _mr, "scale": scale,
+                                "ok_corr": bool(ok_corr), "ok_scale": ok_scale,
                                 "audit": [{"plane": pl, "fluid": fl, "k": kk, "stack": nn,
                                            "idx": ix} for pl, fl, kk, nn, ix in audit]})
         meds = [r["corr_med"] for r in results if "corr_med" in r]
+        # ---- C98-b: the HEADLINE verdict must be scale-aware too -------------------------
+        # It used to come from `meds` (correlations) alone, so a corpus 43% too dark still
+        # summarised as "FAITHFUL" -- the very string C86 cites as the check that missed the
+        # defect. Fixing the per-row verdict without fixing the headline left it just as blind.
+        # Computed HERE, before the dict literal: statements cannot live inside a dict.
+        _scales = [r["scale"] for r in results if r.get("scale") == r.get("scale")]
+        median_scale = float(np.median(_scales)) if _scales else float("nan")
+        ok_corr_all = bool(meds) and np.median(meds) > 0.9
+        ok_scale_all = bool(_scales) and 0.85 <= median_scale <= 1.15
         summary = {
             "mode": "verify44", "reference": "dreaddevelopment/knee-raptor-corpus",
             "recipe": {"slots": sum(g[2] for g in groups), "span": list(span), "out": OUT,
                        "crop_mm": CROP_MM},
             "n_studies": len(results),
             "median_of_medians": float(np.median(meds)) if meds else None,
-            "verdict": ("FAITHFUL" if meds and np.median(meds) > 0.9 else "MISMATCH"),
+            "verdict": ("FAITHFUL" if (ok_corr_all and ok_scale_all)
+                    else ("FAITHFUL-STRUCTURE-ONLY" if ok_corr_all else "MISMATCH")),
+        "median_scale": median_scale,
+        "ok_scale": ok_scale_all,
             "seconds": round(time.time() - t0, 1),
             "results": results,
         }

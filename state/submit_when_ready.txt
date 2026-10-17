@@ -1,0 +1,10 @@
+2026-10-14T14:12:05Z  ppxl16/rsna-knee-r7-c224-r9all-w10 is RUNNING -- waiting
+2026-10-14T14:14:10Z  ppxl16/rsna-knee-r7-c224-r9all-w10 is RUNNING -- waiting
+2026-10-14T14:16:13Z  ppxl16/rsna-knee-r7-c224-r9all-w10 is RUNNING -- waiting
+2026-10-14T14:18:24Z  ppxl16/rsna-knee-r7-c224-r9all-w10 finished with status COMPLETE
+2026-10-14T14:18:40Z  not submitting: no r9all_leg_report.json in the output (Traceback (most recent call last):
+  File "D:\python\Lib\site-packages\urllib3\connectionpool.py", line 787, in urlopen
+    response = self._make_request(
+        conn,
+    ...<10 lines>...
+        **)

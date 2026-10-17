@@ -182,3 +182,8 @@ work/stackpp_src/
 work/stackpp_dataset/
 work/_rdrtta_cell.py
 work/klog_rdrtta/
+
+# downloaded datasets / bundles / timing artefacts: addressable via their public slugs, never versioned
+downloads/
+# stray metadata pulled by 'kaggle datasets metadata'
+dataset-metadata.json

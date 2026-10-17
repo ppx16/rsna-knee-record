@@ -1,0 +1,84 @@
+{
+  "note": "Durable record of the 2026-10-09 push of the two chosen RSNA submission kernels. Written BEFORE the runs finished, because the user may shut the machine down at any time. Append-only history in state/rsna_submissions.jsonl.",
+  "competition": "rsna-knee-abnormality-detection",
+  "deadline_utc": "2026-10-22T23:59:00Z",
+  "plan_doc": "docs/PLAN-2026-10-10-apex-push.md",
+  "facts_refs": ["C111", "C113", "C114", "C116", "C117", "A179", "A180"],
+
+  "target": {
+    "bronze_rank_now": 558,
+    "bronze_score_now": 0.950,
+    "our_best_score": 0.944,
+    "our_best_submission": "56878092",
+    "why_not_0_950": "C113: displayed ties rank by the UNROUNDED score, so a new 0.950 lands somewhere in ranks 254..711 -> roughly a coin flip for bronze. 0.951 (ranks <=253) is the real target."
+  },
+
+  "pushed": [
+    {
+      "dir": "kernels/kernel-triplereader-0951",
+      "kernel": "ppxl16/rsna-knee-triple-reader-0951",
+      "version": 1,
+      "target_score": "0.950-0.951 (title claims 0.951+; unverified)",
+      "role": "PRIMARY",
+      "provenance": "fork of rabari9999/rsna-knee-sota-dual-engine-stack-lb-0-951",
+      "mechanism": "adds nartaa's 224-crop CoAtNet (0.945, same public dataset) as an orthogonal SCALE: coat = rank(0.7*rank(c384) + 0.3*rank(c224)), then the SAME twelve per-target reader weights as Apex. Inputs all public, no empty slug, no kernel_sources -- verified by file probing, not by the title (C119 lesson).",
+      "notebook_bytes": 222555,
+      "notebook_sha256": "349d98f7b9d21ec88d4a0e8855c88de8b8ddf02894160f4e24d35acdcfac80bb",
+      "status": "COMPLETE, verified, SUBMITTED",
+      "submission_ref": "57026501",
+      "submitted_at_utc": "2026-10-10T01:04:15Z",
+      "pre_submit_verification": "work/verify_run_outputs.py -> PASS (all three legs present, aligned, non-degenerate, in [0,1])",
+      "leg_diversity_mean_spearman": {"c224_vs_c384": 0.792, "c224_vs_reader": 0.500, "c384_vs_reader": 0.750},
+      "note": "A183: the real slug is the title's slug. metadata id was first written as 'triplereader-0951' and Kaggle silently used 'triple-reader-0951'; corrected."
+    },
+    {
+      "dir": "kernels/kernel-apex-repro",
+      "kernel": "ppxl16/rsna-knee-apex-0949",
+      "version": 1,
+      "target_score": "0.949-0.950",
+      "role": "SECONDARY (already submitted)",
+      "submission_ref": "57026328",
+      "provenance": "byte-faithful fork of sujanmajhisuzan/rsna-knee-apex-grandmaster-stack (128 votes) = Work 6 in the community evolution",
+      "blend": "nartaa CoAtNet + goodpjw 2.5D ConvNeXt MIL, twelve per-target rank weights tuned on the public board",
+      "notebook_bytes": 130237,
+      "notebook_sha256": "c3b62e2f8be016abe541e9d5e537217fec73edce41f6fef15d95527c2dbfc75a",
+      "pre_submit_verification": "work/verify_run_outputs.py -> PASS; leg diversity c384 vs reader = 0.750",
+      "status": "COMPLETE, submitted, awaiting score"
+    }
+  ],
+
+  "not_pushed": [
+    {
+      "dir": "kernels/kernel-apex-pure0949",
+      "kernel": "ppxl16/rsna-knee-apex-pure0949",
+      "target_score": "0.949",
+      "role": "DOMINATED - held in reserve",
+      "why": "Same OAI checkpoint plus fewer knobs, but a LOWER score than apex; it adds no diversity to the final pair either. Push was also refused with 'Maximum batch GPU session count of 2 reached.' (A6 GPU concurrency cap, not the weekly quota)."
+    }
+  ],
+
+  "closed": [
+    {
+      "dir": "kernels/kernel-blendgold-0951",
+      "kernel": "ppxl16/rsna-knee-blendgold-0951",
+      "was": "the 0.951 target with fixed, unfitted blend weights -- methodologically the best design we found",
+      "why_closed": "NOT REPRODUCIBLE: stage 2 needs 'rsna-knee-compact-v1' (manifest.json + the 4-fold bundle), a PRIVATE dataset. The pushed run died with RuntimeError: Cannot resolve rsna-knee-compact-v1: []. The public heliosli/rsna-orthofoundation-fold0-epoch7-20261004 is only FOLD 0 (receipt.json: fold 0, weak-ref AUC 0.93175). See FACTS C119.",
+      "lesson": "Probe for FILE-LEVEL availability before believing a title or a vote count. An empty dataset slug in pulled metadata is an invisible private dataset, not junk."
+    }
+  ],
+
+  "fallback_pair_UNCHANGED": {
+    "56878092": "0.944 - our own CoAtNet / 44-slot substrate, NO OAI data used",
+    "56570151": "0.943 - 0943s sparse substrate",
+    "rule": "The platform keeps our best, so the pair's only job is to not co-fail on the private split. Never spend both final slots on OAI-lineage submissions."
+  },
+
+  "next_actions": [
+    "wait for both kernels to reach COMPLETE (do NOT trust anything else as a verdict - A173/A174)",
+    "then submit via the code-competition path: kaggle competitions submit -c rsna-knee-abnormality-detection -k <kernel> -v <version> -f submission.csv",
+    "record the real public score in state/rsna_submissions.jsonl and refresh work/rsna_daily.py pair check",
+    "decide the final two slots only after the host's OAI ruling (discussion 743416)"
+  ],
+
+  "honest_expectation": "The blend-gold notebook does not state its own score anywhere; 0.951 comes from the independent 342-vote community evolution notebook. The Apex notebook states 0.949 throughout and never claims 0.950. So treat 0.951 / 0.950 as targets to be MEASURED, not as facts."
+}

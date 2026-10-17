@@ -1,0 +1,22 @@
+{
+  "id": "ppxl16/rsna-knee-eval-v5v9",
+  "title": "RSNA knee eval v5v9",
+  "code_file": "knee-mri-training-the-twelve-finding-model.py",
+  "language": "python",
+  "kernel_type": "script",
+  "is_private": true,
+  "enable_gpu": true,
+  "enable_internet": true,
+  "dataset_sources": [
+    "dreaddevelopment/knee-raptor-corpus",
+    "dreaddevelopment/knee-raptor-corpus-ext",
+    "dreaddevelopment/raptor-knee-maxspan",
+    "dreaddevelopment/raptor-knee-finespacing",
+    "flight0234/rsna-knee-hybrid-report-labels"
+  ],
+  "competition_sources": [
+    "rsna-knee-abnormality-detection"
+  ],
+  "kernel_sources": [],
+  "enable_tpu": false
+}

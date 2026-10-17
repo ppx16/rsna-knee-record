@@ -1,0 +1,34 @@
+{
+  "id": "ppxl16/rsna-knee-v5ft64",
+  "title": "RSNA knee v5ft64",
+  "code_file": "knee-mri-training-the-twelve-finding-model.py",
+  "language": "python",
+  "kernel_type": "script",
+  "is_private": true,
+  "enable_gpu": true,
+  "enable_internet": true,
+  "keywords": [
+    "gpu"
+  ],
+  "dataset_sources": [
+    "flight0234/rsna-knee-hybrid-report-labels",
+    "ppxl16/rsna-knee-cv-folds",
+    "dreaddevelopment/raptor-knee-maxspan",
+    "dreaddevelopment/knee-raptor-corpus",
+    "dreaddevelopment/knee-raptor-corpus-ext"
+  ],
+  "kernel_sources": [
+    "ppxl16/rsna-knee-corpus64-s0",
+    "ppxl16/rsna-knee-corpus64-s1",
+    "ppxl16/rsna-knee-corpus64-s2",
+    "ppxl16/rsna-knee-corpus64-s3",
+    "ppxl16/rsna-knee-corpus64-s4",
+    "ppxl16/rsna-knee-corpus64-s5",
+    "ppxl16/rsna-knee-corpus64-s6",
+    "ppxl16/rsna-knee-corpus64-s7"
+  ],
+  "competition_sources": [
+    "rsna-knee-abnormality-detection"
+  ],
+  "enable_tpu": false
+}

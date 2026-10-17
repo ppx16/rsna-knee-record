@@ -342,9 +342,70 @@ print("   READ RULE (fixed in advance): >=0.92 geometry matches + as strong as c
 print("      0.90-0.92 usable but no better than msft2 (0.9069) | 0.85-0.90 below the A167 gate")
 print("      <0.85 geometry mismatch -> reject permanently")
 
+# ---------------------------------------------------------------- the two v9 kernels (2026-10-07)
+# Added with the two-direction audit. These are NOT submissions, so the SCORE_ARMS loop above
+# does not cover them, and without this block the one-command read path would silently miss the
+# two measurements that are actually in flight.
+import pathlib as _pl
+_ROOT = _pl.Path(__file__).resolve().parent.parent
+
+print()
+print("=" * 92)
+print("MEASUREMENT -- kernel-eval-v5v9  (v5 control + v9 finespacing on the 58-study gold split)")
+_eval_dir = _ROOT / "state" / "eval_v5v9"
+_recs = sorted(_eval_dir.rglob("raptor_evalonly_*.json")) if _eval_dir.exists() else []
+if _recs:
+    import json as _json
+    _got = {}
+    for _f in _recs:
+        try:
+            _j = _json.loads(_f.read_text(encoding="utf-8"))
+        except Exception as _e:
+            print("   unreadable %s: %s" % (_f.name, _e))
+            continue
+        _got[_j.get("tag")] = _j
+        print("   %-16s gold_auc=%-8s n_gold=%-4s res=%-4s k_eval=%s" % (
+            _j.get("tag"), _j.get("gold_auc"), _j.get("n_gold"), _j.get("res"), _j.get("k_eval")))
+    print("   READ RULE (fixed in advance, docs/PREREG-2026-10-07-v9-finespacing-two-directions.md):")
+    _ctrl = _got.get("ev_v5maxspan", {}).get("gold_auc")
+    if _ctrl is None:
+        print("      ev_v5maxspan is MISSING -> the control did not run; do not read the v9 number")
+    else:
+        _ok = abs(float(_ctrl) - 0.9214) <= 0.005
+        print("      control ev_v5maxspan = %.4f vs 0.9214+/-0.005 -> %s"
+              % (float(_ctrl), "REPRODUCED" if _ok else "*** DID NOT REPRODUCE ***"))
+        if not _ok:
+            print("      *** the loader or the corpus geometry is wrong. The v9 number may NOT be")
+            print("      *** read as 'v9 is weak' -- fix the setting first.")
+        else:
+            _v9 = _got.get("ev_v9fine", {}).get("gold_auc")
+            if _v9 is not None:
+                print("      v9 finespacing gold-58 = %.4f  (author's own reported value 0.9031)"
+                      % float(_v9))
+else:
+    print("   receipts NOT collected yet. Get them with:")
+    print("      python work/watch_eval_v5v9.py")
+    print("   READ RULE: ev_v5maxspan MUST reproduce 0.9214+/-0.005 (proves loader + geometry).")
+    print("     If it does not, the v9 number may NOT be read as 'v9 is weak'.")
+
+print()
+print("MEASUREMENT -- kernel-v9ft  (v9 warm-start fine-tune: msft2's recipe, checkpoint swapped)")
+print("   build proof: work/build_v9ft.py prints the diff vs kernel-msft2 -- it must be EXACTLY 3")
+print("   lines (the warm ckpt glob, its error string, and --tag). Any other diff breaks the A/B.")
+print("   push is gated on a free GPU session; retried by work/push_v9ft_when_free.py")
+print("      kaggle kernels status ppxl16/rsna-knee-v9ft")
+print("      kaggle kernels output ppxl16/rsna-knee-v9ft -p state/v9ft")
+print("   READ RULE (pre-registered): fine-tuned gold_auc must be > 0.9031 (its own start) AND")
+print("     >= 0.9069 (msft2). Below either -> the v5 warm-start stays the only measured gain.")
+print("   NOTE: the 8 head tensors MUST be carried; msft2's own record says dropping them scored")
+print("     0.8795 at epoch 0 against a parent at 0.9214.")
+
 # ---------------------------------------------------------------- where the state lives
 print()
 print("=" * 92)
 print("AUTHORITATIVE STATE: the `CURRENT STATE` block at the top of STATUS.md.")
-print("Final pair: 56814081 (primary) + 56613303 (second) -- BROWSER-ONLY, and six other submissions")
-print("also display 0.942-0.943, so pick by DESCRIPTION TEXT, never by score.")
+print("Final pair: 56878092 (PRIMARY, reader leg w=0.15, 0.944) + 56613303 (second).")
+print("  BROWSER-ONLY. Match on the DESCRIPTION text: the ONLY reliable token on the primary is")
+print("  `w=0.15` -- its prefix CLASHES with 56872230, which says `30% rank leg` and scores 0.943.")
+print("  56814081 has DROPPED OUT. Thirteen other submissions also display 0.942-0.943, so pick")
+print("  by DESCRIPTION TEXT, never by score. See FINAL-TICK.md before touching the page.")

@@ -1,0 +1,25 @@
+{
+ "tag": "ev_v5_plain",
+ "eval_only": true,
+ "init_ckpt": "/kaggle/input/datasets/dreaddevelopment/raptor-knee-maxspan/raptor_ft_coatnet_v5_full_swa.pt",
+ "gold_auc": 0.8965243697042471,
+ "aucs": {
+  "ACL": 0.9632352941176472,
+  "MCL": 0.9342403628117913,
+  "Medial Meniscus": 0.953125,
+  "Lateral Meniscus": 0.8732919254658386,
+  "Medial OA": 0.9736434108527131,
+  "Lateral OA": 0.8065764023210832,
+  "PF OA": 0.8301158301158302,
+  "Effusion": 0.982608695652174,
+  "Synovitis": 0.8351254480286738,
+  "Baker's": 0.8931159420289854,
+  "Contusion": 0.8326585695006747,
+  "Fracture": 0.8805555555555555
+ },
+ "arch": "coatnet_rmlp_2_rw_384.sw_in12k_ft_in1k",
+ "res": 384,
+ "k_eval": 24,
+ "src": "timm-pretrained",
+ "n_gold": 58
+}

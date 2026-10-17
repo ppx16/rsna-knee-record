@@ -16,6 +16,5 @@
     "rsna-knee-abnormality-detection"
   ],
   "kernel_sources": [],
-  "machine_shape": "NvidiaTeslaT4",
   "enable_tpu": false
 }

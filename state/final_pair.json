@@ -1,0 +1,161 @@
+{
+  "_doc": "The pair we intend to tick at the deadline. SINGLE source of truth: FINAL-TICK.md and work/verify_final_pair.py both read it, so the runbook and the verifier cannot drift apart.",
+  "_oai_flag_note": "`oai` is an EXPLICIT BOOLEAN on purpose. An earlier version inferred it by substring-matching the display label, and 'ours-nonOAI'.upper() contains 'OAI' -- so the check reported our entirely non-OAI pair as 'BOTH ticks are OAI'. Never infer a flag from a display string (FACTS A184).",
+  "competition": "rsna-knee-abnormality-detection",
+  "deadline_utc": "2026-10-22T23:59:00Z",
+  "rule": "The platform keeps our BEST selected submission, so the pair's ONLY job is to not co-fail on the private split. Selection is from the FULL submission history (rules verified 2026-10-05). Up to 2 may be ticked.",
+  "candidates": {
+    "57127191": {
+      "label": "OAI-SPARE",
+      "score": 0.956,
+      "oai": true,
+      "bloodline": "nartaa CoAtNet, OAI-supervised (stage 1) + heliosli compact ConvNeXt-small S6 *r7* bundle (stage 2)",
+      "match": "Byte-for-byte fork of the public notebook heliosli/0-957-latest-dataset-score-in-one-click",
+      "unique_token": "bundle_id 8c7b666e27dc0e8f",
+      "clashes_with": [
+        "57250245"
+      ],
+      "why": "SCORED 0.956 on 2026-10-13T06:46Z -- our best, one full step above 0.954, and 0.956 sits inside the silver line. Kernel ppxl16/rsna-knee-r7-onclick: a byte-for-byte fork (only edit: one non-ASCII character the Windows pusher could not encode) of heliosli's public 0.956 notebook. The decisive control: our OTHER submission that day, ppxl16/rsna-knee-raptor-s6-v1ds, used the OLDER r6/v1 bundle at the SAME 0.5/0.5 weights and the SAME newer trainer, and returned 0.954 -- so the gain comes from the r7 weights plus its fluid_stacker/state_stacker, not from the weights or the trainer (this falsifies the C144 hypothesis). Bundle verified 8/8 sha256 against its own manifest; all four fold weights differ from r6/v1; the run receipt shows fluid=yes state=yes, which only the r7 manifest can produce. OAI-lineage, so the other tick must stay non-OAI.  [2026-10-16] Superseded as tick 1 by 57250245 (0.958, a full displayed step higher). Retained as the interchangeable OAI spare: it is still the strongest artifact we hold that does not depend on the newest public bundle."
+    },
+    "57059293": {
+      "label": "OAI-SPARE",
+      "score": 0.954,
+      "oai": true,
+      "bloodline": "nartaa CoAtNet, OAI-supervised (stage 1) + heliosli compact S6 (stage 2)",
+      "match": "heliosli's restored blend-gold",
+      "unique_token": null,
+      "clashes_with": [],
+      "why": "SCORED 0.954 on 2026-10-11T06:56Z. Superseded as tick 1 by 57127191 (0.956) on 2026-10-13, but kept as the interchangeable OAI spare. Weights fixed before any run (Raptor 0.7 / ours 0.3); second leg trained with gold_in_training=0."
+    },
+    "57026328": {
+      "label": "OAI-SPARE",
+      "score": 0.95,
+      "oai": true,
+      "bloodline": "nartaa CoAtNet, OAI-supervised",
+      "match": "Apex 0.950 stack: nartaa CoAtNet",
+      "unique_token": null,
+      "clashes_with": [],
+      "why": "SCORED 0.950. Superseded as tick 1 by 57059293, but kept as the interchangeable OAI spare."
+    },
+    "56878092": {
+      "label": "TICK-2",
+      "score": 0.944,
+      "oai": false,
+      "bloodline": "ours, no external controlled data",
+      "match": "0943cfmsft2 + the public 2.5D ConvNeXt reader as a separate leg at",
+      "unique_token": "w=0.15",
+      "clashes_with": [
+        "56872230"
+      ],
+      "why": "Our best non-OAI submission. It cannot medal (0.944 sits at ranks ~1117+, far outside the bronze cut of ~562), so its only job is to be the entry that SURVIVES an adverse OAI ruling."
+    },
+    "57026501": {
+      "label": "OAI-SPARE",
+      "score": 0.95,
+      "oai": true,
+      "bloodline": "nartaa CoAtNet, OAI-supervised",
+      "match": "Triple-reader stack: nartaa CoAtNet 384",
+      "unique_token": null,
+      "clashes_with": [],
+      "why": "SCORED 0.950 on 2026-10-10T06:59Z -- the extra 224-crop orthogonal leg did NOT lift us out of the 0.950 band (the title's '0.951+' was not realised). Held as the interchangeable spare for tick 1."
+    },
+    "56570151": {
+      "label": "NON-OAI-SPARE",
+      "score": 0.943,
+      "oai": false,
+      "bloodline": "ours, no external controlled data",
+      "match": "0943s sparse 62/42 v1 - internet off, 20/20 fingerprints",
+      "unique_token": null,
+      "clashes_with": [],
+      "why": "Different substrate from 56878092 (sparse 62/42 geometry); the fallback second tick if tick 1 is dropped."
+    },
+    "57250245": {
+      "label": "TICK-1",
+      "score": 0.958,
+      "oai": true,
+      "bloodline": "nartaa CoAtNet-384 OAI-supervised (stage 1) + nartaa's independent 224-crop checkpoint (stage 1b) + heliosli R6 frozen ConvNeXt-small with flip TTA (stage 2)",
+      "match": "Byte-for-byte fork of the public notebook heliosli/blend-mine-in-private-lb-luck-to-all-upvoters",
+      "unique_token": "blend-mine-in-private-lb-luck-to-all-upvoters",
+      "clashes_with": [
+        "57127191"
+      ],
+      "why": "SCORED 0.958 on 2026-10-16 -- one full displayed step above the 0.956 we had held, and the first time our position has been comfortably inside BOTH medal lines (rank 231; bronze cut 608 -> +377; silver cut 304 -> +73). Kernel ppxl16/rsna-knee-0958-blend: a byte-for-byte fork (only edit: one non-ASCII character the Windows pusher cannot encode) of the highest-scoring public notebook, with all its inputs public -- the attached bundle dataset heliosli/rsna-knee-r6-frozen-fe055406-w1 is the single-version copy of the R6 bundle its manifest expects, so unlike the 0.9576 version it needs no substitution. Verified in the run: ASSETS_READY lists that dataset, the manifest bundle_id/sha256 assertions passed, OURS_STAGE_COMPLETE PASS 3/3 fallback 0, and the receipt carries a224=0.35. OAI-lineage (stage 1 is nartaa's OAI-supervised CoAtNet), so tick 2 must stay non-OAI."
+    },
+    "57291788": {
+      "label": "TICK-1",
+      "score": 0.958,
+      "oai": true,
+      "bloodline": "nartaa CoAtNet-384 + 224-crop (OAI-supervised) + heliosli R6 ConvNeXt (flip TTA) + **nartaa S6 ConvNeXt all-data, which used no OAI data**",
+      "match": "First artifact that adds nartaa's S6 ConvNeXt ALL-DATA model",
+      "unique_token": "S6 ConvNeXt ALL-DATA",
+      "clashes_with": [],
+      "why": "SCORED 0.958 on 2026-10-17 -- the same displayed score as 57250245, and the only artifact we hold that carries an independent, non-OAI model inside an otherwise OAI-lineage ensemble. Built by runnning nartaa's S6 all-data checkpoint (0.950 alone, sha256 0c7297d5..., 'No OAI data was used for this model') as a SECOND compact bundle through the same published pipeline and folding it into the compact half at 0.40, which is the split the published 0.957 recipe uses: compact = 0.60*rank(R6) + 0.40*rank(S6). Run verified: S6 stage PASS, arm E_prior, 3/3 scored, 0 fallbacks, and the log line '[s6] folded into the compact half at 0.4 over 3 studies'. Chosen over 57250245 for the PRIVATE split: more model diversity and both provenances, at no measurable public cost."
+    }
+  },
+  "tick": [
+    "57291788",
+    "56878092"
+  ],
+  "_tick_change_2026_10_13": {
+    "old_tick": [
+      "57059293",
+      "56878092"
+    ],
+    "why": "57127191 SCORED 0.956 on 2026-10-13T06:46Z -- one full displayed step above the 0.954 we had held since 10-11, and it is the first score we have that sits inside the silver line. It is a byte-for-byte fork of the public notebook credited 0.956 (heliosli/0-957-latest-dataset-score-in-one-click).",
+    "the_control_that_pins_the_cause": "The SAME DAY we also submitted 57126899 (ppxl16/rsna-knee-raptor-s6-v1ds): the identical notebook but reading the OLDER r6/v1 compact bundle, at the SAME 0.5/0.5 per-finding rank blend and with the SAME newer compact_train.py (04df7e2e). It returned 0.954. So the +0.002 comes from the r7 weights and its two stackers, NOT from the blend weight and NOT from the trainer -- which falsifies the two-axis hypothesis recorded in FACTS C144.",
+    "still_oai": "57127191 IS OAI-lineage (stage 1 runs nartaa's OAI-supervised CoAtNet), so tick 2 must stay non-OAI. 56878092 remains the anchor.",
+    "honest_uncertainty": "0.956 sits inside the silver line TODAY (the 0.956 band was ranks 100..221 against a silver cut of 293 on 2026-10-13). The whole board is rising about +0.001 per 13-20 h and many teams are converging on the same public recipes, so the medal zone a 0.956 earns at the deadline is not knowable now, and the private split decides it anyway. What we control is our own score, and this is the highest we hold."
+  },
+  "_tick_change_2026_10_11": {
+    "old_tick": [
+      "57026328",
+      "56878092"
+    ],
+    "why": "57059293 (heliosli's restored blend-gold / Work 7) SCORED 0.954 on 2026-10-11T06:56Z, lifting us from rank 540 (margin +31 to bronze, eroding) to rank 208 -- margin +364 to bronze and +78 to SILVER. It is also the more principled artifact: its Raptor 0.7 / ours 0.3 weights are fixed before any run, nothing is fitted on labels or on the test set, and its second leg (heliosli's compact convnext_small S6 bundle 209a32c8b50a6b1c) was trained with gold_in_training=0.",
+    "still_oai": "57059293 IS OAI-lineage (it runs nartaa's checkpoint in stage 1), so tick 2 must stay non-OAI. 56878092 remains the anchor.",
+    "what_this_overturns": "FACTS C122/C128/C134 concluded that per-target FITTED weights bought nothing -- and our own run of the fitted variant did return 0.950. That stands. But the real 0.954 came from replacing the SECOND LEG with heliosli's compact model, not from any weight change. Both conclusions are now measured, not argued."
+  },
+  "_why_this_pair_changed_on_2026_10_10": {
+    "old_tick": [
+      "56878092",
+      "56570151"
+    ],
+    "what_was_wrong": "I had written 'if the ruling is undecided, keep the non-OAI pair'. That treated 'we lose nothing' as if it were 'we are safe' -- but our ENTIRE non-OAI portfolio tops out at 0.944, which sits at ranks ~1117+, far outside the bronze cut. So the non-OAI pair has a ZERO bronze probability.",
+    "dominance_argument": "Tick {OAI 0.950, ours 0.944}: if the ruling allows us -> 0.950, ~51% bronze (C123). If it forbids us -> the OAI entry is voided and we still hold 0.944, i.e. exactly what the non-OAI pair would have given. Downside is therefore ~nil and the upside is ~0.4 expected bronze.",
+    "assumption": "Assumes an adverse ruling VOIDS the submission rather than disqualifying the team. That is the standard behaviour for invalid submissions, and 450+ teams share the exposure, so a mass disqualification is implausible. If the host's text turns out to threaten more than voiding, revert tick to 56878092 + 56570151.",
+    "tie_break_between_the_two_0.950s": "57026328 (apex, 2 legs, the widely-replicated Work-6 recipe) over 57026501 (triple-reader, 3 legs). Both display 0.950 and the unrounded values are unknowable from the board (C113); the added leg produced no measurable public gain, so we prefer the simpler recipe. They are interchangeable."
+  },
+  "_decision_rules": {
+    "oai_ruled_allowed": "keep tick = the higher-scoring OAI candidate + 56878092",
+    "oai_ruled_disallowed": "tick 56878092 + 56570151 (revert; the OAI entries become worthless)",
+    "oai_still_undecided": "keep tick = OAI 0.950 + 56878092 (dominance argument above)",
+    "never": "NEVER tick two OAI submissions -- that leaves NOTHING standing if the ruling goes against us"
+  },
+  "do_not_tick": {
+    "56872230": "looks almost identical to 56878092; it is the '30% rank leg' variant at 0.943",
+    "56814081": "old 0.943 primary, superseded by 56878092",
+    "56599932": "0943cf, superseded second slot",
+    "56599159": "0943p, dominated by cflat",
+    "rabari9999/rsna-knee-sota-apex-grandmaster-0-954": "NOT a submission of ours, but recorded here: its title claims 0.954 while its code differs from the triple-reader ONLY in twelve blend weights. Arithmetic rules it out and its own comment says 'TARGET' (FACTS C122). Do not adopt it."
+  },
+  "_tick_change_2026_10_16": {
+    "old_tick": [
+      "57127191",
+      "56878092"
+    ],
+    "why": "57250245 SCORED 0.958 -- one full displayed step above 0.956, and the census that day reported 'none above ours', i.e. we hold the reproducible public ceiling. Position moved from rank 565 (bronze +40, silver -263) to rank 231 (bronze +377, silver +73).",
+    "the_control_that_pins_the_cause": "The same day, 57250300 = the SAME base plus the band32 leg at w=0.08 returned 0.957, and the same leg at w=0.15 returned 0.956, while w=0.04 on the older base returned 0.956. So the +0.002 came from adopting the newest public base bundle (R6 + flip TTA + the per-finding reweight), NOT from the leg: on this base the added leg costs about a thousandth.",
+    "honest_uncertainty": "The per-finding reweight inside that notebook was changed the day before and is fitted on the public half; the published analysis of this competition puts the public half's standard error near 0.003, larger than the whole spread of the top 400 teams. So part of the 0.958 may be public-LB fitting. What is solid is that we now hold the same artifact as the public ceiling, and the private split decides the medal.",
+    "still_oai": "57250245 IS OAI-lineage (nartaa's OAI-supervised CoAtNet in stage 1), so tick 2 stays 56878092 (non-OAI)."
+  },
+  "_tick_change_2026_10_17": {
+    "old_tick": [
+      "57250245",
+      "56878092"
+    ],
+    "why": "57291788 scored the same 0.958 as 57250245, so the board cannot separate them; it wins on diversity for the hidden half (an independent model added at the published 0.40 share) and on provenance (that model used no OAI data).",
+    "the_control_that_pins_it": "The same day's other three shots isolate the knobs: A224=0.50 -> 0.957, A224=0.65 -> 0.957, r9all leg @0.10 -> 0.957, while the plain base and the S6 version both give 0.958. So the S6 arm costs nothing measurable and the other two axes cost a thousandth.",
+    "honest_uncertainty": "The two 0.958 artifacts are indistinguishable on the public board; the unrounded order inside a displayed band is not observable (C113/C141/C189). This is a judgment about which one generalises to the private half, not a measurement. If the S6 arm turned out to hurt the private split, tick 2 still holds 0.944 and the exposure is one medal step, not the whole entry.",
+    "still_oai": "The Raptor stages are still OAI-supervised, so 57291788 is OAI-lineage overall; tick 2 stays 56878092 (non-OAI)."
+  }
+}

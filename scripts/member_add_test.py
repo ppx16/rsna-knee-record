@@ -109,13 +109,16 @@ def main(argv=None) -> int:
 
     # our arms (one per --arm; the gate is only meaningful for one, the JOINT question needs N)
     found = {}
-    for pat in (str(ROOT / "downloads/cv/**/raptor_oof_*.npz"),
-                str(ROOT / "downloads/rent/**/raptor_oof_*.npz"),
-                # the A-lite paired arms land here rather than under cv/ (they are written by
-                # kernels/kernel-a5lite*, not by the cvtrain pipeline).  NOTE these use a DIFFERENT
-                # fold system (ppxl16/rsna-knee-cv-folds, 881 studies) from the base's v52_oof.csv,
-                # which is fine -- the id intersection handles it, and honesty is per-family.
-                str(ROOT / "downloads/a5lite_*/raptor_oof_*.npz")):
+    # ⚠️ BROADENED 2026-10-07.  This used to enumerate four directories
+    # (downloads/cv, downloads/rent, downloads/tpu, downloads/a5lite_*), and the P1.1
+    # 24-arm census (FACTS A158) inherited that blind spot.  Two arms fell through it:
+    #   msft0  (work/msft2_out/)  -- our BEST arm, and the only member ever measured to
+    #                                clear +0.005 as a member (+0.0084, CI [+0.0060,+0.0107])
+    #   cx0    (work/cx0-oof/)    -- never censused; it turns out to PASS at +0.0015
+    # A census that silently omits the best arm CANNOT conclude "the inventory is
+    # exhausted".  Scan everything and let the arm name key the dict.
+    for pat in (str(ROOT / "downloads/**/raptor_oof_*.npz"),
+                str(ROOT / "work/**/raptor_oof_*.npz")):
         for p in glob.glob(pat, recursive=True):
             m = re.search(r"raptor_oof_([A-Za-z0-9]+?)(?:_(ep\d+|epens|swa))?_fold(\d+)\.npz$",
                           os.path.basename(p))

@@ -1,0 +1,27 @@
+{
+  "ref": "ppxl16/rsna-knee-tpu-3darm",
+  "status": "KernelWorkerStatus.ERROR",
+  "log_chars": 2852,
+  "at": "2026-10-07T12:59:56Z",
+  "lines": [
+    "[3darm] torch_xla 2.8.0 ; device xla:0",
+    "[3darm] corpus all_vols.npy | labels report_labels_v4hybrid.csv | folds fold_file.json",
+    "[3darm] vols (3200, 44, 336, 336) | ids 3200 | labels 4407 | folds 4407",
+    "[3darm] train 2558 | held-out fold 0: 642",
+    "[3darm] Conv3d width=32, 0.72M params, input (1,32,128,128)",
+    "[3darm] step    1/1200  loss 0.7132  9.5s",
+    "log('[3darm] step %4d/%d  loss %.4f  %.1fs' % (step, a.steps, float(loss), time.time() - t0))",
+    "[3darm] step   50/1200  loss 0.5998  202.1s",
+    "[3darm] step  100/1200  loss 0.6230  403.3s",
+    "[3darm] step  150/1200  loss 0.5701  647.9s",
+    "[3darm] step  200/1200  loss 0.6856  947.1s",
+    "[3darm] step  250/1200  loss 0.5547  1296.8s",
+    "[3darm] step  300/1200  loss 0.6656  1705.6s"
+  ],
+  "errors": [
+    "Traceback",
+    "Error",
+    "Error"
+  ],
+  "decision": "no held-out AUC line in the log -> NOT READ, and this is not a rejection"
+}

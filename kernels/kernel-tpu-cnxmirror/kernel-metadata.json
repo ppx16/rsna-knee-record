@@ -1,0 +1,29 @@
+{
+  "id": "ppxl16/rsna-knee-tpu-cnxmirror",
+  "title": "RSNA knee tpu cnxmirror",
+  "code_file": "knee-mri-training-the-twelve-finding-model.py",
+  "language": "python",
+  "kernel_type": "script",
+  "is_private": true,
+  "enable_gpu": false,
+  "enable_tpu": true,
+  "enable_internet": true,
+  "dataset_sources": [
+    "flight0234/rsna-knee-hybrid-report-labels",
+    "ppxl16/rsna-knee-cv-folds"
+  ],
+  "kernel_sources": [
+    "ppxl16/rsna-knee-corpus64-s0",
+    "ppxl16/rsna-knee-corpus64-s1",
+    "ppxl16/rsna-knee-corpus64-s2",
+    "ppxl16/rsna-knee-corpus64-s3",
+    "ppxl16/rsna-knee-corpus64-s4",
+    "ppxl16/rsna-knee-corpus64-s5",
+    "ppxl16/rsna-knee-corpus64-s6",
+    "ppxl16/rsna-knee-corpus64-s7"
+  ],
+  "competition_sources": [
+    "rsna-knee-abnormality-detection"
+  ],
+  "machine_shape": "Tpu1VmV38"
+}
