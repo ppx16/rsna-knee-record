@@ -9,3 +9,8 @@
 2026-10-18T01:13:36Z     verdict: blend a224=None rows=3 |  {\"status\": \"PASS\", \"arm\": \"E_prior\", \"rows\": 3, \"scored\": 3, \"fallback_studies\": 0, \"seconds\": 70.1}\n"} |  {\"weights\": {\"raptor\": 0.5, \"ours\": 0.5, \"raptor_per_class\": {\"Medial OA\": 0.5, \"Lateral OA\": 0.2, \"PF OA\": 0.6, \"Synovitis\": 0.8, \"Baker's\": 0.35}, \" |  {\"status\": \"PASS\", \"arm\": \"E_lrprior\", \"rows\": 3, \"scored\": 3, \"fallback_studies\": 0, \"seconds\": 375.1, \"per_study_mean\": {\"decode_s\": 41.467, \"rend
 2026-10-18T01:13:40Z  rsna-knee-0958-s6-s6w60                        COMPLETE
 2026-10-18T01:14:41Z     verdict: blend a224=None rows=3 |  {\"status\": \"PASS\", \"arm\": \"E_prior\", \"rows\": 3, \"scored\": 3, \"fallback_studies\": 0, \"seconds\": 70.1}\n"} |  {\"weights\": {\"raptor\": 0.5, \"ours\": 0.5, \"raptor_per_class\": {\"Medial OA\": 0.5, \"Lateral OA\": 0.2, \"PF OA\": 0.6, \"Synovitis\": 0.8, \"Baker's\": 0.35}, \" |  {\"status\": \"PASS\", \"arm\": \"E_lrprior\", \"rows\": 3, \"scored\": 3, \"fallback_studies\": 0, \"seconds\": 380.1, \"per_study_mean\": {\"decode_s\": 41.867, \"rend
+2026-10-18T06:15:49Z  poll error: TimeoutExpired(['kaggle', 'kernels', 'status', 'ppxl16/rsna-knee-0958-s6-s6w40'], 300)
+2026-10-18T11:04:49Z  poll error: TimeoutExpired(['kaggle', 'kernels', 'status', 'ppxl16/rsna-knee-0958-s6-s6w60'], 300)
+2026-10-18T13:17:05Z  rsna-knee-0958-s6-s6w60                        UNKNOWN
+2026-10-18T13:47:06Z  no kernels in the last 24h
+2026-10-18T14:17:06Z  no kernels in the last 24h

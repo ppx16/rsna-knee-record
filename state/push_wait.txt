@@ -47,3 +47,8 @@
 2026-10-16T01:20:53Z  PUSH OK on attempt 1
 2026-10-17T01:47:56Z  waiting to push ppxl16/rsna-knee-0958-r9all-w10 (limit 240 min)
 2026-10-17T01:48:07Z  PUSH OK on attempt 1
+2026-10-18T14:03:57Z  waiting to push ppxl16/rsna-knee-0958-s6-s6w80 (limit 300 min)
+2026-10-18T14:04:48Z  attempt 1 not accepted (PUSH FAILED (rc=1) -- no 'successfully pushed' in output) -- server says ABSENT
+2026-10-18T14:06:59Z  attempt 2 not accepted (PUSH FAILED (rc=1) -- no 'successfully pushed' in output) -- server says ABSENT
+2026-10-18T14:09:15Z  attempt 3 not accepted (PUSH FAILED (rc=1) -- no 'successfully pushed' in output) -- server says QUEUED
+2026-10-18T14:10:55Z  PUSH OK on attempt 4

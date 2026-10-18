@@ -77,23 +77,24 @@
       "match": "Byte-for-byte fork of the public notebook heliosli/blend-mine-in-private-lb-luck-to-all-upvoters",
       "unique_token": "blend-mine-in-private-lb-luck-to-all-upvoters",
       "clashes_with": [
-        "57127191"
+        "57127191",
+        "57291788"
       ],
-      "why": "SCORED 0.958 on 2026-10-16 -- one full displayed step above the 0.956 we had held, and the first time our position has been comfortably inside BOTH medal lines (rank 231; bronze cut 608 -> +377; silver cut 304 -> +73). Kernel ppxl16/rsna-knee-0958-blend: a byte-for-byte fork (only edit: one non-ASCII character the Windows pusher cannot encode) of the highest-scoring public notebook, with all its inputs public -- the attached bundle dataset heliosli/rsna-knee-r6-frozen-fe055406-w1 is the single-version copy of the R6 bundle its manifest expects, so unlike the 0.9576 version it needs no substitution. Verified in the run: ASSETS_READY lists that dataset, the manifest bundle_id/sha256 assertions passed, OURS_STAGE_COMPLETE PASS 3/3 fallback 0, and the receipt carries a224=0.35. OAI-lineage (stage 1 is nartaa's OAI-supervised CoAtNet), so tick 2 must stay non-OAI."
+      "why": "SCORED 0.958 on 2026-10-16 -- one full displayed step above the 0.956 we had held, and the first time our position has been comfortably inside BOTH medal lines (rank 231; bronze cut 608 -> +377; silver cut 304 -> +73). Kernel ppxl16/rsna-knee-0958-blend: a byte-for-byte fork (only edit: one non-ASCII character the Windows pusher cannot encode) of the highest-scoring public notebook, with all its inputs public -- the attached bundle dataset heliosli/rsna-knee-r6-frozen-fe055406-w1 is the single-version copy of the R6 bundle its manifest expects, so unlike the 0.9576 version it needs no substitution. Verified in the run: ASSETS_READY lists that dataset, the manifest bundle_id/sha256 assertions passed, OURS_STAGE_COMPLETE PASS 3/3 fallback 0, and the receipt carries a224=0.35. OAI-lineage (stage 1 is nartaa's OAI-supervised CoAtNet), so tick 2 must stay non-OAI.  [2026-10-18] RESTORED as tick 1: it is the same 0.958 recipe without the S6 arm, and the only independent measurement of that arm says it costs a thousandth."
     },
     "57291788": {
-      "label": "TICK-1",
+      "label": "S6-SPARE",
       "score": 0.958,
       "oai": true,
       "bloodline": "nartaa CoAtNet-384 + 224-crop (OAI-supervised) + heliosli R6 ConvNeXt (flip TTA) + **nartaa S6 ConvNeXt all-data, which used no OAI data**",
       "match": "First artifact that adds nartaa's S6 ConvNeXt ALL-DATA model",
       "unique_token": "S6 ConvNeXt ALL-DATA",
       "clashes_with": [],
-      "why": "SCORED 0.958 on 2026-10-17 -- the same displayed score as 57250245, and the only artifact we hold that carries an independent, non-OAI model inside an otherwise OAI-lineage ensemble. Built by runnning nartaa's S6 all-data checkpoint (0.950 alone, sha256 0c7297d5..., 'No OAI data was used for this model') as a SECOND compact bundle through the same published pipeline and folding it into the compact half at 0.40, which is the split the published 0.957 recipe uses: compact = 0.60*rank(R6) + 0.40*rank(S6). Run verified: S6 stage PASS, arm E_prior, 3/3 scored, 0 fallbacks, and the log line '[s6] folded into the compact half at 0.4 over 3 studies'. Chosen over 57250245 for the PRIVATE split: more model diversity and both provenances, at no measurable public cost."
+      "why": "SCORED 0.958 on 2026-10-17 -- the same displayed score as 57250245, and the only artifact we hold that carries an independent, non-OAI model inside an otherwise OAI-lineage ensemble. Built by runnning nartaa's S6 all-data checkpoint (0.950 alone, sha256 0c7297d5..., 'No OAI data was used for this model') as a SECOND compact bundle through the same published pipeline and folding it into the compact half at 0.40, which is the split the published 0.957 recipe uses: compact = 0.60*rank(R6) + 0.40*rank(S6). Run verified: S6 stage PASS, arm E_prior, 3/3 scored, 0 fallbacks, and the log line '[s6] folded into the compact half at 0.4 over 3 studies'. Chosen over 57250245 for the PRIVATE split: more model diversity and both provenances, at no measurable public cost.  [2026-10-18] DEMOTED from tick 1: the independent notebook goodpjw2008/rsna-knee-does-s6-help-next-to-r6 published that adding S6 to R6 costs 0.001 (0.957 vs 0.958 without it). Our own three S6 shots displayed 0.958, so the measurements disagree inside the noise, but the only effect ever measured for S6 is zero to minus a thousandth -- never positive -- so the tick goes to the artifact without it."
     }
   },
   "tick": [
-    "57291788",
+    "57250245",
     "56878092"
   ],
   "_tick_change_2026_10_13": {
@@ -157,5 +158,15 @@
     "the_control_that_pins_it": "The same day's other three shots isolate the knobs: A224=0.50 -> 0.957, A224=0.65 -> 0.957, r9all leg @0.10 -> 0.957, while the plain base and the S6 version both give 0.958. So the S6 arm costs nothing measurable and the other two axes cost a thousandth.",
     "honest_uncertainty": "The two 0.958 artifacts are indistinguishable on the public board; the unrounded order inside a displayed band is not observable (C113/C141/C189). This is a judgment about which one generalises to the private half, not a measurement. If the S6 arm turned out to hurt the private split, tick 2 still holds 0.944 and the exposure is one medal step, not the whole entry.",
     "still_oai": "The Raptor stages are still OAI-supervised, so 57291788 is OAI-lineage overall; tick 2 stays 56878092 (non-OAI)."
+  },
+  "_tick_change_2026_10_18": {
+    "old_tick": [
+      "57291788",
+      "56878092"
+    ],
+    "why": "External replication. goodpjw2008 published 'does S6 help next to R6': version 4 with S6 scored 0.957 against 0.958 for the same recipe without it, and they conclude 'do not add S6 to R6'. Our three S6 shots displayed 0.958, so the two measurements disagree at the 0.001 level -- inside the noise of a 640-study half -- but the asymmetry decides it: S6 has never measured positive, only zero or minus one thousandth.",
+    "what_is_kept": "Nothing is thrown away: 57291788 and 57313021 stay scored and approved as the S6-SPARE. If the private split rewards the extra model, we can still tick it.",
+    "the_weights_stay": "The per-finding weights stay as heliosli set them: our flat twin scored 0.957 (so they are worth the thousandth publicly) and the external team's gold-58-tuned variants scored 0.957 / 0.955.",
+    "still_oai": "Both artifacts are OAI-lineage (Raptor stages), so tick 2 stays 56878092 (non-OAI)."
   }
 }
