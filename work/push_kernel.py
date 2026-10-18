@@ -19,6 +19,7 @@ ROOT = Path(__file__).resolve().parents[1]
 # the directory basename and the metadata id must be declared together, and the
 # metadata on disk must agree.
 EXPECTED = {
+    "kernel-0958-s6-flat": "ppxl16/rsna-knee-0958-s6-flat",
     "kernel-0958-s6-s6w60": "ppxl16/rsna-knee-0958-s6-s6w60",
     "kernel-0958-s6-s6w40": "ppxl16/rsna-knee-0958-s6-s6w40",
     "kernel-0958-r9all-w10": "ppxl16/rsna-knee-0958-r9all-w10",
