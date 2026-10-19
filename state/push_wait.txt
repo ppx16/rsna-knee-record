@@ -58,3 +58,12 @@
 2026-10-19T01:35:53Z  PUSH OK on attempt 1
 2026-10-19T06:28:31Z  waiting to push ppxl16/rsna-knee-0958-p384 (limit 300 min)
 2026-10-19T06:28:40Z  PUSH OK on attempt 1
+2026-10-19T11:28:47Z  waiting to push ppxl16/rsna-knee-09586 (limit 400 min)
+2026-10-19T11:29:14Z  attempt 1 not accepted (REFUSING: 'kernel-09586' is not in the EXPECTED allow-list ['kernel-09573-band32-w04', 'kernel-09573-band32-w08', 'kerne) -- server says ABSENT
+2026-10-19T11:31:06Z  attempt 2 not accepted (REFUSING: 'kernel-09586' is not in the EXPECTED allow-list ['kernel-09573-band32-w04', 'kernel-09573-band32-w08', 'kerne) -- server says ABSENT
+2026-10-19T11:32:59Z  attempt 3 not accepted (REFUSING: 'kernel-09586' is not in the EXPECTED allow-list ['kernel-09573-band32-w04', 'kernel-09573-band32-w08', 'kerne) -- server says ABSENT
+2026-10-19T11:34:52Z  attempt 4 not accepted (REFUSING: 'kernel-09586' is not in the EXPECTED allow-list ['kernel-09573-band32-w04', 'kernel-09573-band32-w08', 'kerne) -- server says ABSENT
+2026-10-19T11:36:45Z  attempt 5 not accepted (REFUSING: 'kernel-09586' is not in the EXPECTED allow-list ['kernel-09573-band32-w04', 'kernel-09573-band32-w08', 'kerne) -- server says ABSENT
+2026-10-19T11:38:38Z  attempt 6 not accepted (REFUSING: 'kernel-09586' is not in the EXPECTED allow-list ['kernel-09573-band32-w04', 'kernel-09573-band32-w08', 'kerne) -- server says ABSENT
+2026-10-19T11:39:10Z  waiting to push ppxl16/rsna-knee-09586 (limit 400 min)
+2026-10-19T11:39:20Z  PUSH OK on attempt 1
