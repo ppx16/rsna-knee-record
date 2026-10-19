@@ -54,3 +54,5 @@
 2026-10-18T14:10:55Z  PUSH OK on attempt 4
 2026-10-19T01:19:14Z  waiting to push ppxl16/rsna-knee-0958-m224 (limit 300 min)
 2026-10-19T01:19:26Z  PUSH OK on attempt 1
+2026-10-19T01:35:42Z  waiting to push ppxl16/rsna-knee-0958-m224p (limit 300 min)
+2026-10-19T01:35:53Z  PUSH OK on attempt 1
