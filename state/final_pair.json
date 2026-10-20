@@ -91,6 +91,22 @@
       "unique_token": "S6 ConvNeXt ALL-DATA",
       "clashes_with": [],
       "why": "SCORED 0.958 on 2026-10-17 -- the same displayed score as 57250245, and the only artifact we hold that carries an independent, non-OAI model inside an otherwise OAI-lineage ensemble. Built by runnning nartaa's S6 all-data checkpoint (0.950 alone, sha256 0c7297d5..., 'No OAI data was used for this model') as a SECOND compact bundle through the same published pipeline and folding it into the compact half at 0.40, which is the split the published 0.957 recipe uses: compact = 0.60*rank(R6) + 0.40*rank(S6). Run verified: S6 stage PASS, arm E_prior, 3/3 scored, 0 fallbacks, and the log line '[s6] folded into the compact half at 0.4 over 3 studies'. Chosen over 57250245 for the PRIVATE split: more model diversity and both provenances, at no measurable public cost.  [2026-10-18] DEMOTED from tick 1: the independent notebook goodpjw2008/rsna-knee-does-s6-help-next-to-r6 published that adding S6 to R6 costs 0.001 (0.957 vs 0.958 without it). Our own three S6 shots displayed 0.958, so the measurements disagree inside the noise, but the only effect ever measured for S6 is zero to minus a thousandth -- never positive -- so the tick goes to the artifact without it."
+    },
+    "57376589": {
+      "label": "M224-SPARE",
+      "kernel": null,
+      "public": "0.958",
+      "oai": true,
+      "why": "0.958. Same recipe as 57250245 plus the anatomical mirror on the 224 arm (C196), which the published flip notebook reports as an unchanged displayed score with a rank gain. Measured here as 0.958, i.e. neutral in the display. One more averaged view than tick 1.",
+      "clashes_with": []
+    },
+    "57394596": {
+      "label": "P384-SPARE",
+      "kernel": null,
+      "public": "0.958",
+      "oai": true,
+      "why": "0.958. The most averaged of our artifacts: plain/TTA rank split on BOTH Raptor arms (C197+C198). Note the arms disagreed on their own -- the 224 split alone measured 0.957 (57377106) while the 384 split alone measured 0.958 (C204) -- so the combination sitting at 0.958 is not evidence that each half is sound. Listed as the preferred candidate under the tie-break rule below, not as a measured improvement.",
+      "clashes_with": []
     }
   },
   "tick": [
@@ -168,5 +184,11 @@
     "what_is_kept": "Nothing is thrown away: 57291788 and 57313021 stay scored and approved as the S6-SPARE. If the private split rewards the extra model, we can still tick it.",
     "the_weights_stay": "The per-finding weights stay as heliosli set them: our flat twin scored 0.957 (so they are worth the thousandth publicly) and the external team's gold-58-tuned variants scored 0.957 / 0.955.",
     "still_oai": "Both artifacts are OAI-lineage (Raptor stages), so tick 2 stays 56878092 (non-OAI)."
+  },
+  "_candidates_note_2026_10_20": {
+    "situation": "Four artifacts display 0.958 and the public half cannot separate them: the 0.958 band holds 1313 teams and the published noise floor exceeds every gap inside it (C184).",
+    "tie_break_rule": "Prefer the artifact with more independent views averaged, because the displayed score is pinned and only the unrounded value can differ; averaging independent views lowers its variance. That ranks 57394596 first, then 57376589, then 57250245.",
+    "why_the_tick_did_not_move": "The rule is a judgement, not a measurement. 57250245 is the artifact whose recipe is someone else's published work with no addition of ours, so it is the one we can defend without appealing to a guess.",
+    "what_would_move_it": "A public asset above 0.958, or a measurement separating two of these -- neither is available: the band is saturated and the hidden rerun is the only place the unrounded value exists."
   }
 }
