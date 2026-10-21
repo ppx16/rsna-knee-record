@@ -67,3 +67,12 @@
 2026-10-19T11:38:38Z  attempt 6 not accepted (REFUSING: 'kernel-09586' is not in the EXPECTED allow-list ['kernel-09573-band32-w04', 'kernel-09573-band32-w08', 'kerne) -- server says ABSENT
 2026-10-19T11:39:10Z  waiting to push ppxl16/rsna-knee-09586 (limit 400 min)
 2026-10-19T11:39:20Z  PUSH OK on attempt 1
+2026-10-21T10:04:36Z  waiting to push ppxl16/rsna-knee-s6-solo (limit 300 min)
+2026-10-21T10:05:04Z  attempt 1 not accepted (REFUSING: 'kernel-s6-solo' is not in the EXPECTED allow-list ['kernel-09573-band32-w04', 'kernel-09573-band32-w08', 'ker) -- server says ABSENT
+2026-10-21T10:07:01Z  attempt 2 not accepted (REFUSING: 'kernel-s6-solo' is not in the EXPECTED allow-list ['kernel-09573-band32-w04', 'kernel-09573-band32-w08', 'ker) -- server says ABSENT
+2026-10-21T10:08:54Z  attempt 3 not accepted (REFUSING: 'kernel-s6-solo' is not in the EXPECTED allow-list ['kernel-09573-band32-w04', 'kernel-09573-band32-w08', 'ker) -- server says ABSENT
+2026-10-21T10:10:46Z  attempt 4 not accepted (REFUSING: 'kernel-s6-solo' is not in the EXPECTED allow-list ['kernel-09573-band32-w04', 'kernel-09573-band32-w08', 'ker) -- server says ABSENT
+2026-10-21T10:12:38Z  attempt 5 not accepted (REFUSING: 'kernel-s6-solo' is not in the EXPECTED allow-list ['kernel-09573-band32-w04', 'kernel-09573-band32-w08', 'ker) -- server says ABSENT
+2026-10-21T10:14:32Z  attempt 6 not accepted (REFUSING: 'kernel-s6-solo' is not in the EXPECTED allow-list ['kernel-09573-band32-w04', 'kernel-09573-band32-w08', 'ker) -- server says ABSENT
+2026-10-21T10:14:45Z  waiting to push ppxl16/rsna-knee-s6-solo (limit 300 min)
+2026-10-21T10:14:57Z  PUSH OK on attempt 1
