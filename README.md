@@ -1,119 +1,161 @@
 # RSNA Knee Abnormality Detection — working record
 
-Private record for a Kaggle **code competition**: 12-label macro ROC-AUC, deadline **2026-10-22**.
-The hidden test is 1322 studies; the visible test is 3, which is why almost nothing here can be
-settled on the public board.
+A public record of one Kaggle **code competition**: 12-label macro ROC-AUC, 1,322 hidden studies,
+deadline **2026-10-22**. It is written as a lab notebook, not a tutorial: the measurements, the
+falsifications, and the places where I was wrong are all kept.
 
-**Start with [`STATUS.md`](STATUS.md)** — one screen: what is live, what is closed, what is next.
-This file is the map.
+**Final standing: displayed score 0.958, our best artifact, held from 2026-10-16.**
+At the last reading the 0.958 band held **~1,475 teams** and we sat at about **323/1,475** inside it —
+inside the bronze cut, outside silver. No public notebook ever displayed higher than 0.958.
 
 ---
 
-## The rule this repository is built on
+## The one-paragraph version
 
-> **A conclusion is only as good as the instrument that produced it, and an instrument is only
-> trusted after it has been shown to pass on a known-good input and fail on a known-bad one.**
+We climbed 0.943 → 0.950 → 0.954 → 0.956 → **0.958** in twelve days, mostly by finding public artifacts
+one step ahead of us and reproducing them exactly rather than by training anything. When the public
+surface ran out, we spent the remaining days measuring what could *not* be improved, which turned out to
+be almost everything: at 0.958 the public leaderboard cannot resolve a thousandth, and every knob we
+turned either did nothing or cost exactly that thousandth. The durable output of the last week is
+therefore a set of **falsifications** rather than a higher score, and a deadline protocol that does not
+depend on anyone remembering anything at 07:59 on a Friday.
 
-Everything below follows from that. Three separate times in this project a check reported a
-confident verdict it could not actually see: a scale-invariant "faithful" test, a log decoder that
-turned two successful runs into FAILs, and a submission pipeline that passed every gate while
-producing three all-zero rows. All three are recorded, with the controls that now catch them.
+---
+
+## The rule this repository runs on
+
+> **A conclusion is only as good as the instrument that produced it, and an instrument is only trusted
+> after it has been shown to pass on a known-good input and fail on a known-bad one.**
+
+Three times a check here reported a confident verdict it could not actually see: a scale-invariant
+"faithful" test, a log decoder that turned two successful runs into FAILs, and a submission pipeline that
+passed every gate while producing three all-zero rows. All three are in the record with the controls that
+now catch them.
+
+A fourth failure mode took longer to learn: **reading a claim as a measurement**. The leaderboard shows
+`bestPublicScore`; the notebook title shows what its author hopes it is. When a notebook called
+`…=0.9586` turns out to display 0.958, the honest reading is the board, not the title.
+
+---
+
+## What actually moved the number
+
+| Date | Displayed | What changed |
+|---|---|---|
+| 10-09 → 10-10 | 0.943 → 0.950 | public Raptor CoAtNet arms |
+| 10-11 | 0.954 | heliosli's restored "blend gold" |
+| 10-13 | 0.956 | the R7 compact bundle, then the R6 bundle pinned to version 1 |
+| **10-16** | **0.958** | **the base recipe was replaced, not tuned**: R6 frozen bundle + flip TTA + per-finding Raptor weights (`Medial OA 0.50, Lateral OA 0.20, PF OA 0.60, Synovitis 0.80, Baker's 0.35`) + `A224 = 0.35` |
+
+The last step is the instructive one: it was not any single arm getting better, it was the **blend being
+republished** by its author with a different weighting. Two days later, an independent author's version
+history confirmed the same thing from the other side — their versions 21/22/24 (same models, flat weights)
+scored 0.957 and their 25/26 (same models, the weights above) scored 0.958.
+
+---
+
+## What did not work — the measured negatives
+
+Every one of these was submitted and scored, not argued about:
+
+| Change, on the 0.958 base | Displayed |
+|---|---|
+| `A224 = 0.50` / `0.65` | 0.957 / 0.957 |
+| `r9all` leg at 0.10 | 0.957 |
+| `band32` leg at 0.08 / 0.15 | 0.957 / 0.956 |
+| per-finding weights flattened to 0.5 (the un-fitted twin) | 0.957 |
+| nartaa's S6 all-data arm at **0.80** of the compact half | 0.957 |
+| plain/TTA rank split on the **224** arm | 0.957 |
+| S6 arm at **0.40 / 0.60** | 0.958 (i.e. no effect) |
+| anatomical mirror on the **224** arm | 0.958 |
+| plain/TTA rank split on the **384** arm | 0.958 |
+
+Seven artifacts display 0.958 and nine display 0.957. **The spread between "the best public recipe" and
+"the best public recipe plus any change we can think of" is one band, in both directions.**
+
+---
+
+## Why the last thousandth is unreachable, not merely hard
+
+- The visible test set is **3 studies**; the hidden test is 1,322. Scoring reruns the kernel, so the
+  public score is one sample of an unrounded value, and **the unrounded value moves between reruns**.
+- The published analysis of this competition puts the public half's standard error near **0.003** —
+  larger than the entire spread of the top 400 teams.
+- The band we are in holds **~1,475 teams**. Inside it, rank is not a measurement: our own rank moved
+  **231 → 419 → 264** across days on which we submitted nothing, because reruns reshuffle ties.
+- Therefore any claim of the form "component X is worth +0.001" is unfalsifiable on this board — and
+  after three such claims of mine were falsified by the next submission, that is the standing position.
+
+An independent author reached the same conclusion in their own write-up, almost word for word:
+*"Without controlled ablation experiments, the contribution of each optional branch cannot be established
+independently … Public leaderboard progression does not establish private leaderboard robustness."*
+
+---
+
+## The final artifacts
+
+Only two submissions are selected at the deadline, and the platform keeps the better of them.
+
+| Slot | ref | Score | Lineage |
+|---|---|---|---|
+| 1 | `57250245` | **0.958** | OAI-supervised Raptor arms (acknowledgement included as the rules require) |
+| 2 | `56878092` | 0.944 | **non-OAI**, our own stack — insurance if the OAI-lineage models are ruled unusable |
+
+Slot 1 is deliberately the artifact whose recipe is **entirely someone else's published work**, with no
+addition of ours. When five artifacts tie at 0.958 and the tiebreak is unmeasurable, the defensible
+choice is the least self-fitted one, not the most elaborate.
+
+The protocol for the deadline is one command:
+
+```powershell
+python work\deadline_report.py     # exit 0 = safe to tick; prints the two refs and their descriptions
+```
+
+It re-verifies the pair against the live server, checks both ledgers are committed and pushed, reads the
+board, and prints the opening and closing words of each description — because twenty-odd of our
+submissions display 0.942/0.943 and the platform's default selection is not ours.
 
 ---
 
 ## Layout
 
-The repository root holds **eleven entries**, and nothing else — a flat root with eighty-odd
-`kernel-*` directories made the history unreadable on GitHub, so the kernels now live under one
-directory and the one-off scrap under another.
-
 ```
-README.md          entry point (this file)
-STATUS.md          live state, one screen, rewritten every session
-docs/              the written record
-kernels/           every Kaggle kernel we own, one directory each
-datasets/          dataset metadata we publish
-scripts/           every tool worth keeping
-state/             manifests, ledgers, logs, and FACTS.md
-downloads/         pulled artifacts (evidence only; see the note below)
-archive/           one-off scrap kept for provenance, not for use
-.gitignore         payload/record split for downloads/
-.gitattributes     line-ending discipline
+README.md      this file
+docs/          the written record: handovers, pre-registrations, findings, the deadline runbooks
+kernels/       every Kaggle kernel we own, one directory each
+scripts/       reusable tools
+state/         FACTS.md (the ledger), final_pair.json (the single source of truth for the tick), logs
+downloads/     pulled artifacts (evidence only)
+archive/       one-off scrap kept for provenance
 ```
 
-## Where things live
+## Where to read
 
 | Path | What it is |
 |---|---|
-| `STATUS.md` | **Live state.** Rewritten every session. One screen. |
-| `state/FACTS.md` | **Atomic facts**, append-only, numbered `A1..An`. Each entry is one thing that is true and how it was measured. |
-| `docs/HANDOFF.md` | **Narrative**, numbered `§N` sections. What was attempted, what happened, what it cost. |
-| `docs/FINAL-SELECTION.md` | **The one manual step left.** Which two submissions to tick, and why those two — the browser action the CLI cannot perform. |
-| `docs/RUNBOOK-0943.md` | The copy-pasteable sequence for pushing and submitting the 0.943-line arms. Read it before touching the submission line. |
-| `docs/PLAN-arm-image-metadata.md` | The pre-registered plan for an image+metadata arm. **Marked NOT RECOMMENDED** — kept as a design record because the falsification ladder and the permutation control are the right shape. |
-| `state/EXPERIMENTS.md` | Registered experiments and their verdicts, including the ones closed as negative. |
-| `scripts/` | Every tool worth keeping. Reusable analysis lives here, not in ad-hoc commands. |
-| `kernels/kernel-*/` | Kaggle kernels we own: the five 0.943-line arms, the A5-OOF kernel, the CPU site probe, and the retired CV/TPU/corpus families. |
-| `downloads/` | Pulled artifacts. **`*.npz` and `*.json` are tracked** (raw OOF predictions and audits are the evidence); weights, data blobs, logs and third-party notebooks are not. |
+| `state/FACTS.md` | **The ledger.** Every conclusion, numbered — `C1..` for measured findings on the models and the board, `A1..` for facts about the tooling. Append-only: a wrong entry is superseded, never edited. |
+| `docs/HANDOVER-2026-10-2*.md` | The last three days, written for a successor with no memory of this session. |
+| `docs/DEADLINE-CHECKLIST.md` | The five-minute deadline procedure, and the list of things **not** to do, each with the measurement behind it. |
+| `docs/FINAL-TICK.md` | The one manual step: which two submissions to tick, and how to recognise them in the UI. |
+| `docs/` (older) | The earlier phase: pre-registrations, falsified plans, and the pre-0.950 work. |
 
-⚠️ **Moving a kernel directory breaks every script that names it.** The builders and the preflight
-resolve `kernels/<name>` first and fall back to the old flat path, and the five arms were **rebuilt
-after the move and came back byte-identical** — that rebuild is the check that the paths are right.
+## Related
 
-## The recording protocol
+[`ppx16/arc-agi-3-ledger`](https://github.com/ppx16/arc-agi-3-ledger) — the simultaneous ARC Prize 2026
+Milestone 2 campaign, where the objective is different in a way worth stating: the score is the **max**
+over all of a team's submissions, so what matters is the **right tail**, not the mean. One draw per UTC
+day, and the only rational policy is to never miss a day.
 
-Four files, four different jobs. Putting the wrong kind of thing in the wrong file is what made the
-record hard to use:
-
-1. **A new measured fact** → one row appended to `state/FACTS.md`, with the number, the measurement,
-   and the section it came from. Never rewrite an old row; if it turns out wrong, add a new row that
-   says so and cross-reference it. (A77 was corrected by A95 this way.)
-2. **A block of work** → a new `§N` section in `HANDOFF.md`: what was tried, what was observed, what
-   it cost, what changed as a result. **The section and its FACTS row land in the same commit** — an
-   audit on 2026-09-26 found 24 citations pointing at HANDOFF sections that were never written
-   (A119/§193), so the pairing is now checked rather than intended:
-
-   ```powershell
-   python scripts\check_facts_refs.py      # must exit 0; prints every recorded gap
-   ```
-3. **Live state** → `STATUS.md`, rewritten in place. If it grows past one screen, it is a HANDOFF
-   section, not a status.
-4. **A tool** → `scripts/`, with a docstring that says what problem it solves and what it would get
-   wrong. Scripts that exist to answer one question still belong here if the question will recur.
-
-Write facts **at the moment they are measured**. An unrecorded measurement is one we will pay for
-twice — the repository is the only memory that survives a closed session.
+---
 
 ## Standing policies
 
-**Resources.** TPU has a slow queue and takes non-urgent work. Kaggle GPU is scarce. AutoDL carries
-urgent, long-running experiments. The deciding question is not which machine is cheaper but
-**whether the experiment needs the images**:
+**Submissions.** A submission is for **confirming** an improvement that local evidence already supports —
+never for discovering whether one exists. When the board cannot resolve the effect being chased, "submit
+and see" is multiple comparisons on noise.
 
-- needs the competition DICOM → **Kaggle only** (the data is mounted there; moving it costs hundreds
-  of gigabytes)
-- does not need images (fusion, calibration, routing) → **local CPU, seconds, free** — never an
-  accelerator
-- training or long runs that avoid the DICOM → AutoDL when urgent, TPU when not
+**Recording.** Write facts at the moment they are measured. An unrecorded measurement is one we pay for
+twice. A new fact appends a row; a correction appends a row that says so and cross-references the old one.
 
-**Submissions.** Scoring reruns do not consume our quota, but a submission is **only for confirming
-an improvement that local evidence already supports** — never for discovering whether one exists.
-Public leaderboard noise is ~0.008 while the effects we chase are 0.001–0.003, so "submit and see" is
-multiple comparisons on noise. Pre-register the threshold before looking.
-
-**Process.** Diagnose one cause, fix that cause, and be able to say which cause an edit addressed. A
-diagnosis that lists three causes is not resolved by fixing one of them (A89).
-
-## Reproducing the two live tools
-
-```powershell
-# measure accelerator quota (CLI 2.1.2 has no `quota`; 2.2.4 in an isolated venv does)
-powershell -File scripts\quota.ps1
-
-# re-verify the five arms before pushing anything
-python scripts\preflight_0943.py          # must print PREFLIGHT OK
-```
-
-`scripts/build_0943_arms.py` rebuilds the five arms deterministically from the frontier notebook,
-with exact-match assertions on every edit. The four originals come back byte-identical; that property
-is what makes a rebuild safe to trust.
+**Diagnosis.** Diagnose one cause, fix that cause, and be able to say which cause an edit addressed. A
+diagnosis that lists three causes is not resolved by fixing one of them.
