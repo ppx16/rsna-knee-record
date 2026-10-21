@@ -1,5 +1,23 @@
 # RSNA Knee Abnormality Detection — STATUS
 
+> # ⛔ 本页已于 2026-10-21 作废（内容停在 2026-10-07 的 0.943 时代）
+>
+> **文件名不带日期，所以它看起来像"现役状态页" —— 它不是。** 现在的入口是：
+>
+> | 想看什么 | 看哪里 |
+> |---|---|
+> | 这次比赛的最终结果与方法 | [`README.md`](README.md) |
+> | 每一条结论（含被证伪的） | [`state/FACTS.md`](state/FACTS.md) |
+> | 截止日要做什么 | [`docs/DEADLINE-CHECKLIST.md`](docs/DEADLINE-CHECKLIST.md)、[`docs/FINAL-TICK.md`](docs/FINAL-TICK.md) |
+> | 最近三天 | `docs/HANDOVER-2026-10-2*.md` |
+>
+> ⚠️ **尤其不要按本页里出现的任何 `ref` 去勾选**：那些是 0.943 时代的提交号，与当前的 tick
+> （`57250245` + `56878092`，见 `state/final_pair.json`）无关。本页以下内容仅作历史保留。
+>
+> （这条横幅是 `work/audit_docs_tick.py` 的产物：它扫描所有文档里"tick/勾选 + ref"的组合，
+> 找出与 `final_pair.json` 不一致的**指令式**行。它已经抓到过一条真的危险指令 ——
+> `FINAL-TICK.md` 里那句"退回 0.954"的陈旧兜底。）
+
 ## 🟢 CURRENT STATE — 2026-10-07T03:05Z — **read this block and nothing else for the state**
 
 *Every number below was assembled from files (`work/assemble_state.py`), not from prose. The DELTA sections
