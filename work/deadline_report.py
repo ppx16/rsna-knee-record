@@ -52,15 +52,23 @@ def main() -> int:
 
     # 2. ledgers committed and pushed
     print('\n[2] ledgers committed and pushed')
+    # Append-only logs are expected to be dirty: daily_rsna.py adds a trend row on every run, and this
+    # report runs it.  Counting those as "uncommitted work" would make the verdict red every single time,
+    # which would train the operator to ignore it -- so they are whitelisted, not fixed by suppressing them.
+    APPEND_ONLY = ('state/daily_trend.jsonl',)
     for repo in (ROOT, Path(r'D:\kaggle\arc-agi-3-ledger')):
         rc, out = sh(['git', 'status', '--porcelain'], cwd=repo)
         rc2, head = sh(['git', 'rev-parse', '--short', 'HEAD'], cwd=repo)
         rc3, remote = sh(['git', 'ls-remote', 'origin', 'refs/heads/main'], cwd=repo)
-        dirty = bool(out.strip())
+        lines = [l for l in out.splitlines() if l.strip()]
+        real = [l for l in lines if not any(f in l for f in APPEND_ONLY)]
+        dirty = bool(real)
+        only_logs = bool(lines) and not real
         ra = remote.split()[0][:7] if remote.strip() else 'UNREACHABLE'
         h = head.strip()[:7]
         flag = 'OK' if (not dirty and ra == h) else 'CHECK'
-        print('    %-22s HEAD=%s remote=%s dirty=%s  -> %s' % (repo.name, h, ra, dirty, flag))
+        print('    %-22s HEAD=%s remote=%s dirty=%s%s  -> %s'
+              % (repo.name, h, ra, dirty, ' (append-only log only)' if only_logs else '', flag))
         if dirty or ra not in (h, 'UNREACHABLE'):
             ok = False
 
