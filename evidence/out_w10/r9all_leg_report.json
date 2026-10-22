@@ -1,0 +1,71 @@
+{
+ "status": "blended",
+ "w": 0.1,
+ "start_max_s": 23400.0,
+ "abort_s": 30240.0,
+ "elapsed_at_start_s": 412.5,
+ "leg_main": "/kaggle/input/rsna-knee-leg-r9all/leg_main.py",
+ "leg_seconds": 57.4,
+ "child_returncode": 0,
+ "child": {
+  "ok": true,
+  "n_test": 3,
+  "n_scored": 3,
+  "n_missing": 0,
+  "partial": false,
+  "deadline_hit": false,
+  "errors_by_reason": {},
+  "header_match": true,
+  "device": "cuda",
+  "gpu_free_gb_at_start": [
+   14.46,
+   14.36
+  ],
+  "fp16": true,
+  "members": [
+   {
+    "i": 0,
+    "ckpt": "loop_R9_all.pt",
+    "sha256": "a7d63688914bcd35f6cf6be7bd56c31998e4f4d19e134509d969e2ce217aeac6",
+    "arch": "coatnet_rmlp_2_rw_384.sw_in12k_ft_in1k",
+    "geometry": "fs",
+    "laterality": true,
+    "tta_offsets": [
+     0.0
+    ],
+    "weight": 1.0,
+    "row": "R9_all",
+    "n_scored": 3,
+    "n_errors": 0
+   }
+  ],
+  "groups": [
+   {
+    "key": [
+     "fs",
+     true,
+     5.0
+    ],
+    "members": [
+     0
+    ],
+    "n_jobs": 3,
+    "n_packed": 3,
+    "seconds": 44.3
+   }
+  ],
+  "load_s": 3.862,
+  "runtime_s": 48.656,
+  "peak_rss_gb": 2.397,
+  "comp": "/kaggle/input/rsna-knee-abnormality-detection",
+  "img_root": "/kaggle/input/rsna-knee-abnormality-detection/test_series",
+  "torch": "2.11.0+cu128",
+  "gpu_peak_alloc_gb": 9.312,
+  "gold": "not read",
+  "deadline": 1792016941.1653616,
+  "oom_score_adj_set": true
+ },
+ "coverage": 1.0,
+ "studies_with_leg": 3,
+ "total_stage_seconds": 472.2
+}

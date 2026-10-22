@@ -1,0 +1,200 @@
+{
+  "read_at": "2026-10-22T00:43:54Z",
+  "runs": {
+    "out_0958b": {
+      "proves": "the 0.958 base (tick 1 lineage): blend weights + raptor/ours halves",
+      "files": [
+        {
+          "file": "blend_receipt.json",
+          "sha256": "6d27f65788e7a0ef",
+          "bytes": 1648
+        },
+        {
+          "file": "submission_receipt.json",
+          "sha256": "33eb804444f5899a",
+          "bytes": 12956
+        }
+      ]
+    },
+    "out_m224": {
+      "proves": "224 arm + anatomical mirror",
+      "files": [
+        {
+          "file": "blend_receipt.json",
+          "sha256": "daa0e9c65a052c6f",
+          "bytes": 1648
+        },
+        {
+          "file": "submission_receipt.json",
+          "sha256": "d41deab7efc52502",
+          "bytes": 12962
+        }
+      ]
+    },
+    "out_m224p": {
+      "proves": "224 arm plain/TTA rank split",
+      "files": [
+        {
+          "file": "blend_receipt.json",
+          "sha256": "ea13ab682f56c3e5",
+          "bytes": 1648
+        },
+        {
+          "file": "submission_receipt.json",
+          "sha256": "0ae129a454a5adfa",
+          "bytes": 12955
+        }
+      ]
+    },
+    "out_p384": {
+      "proves": "384 arm plain/TTA rank split (plus the 224 split)",
+      "files": [
+        {
+          "file": "blend_receipt.json",
+          "sha256": "dc32378f565a5b6a",
+          "bytes": 1648
+        },
+        {
+          "file": "submission_receipt.json",
+          "sha256": "f3b3acf6a5925a3b",
+          "bytes": 12960
+        }
+      ]
+    },
+    "out_s6w60": {
+      "proves": "S6 arm folded at 0.60",
+      "files": [
+        {
+          "file": "blend_receipt.json",
+          "sha256": "10821e3a191237a0",
+          "bytes": 1647
+        },
+        {
+          "file": "submission_receipt.json",
+          "sha256": "261f6a48bd48a258",
+          "bytes": 12960
+        }
+      ]
+    },
+    "out_w80": {
+      "proves": "S6 arm folded at 0.80 (the weight at which the cost appears)",
+      "files": [
+        {
+          "file": "blend_receipt.json",
+          "sha256": "86f735c965b39b0c",
+          "bytes": 1647
+        },
+        {
+          "file": "submission_receipt.json",
+          "sha256": "71696ac3f1b57d9b",
+          "bytes": 12956
+        }
+      ]
+    },
+    "out_flat": {
+      "proves": "per-finding weights flattened to 0.5 (the un-fitted twin)",
+      "files": [
+        {
+          "file": "blend_receipt.json",
+          "sha256": "b4a2f5f47c44b29f",
+          "bytes": 1606
+        },
+        {
+          "file": "submission_receipt.json",
+          "sha256": "b7c8507c6a088db5",
+          "bytes": 12959
+        }
+      ]
+    },
+    "out_s6solo": {
+      "proves": "S6 alone: raptor 0.0, ours 1.0, no per-finding weights (tick 2)",
+      "files": [
+        {
+          "file": "blend_receipt.json",
+          "sha256": "4c58b6a2c3c66c74",
+          "bytes": 1545
+        },
+        {
+          "file": "submission_receipt.json",
+          "sha256": "3a5fbc9f90a6b81d",
+          "bytes": 12956
+        }
+      ]
+    },
+    "out_09586": {
+      "proves": "heliosli 0.9586 fork: flat weights plus the 2.5D MIL reader",
+      "files": [
+        {
+          "file": "blend_receipt.json",
+          "sha256": "bfc03ef149872a88",
+          "bytes": 1650
+        },
+        {
+          "file": "submission_receipt.json",
+          "sha256": "f0f3c311cf3ed98c",
+          "bytes": 12962
+        }
+      ]
+    },
+    "out_w10": {
+      "proves": "the r9all leg at 0.10",
+      "files": [
+        {
+          "file": "blend_receipt.json",
+          "sha256": "00ab452f0bcc147e",
+          "bytes": 874
+        },
+        {
+          "file": "submission_receipt.json",
+          "sha256": "53c9950d0bb5a39f",
+          "bytes": 11846
+        },
+        {
+          "file": "r9all_leg_report.json",
+          "sha256": "606643e8ddfc5f87",
+          "bytes": 1431
+        }
+      ]
+    },
+    "out_b32w08": {
+      "proves": "the band32 leg at 0.08",
+      "files": [
+        {
+          "file": "blend_receipt.json",
+          "sha256": "653467ca9fd468cf",
+          "bytes": 874
+        },
+        {
+          "file": "submission_receipt.json",
+          "sha256": "c65e76ba5a8f2b75",
+          "bytes": 11849
+        },
+        {
+          "file": "band32_leg_report.json",
+          "sha256": "961a024042587a9f",
+          "bytes": 250
+        }
+      ]
+    },
+    "out_w15b": {
+      "proves": "the band32 leg at 0.15",
+      "files": [
+        {
+          "file": "blend_receipt.json",
+          "sha256": "b07ca0e3b3526231",
+          "bytes": 1606
+        },
+        {
+          "file": "submission_receipt.json",
+          "sha256": "6eb897b50585b9ee",
+          "bytes": 11855
+        },
+        {
+          "file": "band32_leg_report.json",
+          "sha256": "cd20f478a41b9d1c",
+          "bytes": 342
+        }
+      ]
+    }
+  }
+}

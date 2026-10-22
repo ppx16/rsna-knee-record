@@ -1,0 +1,15 @@
+{
+ "status": "blended",
+ "w": 0.15,
+ "start_max_s": 23400.0,
+ "abort_s": 30240.0,
+ "elapsed_at_start_s": 417.2,
+ "members_json": "/kaggle/input/rsna-knee-band32-ours/members.json",
+ "model_v3_files": 10,
+ "n_expected": 10,
+ "leg_seconds": 47.0,
+ "child_returncode": 0,
+ "coverage": 1.0,
+ "studies_with_leg": 3,
+ "total_stage_seconds": 818.3
+}
