@@ -1,6 +1,6 @@
 # LESSONS — the reasoning failures, and the rules they produced
 
-This file is not about the score. It is about the eleven times this project's *thinking* failed in a way that
+This file is not about the score. It is about the thirteen times this project's *thinking* failed in a way that
 a record could have caught, and the specific rule each failure produced. It is written after the models were
 converged, because that is the only position from which the pattern is visible.
 
@@ -28,7 +28,7 @@ rather than as hindsight.
 The predictions were not wrong because the reasoning was lazy. They were wrong because **the object they
 were about is not measurable here**.
 
-## II. Six instruments that reported success without seeing anything
+## II. Eight instruments that reported success without seeing anything
 
 This is the more expensive failure class, because it corrupts the record rather than the plan.
 
@@ -43,6 +43,13 @@ This is the more expensive failure class, because it corrupts the record rather 
    false evidence.
 6. **A deadline check that went red on every run** — it counted append-only logs as uncommitted work, so it
    failed even when everything was fine. Three separate files had to be whitelisted.
+7. **An audit that examined zero claims and reported success** — the first version of the ARC number audit
+   matched nothing, printed `claims examined: 0`, and concluded "every claim agrees". Fixed by giving it a
+   self-test that must match known bad probes, and an exit code of 2 when it examined nothing. **A check that
+   cannot fail is not a check** — this one was written *while documenting that rule*.
+8. **An audit pointed at the wrong repository** — the same script resolved its root from `__file__` and lives
+   in the working tree, not the ledger checkout, so it scanned five unrelated files. Fixed by naming the path
+   explicitly and refusing to run if `findings/` is not there.
 
 **The rule:** an instrument must be shown to **pass on a known-good input and fail on a known-bad one**. If it
 has never failed, it has never been tested. And a check that always fails will train its reader to ignore it —
