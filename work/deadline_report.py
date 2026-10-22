@@ -56,7 +56,7 @@ def main() -> int:
     # report runs it.  Counting those as "uncommitted work" would make the verdict red every single time,
     # which would train the operator to ignore it -- so they are whitelisted, not fixed by suppressing them.
     APPEND_ONLY = ('state/daily_trend.jsonl', 'state/rsna_submissions.jsonl',
-                   'state/kernel_watch.txt')
+                   'state/kernel_watch.txt', 'state/closing_watch.txt')
     for repo in (ROOT, Path(r'D:\kaggle\arc-agi-3-ledger')):
         rc, out = sh(['git', 'status', '--porcelain'], cwd=repo)
         rc2, head = sh(['git', 'rev-parse', '--short', 'HEAD'], cwd=repo)
