@@ -65,12 +65,24 @@ def main() -> int:
         real = [l for l in lines if not any(f in l for f in APPEND_ONLY)]
         dirty = bool(real)
         only_logs = bool(lines) and not real
-        ra = remote.split()[0][:7] if remote.strip() else 'UNREACHABLE'
+        # A transport failure is not a mismatch. The deadline depends on the local checkout, and the remote
+        # is a backup, so an unreachable GitHub must warn rather than block -- otherwise a flaky network
+        # turns the one command a human is told to trust into a red light they learn to ignore.
+        raw_remote = remote.strip()
+        unreachable = (not raw_remote) or ('fatal' in raw_remote) or (':' == raw_remote[:1])
+        ra = 'UNREACHABLE' if unreachable else raw_remote.split()[0][:7]
         h = head.strip()[:7]
-        flag = 'OK' if (not dirty and ra == h) else 'CHECK'
+        if dirty:
+            flag = 'CHECK'
+        elif ra == 'UNREACHABLE':
+            flag = 'OK (remote not checked: network)'
+        elif ra != h:
+            flag = 'CHECK (remote behind)'
+        else:
+            flag = 'OK'
         print('    %-22s HEAD=%s remote=%s dirty=%s%s  -> %s'
               % (repo.name, h, ra, dirty, ' (append-only log only)' if only_logs else '', flag))
-        if dirty or ra not in (h, 'UNREACHABLE'):
+        if dirty or (ra not in (h, 'UNREACHABLE')):
             ok = False
 
     # 3. the board, right now
