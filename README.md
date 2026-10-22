@@ -148,6 +148,18 @@ day, and the only rational policy is to never miss a day.
 
 ---
 
+## What this project actually produced
+
+Not the score — the score came almost entirely from finding published work one step ahead and reproducing it
+exactly. What we produced is **[`docs/LESSONS.md`](docs/LESSONS.md)**: five predictions that were written
+down before measurement and then falsified, six instruments that reported success without seeing anything,
+and the four rules those two lists generated.
+
+The short version: *when the instrument's noise exceeds the effect, stop proposing effects.* It took eleven
+failures to believe that.
+
+---
+
 ## Standing policies
 
 **Submissions.** A submission is for **confirming** an improvement that local evidence already supports —
