@@ -55,7 +55,15 @@ def main(argv: list[str]) -> int:
                          % (ref, status, score))
     new = float(score)
     old_ref = d['tick'][1]
-    old = float(d['candidates'].get(old_ref, {}).get('public') or 0)
+    # Read the outgoing score from the server too. On the first real run the candidate dict had no
+    # 'public' field, so the comparison ran against a made-up 0.0 and "passed" for the wrong reason --
+    # the decision was right but the evidence in the log was empty. Refuse instead if it is unreadable.
+    old_row = rows.get(old_ref) or {}
+    old_score = (old_row.get('publicScore') or '').strip()
+    if not old_score:
+        raise SystemExit('REFUSING: cannot read the current tick 2 (%s) score from the server, so the '
+                         'comparison would be vacuous' % old_ref)
+    old = float(old_score)
     if new <= old:
         raise SystemExit('REFUSING: %s scores %.3f, not better than tick 2 %s at %.3f'
                          % (ref, new, old_ref, old))

@@ -23,8 +23,9 @@ TICKISH = re.compile(r'(勾选|tick|TICK|槽位|slot\s*[12]|Selected|①|②)')
 REF = re.compile(r'\b(5\d{7})\b')
 # a line that explains itself as history, negation, or an explicit fallback is not an instruction to follow
 CONTEXT = re.compile(r'(此前|previous|superseded|历史|已过期|不要|不用|别|NOT\b|❌|⛔|退回|退|撤销|曾是|旧的|'
-                     r'不可用|已检验|不触发|待定|pending|近似|几乎一样|almost|look-alike|'
-                     r'do not|don\'t|never|failed|被证伪|candidate|并列候选|fallback|备用|替代)', re.I)
+                     r'不可用|已检验|不触发|待定|pending|近似|几乎一样|换成|已换|'
+                     r'almost|look-alike|do not|don\'t|never|failed|被证伪|candidate|并列候选|'
+                     r'fallback|备用|替代)', re.I)
 
 
 # The documents a human could plausibly act on at the deadline.  Everything else in docs/ is a dated

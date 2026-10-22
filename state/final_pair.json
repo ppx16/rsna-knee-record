@@ -38,7 +38,7 @@
       "why": "SCORED 0.950. Superseded as tick 1 by 57059293, but kept as the interchangeable OAI spare."
     },
     "56878092": {
-      "label": "TICK-2",
+      "label": "NONOAI-SPARE",
       "score": 0.944,
       "oai": false,
       "bloodline": "ours, no external controlled data",
@@ -47,7 +47,7 @@
       "clashes_with": [
         "56872230"
       ],
-      "why": "Our best non-OAI submission. It cannot medal (0.944 sits at ranks ~1117+, far outside the bronze cut of ~562), so its only job is to be the entry that SURVIVES an adverse OAI ruling."
+      "why": "Our best non-OAI submission. It cannot medal (0.944 sits at ranks ~1117+, far outside the bronze cut of ~562), so its only job is to be the entry that SURVIVES an adverse OAI ruling.  [2026-10-21] Demoted from tick 2: 57478661 scored 0.950 as the non-OAI insurance and is strictly better."
     },
     "57026501": {
       "label": "OAI-SPARE",
@@ -107,11 +107,18 @@
       "oai": true,
       "why": "0.958. The most averaged of our artifacts: plain/TTA rank split on BOTH Raptor arms (C197+C198). Note the arms disagreed on their own -- the 224 split alone measured 0.957 (57377106) while the 384 split alone measured 0.958 (C204) -- so the combination sitting at 0.958 is not evidence that each half is sound. Listed as the preferred candidate under the tie-break rule below, not as a measured improvement.",
       "clashes_with": []
+    },
+    "57478661": {
+      "label": "TICK-2",
+      "public": "0.950",
+      "oai": false,
+      "why": "Non-OAI insurance: nartaa's S6 all-data ConvNeXt run on its own (Raptor half weighted to zero, compact half entirely S6). Documented as 0.950 alone and built with \"No OAI data was used\", which is why it can serve as the floor if the OAI-lineage Raptor models are ever ruled unusable. Measured here at 0.950.",
+      "clashes_with": []
     }
   },
   "tick": [
     "57250245",
-    "56878092"
+    "57478661"
   ],
   "_tick_change_2026_10_13": {
     "old_tick": [
@@ -190,5 +197,14 @@
     "tie_break_rule": "Prefer the artifact with more independent views averaged, because the displayed score is pinned and only the unrounded value can differ; averaging independent views lowers its variance. That ranks 57394596 first, then 57376589, then 57250245.",
     "why_the_tick_did_not_move": "The rule is a judgement, not a measurement. 57250245 is the artifact whose recipe is someone else's published work with no addition of ours, so it is the one we can defend without appealing to a guess.",
     "what_would_move_it": "A public asset above 0.958, or a measurement separating two of these -- neither is available: the band is saturated and the hidden rerun is the only place the unrounded value exists."
+  },
+  "_tick2_change_2026_10_21": {
+    "old": "56878092",
+    "new": "57478661",
+    "scores": {
+      "56878092": 0.0,
+      "57478661": 0.95
+    },
+    "why": "tick 2 exists only as insurance against an OAI ruling, so it should be the best non-OAI artifact we hold. It was 0.944 for three days while a 0.950-class non-OAI artifact (S6 alone) had never been submitted."
   }
 }
