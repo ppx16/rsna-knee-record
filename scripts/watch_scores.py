@@ -1,121 +1,96 @@
-"""Wait for specific competition submissions to be scored, then print them.
+"""Watch the two pending RSNA submissions until Kaggle publishes their public scores.
 
-Why a watcher and not a loop of manual checks: the hidden-set rerun takes tens of minutes, and the
-submission list is a shared, rate-limited endpoint (FACTS A26).  Polling every 5 minutes is cheap and
-the run ends on its own; polling by hand is neither.
+Rank resolution is 0.001, and which rank we get INSIDE the 0.950 block depends on the
+unrounded score (FACTS C113), so the moment the real number lands it must be written down.
 
-The list is read through the API rather than by scraping the CLI's table, because the table's
-description column contains spaces and its trailing score columns are empty while a row is PENDING --
-i.e. exactly the two shapes a naive split gets wrong.
+Behaviour:
+  * polls the submissions API, retrying transport failures in-call (A173/A174);
+  * a transport failure is reported as UNKNOWN, never as "no score";
+  * exits 0 as soon as every watched ref has a public score;
+  * exits 2 on the time limit (still pending);
+  * on exit it reconciles the local ledger (A181: the server list is the only truth).
 
-Usage:
-    python scripts/watch_scores.py --ref 56568520 --ref 56568524
+Usage: python work/watch_scores.py [ref ...] [--max-min N]
 """
-import argparse
+from __future__ import annotations
+
+import re
+import subprocess
 import sys
 import time
+from datetime import datetime, timezone
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]
+COMP = "rsna-knee-abnormality-detection"
+DEFAULT_REFS = ["57026328", "57026501"]   # apex, triple-reader
+TRANSPORT = ("Max retries", "SSLError", "UNEXPECTED_EOF", "Timeout", "timed out",
+             "Connection aborted", "ConnectionReset", "Read timed out")
 
 
-def main():
-    ap = argparse.ArgumentParser()
-    ap.add_argument("--competition", default="rsna-knee-abnormality-detection")
-    ap.add_argument("--ref", action="append", required=True,
-                    help="submission ref to wait for; repeat for several")
-    ap.add_argument("--interval-min", type=float, default=5.0)
-    ap.add_argument("--max-hours", type=float, default=6.0)
-    args = ap.parse_args()
-
-    try:
-        sys.stdout.reconfigure(encoding="utf-8", errors="replace")
-    except Exception:
-        pass
-
-    from kaggle.api.kaggle_api_extended import KaggleApi
-
-    api = KaggleApi()
-    # ⚠️ RETRY THE AUTH CALL ITSELF, not just the import. This line authenticates ONCE at module scope, before
-    # any polling loop, so a transient api.kaggle.com SSLEOFError here is instant death -- and for a watcher that
-    # means the result it waited hours for is never read. See work/patch_auth_guard.py.
-    _auth_last = None
-    for _auth_try in range(6):
+def fetch() -> list[dict] | None:
+    for a in range(5):
         try:
-            # ⚠️ RETRY THE AUTH CALL ITSELF, not just the import. This line authenticates ONCE at module scope, before
-            # any polling loop, so a transient api.kaggle.com SSLEOFError here is instant death -- and for a watcher that
-            # means the result it waited hours for is never read. See work/patch_auth_guard.py.
-            # Self-contained on purpose: it imports what it needs, so it does not depend on the host file's imports.
-            import sys as _auth_sys
-            import time as _auth_time
+            r = subprocess.run(["kaggle", "competitions", "submissions", "-c", COMP, "--csv"],
+                               capture_output=True, text=True, encoding="utf-8",
+                               errors="replace", timeout=600)
+        except Exception:  # noqa: BLE001
+            time.sleep(15 * (a + 1))
+            continue
+        out = "\n".join(l for l in ((r.stdout or "") + (r.stderr or "")).splitlines()
+                        if "outdated `kaggle`" not in l).strip()
+        if not out or any(t in out for t in TRANSPORT):
+            time.sleep(15 * (a + 1))
+            continue
+        rows = []
+        for line in out.splitlines()[1:]:
+            parts = re.split(r",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", line)
+            if len(parts) >= 6 and parts[0].strip().isdigit():
+                rows.append({"ref": parts[0].strip(), "date": parts[2].strip(),
+                             "status": parts[4].strip(), "score": parts[5].strip().strip('"')})
+        return rows
+    return None
 
-            _auth_last = None
-            for _auth_try in range(6):
-                try:
-                    api.authenticate()
-                    break
-                except Exception as _auth_e:  # noqa: BLE001
-                    _auth_last = _auth_e
-                    _auth_sys.stderr.write("api.authenticate() attempt %d failed: %s\n"
-                                           % (_auth_try + 1, type(_auth_e).__name__))
-                    _auth_sys.stderr.flush()
-                    _auth_time.sleep(8)
-            else:
-                _auth_sys.stderr.write("COULD NOT AUTHENTICATE after 6 attempts (%r) -- TRANSPORT failure, "
-                                       "not a result.\n" % (_auth_last,))
-                raise SystemExit(2)
-            break
-        except Exception as _auth_e:  # noqa: BLE001
-            _auth_last = _auth_e
-            print("api.authenticate() attempt %d failed: %s" % (_auth_try + 1, type(_auth_e).__name__),
-                  file=sys.stderr, flush=True)
-            time.sleep(8)
-    else:
-        print("COULD NOT AUTHENTICATE after 6 attempts (%r) -- TRANSPORT failure, not a result."
-              % (_auth_last,), file=sys.stderr)
-        raise SystemExit(2)
 
-    wanted = list(dict.fromkeys(args.ref))
-    pending = set(wanted)
-    deadline = time.time() + args.max_hours * 3600
+def main(argv: list[str]) -> int:
+    max_min = 720.0
+    if "--max-min" in argv:
+        i = argv.index("--max-min")
+        max_min = float(argv[i + 1])
+        del argv[i:i + 2]
+    refs = [a for a in argv[1:] if a.isdigit()] or DEFAULT_REFS
 
+    print(f"watching {refs} for public scores (limit {max_min:.0f} min)")
+    t0 = time.time()
     while True:
-        try:
-            subs = api.competition_submissions(args.competition)
-        except Exception as exc:
-            print("!! list failed (%s: %s); retrying next cycle" % (type(exc).__name__, exc))
-            subs = []
-
-        by_ref = {}
-        for s in subs:
-            by_ref[str(getattr(s, "ref", ""))] = s
-
-        for ref in wanted:
-            s = by_ref.get(ref)
-            if s is None:
-                print("%s  not visible in the list yet" % ref)
-                continue
-            status = str(getattr(s, "status", "?"))
-            pub = getattr(s, "public_score", None)
-            prv = getattr(s, "private_score", None)
-            printed = getattr(s, "date", "")
-            print("%s  status=%-28s public=%-8s private=%-8s  %s"
-                  % (ref, status, pub if pub not in (None, "") else "-",
-                     prv if prv not in (None, "") else "-", printed))
-            scored = status.endswith("COMPLETE") and pub not in (None, "", "None")
-            if scored:
-                pending.discard(ref)
-            elif status.endswith("ERROR"):
-                print("%s  !! submission ERRORED - this one is dead" % ref)
-                pending.discard(ref)
-
-        if not pending:
-            print("ALL DONE")
-            return 0
-        if time.time() > deadline:
-            print("timeout; still pending: %s" % sorted(pending))
+        el = (time.time() - t0) / 60.0
+        rows = fetch()
+        stamp = datetime.now(timezone.utc).strftime("%H:%M:%SZ")
+        if rows is None:
+            print(f"[{stamp} +{el:.0f}m] TRANSPORT FAILURE -- score status UNKNOWN "
+                  f"(NOT 'still pending' as a fact, just unread)", flush=True)
+        else:
+            by = {r["ref"]: r for r in rows}
+            done = 0
+            for ref in refs:
+                r = by.get(ref)
+                if r is None:
+                    print(f"[{stamp} +{el:.0f}m] {ref}: NOT on the server's list", flush=True)
+                    continue
+                sc = r["score"] or None
+                if sc:
+                    done += 1
+                print(f"[{stamp} +{el:.0f}m] {ref}: status={r['status']} score={sc}", flush=True)
+            if done == len(refs):
+                print("\n=== all watched submissions have a public score ===")
+                subprocess.run([sys.executable, str(ROOT / "work" / "reconcile_submissions.py"),
+                                "--append"], check=False)
+                return 0
+        if el > max_min:
+            print(f"\n=== still pending after {el:.0f} min; giving up this watch ===")
             return 2
-        print("-- waiting %s min; still pending: %s"
-              % (args.interval_min, sorted(pending)))
-        time.sleep(args.interval_min * 60)
+        time.sleep(300)
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    raise SystemExit(main(sys.argv))
