@@ -8,6 +8,13 @@ falsifications, and the places where I was wrong are all kept.
 At the last reading the 0.958 band held **~1,475 teams** and we sat at about **323/1,475** inside it —
 inside the bronze cut, outside silver. No public notebook ever displayed higher than 0.958.
 
+**The competition closed on 2026-10-22 23:59Z.** The final recorded board position was **rank 574, score
+0.958**, with the bronze cut at rank 637 — inside the medal line, and one thousandth away from the 0.959
+band that began at rank 238. The two selected submissions were `57250245` (0.958) and `57478661` (0.950,
+non-OAI insurance). The reading as it came off the leaderboard is in
+[`state/FINAL-RESULT.md`](state/FINAL-RESULT.md); the medals themselves are decided on the private split,
+which is the larger half of the hidden set and re-ranks everything.
+
 ---
 
 ## The one-paragraph version
